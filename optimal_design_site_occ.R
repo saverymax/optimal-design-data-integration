@@ -1,0 +1,197 @@
+###########################
+# Sandbox script for optimal design in .qmd file
+########################## 
+
+library(ggplot2)
+library(viridis)
+library(hrbrthemes)
+library(cmdstanr) 
+library(bayesplot)
+
+user_dir <- "C:\\Users\\msavery\\OneDrive - UGent\\Documents\\ghent_phd_spatial_doe\\code\\point_processes\\"
+#user_dir <- "C:\\Users\\saver\\Documents\\ghent_phd\\code\\point-processes\\"
+source(paste(user_dir, "mcmc_functions.R", sep=""))
+source(paste(user_dir, "experimental_design_functions.R", sep=""))
+source(paste(user_dir, "presence_only_functions.R", sep=""))
+eval_bool <- TRUE
+
+# R=1000 datasets for monte carlo approx
+data_reps <- 10
+# k is one side of grid
+k <- 20
+sites <- k^2
+p_0 <- 0.7
+b_0 <- 0
+# b_01=2 indicates "good" quality of auxiliary information
+b_1 <- 2
+# This assumes spatial variance of 1, which was used in the paper (see supplement)
+sigma <- 1
+# number of surveys at site is equal to n or 0.
+n_surveys <- 5
+# There will be m sites selected for sampling
+# 36 was used in paper
+m <- 10
+# Based on the size of grid get the auxiliary data and coordinates
+# Because these don't really depend on any random variables and just location 
+# in the grid, there will be one fixed dataset throughout the optimization
+sampling_surface <- get_sampling_surface(k)
+sampling_surface
+# Next, we use this data to generate the rest of the datasets
+# The data generating function will sample R occupancy maps|params
+# and then R complete datasets|occupancy maps
+corr_matrix <- specify_corr(sampling_surface[,1:2])
+r_survey_data <- generate_data(data_reps, sampling_surface, corr_matrix, p_0, b_0, b_1, sigma, n_surveys, sites)
+
+# Then generate R presence-only datasets
+alpha <- -2 
+beta <- 2
+gamma <- -4
+delta <- 0.5
+params <- list(alpha=alpha, beta=beta, gamma=gamma, delta=delta)
+# Provide occupancy maps and number of data reps, as well as params and sampling surface, to generate pp data.
+r_po_data <- generate_ppp_data_r(sampling_surface, params, k*k, r_survey_data$occupancy, data_reps)
+Y_positive_indices <- which(r_po_data$Y>0)
+# This is the data at which there are counts > 0
+r_po_data$Y[Y_positive_indices]
+# The first replicate dataset
+r_survey_data$occupancy[1,]
+r_survey_data$Y[1,]
+# So that gives us R complete datasets for 400 sites.
+# These will stay fixed throughout the rest of the procedure
+
+# For the coordinate exchange algorithm, we will need to precompute the nearest neighbors.
+# I take a naive approach here of choosing the top l neighbors
+# 9 is nice because it includes exactly the adjacent cells
+l <- 15
+nearest_neighbors <- get_neighbors(sampling_surface, l)
+nearest_neighbors
+
+# Use the final generation iteration
+p <- ggplot(sampling_surface, aes(x, y, fill=r_po_data$lambda[data_reps,])) + 
+  geom_tile() +
+  scale_fill_viridis(discrete=FALSE) +
+  ggtitle("Generated intensity per site")
+print(p)
+
+p <- ggplot(sampling_surface, aes(x, y, fill=r_po_data$bias[data_reps,])) + 
+  geom_tile() +
+  scale_fill_viridis(discrete=FALSE) +
+  ggtitle("Generated bias per site")
+print(p)
+
+thinned_intensity <- r_po_data$lambda[data_reps,]*r_po_data$bias[data_reps,]
+p <- ggplot() +
+  geom_tile(sampling_surface, mapping=aes(x, y, fill=thinned_intensity, width=1, height=1), alpha=.6) + 
+  scale_fill_viridis(discrete=FALSE, name="L*b") +
+  ggtitle("Generated thinning per site, including generated (or observed) individuals") +
+  geom_point(data=r_po_data$Y_coords, mapping=aes(x=x, y=y), size=3, col="white") +
+  theme(panel.grid.minor = element_line(colour="white")) +
+  scale_y_continuous(breaks = seq(0, 20, 1)) +
+  scale_x_continuous(breaks = seq(0, 20, 1)) 
+print(p)
+
+source(paste(user_dir, "stan_models/stan_site_occupancy_models.R", sep=""))
+model_path <- paste(user_dir, "stan_models\\poisson_process_prior_site_occupancy.stan", sep="")
+model_string <- poisson_process_site_occupancy
+write(model_string, model_path)
+model <- cmdstan_model(model_path) 
+# These are the parameters to report
+params <- c('p', 'alpha', 'beta', 'gamma', 'delta')
+generated_vars <- c('lambda_rep', 'y_rep', 'b_rep')
+# The reich paper repeats the procedure 10 times, and retains solution with lowest V(D)
+total_exchanges <- 10
+v_mat <- matrix(nrow=total_exchanges, ncol=1)
+p_logging <- T
+# Start timer
+start_time <- Sys.time()
+for (ex in 1:total_exchanges){
+  
+  # we first randomly select m sites, for each run of the exchange algorithm.
+  # from the sampling surface, which includes the auxiliary information.
+  # These sites will have n_i = n, the others will have n_i = 0
+  # Only sites with n_i=n will contribute to likelihood for the site-occupancy model.
+  select_idx <- sample(1:sites, m, replace=F)
+  #select_idx
+  select_sites <- sampling_surface[select_idx,]
+  #select_sites
+  
+  print(paste("Exchange iteration: ", ex))
+  # Data structure for each score estimate
+  estimate_mat <- matrix(nrow=data_reps, ncol=1)
+  # Then compute the posterior based on those sites and generated data, for each r dataset
+  for (r in 1:data_reps){
+    # For each rth dataset get the m randomly chosen sites
+    selected_data <- r_survey_data$Y[r, select_idx]
+    #selected_data
+    selected_occ <- r_survey_data$occupancy[r, select_idx]
+    #selected_occ
+    # TODO: DO I NEED TO CENTER AUX DATA?
+    # TODO: Finsih making stan compatible (converting from previous ed code.)
+    # Here I use the same X covariate for the presence-only data as used for the survey data. The difference is that
+    # the survey data here is a subset (select_sites) of the sites, whereas the presence only data 
+    # needs covariates for the whole grid to approximate the expected count in the entire region.
+    data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, X=select_sites$aux_x, Y=selected_data, PO=r_po_data$Y[r,], 
+                         X_po=sampling_surface$aux_x, Z_po=sampling_surface$aux_z)
+    #print(data_site_occ)
+    fit <- model$sample(data=data_site_occ, seed=13, chains=3, iter_sampling=1000, iter_warmup=100) 
+    posterior <- fit$draws()
+    # TODO: redo logging with stan diagnostics.
+    if (p_logging==T){
+      print("parameter estimates, beta0, beta 1, p")
+      print(fit$summary(variables=params))
+      # Posterior estimate for betas
+      # Print posteriors
+    }
+    # print("criterion")
+    #print(design_criteria(criteria="brier", posterior$occupancy, selected_occ))
+    # Average estimate after R iterations through the datasets.
+    # HMMMMMMM OK WHAT DO I TAKE HERE FOR OCCUPANCY?
+    gen_occupancy <- fit$summary(variables=c("g_theta_gen"))
+    # Take the mean of the generated quantity for the posterior estimate
+    estimate_mat[r,1] <- design_criteria(criteria="brier", sim_occ=gen_occupancy$mean, obs_occ=selected_occ)
+  }
+  # Once the posterior is computed on each of R datasets, find the average score:
+  new_v_est <- sum(estimate_mat) / data_reps
+  v_mat[ex, 1] <- new_v_est
+  print("Design score from most recent exchange")
+  print(new_v_est)
+  
+  if (ex==1){
+    current_v_est <- new_v_est
+    best_select_idx <- select_idx
+    print("Initial row ids")
+    print(select_idx)
+    print("Initial coordinates")
+    print(sampling_surface[best_select_idx,1:2])
+    print("Initial design score")
+    print(new_v_est)
+    title <- paste("Inital spatial design: v=", round(new_v_est, 5), sep="")
+    plot_sites(sampling_surface, best_select_idx, title)
+  } else if (new_v_est < current_v_est){
+    # Set new best indices
+    best_select_idx <- select_idx
+    print("New optimal row ids")
+    print(best_select_idx)
+    print("New coordinates")
+    print(sampling_surface[best_select_idx,1:2])
+    current_v_est <- new_v_est
+    print(current_v_est)
+    title <- paste("Optimal spatial design: v=", round(new_v_est, 5), sep="")
+    plot_sites(sampling_surface, best_select_idx, title)
+  }
+  else{
+    title <- paste("Non-optimal spatial design: v=", round(new_v_est, 5), sep="")
+    plot_sites(sampling_surface, select_idx, title)
+  }
+  # Select new data (switch out local points)
+  select_idx <- exchange_coordinates(best_select_idx, nearest_neighbors, l)
+  select_sites <- sampling_surface[best_select_idx,] 
+  selected_occ <- r_survey_data$occupancy[best_select_idx]
+  selected_data <- r_survey_data$Y[best_select_idx]
+  # Then iterate again.
+}
+end_time <- Sys.time()
+run_time <- end_time - start_time
+run_time
+
+
