@@ -111,9 +111,17 @@ write(model_string, model_path)
 model <- cmdstan_model(model_path) 
 # These are the parameters to report
 params <- c('p', 'alpha', 'beta', 'gamma', 'delta')
-generated_vars <- c('lambda_rep', 'y_rep', 'b_rep')
+generated_vars <- c('g_theta_gen')
 ```
+There are a few assumptions we make in this work. First, in the Reich 2018 paper, due to symmetry of the sampling surface, they optimize over only a quarter of the grid, exploring $n/4$ sites. Secondly, here as in there, the sites are assumed to either be visited no times, or $n_i$ times, though this could easily be made variable for each site. It may be of interest to include variable numbers of visits to the site, as sites that have low detection probability may need more visits.
 
+The exchange algorithm proceeds as follows: 
+
+1. We first select $m$ sites for which $Y_i = n_i$, the number of surveys at this particular site.
+2. We compute the criteria $V(Z)$ for the initial site Configuration.
+3. Next, iterating through each site, we select a nearest neighbor for site $s_i$ and compute $V(Z)$. We see if this lowers $V(Z)$.
+3. We update the site coordinates whenever a neighbor lowers $V$. While we could iterate through all neighbors of a site, per site, we instead iterate by only selecting 1 random neighbor at a time for 1 site, and then move to the next site. 
+4. After one complete iteration through the sites, we check to see if the site locations are different than before we started the iteration through neighbors. If no, we end the loop.
 ```{r coordinate-ex}
 # we first randomly select m sites, for each run of the exchange algorithm,
 # from the sampling surface, which includes the auxiliary information.
@@ -157,10 +165,8 @@ for (ex in 1:total_exchanges){
     #print(data_site_occ)
     # refresh=0 turns off messages except errors from stan
     
-    
     fit <- quiet(model$sample(data=data_site_occ, seed=13, chains=1, iter_sampling=1000, iter_warmup=100, refresh=0, show_messages=F))
     posterior <- fit$draws()
-    # TODO: redo logging with stan diagnostics.
     if (p_logging==T){
       print("parameter estimates, beta0, beta 1, p")
       print(fit$summary(variables=params))
@@ -170,8 +176,7 @@ for (ex in 1:total_exchanges){
     # print("criterion")
     #print(design_criteria(criteria="brier", posterior$occupancy, selected_occ))
     # Average estimate after R iterations through the datasets.
-    # HMMMMMMM OK WHAT DO I TAKE HERE FOR OCCUPANCY?
-    gen_occupancy <- fit$summary(variables=c("g_theta_gen"))
+    gen_occupancy <- fit$summary(variables=c(generated_vars))
     # Take the mean of the generated quantity for the posterior estimate
     estimate_mat[r,1] <- design_criteria(criteria="brier", sim_occ=gen_occupancy$mean, obs_occ=selected_occ)
   }
@@ -220,4 +225,5 @@ run_time <- end_time - start_time
 run_time
 ```
 
+We compare the minimum $V(Z)$ for different models, including those with and without prior information. The idea is to see if using the presence-only data allows us to better minimize the design criteria.
 
