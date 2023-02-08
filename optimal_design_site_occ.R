@@ -160,14 +160,12 @@ for (r_start in 1:random_starts){
         # needs covariates for the whole grid to approximate the expected count in the entire region.
         data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, X=select_sites$aux_x, Y=selected_data, PO=r_po_data$Y[r,], 
                              X_po=sampling_surface$aux_x, Z_po=sampling_surface$aux_z, model_diag=0)
-        #print(data_site_occ)
         # refresh=0 turns off messages except errors from stan
         # quiet function silences stan output 
-        # TODO: CHECK OUT ISSUES WITH DIVERGENCES...
-        #fit <- quiet(model$sample(data=data_site_occ, seed=13, chains=1, 
-        #                          iter_sampling=1000, iter_warmup=100, refresh=0, show_messages=F))
-        fit <- model$sample(data=data_site_occ, seed=13, chains=1, 
-                                  iter_sampling=1000, iter_warmup=100)
+        fit <- quiet(model$sample(data=data_site_occ, seed=13, chains=1, 
+                                  iter_sampling=1000, iter_warmup=100, refresh=0, show_messages=F))
+        #fit <- model$sample(data=data_site_occ, seed=13, chains=1, 
+        #                          iter_sampling=1000, iter_warmup=100)
         if (p_logging==T){
           print("Logging posterior")
           posterior <- fit$draws()
@@ -190,22 +188,30 @@ for (r_start in 1:random_starts){
           p_post <- mcmc_areas(posterior,  prob = 0.9, point_est="mean", pars = c("p")) + plot_title
           print(p_post)
           
-          # TODO: Plot site specific probs
-          #ppd_count_df <- data.frame(x=sampling_surface$x, y=sampling_surface$y, 
-          #                           occ=fit$summary(variables=generated_vars[1])$mean)
+          # Check issues with divergences
+          color_scheme_set("darkgray")
+          nuts_fit <- nuts_params(fit)
+          diverge_p <- mcmc_parcoord(posterior, pars = params, np = nuts_fit, alpha=.1, 
+                                     np_style=parcoord_style_np(div_alpha=1, div_size=.5))
+          print(diverge_p)
           
-          #p <- ggplot(ppd_count_df, aes(x, y, fill=occ)) + 
-          #  geom_tile() +
-          #  scale_fill_viridis(discrete=FALSE) +
-          #  ggtitle("Occupancy probability per site")
-          #print(p)
+          # TODO: Plot site specific probs
+          ppd_count_df <- data.frame(x=sampling_surface$x, y=sampling_surface$y, 
+                                     occ=fit$summary(variables=generated_vars[1])$mean)
+          
+          p <- ggplot(ppd_count_df, aes(x, y, fill=occ)) + 
+            geom_tile() +
+            scale_fill_viridis(discrete=FALSE) +
+            ggtitle("Generated occupancy probability per site")
+          print(p)
           
         }
         # Average estimate after R iterations through the datasets.
-        gen_occupancy <- fit$summary(variables=c(generated_vars))
+        # Need to select_idx the sites since it generates for all of them.
+        gen_occupancy <- fit$summary(variables=c(generated_vars))$mean[select_idx]
         # Take the mean of the generated quantity for the posterior estimate
         # TODO: Check if the magnitude of V makes sense
-        estimate_mat[r,1] <- design_criteria(criteria="brier", sim_occ=gen_occupancy$mean, obs_occ=selected_occ)
+        estimate_mat[r,1] <- design_criteria(criteria="brier", sim_occ=gen_occupancy, obs_occ=selected_occ)
       }
       # Once the posterior is computed on each of R datasets, find the average score:
       new_v_est <- sum(estimate_mat) / data_reps
