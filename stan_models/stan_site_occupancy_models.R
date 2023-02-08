@@ -92,7 +92,10 @@ cloglog_site_occupancy <- '
   data{
       int<lower = 1> n_surveys;
       int<lower = 1> n_sites;
+      int<lower = 1> total_sites;
+      // Distinction in the model for total sites and selected ones
       vector[n_sites] X;
+      vector[total_sites] X_all;
       array[n_sites] int Y;
     }
     parameters{
@@ -121,12 +124,16 @@ cloglog_site_occupancy <- '
       }
     }
     generated quantities{
-      vector[n_sites] lambda_rep;
-      array[n_sites] int y_rep; 
-      lambda_rep = exp(alpha + beta * X);
-      // Posterior predictive distribution
+      //vector[n_sites] lambda_rep;
+      //array[n_sites] int y_rep; 
+      //lambda_rep = exp(alpha + beta * X);
       // Is poisson the right choice here?
-      y_rep = poisson_rng(lambda_rep);
+      //y_rep = poisson_log_rng(alpha + beta * X);
+      vector[total_sites] g_theta_gen;
+      array[total_sites] int occ_gen; 
+      g_theta_gen = 1 - exp(-exp(alpha + beta * X_all));
+      // Posterior predictive distribution
+      occ_gen = bernoulli_rng(g_theta_gen);
   }
 '
 

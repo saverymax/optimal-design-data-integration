@@ -2,6 +2,8 @@
 # Sandbox script for optimal design in .qmd file
 ########################## 
 
+rm(list = ls())
+
 library(ggplot2)
 library(viridis)
 library(hrbrthemes)
@@ -100,11 +102,16 @@ print(p)
 model_path <- "stan_models\\poisson_process_prior_site_occupancy.stan"
 # We can experiment with these models in the exchange algorithm
 model_strings <- c(cloglog_site_occupancy, site_occupany_detection, poisson_process_site_occupancy)
-write(model_strings[3], model_path)
+model_selection <- 1
+write(model_strings[model_selection], model_path)
 model <- cmdstan_model(model_path) 
 # These are the parameters to report, though this will be model dependent
-params <- c('p', 'alpha', 'beta', 'gamma', 'delta')
-generated_vars <- c('g_theta_gen')
+if (model_selection==3){
+  params <- c('p', 'alpha', 'beta', 'gamma', 'delta')
+}else{
+  params <- c('p', 'alpha', 'beta')
+}
+generated_vars <- c('g_theta_gen', 'occ_gen')
 
 # The reich paper repeats the entire exchange algorithm procedure 10 times,
 # and retains solution with lowest V(D)
@@ -156,8 +163,16 @@ for (r_start in 1:random_starts){
         # Here I use the same X covariate for the presence-only data as used for the survey data. The difference is that
         # the survey data here is a subset (select_sites) of the sites, whereas the presence only data 
         # needs covariates for the whole grid to approximate the expected count in the entire region.
-        data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, X=select_sites$aux_x, Y=selected_data, PO=r_po_data$Y[r,], 
+        if (model_selection==3){
+          data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, X=select_sites$aux_x, Y=selected_data, PO=r_po_data$Y[r,], 
                              X_po=sampling_surface$aux_x, Z_po=sampling_surface$aux_z, model_diag=0)
+        }
+        else if(model_selection==1){
+          data_site_occ = list(n_surveys=n_surveys, n_sites=m, total_sites=sites, X=select_sites$aux_x, X_all=sampling_surface$aux_x, Y=selected_data)
+        }
+        else{
+          stop("No model selected")
+        }
         # refresh=0 turns off messages except errors from stan
         # quiet function silences stan output 
         fit <- quiet(model$sample(data=data_site_occ, seed=13, chains=1, 
@@ -195,9 +210,9 @@ for (r_start in 1:random_starts){
           
           # TODO: Plot site specific probs
           ppd_count_df <- data.frame(x=sampling_surface$x, y=sampling_surface$y, 
-                                     occ=fit$summary(variables=generated_vars[1])$mean)
+                                     occ_prob=fit$summary(variables=generated_vars[1])$mean)
           
-          p <- ggplot(ppd_count_df, aes(x, y, fill=occ)) + 
+          p <- ggplot(ppd_count_df, aes(x, y, fill=occ_prob)) + 
             geom_tile() +
             scale_fill_viridis(discrete=FALSE) +
             ggtitle("Generated occupancy probability per site")
@@ -206,7 +221,7 @@ for (r_start in 1:random_starts){
         }
         # Average estimate after R iterations through the datasets.
         # Need to select_idx the sites since it generates for all of them.
-        gen_occupancy <- fit$summary(variables=c(generated_vars))$mean[select_idx]
+        gen_occupancy <- fit$summary(variables=generated_vars[2])$mean[select_idx]
         # Take the mean of the generated quantity for the posterior estimate
         # TODO: Check if the magnitude of V makes sense
         estimate_mat[r,1] <- design_criteria(criteria="brier", sim_occ=gen_occupancy, obs_occ=selected_occ)
