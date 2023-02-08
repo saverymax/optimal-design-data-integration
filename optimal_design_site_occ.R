@@ -19,7 +19,8 @@ source("presence_only_functions.R")
 source("stan_models\\stan_site_occupancy_models.R")
 
 # R=1000 datasets for monte carlo approx
-data_reps <- 10
+exp_args <- list(model_selection=3, data_reps=10, random_starts=1, p_logging=F)
+data_reps <- exp_args$data_reps
 # k is one side of grid
 k <- 20
 sites <- k^2
@@ -102,7 +103,7 @@ print(p)
 model_path <- "stan_models\\poisson_process_prior_site_occupancy.stan"
 # We can experiment with these models in the exchange algorithm
 model_strings <- c(cloglog_site_occupancy, site_occupany_detection, poisson_process_site_occupancy)
-model_selection <- 1
+model_selection <- exp_args$model_selection
 write(model_strings[model_selection], model_path)
 model <- cmdstan_model(model_path) 
 # These are the parameters to report, though this will be model dependent
@@ -117,8 +118,8 @@ generated_vars <- c('g_theta_gen', 'occ_gen')
 # and retains solution with lowest V(D)
 # Currently I am not repeating the procedure. However, it accounts for uncertainty associated with random m sites 
 # selected for sampling
-random_starts <- 10
-p_logging <- F
+p_logging <- exp_args$p_logging
+random_starts <- exp_args$random_starts
 v_list <- vector(mode="list", length=random_starts)
 names(v_list) <- c(1:random_starts)
 c(1:random_starts)
@@ -193,9 +194,11 @@ for (r_start in 1:random_starts){
           p_post <- mcmc_areas(posterior,  prob = 0.9, point_est="mean", regex_pars = c("alpha", "beta")) + plot_title
           print(p_post)
           
-          plot_title <- ggtitle(paste("Posterior distributions, with means and 90% interval"))
-          p_post <- mcmc_areas(posterior,  prob = 0.9, point_est="mean", regex_pars = c("gamma", "delta")) + plot_title
-          print(p_post)
+          if(model_selection==3){
+            plot_title <- ggtitle(paste("Posterior distributions, with means and 90% interval"))
+            p_post <- mcmc_areas(posterior,  prob = 0.9, point_est="mean", regex_pars = c("gamma", "delta")) + plot_title
+            print(p_post)
+          }
           
           plot_title <- ggtitle(paste("Posterior distribution of detection probability, mean and 90% interval"))
           p_post <- mcmc_areas(posterior,  prob = 0.9, point_est="mean", pars = c("p")) + plot_title
@@ -208,7 +211,6 @@ for (r_start in 1:random_starts){
                                      np_style=parcoord_style_np(div_alpha=1, div_size=.5))
           print(diverge_p)
           
-          # TODO: Plot site specific probs
           ppd_count_df <- data.frame(x=sampling_surface$x, y=sampling_surface$y, 
                                      occ_prob=fit$summary(variables=generated_vars[1])$mean)
           
@@ -221,6 +223,7 @@ for (r_start in 1:random_starts){
         }
         # Average estimate after R iterations through the datasets.
         # Need to select_idx the sites since it generates for all of them.
+        # The 2 index is the ppd for Z
         gen_occupancy <- fit$summary(variables=generated_vars[2])$mean[select_idx]
         # Take the mean of the generated quantity for the posterior estimate
         # TODO: Check if the magnitude of V makes sense
@@ -296,13 +299,15 @@ end_time <- Sys.time()
 run_time <- end_time - start_time
 run_time
 
+v_list
 best_site_mat
 
 # Plot the convergence of V(D)
-v_concat <- c(v_list[[1]], v_list[[2]], v_list[[3]], v_list[[4]], v_list[[5]])
+v_concat <- c()
 x_concat <- c()
 rep_labels <- c()
 for(i in 1:random_starts){
+  v_concat <- c(v_concat, v_list[[i]])
   l_vec <- rep(paste("y", i, sep=""), length(v_list[[i]]))
   print(length(l_vec))
   x_concat <- c(x_concat, 1:length(l_vec))
