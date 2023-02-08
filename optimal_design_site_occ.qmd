@@ -101,7 +101,7 @@ p <- ggplot() +
   scale_x_continuous(breaks = seq(0, 20, 1)) 
 print(p)
 ```
-  
+Then specify the model. See work in "site_occupancy_stan.qmd" for the model equations and discussion.
 
 ```{r stan-set-p}
 source(paste(user_dir, "stan_models/stan_site_occupancy_models.R", sep=""))

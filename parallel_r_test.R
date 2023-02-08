@@ -1,10 +1,5 @@
-###########################
-# Sandbox script for optimal design in .qmd file
-########################## 
+library(parallel)
 
-library(ggplot2)
-library(viridis)
-library(hrbrthemes)
 library(cmdstanr) 
 library(bayesplot)
 library(dplyr)
@@ -17,6 +12,8 @@ user_dir <- "C:\\Users\\msavery\\OneDrive - UGent\\Documents\\ghent_phd_spatial_
 source(paste(user_dir, "experimental_design_functions.R", sep=""))
 source(paste(user_dir, "presence_only_functions.R", sep=""))
 
+
+n_cores <- detectCores()
 # R=1000 datasets for monte carlo approx
 data_reps <- 10
 # k is one side of grid
@@ -37,10 +34,8 @@ m <- 10
 # Because these don't really depend on any random variables and just location 
 # in the grid, there will be one fixed dataset throughout the optimization
 sampling_surface <- get_sampling_surface(k)
-# Filter for only a quarter of the grid.
 # If we filter, we need to change the total sites as well
 sites <- sites/4
-stopifnot(sites>m)
 sampling_surface <- sampling_surface %>% dplyr::filter(x<11, y<11)
 sampling_surface
 # Next, we use this data to generate the rest of the datasets
@@ -56,7 +51,6 @@ gamma <- -4
 delta <- 0.5
 params <- list(alpha=alpha, beta=beta, gamma=gamma, delta=delta)
 # Provide occupancy maps and number of data reps, as well as params and sampling surface, to generate pp data.
-#r_po_data <- generate_ppp_data_r(sampling_surface, params, sites, r_survey_data$occupancy, data_reps)
 r_po_data <- generate_ppp_data_r(sampling_surface, params, sites, data_reps)
 Y_positive_indices <- which(r_po_data$Y>0)
 # This is the data at which there are counts > 0
@@ -151,62 +145,8 @@ for (r_start in 1:random_starts){
       print(paste("current site: ", current_site, sep=""))
       estimate_mat <- matrix(nrow=data_reps, ncol=1)
       # TODO: Parallelize this.
-      for (r in 1:data_reps){
-        # For each rth dataset get the m randomly chosen sites
-        selected_data <- r_survey_data$Y[r, select_idx]
-        selected_occ <- r_survey_data$occupancy[r, select_idx]
-        # Here I use the same X covariate for the presence-only data as used for the survey data. The difference is that
-        # the survey data here is a subset (select_sites) of the sites, whereas the presence only data 
-        # needs covariates for the whole grid to approximate the expected count in the entire region.
-        data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, X=select_sites$aux_x, Y=selected_data, PO=r_po_data$Y[r,], 
-                             X_po=sampling_surface$aux_x, Z_po=sampling_surface$aux_z, model_diag=0)
-        #print(data_site_occ)
-        # refresh=0 turns off messages except errors from stan
-        # quiet function silences stan output 
-        # TODO: CHECK OUT ISSUES WITH DIVERGENCES...
-        #fit <- quiet(model$sample(data=data_site_occ, seed=13, chains=1, 
-        #                          iter_sampling=1000, iter_warmup=100, refresh=0, show_messages=F))
-        fit <- model$sample(data=data_site_occ, seed=13, chains=1, 
-                                  iter_sampling=1000, iter_warmup=100)
-        if (p_logging==T){
-          print("Logging posterior")
-          posterior <- fit$draws()
-          print(fit$summary(variables=params))
-          
-          color_scheme_set("mix-blue-pink")
-          p_trace <- mcmc_trace(posterior,  pars = params,
-                                facet_args = list(nrow = 2, labeller = label_parsed))
-          print(p_trace + facet_text(size = 15))
-  
-          plot_title <- ggtitle(paste("Posterior distributions, with means and 90% interval"))
-          p_post <- mcmc_areas(posterior,  prob = 0.9, point_est="mean", regex_pars = c("alpha", "beta")) + plot_title
-          print(p_post)
-          
-          plot_title <- ggtitle(paste("Posterior distributions, with means and 90% interval"))
-          p_post <- mcmc_areas(posterior,  prob = 0.9, point_est="mean", regex_pars = c("gamma", "delta")) + plot_title
-          print(p_post)
-          
-          plot_title <- ggtitle(paste("Posterior distribution of detection probability, mean and 90% interval"))
-          p_post <- mcmc_areas(posterior,  prob = 0.9, point_est="mean", pars = c("p")) + plot_title
-          print(p_post)
-          
-          # TODO: Plot site specific probs
-          #ppd_count_df <- data.frame(x=sampling_surface$x, y=sampling_surface$y, 
-          #                           occ=fit$summary(variables=generated_vars[1])$mean)
-          
-          #p <- ggplot(ppd_count_df, aes(x, y, fill=occ)) + 
-          #  geom_tile() +
-          #  scale_fill_viridis(discrete=FALSE) +
-          #  ggtitle("Occupancy probability per site")
-          #print(p)
-          
-        }
-        # Average estimate after R iterations through the datasets.
-        gen_occupancy <- fit$summary(variables=c(generated_vars))
-        # Take the mean of the generated quantity for the posterior estimate
-        # TODO: Check if the magnitude of V makes sense
-        estimate_mat[r,1] <- design_criteria(criteria="brier", sim_occ=gen_occupancy$mean, obs_occ=selected_occ)
-      }
+      estimate_mat <- estimate_v()
+      
       # Once the posterior is computed on each of R datasets, find the average score:
       new_v_est <- sum(estimate_mat) / data_reps
       print("Design score from most recent exchange")
@@ -249,7 +189,6 @@ for (r_start in 1:random_starts){
       fig_name <- paste(fig_dir, "site_locs_iter_", exchange_iter, ".png", sep="")
       ggsave(fig_name, plot=p, dpi = 300)
       # Select new data using the best coordinates (switch out local points)
-      # TODO: Compare to deterministic exchange
       select_idx <- exchange_coordinates(best_select_idx, current_site, s, nearest_neighbors, l)
       select_sites <- sampling_surface[select_idx,] 
       # Then go to the next site
@@ -299,3 +238,4 @@ for(rs in 1:random_starts){
   title <- paste("Optimal sites from random init ", rs, sep="")
   plot_sites(sampling_surface, best_site_mat[rs, ], title) 
 }
+
