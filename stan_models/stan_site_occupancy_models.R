@@ -35,8 +35,9 @@ site_occupany_detection <- '
       vector[n_sites] theta_rep;
       array[n_sites] int y_rep; 
       // Posterior predictive distributions
-      theta_rep = Phi(beta_0 + beta_1*X);
-      y_rep = binomial_rng(n_surveys, theta_rep);
+      g_theta_gen = Phi(beta_0 + beta_1*X);
+      occ_gen = bernoulli_rng(g_theta_gen);
+      y_rep = binomial_rng(n_surveys, g_theta_gen);
   }
 '
 
