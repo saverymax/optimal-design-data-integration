@@ -273,7 +273,7 @@ plot_sites_vs_best <- function(sampling_surface, select_idx, best_select_idx, ti
   p <- ggplot(sampling_surface, aes(x, y, fill=aux_x)) + 
     geom_tile() +
     geom_point(data=sampling_surface[select_idx,], aes(x=x, y=y), colour = "white", size = 3) +
-    geom_point(data=sampling_surface[best_select_idx,], aes(x=x, y=y), colour = "42B5FF", size = 2, alpha=.7) +
+    geom_point(data=sampling_surface[best_select_idx,], aes(x=x, y=y), colour = "hotpink1", size = 2, alpha=1) +
     scale_fill_viridis(discrete=FALSE) +
     ggtitle(title)
   print(p)

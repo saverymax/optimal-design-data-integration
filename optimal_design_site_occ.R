@@ -11,11 +11,10 @@ library(dplyr)
 library(tidyr)
 library(reshape2)
 
-fig_dir <- "C:\\Users\\msavery\\OneDrive - UGent\\Documents\\ghent_phd_spatial_doe\\code\\optimal_design_site_occ\\figures\\optimal_design\\"
-user_dir <- "C:\\Users\\msavery\\OneDrive - UGent\\Documents\\ghent_phd_spatial_doe\\code\\point_processes\\"
-#user_dir <- "C:\\Users\\saver\\Documents\\ghent_phd\\code\\point-processes\\"
-source(paste(user_dir, "experimental_design_functions.R", sep=""))
-source(paste(user_dir, "presence_only_functions.R", sep=""))
+fig_dir <- "figures\\optimal_design\\"
+source("experimental_design_functions.R")
+source("presence_only_functions.R")
+source("stan_models\\stan_site_occupancy_models.R")
 
 # R=1000 datasets for monte carlo approx
 data_reps <- 10
@@ -98,8 +97,7 @@ p <- ggplot() +
   scale_x_continuous(breaks = seq(0, 20, 1)) 
 print(p)
 
-source(paste(user_dir, "stan_models/stan_site_occupancy_models.R", sep=""))
-model_path <- paste(user_dir, "stan_models\\poisson_process_prior_site_occupancy.stan", sep="")
+model_path <- "stan_models\\poisson_process_prior_site_occupancy.stan"
 # We can experiment with these models in the exchange algorithm
 model_strings <- c(cloglog_site_occupancy, site_occupany_detection, poisson_process_site_occupancy)
 write(model_strings[3], model_path)
@@ -140,13 +138,13 @@ for (r_start in 1:random_starts){
   v_vec <- c()
   while (convergence_cond==FALSE){
     exchange_iter <- exchange_iter + 1
-    print(paste("Exchange iteration: ", exchange_iter))
+    print(paste("New exchange iteration: ", exchange_iter))
     # Data structure for each score estimate
     # Then compute the posterior based on those sites and generated data, for each r dataset
     # We iterate through the sites, computing the estimate of $V(D)$ for each so that we explore the effect of each site on the design
     # It is also possible to iterate through all neighbors of the site as well
     for (s in 1:length(select_idx)){
-      print(paste("current site index: ", s, sep=""))
+      print(paste("ex iter: ", exchange_iter, ", current site index: ", s, sep=""))
       current_site <- select_idx[s]
       print(paste("current site: ", current_site, sep=""))
       estimate_mat <- matrix(nrow=data_reps, ncol=1)
