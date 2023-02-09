@@ -13,28 +13,33 @@ library(dplyr)
 library(tidyr)
 library(reshape2)
 
-fig_dir <- "figures\\optimal_design\\"
 source("experimental_design_functions.R")
 source("presence_only_functions.R")
 source("stan_models\\stan_site_occupancy_models.R")
 
 # R=1000 datasets for monte carlo approx
-exp_args <- list(model_selection=3, data_reps=10, random_starts=1, p_logging=F)
+exp_args <- list(model_selection=3, m=10, data_reps=1, random_starts=10, p_logging=F)
+fig_dir <- paste("figures\\optimal_design_model-", exp_args$model_selection,  "_m-", exp_args$m, "_r-", exp_args$data_reps, "\\", sep="")
+dir.create(fig_dir)
 data_reps <- exp_args$data_reps
 # k is one side of grid
 k <- 20
 sites <- k^2
+alpha <- -2 
+beta <- 2
+gamma <- -4
+delta <- 0.5
 p_0 <- 0.7
-b_0 <- 0
+#b_0 <- 0
 # b_01=2 indicates "good" quality of auxiliary information
-b_1 <- 2
+#b_1 <- 2
 # This assumes spatial variance of 1, which was used in the paper (see supplement)
 sigma <- 1
 # number of surveys at site is equal to n or 0.
 n_surveys <- 5
 # There will be m sites selected for sampling
 # 36/4 was used in paper
-m <- 10
+m <- exp_args$m
 # Based on the size of grid get the auxiliary data and coordinates
 # Because these don't really depend on any random variables and just location 
 # in the grid, there will be one fixed dataset throughout the optimization
@@ -49,13 +54,13 @@ sampling_surface
 # The data generating function will sample R occupancy maps|params
 # and then R complete datasets|occupancy maps
 corr_matrix <- specify_corr(sampling_surface[,1:2])
-r_survey_data <- generate_data(data_reps, sampling_surface, corr_matrix, p_0, b_0, b_1, sigma, n_surveys, sites)
+link_func <- "cloglog"
+r_survey_data <- generate_data(data_reps, sampling_surface, corr_matrix, p_0, alpha, beta, sigma, n_surveys, sites, link=link_func)
+r_survey_data$occupancy[1,]
+r_survey_data$Y[1,]
+r_survey_data$theta[1,]
 
 # Then generate R presence-only datasets
-alpha <- -2 
-beta <- 2
-gamma <- -4
-delta <- 0.5
 params <- list(alpha=alpha, beta=beta, gamma=gamma, delta=delta)
 # Provide occupancy maps and number of data reps, as well as params and sampling surface, to generate pp data.
 #r_po_data <- generate_ppp_data_r(sampling_surface, params, sites, r_survey_data$occupancy, data_reps)
@@ -63,9 +68,6 @@ r_po_data <- generate_ppp_data_r(sampling_surface, params, sites, data_reps)
 Y_positive_indices <- which(r_po_data$Y>0)
 # This is the data at which there are counts > 0
 r_po_data$Y[Y_positive_indices]
-# The first replicate dataset
-r_survey_data$occupancy[1,]
-r_survey_data$Y[1,]
 # So that gives us R complete datasets for 400 sites.
 # These will stay fixed throughout the rest of the procedure
 
@@ -76,7 +78,32 @@ nearest_neighbors <- get_neighbors(sampling_surface, l)
 dim(nearest_neighbors)
 nearest_neighbors
 
-# Use the final generation iteration
+# Use the final generation iteration to look at the presence-absence and presence-only data
+survey_data_df <- data.frame(counts=r_survey_data$Y[1,], o=r_survey_data$occupancy[1,], 
+                             x=sampling_surface$x, y=sampling_surface$y, theta=r_survey_data$theta[1,], cor_mat=as.vector(corr_matrix[1,]))
+head(survey_data_df)
+dim(survey_data_df)
+
+# First PA data
+p <- ggplot(sampling_surface, aes(x, y, fill=r_survey_data$Y[data_reps,])) + 
+  geom_tile() +
+  scale_fill_viridis(discrete=FALSE) +
+  ggtitle("Generated counts per site")
+print(p)
+
+p <- ggplot(sampling_surface, aes(x, y, fill=r_survey_data$occupancy[data_reps,])) + 
+  geom_tile() +
+  scale_fill_viridis(discrete=FALSE) +
+  ggtitle("Generated occupancy per site")
+print(p)
+
+p <- ggplot(sampling_surface, aes(x, y, fill=r_survey_data$theta[data_reps,])) + 
+  geom_tile() +
+  scale_fill_viridis(discrete=FALSE) +
+  ggtitle("generated occupancy probability per site")
+print(p)
+
+# Then the PO data
 p <- ggplot(sampling_surface, aes(x, y, fill=r_po_data$lambda[data_reps,])) + 
   geom_tile() +
   scale_fill_viridis(discrete=FALSE) +
@@ -122,7 +149,7 @@ p_logging <- exp_args$p_logging
 random_starts <- exp_args$random_starts
 v_list <- vector(mode="list", length=random_starts)
 names(v_list) <- c(1:random_starts)
-c(1:random_starts)
+v_list
 best_site_mat <- matrix(nrow=random_starts, ncol=m)
 best_site_mat
 # Start timer
@@ -226,7 +253,6 @@ for (r_start in 1:random_starts){
         # The 2 index is the ppd for Z
         gen_occupancy <- fit$summary(variables=generated_vars[2])$mean[select_idx]
         # Take the mean of the generated quantity for the posterior estimate
-        # TODO: Check if the magnitude of V makes sense
         estimate_mat[r,1] <- design_criteria(criteria="brier", sim_occ=gen_occupancy, obs_occ=selected_occ)
       }
       # Once the posterior is computed on each of R datasets, find the average score:
@@ -268,15 +294,15 @@ for (r_start in 1:random_starts){
         print("No change in optimal design")
         p <- plot_sites_vs_best(sampling_surface, select_idx, best_select_idx, title)
       }
-      fig_name <- paste(fig_dir, "site_locs_iter_", exchange_iter, ".png", sep="")
-      ggsave(fig_name, plot=p, dpi = 300)
+      fig_name <- paste(fig_dir, "site_locs_rand-start-", r_start, "_ex-iter_", exchange_iter, "_site-iter-", s, ".png", sep="")
+      ggsave(fig_name, plot=p, dpi=300)
       # Select new data using the best coordinates (switch out local points)
       # TODO: Compare to deterministic exchange
       select_idx <- exchange_coordinates(best_select_idx, current_site, s, nearest_neighbors, l)
       select_sites <- sampling_surface[select_idx,] 
       # Then go to the next site
     }
-    # If after a complete iteration through all the sites the best sites haven't changed
+    # If after a complete iteration through all the sites, the best sites haven't changed
     # then we can call that convergence
     # If it's the first iteration we need to initialize the best sites
     if(exchange_iter==1){
@@ -316,10 +342,16 @@ for(i in 1:random_starts){
 length(rep_labels)
 length(v_concat)
 v_df <- data.frame(x=x_concat, v=v_concat, r=rep_labels)
-ggplot(data=v_df, aes(x=x, y=v, colour=r)) +
-  geom_line()
+fig_name <- paste(fig_dir, "exchange_convergence.png", sep="")
+p <- ggplot(data=v_df, aes(x=x, y=v, colour=r)) +
+  geom_line() +
+  theme_bw()
+print(p)
+ggsave(fig_name, plot=p, dpi = 300)
 
 for(rs in 1:random_starts){
   title <- paste("Optimal sites from random init ", rs, sep="")
-  plot_sites(sampling_surface, best_site_mat[rs, ], title) 
+  p <- plot_sites(sampling_surface, best_site_mat[rs, ], title) 
+  fig_name <- paste(fig_dir, "optimal_sites_random_start-", rs, ".png", sep="")
+  ggsave(fig_name, plot=p, dpi = 300)
 }

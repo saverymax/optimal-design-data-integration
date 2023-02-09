@@ -6,34 +6,28 @@ quiet <- function(x) {
   invisible(force(x)) 
 } 
 
+# Brier based on previous data structures
 brier_score <- function(z, z_obs){
   b <- 0
   sites <- ncol(z)
   iter <- nrow(z)
-  for (i in 1:sites)
+  for (i in 1:sites){
     z_bar_i <- sum(z[, i]) / iter
     if(z_obs[i] == 0){
       b <- b + (z_bar_i)^2 
     }else{
       b <- b + (1-z_bar_i)^2
     }
+  }
   return(b/sites)
 }
 
 brier_score_stan <- function(z, z_obs){
-  # Brier score more compatible with stan output
-  b <- 0
+  # Brier score compatible with stan output
   sites <- length(z)
-  for (i in 1:sites)
-    z_bar_i <- z[i]
-    if(z_obs[i] == 0){
-      b <- b + (z_bar_i)^2 
-    }else{
-      b <- b + (1-z_bar_i)^2
-    }
-  return(b/sites)
+  brier <- sum((z_obs - z)^2) / sites
+  return(brier)
 }
-
 
 design_criteria <- function(criteria, sim_occ, obs_occ){
   if (criteria=="brier"){
@@ -235,7 +229,7 @@ get_sampling_surface <- function(k){
   return(sampling_grid)
 }
 
-generate_data <- function(data_reps, surface_data, corr_matrix, p_0, b_0, b_1, sigma, n, sites){
+generate_data <- function(data_reps, surface_data, corr_matrix, p_0, b_0, b_1, sigma, n, sites, link){
   # Generate some random covariate data that will be used to model theta
   occupancy_maps <- matrix(nrow=data_reps, ncol=sites)
   Y_detection <- matrix(nrow=data_reps, ncol=sites)
@@ -248,10 +242,14 @@ generate_data <- function(data_reps, surface_data, corr_matrix, p_0, b_0, b_1, s
     # Equivalent way to induce correlation
     #R <- t(chol(corr_matrix)) 
     #theta <- b_0 + sampling_surface$aux*b_1 + R %*% rnorm(sites)
-    theta <- rnorm(sites, b_0 + surface_data$aux_x*b_1, sigma*corr_matrix)
-    g_theta <- pnorm(theta)
+    if (link=="cloglog"){
+      g_theta <- 1 - exp(-exp(alpha + surface_data$aux_x*beta))
+    }else{
+      theta <- rnorm(sites, alpha + surface_data$aux_x*beta, sigma*corr_matrix)
+      g_theta <- pnorm(theta)
+    }
     site_presence <- rbinom(sites, 1, g_theta)
-    theta_reps[r, ] <- theta
+    theta_reps[r, ] <- g_theta
     occupancy_maps[r, ] <- site_presence
     Y_detection[r, ] <- rbinom(sites, n, p_0*site_presence)
   } 
@@ -264,19 +262,20 @@ plot_sites <- function(sampling_surface, select_idx, title){
     geom_point(data=sampling_surface[select_idx,], aes(x=x, y=y), colour = "white", size = 3) +
     scale_fill_viridis(discrete=FALSE) +
     ggtitle(title)
-  print(p)
+  #print(p)
   return(p)
 }
 
 plot_sites_vs_best <- function(sampling_surface, select_idx, best_select_idx, title){
   # Plot current set of sites compared to the best sites. 
+  # Note that best should always be pink
   p <- ggplot(sampling_surface, aes(x, y, fill=aux_x)) + 
     geom_tile() +
     geom_point(data=sampling_surface[select_idx,], aes(x=x, y=y), colour = "white", size = 3) +
     geom_point(data=sampling_surface[best_select_idx,], aes(x=x, y=y), colour = "hotpink1", size = 2, alpha=1) +
     scale_fill_viridis(discrete=FALSE) +
     ggtitle(title)
-  print(p)
+  #print(p)
   return(p)
 }
 
