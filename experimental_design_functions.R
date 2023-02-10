@@ -40,8 +40,9 @@ design_criteria <- function(criteria, sim_occ, obs_occ){
 }
 
 estimate_v <- function(model, n_surveys, data_reps, m, sites, sampling_surface, 
-                       select_idx, select_sites, selected_data, r_survey_data, r_po_data, 
-                       p_logging, params){
+                       select_idx, select_sites, r_survey_data, r_po_data, 
+                       p_logging, params, generated_vars, model_selection){
+  estimate_mat <- matrix(nrow=data_reps, ncol=1)
   for (r in 1:data_reps){
     # For each rth dataset get the m randomly chosen sites
     selected_data <- r_survey_data$Y[r, select_idx]
@@ -49,14 +50,22 @@ estimate_v <- function(model, n_surveys, data_reps, m, sites, sampling_surface,
     # Here I use the same X covariate for the presence-only data as used for the survey data. The difference is that
     # the survey data here is a subset (select_sites) of the sites, whereas the presence only data 
     # needs covariates for the whole grid to approximate the expected count in the entire region.
-    data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, X=select_sites$aux_x, Y=selected_data, PO=r_po_data$Y[r,], 
-                         X_po=sampling_surface$aux_x, Z_po=sampling_surface$aux_z)
-    #print(data_site_occ)
+    if (model_selection==3){
+      data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, X=select_sites$aux_x, Y=selected_data, PO=r_po_data$Y[r,], 
+                           X_po=sampling_surface$aux_x, Z_po=sampling_surface$aux_z, model_diag=0)
+    }
+    else if(model_selection==1){
+      data_site_occ = list(n_surveys=n_surveys, n_sites=m, total_sites=sites, X=select_sites$aux_x, X_all=sampling_surface$aux_x, Y=selected_data)
+    }
+    else{
+      stop("No model selected")
+    }
     # refresh=0 turns off messages except errors from stan
     # quiet function silences stan output 
-    # TODO: Check out issues with divergences...
     fit <- quiet(model$sample(data=data_site_occ, seed=13, chains=1, 
                               iter_sampling=1000, iter_warmup=100, refresh=0, show_messages=F))
+    #fit <- model$sample(data=data_site_occ, seed=13, chains=1, 
+    #                          iter_sampling=1000, iter_warmup=100)
     if (p_logging==T){
       print("Logging posterior")
       posterior <- fit$draws()
@@ -71,32 +80,77 @@ estimate_v <- function(model, n_surveys, data_reps, m, sites, sampling_surface,
       p_post <- mcmc_areas(posterior,  prob = 0.9, point_est="mean", regex_pars = c("alpha", "beta")) + plot_title
       print(p_post)
       
-      plot_title <- ggtitle(paste("Posterior distributions, with means and 90% interval"))
-      p_post <- mcmc_areas(posterior,  prob = 0.9, point_est="mean", regex_pars = c("gamma", "delta")) + plot_title
-      print(p_post)
+      if(model_selection==3){
+        plot_title <- ggtitle(paste("Posterior distributions, with means and 90% interval"))
+        p_post <- mcmc_areas(posterior,  prob = 0.9, point_est="mean", regex_pars = c("gamma", "delta")) + plot_title
+        print(p_post)
+      }
       
       plot_title <- ggtitle(paste("Posterior distribution of detection probability, mean and 90% interval"))
       p_post <- mcmc_areas(posterior,  prob = 0.9, point_est="mean", pars = c("p")) + plot_title
       print(p_post)
       
-      # TODO: Plot site specific probs
-      #ppd_count_df <- data.frame(x=sampling_surface$x, y=sampling_surface$y, 
-      #                           occ=fit$summary(variables=generated_vars[1])$mean)
+      # Check issues with divergences
+      color_scheme_set("darkgray")
+      nuts_fit <- nuts_params(fit)
+      diverge_p <- mcmc_parcoord(posterior, pars = params, np = nuts_fit, alpha=.1, 
+                                 np_style=parcoord_style_np(div_alpha=1, div_size=.5))
+      print(diverge_p)
       
-      #p <- ggplot(ppd_count_df, aes(x, y, fill=occ)) + 
-      #  geom_tile() +
-      #  scale_fill_viridis(discrete=FALSE) +
-      #  ggtitle("Occupancy probability per site")
-      #print(p)
+      ppd_count_df <- data.frame(x=sampling_surface$x, y=sampling_surface$y, 
+                                 occ_prob=fit$summary(variables=generated_vars[1])$mean)
+      
+      p <- ggplot(ppd_count_df, aes(x, y, fill=occ_prob)) + 
+        geom_tile() +
+        scale_fill_viridis(discrete=FALSE) +
+        ggtitle("Generated occupancy probability per site")
+      print(p)
       
     }
     # Average estimate after R iterations through the datasets.
-    gen_occupancy <- fit$summary(variables=c(generated_vars))
+    # Need to select_idx the sites since it generates for all of them.
+    # The 2 index is the ppd for Z
+    gen_occupancy <- fit$summary(variables=generated_vars[2])$mean[select_idx]
     # Take the mean of the generated quantity for the posterior estimate
-    # TODO: Check if the magnitude of V makes sense
-    estimate_mat[r,1] <- design_criteria(criteria="brier", sim_occ=gen_occupancy$mean, obs_occ=selected_occ)
+    estimate_mat[r,1] <- design_criteria(criteria="brier", sim_occ=gen_occupancy, obs_occ=selected_occ)
   }
+  return(estimate_mat)
 }
+
+estimate_v_parallel <- function(combined_df, model, n_surveys, data_reps, m, sites, sampling_surface, 
+                       select_idx, select_sites, params, generated_vars, model_selection){
+  # For each rth dataset get the m randomly chosen sites
+  selected_occ <- combined_df[select_idx]
+  selected_data <- combined_df[sites+select_idx]
+  PO_data <- combined_df[(2*sites):ncol(combined_df)]
+  # Here I use the same X covariate for the presence-only data as used for the survey data. The difference is that
+  # the survey data here is a subset (select_sites) of the sites, whereas the presence only data 
+  # needs covariates for the whole grid to approximate the expected count in the entire region.
+  if (model_selection==3){
+    data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, X=select_sites$aux_x, Y=selected_data, PO=PO_data, 
+                         X_po=sampling_surface$aux_x, Z_po=sampling_surface$aux_z, model_diag=0)
+  }
+  else if(model_selection==1){
+    data_site_occ = list(n_surveys=n_surveys, n_sites=m, total_sites=sites, X=select_sites$aux_x, X_all=sampling_surface$aux_x, Y=selected_data)
+  }
+  else{
+    stop("No model selected")
+  }
+  # refresh=0 turns off messages except errors from stan
+  # quiet function silences stan output 
+  #fit <- quiet(model$sample(data=data_site_occ, seed=13, chains=1, 
+  #                          iter_sampling=1000, iter_warmup=100, refresh=0, show_messages=F))
+  fit <- model$sample(data=data_site_occ, seed=13, chains=1, 
+                            iter_sampling=1000, iter_warmup=100)
+  # Average estimate after R iterations through the datasets.
+  # Need to select_idx the sites since it generates for all of them.
+  # The 2 index is the ppd for Z
+  gen_occupancy <- fit$summary(variables=generated_vars[2])$mean[select_idx]
+  # Take the mean of the generated quantity for the posterior estimate
+  v_est <- design_criteria(criteria="brier", sim_occ=gen_occupancy, obs_occ=selected_occ)
+  return(v_est)
+}
+
 
 
 distance_func <- function(x, center_coord){

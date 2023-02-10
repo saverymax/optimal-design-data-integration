@@ -196,6 +196,7 @@ poisson_process_site_occupancy <- '
       // We can generate over all sites, instead of just those being used for PA
       vector[n_po_sites] g_theta_gen;
       array[n_po_sites] int occ_gen; 
+      // DO i NEED TO INCLUDE GAMMA
       g_theta_gen = 1 - exp(-exp(alpha + beta * X_po));
       // Posterior predictive distribution for occupancy
       occ_gen = bernoulli_rng(g_theta_gen);
