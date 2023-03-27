@@ -182,6 +182,7 @@ poisson_process_site_occupancy <- '
     }
     generated quantities{
       // Dont need these generated quantities at the moment
+      // model diag is model diagnosis but not implemented atm
       //if (model_diag){
       //vector[n_po_sites] lambda_rep;
       //vector[n_po_sites] b_rep;
@@ -196,9 +197,53 @@ poisson_process_site_occupancy <- '
       // We can generate over all sites, instead of just those being used for PA
       vector[n_po_sites] g_theta_gen;
       array[n_po_sites] int occ_gen; 
-      // DO i NEED TO INCLUDE GAMMA
+      // Note that we do not include gamma here because the 
+      // probability of occupancy is just P(N(C_i)>0) = G(alpha + beta X)
       g_theta_gen = 1 - exp(-exp(alpha + beta * X_po));
       // Posterior predictive distribution for occupancy
       occ_gen = bernoulli_rng(g_theta_gen);
   }
 '
+
+# This model is "intractably" specified because either we assume 
+# lambda is constant over all of the region or use covariate data
+# which is the same as the other models. Alternatively, we use a GP
+# but then it becomes a LGCP
+pp_site_occ_no_aux <- '
+  data{
+      int<lower = 1> n_surveys;
+      int<lower = 1> n_pa_sites;
+      int<lower = 1> n_po_sites;
+      array[n_pa_sites] int Y;
+      array[n_po_sites] int PO;
+    }
+    parameters{
+      real lambda;
+      real<lower = 0, upper = 1> p;
+    }
+    model{
+      // priors
+      target += gamma_lpdf(lambda | 1,1);
+      vector[n_pa_sites] g_theta;
+      target += poisson_log_lpmf(PO | lambda);
+      g_theta = 1 - exp(-exp(lambda));
+      for (i in 1:n_pa_sites) {
+        if (Y[i] > 0){
+          target += log(g_theta[i]*choose(n_surveys, Y[i])*(p^Y[i])*(1-p)^(n_surveys-Y[i]));
+        }
+        else{
+          // Compute mixture of no detection and no occupancy
+          target += log(g_theta[i]*(1-p)^(n_surveys) + (1 - g_theta[i]));
+        }
+      }
+    }
+    generated quantities{
+      // We can generate over all sites, instead of just those being used for PA
+      vector[n_po_sites] g_theta_gen;
+      array[n_po_sites] int occ_gen; 
+      g_theta_gen = 1 - exp(-exp(lambda));
+      // Posterior predictive distribution for occupancy
+      occ_gen = bernoulli_rng(g_theta_gen);
+  }
+'
+

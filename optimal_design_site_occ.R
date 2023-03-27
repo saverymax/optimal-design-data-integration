@@ -1,5 +1,5 @@
 ###########################
-# Sandbox script for optimal design in .qmd file
+# Analagous script for optimal design in .qmd file
 ########################## 
 
 rm(list = ls())
@@ -18,7 +18,7 @@ source("presence_only_functions.R")
 source("stan_models\\stan_site_occupancy_models.R")
 
 # R=1000 datasets for monte carlo approx
-exp_args <- list(model_selection=3, m=10, data_reps=1, random_starts=5, p_logging=F)
+exp_args <- list(model_selection=3, m=10, data_reps=100, random_starts=5, p_logging=F, mcmc_iter=500)
 fig_dir <- paste("figures\\optimal_design_model-", exp_args$model_selection,  "_m-", exp_args$m, "_r-", exp_args$data_reps, "\\", sep="")
 dir.create(fig_dir)
 data_reps <- exp_args$data_reps
@@ -129,13 +129,15 @@ print(p)
 
 model_path <- "stan_models\\poisson_process_prior_site_occupancy.stan"
 # We can experiment with these models in the exchange algorithm
-model_strings <- c(cloglog_site_occupancy, site_occupany_detection, poisson_process_site_occupancy)
+model_strings <- c(cloglog_site_occupancy, site_occupany_detection, poisson_process_site_occupancy, pp_site_occ_no_aux)
 model_selection <- exp_args$model_selection
 write(model_strings[model_selection], model_path)
 model <- cmdstan_model(model_path) 
 # These are the parameters to report, though this will be model dependent
 if (model_selection==3){
   params <- c('p', 'alpha', 'beta', 'gamma', 'delta')
+}else if (model_selection==4){
+  params <- c('p', 'lambda')
 }else{
   params <- c('p', 'alpha', 'beta')
 }
@@ -198,13 +200,16 @@ for (r_start in 1:random_starts){
         else if(model_selection==1){
           data_site_occ = list(n_surveys=n_surveys, n_sites=m, total_sites=sites, X=select_sites$aux_x, X_all=sampling_surface$aux_x, Y=selected_data)
         }
+        else if(model_selection==4){
+          data_site_occ = list(n_surveys=n_surveys, n_sites=m, total_sites=sites, Y=selected_data)
+        }
         else{
-          stop("No model selected")
+          stop("Other models implementation needs to be checked")
         }
         # refresh=0 turns off messages except errors from stan
         # quiet function silences stan output 
         fit <- quiet(model$sample(data=data_site_occ, seed=13, chains=1, 
-                                  iter_sampling=1000, iter_warmup=100, refresh=0, show_messages=F))
+                                  iter_sampling=exp_args$mcmc_iter, iter_warmup=100, refresh=0, show_messages=F))
         #fit <- model$sample(data=data_site_occ, seed=13, chains=1, 
         #                          iter_sampling=1000, iter_warmup=100)
         if (p_logging==T){
@@ -219,18 +224,18 @@ for (r_start in 1:random_starts){
           print(p_trace + facet_text(size = 15))
   
           plot_title <- ggtitle(paste("Posterior distributions, with means and 90% interval"))
-          p_post <- mcmc_areas(posterior,  prob = 0.9, point_est="mean", regex_pars = c("alpha", "beta")) + plot_title
+          p_post <- mcmc_areas(posterior,  prob = 0.9, point_est="mean", regex_pars = params) + plot_title
           print(p_post)
           
-          if(model_selection==3){
-            plot_title <- ggtitle(paste("Posterior distributions, with means and 90% interval"))
-            p_post <- mcmc_areas(posterior,  prob = 0.9, point_est="mean", regex_pars = c("gamma", "delta")) + plot_title
-            print(p_post)
-          }
+          #if(model_selection==3){
+          #  plot_title <- ggtitle(paste("Posterior distributions, with means and 90% interval"))
+          #  p_post <- mcmc_areas(posterior,  prob = 0.9, point_est="mean", regex_pars = c("gamma", "delta")) + plot_title
+          #  print(p_post)
+          #}
           
-          plot_title <- ggtitle(paste("Posterior distribution of detection probability, mean and 90% interval"))
-          p_post <- mcmc_areas(posterior,  prob = 0.9, point_est="mean", pars = c("p")) + plot_title
-          print(p_post)
+          #plot_title <- ggtitle(paste("Posterior distribution of detection probability, mean and 90% interval"))
+          #p_post <- mcmc_areas(posterior,  prob = 0.9, point_est="mean", pars = c("p")) + plot_title
+          #print(p_post)
           
           # Check issues with divergences
           color_scheme_set("darkgray")
@@ -341,7 +346,7 @@ for(i in 1:random_starts){
   x_concat <- c(x_concat, 1:length(l_vec))
   rep_labels <- c(rep_labels, l_vec)
 }
-length(rep_labels)
+  length(rep_labels)
 length(v_concat)
 v_df <- data.frame(x=x_concat, v=v_concat, r=rep_labels)
 fig_name <- paste(fig_dir, "exchange_convergence.png", sep="")
@@ -359,4 +364,5 @@ for(rs in 1:random_starts){
 }
 
 print("Avg V(D)")
-sum(best_v) / random_starts
+print(sum(best_v) / random_starts)
+

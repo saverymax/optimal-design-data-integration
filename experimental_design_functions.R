@@ -289,10 +289,6 @@ generate_data <- function(data_reps, surface_data, corr_matrix, p_0, b_0, b_1, s
   Y_detection <- matrix(nrow=data_reps, ncol=sites)
   theta_reps <- matrix(nrow=data_reps, ncol=sites)
   for (r in 1:data_reps){
-    # There was an error in the earlier code
-    # This models spatial dependence in random effects for each site, which is why we use rnorm
-    # In the strict probit model, we can just use X'B directly, ie pnorm(XB)
-    
     # Equivalent way to induce correlation
     #R <- t(chol(corr_matrix)) 
     #theta <- b_0 + sampling_surface$aux*b_1 + R %*% rnorm(sites)
