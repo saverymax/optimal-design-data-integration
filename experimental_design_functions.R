@@ -187,6 +187,7 @@ exchange_coordinates_deterministic <- function(select_id, current_site, cur_site
     # Get the neighbors for the selected site
     site_neighbors <- n_neighbors[current_site,]
     # Randomly sample 1 new neighbor
+    # TODO: In the deterministic version, there will be no sampling
     new_neighbor_id <- sample(1:l, 1)
     new_neighbor <- site_neighbors[new_neighbor_id]
     # Make sure the new neighbor is not already in the list of current ids, to avoid selecting the same site twice
@@ -231,6 +232,34 @@ specify_corr <- function(surface_data){
   return(corr)
 }
 
+get_sampling_surface_simple <- function(k){
+  # Define the window of interest
+  dim <- c(k, k)
+  win <- owin(c(0,dim[1]), c(0,dim[2]))
+  
+  # set number of pixels to simulate an environmental covariate
+  spatstat.options(npixel=c(dim[1],dim[2]))
+  
+  y0 <- seq(win$yrange[1], win$yrange[2],
+            length=spatstat.options()$npixel[2])
+  x0 <- seq(win$xrange[1], win$xrange[2],
+            length=spatstat.options()$npixel[1])
+  multiplier <- 1/dim[2]
+  # Get coordinate combinations to make a dataframe,
+  # in the same format as other data gen functions
+  surface_data <- expand.grid(x0, y0)
+  names(surface_data) <- c("x", "y")
+  
+  aux_x <- outer(x0,y0, function (x,y) multiplier*y + 0*x)
+  aux_z <- outer(x0,y0, function (x,y) 0*y + multiplier*x)
+  plot(im(aux_x))
+  plot(im(aux_z))
+  surface_data$aux_x <- c(t(aux_x))
+  surface_data$aux_z <- c(t(aux_z))
+  
+  return(surface_data)
+}
+
 get_sampling_surface <- function(k){
   # Function generates X and correlated Z auxiliary data
   x <- seq(1:k)
@@ -258,10 +287,8 @@ get_sampling_surface <- function(k){
   aux_z <- rnorm(k*k, 0, 1)
   X <- cbind(sampling_grid$aux_x, aux_z)
   cor_X <- X %*% R 
-  #sampling_grid$aux_x[1:5]
   print("Correlation between X and Z")
   print(cor(cor_X))
-  #cor_X[1:5, 1]
   sampling_grid$aux_z <- cor_X[,2]
   
   # Now generate the plot of auxiliary data for the grid
@@ -283,7 +310,7 @@ get_sampling_surface <- function(k){
   return(sampling_grid)
 }
 
-generate_data <- function(data_reps, surface_data, corr_matrix, p_0, b_0, b_1, sigma, n, sites, link){
+generate_data_so <- function(data_reps, surface_data, corr_matrix, p_0, b_0, b_1, sigma, n, sites, link){
   # Generate some random covariate data that will be used to model theta
   occupancy_maps <- matrix(nrow=data_reps, ncol=sites)
   Y_detection <- matrix(nrow=data_reps, ncol=sites)

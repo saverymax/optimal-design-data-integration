@@ -12,16 +12,22 @@ library(bayesplot)
 library(dplyr)
 library(tidyr)
 library(reshape2)
+library(spatstat)
 
 source("experimental_design_functions.R")
 source("presence_only_functions.R")
 source("stan_models\\stan_site_occupancy_models.R")
 
 # R=1000 datasets for monte carlo approx
-exp_args <- list(model_selection=3, m=10, data_reps=100, random_starts=5, p_logging=F, mcmc_iter=500)
+exp_args <- list(model_selection=1, m=10, data_reps=100, random_starts=5, p_logging=F, 
+                 mcmc_iter=10, intensity_func="simple")
 fig_dir <- paste("figures\\optimal_design_model-", exp_args$model_selection,  "_m-", exp_args$m, "_r-", exp_args$data_reps, "\\", sep="")
 dir.create(fig_dir)
 data_reps <- exp_args$data_reps
+# Area for whole space, which allows us to set area for sites based on number of sites.
+area_D <- 100
+# For generating data according to GP
+gp_bool <- F
 # k is one side of grid
 k <- 20
 sites <- k^2
@@ -43,19 +49,23 @@ m <- exp_args$m
 # Based on the size of grid get the auxiliary data and coordinates
 # Because these don't really depend on any random variables and just location 
 # in the grid, there will be one fixed dataset throughout the optimization
-sampling_surface <- get_sampling_surface(k)
-# Filter for only a quarter of the grid.
-# If we filter, we need to change the total sites as well
-sites <- sites/4
-stopifnot(sites>m)
-sampling_surface <- sampling_surface %>% dplyr::filter(x<11, y<11)
+if (exp_args$intensity_func == "simple"){
+  sampling_surface <- get_sampling_surface_simple(k)
+}else{
+  sampling_surface <- get_sampling_surface(k)
+  # Filter for only a quarter of the grid.
+  # If we filter, we need to change the total sites as well
+  sites <- sites/4
+  stopifnot(sites>m)
+  sampling_surface <- sampling_surface %>% dplyr::filter(x<11, y<11)
+  }
 sampling_surface
 # Next, we use this data to generate the rest of the datasets
 # The data generating function will sample R occupancy maps|params
 # and then R complete datasets|occupancy maps
 corr_matrix <- specify_corr(sampling_surface[,1:2])
 link_func <- "cloglog"
-r_survey_data <- generate_data(data_reps, sampling_surface, corr_matrix, p_0, alpha, beta, sigma, n_surveys, sites, link=link_func)
+r_survey_data <- generate_data_so(data_reps, sampling_surface, corr_matrix, p_0, alpha, beta, sigma, n_surveys, sites, link=link_func)
 r_survey_data$occupancy[1,]
 r_survey_data$Y[1,]
 r_survey_data$theta[1,]
@@ -64,7 +74,7 @@ r_survey_data$theta[1,]
 params <- list(alpha=alpha, beta=beta, gamma=gamma, delta=delta)
 # Provide occupancy maps and number of data reps, as well as params and sampling surface, to generate pp data.
 #r_po_data <- generate_ppp_data_r(sampling_surface, params, sites, r_survey_data$occupancy, data_reps)
-r_po_data <- generate_ppp_data_r(sampling_surface, params, sites, data_reps)
+r_po_data <- generate_ppp_data_r(sampling_surface, params, sites, data_reps, corr_matrix, gp_bool, area_D)
 Y_positive_indices <- which(r_po_data$Y>0)
 # This is the data at which there are counts > 0
 r_po_data$Y[Y_positive_indices]
@@ -174,7 +184,7 @@ for (r_start in 1:random_starts){
   convergence_cond <- FALSE
   exchange_iter <- 0
   v_vec <- c()
-  while (convergence_cond==FALSE){
+  while ((convergence_cond==FALSE) | (exchange_iter<20)){
     exchange_iter <- exchange_iter + 1
     print(paste("New exchange iteration: ", exchange_iter))
     # Data structure for each score estimate
