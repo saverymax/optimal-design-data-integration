@@ -40,7 +40,7 @@ design_criteria <- function(criteria, sim_occ, obs_occ){
 }
 
 estimate_v <- function(model, n_surveys, data_reps, m, sites, sampling_surface, 
-                       select_idx, select_sites, r_survey_data, r_po_data, 
+                       select_idx, select_sites, r_survey_data, r_po_data, r,
                        p_logging, params, generated_vars, model_selection){
   estimate_mat <- matrix(nrow=data_reps, ncol=1)
   for (r in 1:data_reps){
@@ -57,18 +57,22 @@ estimate_v <- function(model, n_surveys, data_reps, m, sites, sampling_surface,
     else if(model_selection==1){
       data_site_occ = list(n_surveys=n_surveys, n_sites=m, total_sites=sites, X=select_sites$aux_x, X_all=sampling_surface$aux_x, Y=selected_data)
     }
+    else if(model_selection==4){
+      data_site_occ = list(n_surveys=n_surveys, n_sites=m, total_sites=sites, Y=selected_data)
+    }
     else{
-      stop("No model selected")
+      stop("Other models implementation needs to be checked")
     }
     # refresh=0 turns off messages except errors from stan
     # quiet function silences stan output 
     fit <- quiet(model$sample(data=data_site_occ, seed=13, chains=1, 
-                              iter_sampling=1000, iter_warmup=100, refresh=0, show_messages=F))
+                              iter_sampling=exp_args$mcmc_iter, iter_warmup=100, refresh=0, show_messages=F))
     #fit <- model$sample(data=data_site_occ, seed=13, chains=1, 
     #                          iter_sampling=1000, iter_warmup=100)
     if (p_logging==T){
       print("Logging posterior")
       posterior <- fit$draws()
+      # TODO: Why is estimate for alpha now rather large??
       print(fit$summary(variables=params))
       
       color_scheme_set("mix-blue-pink")
@@ -77,18 +81,18 @@ estimate_v <- function(model, n_surveys, data_reps, m, sites, sampling_surface,
       print(p_trace + facet_text(size = 15))
       
       plot_title <- ggtitle(paste("Posterior distributions, with means and 90% interval"))
-      p_post <- mcmc_areas(posterior,  prob = 0.9, point_est="mean", regex_pars = c("alpha", "beta")) + plot_title
+      p_post <- mcmc_areas(posterior,  prob = 0.9, point_est="mean", regex_pars = params) + plot_title
       print(p_post)
       
-      if(model_selection==3){
-        plot_title <- ggtitle(paste("Posterior distributions, with means and 90% interval"))
-        p_post <- mcmc_areas(posterior,  prob = 0.9, point_est="mean", regex_pars = c("gamma", "delta")) + plot_title
-        print(p_post)
-      }
+      #if(model_selection==3){
+      #  plot_title <- ggtitle(paste("Posterior distributions, with means and 90% interval"))
+      #  p_post <- mcmc_areas(posterior,  prob = 0.9, point_est="mean", regex_pars = c("gamma", "delta")) + plot_title
+      #  print(p_post)
+      #}
       
-      plot_title <- ggtitle(paste("Posterior distribution of detection probability, mean and 90% interval"))
-      p_post <- mcmc_areas(posterior,  prob = 0.9, point_est="mean", pars = c("p")) + plot_title
-      print(p_post)
+      #plot_title <- ggtitle(paste("Posterior distribution of detection probability, mean and 90% interval"))
+      #p_post <- mcmc_areas(posterior,  prob = 0.9, point_est="mean", pars = c("p")) + plot_title
+      #print(p_post)
       
       # Check issues with divergences
       color_scheme_set("darkgray")
@@ -177,32 +181,15 @@ get_neighbors <- function(surface, l){
   return(nearest_neighbors)
 }
 
-exchange_coordinates_deterministic <- function(select_id, current_site, cur_site_index, n_neighbors, l){
-  # In the exchange algorithm, we pick a site, find a neighbor close to that site,
+exchange_coordinates_deterministic <- function(select_id, cur_site_index, new_neighbor){
+  # In the deterministic exchange, we pick a site, iterate through its neighbors
   # and then switch that site with n>0 to n=0 and the other site to n>0, for 
-  # whatever value of n we are using.
-  # Make sure new neighbors are not in current list.
-  new_site <- F
-  while (new_site==F){
-    # Get the neighbors for the selected site
-    site_neighbors <- n_neighbors[current_site,]
-    # Randomly sample 1 new neighbor
-    # TODO: In the deterministic version, there will be no sampling
-    new_neighbor_id <- sample(1:l, 1)
-    new_neighbor <- site_neighbors[new_neighbor_id]
-    # Make sure the new neighbor is not already in the list of current ids, to avoid selecting the same site twice
-    if (all(new_neighbor!=select_id)){
-      new_site <- T
-    }
-  }
-  # Assertion to check that new neighbor is not in any of previous ids
-  stopifnot(all(new_neighbor!=select_id))
-  # Replace old site id with new site id
+  # each neighbors
   select_id[cur_site_index] <- new_neighbor
   return(select_id)
 }
 
-exchange_coordinates <- function(select_id, current_site, cur_site_index, n_neighbors, l){
+exchange_coordinates_stochastic <- function(select_id, current_site, cur_site_index, n_neighbors, l){
   # In the exchange algorithm, we pick a site, find a neighbor close to that site,
   # and then switch that site with n>0 to n=0 and the other site to n>0, for 
   # whatever value of n we are using.
@@ -336,23 +323,27 @@ generate_data_so <- function(data_reps, surface_data, corr_matrix, p_0, b_0, b_1
 plot_sites <- function(sampling_surface, select_idx, title){
   p <- ggplot(sampling_surface, aes(x, y, fill=aux_x)) + 
     geom_tile() +
-    geom_point(data=sampling_surface[select_idx,], aes(x=x, y=y), colour = "white", size = 3) +
+    geom_point(data=sampling_surface[select_idx,], aes(x=x, y=y), colour = "white", size = 1.5) +
     scale_fill_viridis(discrete=FALSE) +
-    ggtitle(title)
+    ggtitle(title) + 
+    theme(text=element_text(size=5)) + 
+    coord_fixed() 
   #print(p)
   return(p)
 }
 
-plot_sites_vs_best <- function(sampling_surface, select_idx, best_select_idx, title){
+plot_sites_vs_best <- function(sampling_surface, current_site, select_idx, best_select_idx, title){
   # Plot current set of sites compared to the best sites. 
-  # Note that best should always be pink
+  # Best will always be pink
   p <- ggplot(sampling_surface, aes(x, y, fill=aux_x)) + 
     geom_tile() +
-    geom_point(data=sampling_surface[select_idx,], aes(x=x, y=y), colour = "white", size = 3) +
-    geom_point(data=sampling_surface[best_select_idx,], aes(x=x, y=y), colour = "hotpink1", size = 2, alpha=1) +
+    geom_point(data=sampling_surface[select_idx,], aes(x=x, y=y), colour = "white", size = 1.5) +
+    geom_point(data=sampling_surface[best_select_idx,], aes(x=x, y=y), colour = "hotpink1", size = 1, alpha=1) +
+    geom_point(data=sampling_surface[current_site,], aes(x=x, y=y), colour = "black", size = 0.5) +
     scale_fill_viridis(discrete=FALSE) +
-    ggtitle(title)
-  #print(p)
+    ggtitle(title) + 
+    theme(text=element_text(size=5)) + 
+    coord_fixed() 
   return(p)
 }
-
+  
