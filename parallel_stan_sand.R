@@ -11,6 +11,7 @@ library(bayesplot)
 library(dplyr)
 library(tidyr)
 library(reshape2)
+library(parallel)
 
 source("experimental_design_functions.R")
 source("presence_only_functions.R")

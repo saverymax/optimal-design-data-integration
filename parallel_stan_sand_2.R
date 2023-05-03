@@ -1,6 +1,6 @@
-##################################################################
-# Script for parallel processing test
-##################################################################
+###########################
+# Parallel v estimation with stan
+########################## 
 
 rm(list = ls())
 
@@ -12,23 +12,31 @@ library(bayesplot)
 library(dplyr)
 library(tidyr)
 library(reshape2)
+library(spatstat)
+library(parallel)
 
 source("experimental_design_functions.R")
 source("presence_only_functions.R")
 source("stan_models\\stan_site_occupancy_models.R")
 
 n_cores <- detectCores()
+
 # R=1000 datasets for monte carlo approx
-exp_args <- list(model_selection=3, m=10, data_reps=5, random_starts=5, p_logging=F)
+exp_args <- list(model_selection=1, m=5, data_reps=10, random_starts=3, p_logging=F, 
+                 mcmc_iter=1000, intensity_func="donut")
 fig_dir <- paste("figures\\optimal_design_model-", exp_args$model_selection,  "_m-", exp_args$m, "_r-", exp_args$data_reps, "\\", sep="")
 dir.create(fig_dir)
 data_reps <- exp_args$data_reps
+# Area for whole space, which allows us to set area for sites based on number of sites.
+area_D <- 100
+# For generating data according to GP
+gp_bool <- F
 # k is one side of grid
 k <- 20
 sites <- k^2
 alpha <- -2 
 beta <- 2
-gamma <- -4
+gamma <- -2
 delta <- 0.5
 p_0 <- 0.7
 #b_0 <- 0
@@ -44,19 +52,23 @@ m <- exp_args$m
 # Based on the size of grid get the auxiliary data and coordinates
 # Because these don't really depend on any random variables and just location 
 # in the grid, there will be one fixed dataset throughout the optimization
-sampling_surface <- get_sampling_surface(k)
-# Filter for only a quarter of the grid.
-# If we filter, we need to change the total sites as well
-sites <- sites/4
-stopifnot(sites>m)
-sampling_surface <- sampling_surface %>% dplyr::filter(x<11, y<11)
+if (exp_args$intensity_func == "simple"){
+  sampling_surface <- get_sampling_surface_simple(k)
+}else{
+  sampling_surface <- get_sampling_surface(k)
+  # Filter for only a quarter of the grid.
+  # If we filter, we need to change the total sites as well
+  sites <- sites/4
+  stopifnot(sites>m)
+  sampling_surface <- sampling_surface %>% dplyr::filter(x<11, y<11)
+}
 sampling_surface
 # Next, we use this data to generate the rest of the datasets
 # The data generating function will sample R occupancy maps|params
 # and then R complete datasets|occupancy maps
 corr_matrix <- specify_corr(sampling_surface[,1:2])
 link_func <- "cloglog"
-r_survey_data <- generate_data(data_reps, sampling_surface, corr_matrix, p_0, alpha, beta, sigma, n_surveys, sites, link=link_func)
+r_survey_data <- generate_data_so(data_reps, sampling_surface, corr_matrix, p_0, alpha, beta, sigma, n_surveys, sites, link=link_func)
 r_survey_data$occupancy[1,]
 r_survey_data$Y[1,]
 r_survey_data$theta[1,]
@@ -65,7 +77,7 @@ r_survey_data$theta[1,]
 params <- list(alpha=alpha, beta=beta, gamma=gamma, delta=delta)
 # Provide occupancy maps and number of data reps, as well as params and sampling surface, to generate pp data.
 #r_po_data <- generate_ppp_data_r(sampling_surface, params, sites, r_survey_data$occupancy, data_reps)
-r_po_data <- generate_ppp_data_r(sampling_surface, params, sites, data_reps)
+r_po_data <- generate_ppp_data_r(sampling_surface, params, sites, data_reps, corr_matrix, gp_bool, area_D)
 Y_positive_indices <- which(r_po_data$Y>0)
 # This is the data at which there are counts > 0
 r_po_data$Y[Y_positive_indices]
@@ -74,7 +86,7 @@ r_po_data$Y[Y_positive_indices]
 
 # For the coordinate exchange algorithm, we will need to precompute the nearest neighbors.
 # I take a naive approach here of choosing the top l neighbors
-l <- 8
+l <- 4
 nearest_neighbors <- get_neighbors(sampling_surface, l)
 dim(nearest_neighbors)
 nearest_neighbors
@@ -130,13 +142,15 @@ print(p)
 
 model_path <- "stan_models\\poisson_process_prior_site_occupancy.stan"
 # We can experiment with these models in the exchange algorithm
-model_strings <- c(cloglog_site_occupancy, site_occupany_detection, poisson_process_site_occupancy)
+model_strings <- c(cloglog_site_occupancy, site_occupany_detection, poisson_process_site_occupancy, pp_site_occ_no_aux)
 model_selection <- exp_args$model_selection
 write(model_strings[model_selection], model_path)
 model <- cmdstan_model(model_path) 
 # These are the parameters to report, though this will be model dependent
 if (model_selection==3){
   params <- c('p', 'alpha', 'beta', 'gamma', 'delta')
+}else if (model_selection==4){
+  params <- c('p', 'lambda')
 }else{
   params <- c('p', 'alpha', 'beta')
 }
@@ -162,101 +176,123 @@ for (r_start in 1:random_starts){
   # from the sampling surface, which includes the auxiliary information.
   # These sites will have n_i = n, the others will have n_i = 0
   # Only sites with n_i=n will contribute to likelihood for the site-occupancy model.
-  select_idx <- sample(1:sites, m, replace=F)
-  select_idx
+  site_idx <- sample(1:sites, m, replace=F)
+  site_idx
   # Initialize for exchange algorithm
-  best_select_idx <- select_idx
-  select_sites <- sampling_surface[select_idx,]
+  best_neighbor_idx <- site_idx
+  select_sites <- sampling_surface[site_idx,]
   select_sites
   # Convergence condition will be met where full iteration through all sampled sites results in no change
   # in sites. ie no changes in sites can improve criterion
   convergence_cond <- FALSE
   exchange_iter <- 0
   v_vec <- c()
-  while (convergence_cond==FALSE){
+  # Compute v for initial design
+  #estimate_mat <- estimate_v(model, n_surveys, data_reps, m, sites, sampling_surface, 
+  #                           site_idx, select_sites, r_survey_data, r_po_data, r,
+  #                           p_logging, params, generated_vars, model_selection)
+
+  clust <- makeCluster(n_cores)
+  # Generate estimate matrix, with V estimate for each data rep
+  combined_df <- cbind(r_survey_data$occupancy, r_survey_data$Y, r_po_data$Y)
+  dim(combined_df)
+  # TODO: Get this to work!!!!
+  estimate_mat <- parApply(clust, combined_df, 1, FUN=estimate_v_parallel, model, n_surveys, data_reps, m, sites, sampling_surface, 
+                             site_idx, select_sites, r_survey_data, r_po_data, r,
+                             p_logging, params, generated_vars, model_selection)
+  # Once the posterior is computed on each of R datasets, find the average score:
+  new_v_est <- sum(estimate_mat) / data_reps
+  print("Design score from most recent exchange")
+  print(new_v_est)
+  v_vec <- c(v_vec, new_v_est)
+  current_v_est <- new_v_est
+  print("Initial row ids")
+  print(site_idx)
+  print("Initial coordinates")
+  print(sampling_surface[site_idx,1:2])
+  print("Initial design score")
+  print(new_v_est)
+  title <- paste("Inital spatial design: v=", round(new_v_est, 10), sep="")
+  p <- plot_sites(sampling_surface, site_idx, title)
+  fig_name <- paste(fig_dir, "initial_design.png", sep="")
+  ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm")
+  
+  while ((convergence_cond==FALSE) & (exchange_iter<20)){
     exchange_iter <- exchange_iter + 1
     print(paste("New exchange iteration: ", exchange_iter))
     # Data structure for each score estimate
     # Then compute the posterior based on those sites and generated data, for each r dataset
     # We iterate through the sites, computing the estimate of $V(D)$ for each so that we explore the effect of each site on the design
-    # It is also possible to iterate through all neighbors of the site as well
-    for (s in 1:length(select_idx)){
+    for (s in 1:length(site_idx)){
       print(paste("ex iter: ", exchange_iter, ", current site index: ", s, sep=""))
-      current_site <- select_idx[s]
+      current_site <- site_idx[s]
       print(paste("current site: ", current_site, sep=""))
-      clust <- makeCluster(n_cores)
-      # Generate estimate matrix, with V estimate for each data rep
-      combined_df <- cbind(r_survey_data$occupancy, r_survey_data$Y, r_po_data$Y)
-      dim(combined_df)
-      parApply(clust, r_survey_data$occupancy, 1, FUN=mean)
-      # TODO: Getting stan to work here?
-      estimate_mat <- parApply(clust, combined_df, 1, FUN=estimate_v_parallel, model, n_surveys, data_reps, m, sites, sampling_surface, 
-                       select_idx, select_sites, params, generated_vars, model_selection)
-      # Nice functional version of this, but I need to put in form for apply?
-      estimate_mat <- estimate_v(model, n_surveys, data_reps, m, sites, sampling_surface, 
-                       select_idx, select_sites, r_survey_data, r_po_data, 
-                       p_logging, params, generated_vars, model_selection)
-      # Once the posterior is computed on each of R datasets, find the average score:
-      new_v_est <- sum(estimate_mat) / data_reps
-      print("Design score from most recent exchange")
-      print(new_v_est)
-      v_vec <- c(v_vec, new_v_est)
-      
-      # In the first exchange iteration and for the first site, save the first V(D) as the best
-      if ((exchange_iter==1)&(s==1)){
-        current_v_est <- new_v_est
-        print("Initial row ids")
-        print(select_idx)
-        print("Initial coordinates")
-        print(sampling_surface[best_select_idx,1:2])
-        print("Initial design score")
-        print(new_v_est)
-        title <- paste("Inital spatial design: v=", round(new_v_est, 10), sep="")
-        p <- plot_sites(sampling_surface, best_select_idx, title)
-      } 
-      else if (new_v_est < current_v_est){
-        current_v_est <- new_v_est
-        title <- paste("New optimal spatial design: v=", round(new_v_est, 10), sep="")
-        # Plot the new best site compared to the previous selection, but need to reverse arguments to function
-        # Since the best one is now old and the select will is now the best
-        p <- plot_sites_vs_best(sampling_surface, best_select_idx, select_idx, title)
-        # Then set new best indices
-        best_select_idx <- select_idx
-        print("New optimal row ids")
-        print(best_select_idx)
-        print("New coordinates")
-        print(sampling_surface[best_select_idx,1:2])
-        print("New optimal design score")
-        print(current_v_est)
+      neighbor_set <- nearest_neighbors[current_site,]
+      n_count <- 0
+      # We first iterate through the neighbors of each site, and compute V for each exchange. 
+      # The inital estimate will be for our initial design.
+      # We set the current best set of indices
+      #best_neighbor_idx <- site_idx
+      for(nn in neighbor_set){
+        n_count <- n_count + 1
+        # Select new data using the neighbors (switch out local points)
+        neighbor_idx <- exchange_coordinates_deterministic(best_neighbor_idx, s, nn)
+        select_sites <- sampling_surface[neighbor_idx,] 
+        estimate_mat <- estimate_v(model, n_surveys, data_reps, m, sites, sampling_surface, 
+                                   neighbor_idx, select_sites, r_survey_data, r_po_data, r,
+                                   p_logging, params, generated_vars, model_selection)
+        # Once the posterior is computed on each of R datasets, find the average score:
+        new_v_est <- sum(estimate_mat) / data_reps
+        # TODO: Write this to file
+        #print("Design score from most recent exchange")
+        #print(new_v_est)
+        v_vec <- c(v_vec, new_v_est)
+        
+        if (new_v_est < current_v_est){
+           current_v_est <- new_v_est
+           title <- paste("New optimal spatial design: v=", round(new_v_est, 10), sep="")
+           # Plot the new best site compared to the previous selection, but need to reverse arguments to function
+           p <- plot_sites_vs_best(sampling_surface, current_site, best_neighbor_idx, neighbor_idx, title)
+           # Then set new best indices
+           #site_idx <- select_idx
+           best_neighbor_idx <- neighbor_idx
+           print("New optimal row ids")
+           print(best_neighbor_idx) 
+           print("New coordinates")
+           print(sampling_surface[best_neighbor_idx,1:2])
+           print("New optimal design score")
+           print(current_v_est)
+        }
+        else{
+          title <- paste("Non-optimal spatial design: v=", round(new_v_est, 10), 
+                         "\nvs current optimal design: v=", round(current_v_est, 10), sep="")
+          #print("No change in optimal design")
+          p <- plot_sites_vs_best(sampling_surface, current_site, neighbor_idx, best_neighbor_idx, title)
+        }
+        fig_name <- paste(fig_dir, "site_locs_rand-start-", r_start, "_ex-iter_", 
+                          exchange_iter, "_site-iter-", s, "_nn-iter", n_count,".png", sep="")
+        # TODO: Decrease legend size
+        ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm")
+        # Then go to the next neighbor or site
       }
-      else{
-        title <- paste("Non-optimal spatial design: v=", round(new_v_est, 10), 
-                       ", vs current optimal design: v=", round(current_v_est, 10), sep="")
-        print("No change in optimal design")
-        p <- plot_sites_vs_best(sampling_surface, select_idx, best_select_idx, title)
-      }
-      fig_name <- paste(fig_dir, "site_locs_rand-start-", r_start, "_ex-iter_", exchange_iter, "_site-iter-", s, ".png", sep="")
-      ggsave(fig_name, plot=p, dpi=300)
-      # Select new data using the best coordinates (switch out local points)
-      # TODO: Compare to deterministic exchange
-      select_idx <- exchange_coordinates(best_select_idx, current_site, s, nearest_neighbors, l)
-      select_sites <- sampling_surface[select_idx,] 
-      # Then go to the next site
+      # Set design to best from iteration through neighbors of one site
+      # If there is no change from any neighbors, site_idx will not change
+      site_idx <- best_neighbor_idx
     }
     # If after a complete iteration through all the sites, the best sites haven't changed
     # then we can call that convergence
     # If it's the first iteration we need to initialize the best sites
     if(exchange_iter==1){
-      best_iter_idx <- best_select_idx
+      best_iter_idx <- site_idx
     }
-    else if(all(best_iter_idx==best_select_idx)){
+    else if(all(best_iter_idx==site_idx)){
       convergence_cond <- TRUE
     }
     else{
       print("Previous best sites and current best sites")
       print(best_iter_idx)
-      print(best_select_idx)
-      best_iter_idx <- best_select_idx
+      print(site_idx)
+      best_iter_idx <- site_idx
     }
   }
   v_list[[r_start]] <- v_vec
@@ -281,7 +317,7 @@ for(i in 1:random_starts){
   x_concat <- c(x_concat, 1:length(l_vec))
   rep_labels <- c(rep_labels, l_vec)
 }
-length(rep_labels)
+  length(rep_labels)
 length(v_concat)
 v_df <- data.frame(x=x_concat, v=v_concat, r=rep_labels)
 fig_name <- paste(fig_dir, "exchange_convergence.png", sep="")
@@ -289,14 +325,15 @@ p <- ggplot(data=v_df, aes(x=x, y=v, colour=r)) +
   geom_line() +
   theme_bw()
 print(p)
-ggsave(fig_name, plot=p, dpi = 300)
+ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm")
 
 for(rs in 1:random_starts){
   title <- paste("Optimal sites from random init ", rs, " with V(D)=", best_v[rs], sep="")
   p <- plot_sites(sampling_surface, best_site_mat[rs, ], title) 
   fig_name <- paste(fig_dir, "optimal_sites_random_start-", rs, ".png", sep="")
-  ggsave(fig_name, plot=p, dpi = 300)
+  ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm")
 }
 
 print("Avg V(D)")
-sum(best_v) / random_starts
+print(sum(best_v) / random_starts)
+
