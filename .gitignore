@@ -1,4 +1,5 @@
 figures/
+stan_models/*.exe
 optimal_design_site_occ_files/
 .Rproj.user
 .Rhistory
