@@ -13,14 +13,15 @@ library(dplyr)
 library(tidyr)
 library(reshape2)
 library(spatstat)
+library(parallel)
 
 source("experimental_design_functions.R")
 source("presence_only_functions.R")
 source("stan_models\\stan_site_occupancy_models.R")
 
 # R=1000 datasets for monte carlo approx
-exp_args <- list(model_selection=1, m=5, data_reps=10, random_starts=3, p_logging=F, 
-                 mcmc_iter=1000, intensity_func="donut")
+exp_args <- list(model_selection=3, m=5, data_reps=8, random_starts=3, p_logging=F, 
+                 mcmc_iter=1000, intensity_func="simple", v_parallel=T, exch_iter=20)
 fig_dir <- paste("figures\\optimal_design_model-", exp_args$model_selection,  "_m-", exp_args$m, "_r-", exp_args$data_reps, "\\", sep="")
 dir.create(fig_dir)
 data_reps <- exp_args$data_reps
@@ -165,6 +166,14 @@ v_list
 best_v <- vector(mode="numeric", length=random_starts)
 best_site_mat <- matrix(nrow=random_starts, ncol=m)
 best_site_mat
+# Initiate parallel processing if specified
+if (exp_args$v_parallel==T){
+  n_cores <- detectCores()
+  print(paste("Using parallel processing with", n_cores, "cores"))
+  clust <- makeCluster(n_cores)
+  # Export the environment to the cluster
+  clusterExport(clust, varlist=c("design_criteria", "brier_score_stan"), envir=environment())
+}
 # Start timer
 start_time <- Sys.time()
 for (r_start in 1:random_starts){
@@ -185,12 +194,21 @@ for (r_start in 1:random_starts){
   exchange_iter <- 0
   v_vec <- c()
   # Compute v for initial design
-  estimate_mat <- estimate_v(model, n_surveys, data_reps, m, sites, sampling_surface, 
-                             site_idx, select_sites, r_survey_data, r_po_data, r,
-                             p_logging, params, generated_vars, model_selection)
+  if (exp_args$v_parallel==T){
+    combined_df <- cbind(r_survey_data$occupancy, r_survey_data$Y, r_po_data$Y)
+    estimate_vec <- parApply(clust, combined_df, 1, FUN=estimate_v_parallel, model, n_surveys, m, sites, sampling_surface, 
+                                 site_idx, select_sites, params, generated_vars, model_selection, exp_args$mcmc_iter)
+    # Compatible format with non-parallel v
+    estimate_mat <- matrix(estimate_vec, nrow=data_reps, ncol=1)
+  }
+  else{
+    estimate_mat <- estimate_v(model, n_surveys, data_reps, m, sites, sampling_surface, 
+                               site_idx, select_sites, r_survey_data, r_po_data, r,
+                               p_logging, params, generated_vars, model_selection, exp_args$mcmc_iter)
+  }
   # Once the posterior is computed on each of R datasets, find the average score:
   new_v_est <- sum(estimate_mat) / data_reps
-  print("Design score from most recent exchange")
+  print("Design score from most initial exchange")
   print(new_v_est)
   v_vec <- c(v_vec, new_v_est)
   current_v_est <- new_v_est
@@ -205,7 +223,7 @@ for (r_start in 1:random_starts){
   fig_name <- paste(fig_dir, "initial_design.png", sep="")
   ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm")
   
-  while ((convergence_cond==FALSE) & (exchange_iter<20)){
+  while ((convergence_cond==FALSE) & (exchange_iter<exp_args$exch_iter)){
     exchange_iter <- exchange_iter + 1
     print(paste("New exchange iteration: ", exchange_iter))
     # Data structure for each score estimate
@@ -226,9 +244,18 @@ for (r_start in 1:random_starts){
         # Select new data using the neighbors (switch out local points)
         neighbor_idx <- exchange_coordinates_deterministic(best_neighbor_idx, s, nn)
         select_sites <- sampling_surface[neighbor_idx,] 
-        estimate_mat <- estimate_v(model, n_surveys, data_reps, m, sites, sampling_surface, 
-                                   neighbor_idx, select_sites, r_survey_data, r_po_data, r,
-                                   p_logging, params, generated_vars, model_selection)
+        if (exp_args$v_parallel==T){
+          combined_df <- cbind(r_survey_data$occupancy, r_survey_data$Y, r_po_data$Y)
+          estimate_vec <- parApply(clust, combined_df, 1, FUN=estimate_v_parallel, model, n_surveys, m, sites, sampling_surface, 
+                                       neighbor_idx, select_sites, params, generated_vars, model_selection, exp_args$mcmc_iter)
+          # Compatible format with non-parallel v
+          estimate_mat <- matrix(estimate_vec, nrow=data_reps, ncol=1)
+        }
+        else{
+          estimate_mat <- estimate_v(model, n_surveys, data_reps, m, sites, sampling_surface, 
+                                     neighbor_idx, select_sites, r_survey_data, r_po_data, r,
+                                     p_logging, params, generated_vars, model_selection, exp_args$mcmc_iter)
+        }
         # Once the posterior is computed on each of R datasets, find the average score:
         new_v_est <- sum(estimate_mat) / data_reps
         # TODO: Write this to file
@@ -324,4 +351,7 @@ for(rs in 1:random_starts){
 
 print("Avg V(D)")
 print(sum(best_v) / random_starts)
+
+# End cluster
+stopCluster(clust)
 
