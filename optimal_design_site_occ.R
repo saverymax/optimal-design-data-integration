@@ -14,14 +14,32 @@ library(tidyr)
 library(reshape2)
 library(spatstat)
 library(parallel)
+library(optparse)
 
 source("experimental_design_functions.R")
 source("presence_only_functions.R")
 source("stan_models\\stan_site_occupancy_models.R")
 
 # R=1000 datasets for monte carlo approx
-exp_args <- list(model_selection=3, m=5, data_reps=8, random_starts=3, p_logging=F, 
-                 mcmc_iter=1000, intensity_func="simple", v_parallel=T, exch_iter=20)
+# Create command line arguments
+parser <- OptionParser()
+parser <- add_option(parser, "--data_reps", type="integer", default=10, help="Number of dataset reps for criterion estimation")
+parser <- add_option(parser, "--m", type="integer", default=5, help="Number of sites to survey")
+parser <- add_option(parser, "--model_selection", type="integer", default=3, help="Occupancy model to use")
+parser <- add_option(parser, "--random_starts", type="integer", default=3, help="Number of random starts to run the exchange")
+parser <- add_option(parser, "--exch_iter", type="integer", default=20, help="Number of iterations of exchange before ending optimization")
+parser <- add_option(parser, "--mcmc_iter", type="integer", default=1000, help="Number of MCMC iterations in Stan")
+parser <- add_option(parser, "--intensity_func", type="character", default="simple", help="Intensity function for sampling surface")
+parser <- add_option(parser, "--p_logging", action="store_true", default=F, help="Boolean for logging information about posterior estimates")
+parser <- add_option(parser, "--v_parallel", action="store_true", default=F, help="Boolean for parallel computation of V criterion")
+
+exp_args <- parse_args(parser)
+print(exp_args)
+# Really don't want to use this until later
+stopifnot(exp_args$p_logging==F)
+# Old experimental setup
+#exp_args <- list(model_selection=3, m=5, data_reps=8, random_starts=3, p_logging=F, 
+#                 mcmc_iter=1000, intensity_func="simple", v_parallel=T, exch_iter=20)
 fig_dir <- paste("figures\\optimal_design_model-", exp_args$model_selection,  "_m-", exp_args$m, "_r-", exp_args$data_reps, "\\", sep="")
 dir.create(fig_dir)
 data_reps <- exp_args$data_reps
