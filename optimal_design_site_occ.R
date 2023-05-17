@@ -6,7 +6,7 @@ rm(list = ls())
 
 library(ggplot2)
 library(viridis)
-library(hrbrthemes)
+#library(hrbrthemes)
 library(cmdstanr) 
 library(bayesplot)
 library(dplyr)
@@ -18,7 +18,8 @@ library(optparse)
 
 source("experimental_design_functions.R")
 source("presence_only_functions.R")
-source("stan_models\\stan_site_occupancy_models.R")
+stan_models_path <- file.path("stan_models", "stan_site_occupancy_models.R")
+source(stan_models_path)
 
 # R=1000 datasets for monte carlo approx
 # Create command line arguments
@@ -187,8 +188,8 @@ best_site_mat
 # Initiate parallel processing if specified
 if (exp_args$v_parallel==T){
   n_cores <- detectCores()
-  print(paste("Using parallel processing with", n_cores, "cores"))
-  clust <- makeCluster(n_cores)
+  print(paste("Using parallel processing. Cores detected: ", n_cores, ". However, this is currently hardcoded into the script based on hardware"))
+  clust <- makeCluster(48)
   # Export the environment to the cluster
   clusterExport(clust, varlist=c("design_criteria", "brier_score_stan"), envir=environment())
 }
