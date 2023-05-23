@@ -16,14 +16,10 @@ library(spatstat)
 library(parallel)
 library(optparse)
 
-source("experimental_design_functions.R")
-source("presence_only_functions.R")
-stan_models_path <- file.path("stan_models", "stan_site_occupancy_models.R")
-source(stan_models_path)
-
 # R=1000 datasets for monte carlo approx
 # Create command line arguments
 parser <- OptionParser()
+parser <- add_option(parser, "--working_dir", type="character", help="Path to the directory containing code to source for the main script")
 parser <- add_option(parser, "--data_reps", type="integer", default=10, help="Number of dataset reps for criterion estimation")
 parser <- add_option(parser, "--m", type="integer", default=5, help="Number of sites to survey")
 parser <- add_option(parser, "--model_selection", type="integer", default=3, help="Occupancy model to use")
@@ -34,6 +30,7 @@ parser <- add_option(parser, "--intensity_func", type="character", default="simp
 parser <- add_option(parser, "--p_logging", action="store_true", default=F, help="Boolean for logging information about posterior estimates")
 parser <- add_option(parser, "--v_parallel", action="store_true", default=F, help="Boolean for parallel computation of V criterion")
 
+
 exp_args <- parse_args(parser)
 print(exp_args)
 # Really don't want to use this until later
@@ -41,7 +38,16 @@ stopifnot(exp_args$p_logging==F)
 # Old experimental setup
 #exp_args <- list(model_selection=3, m=5, data_reps=8, random_starts=3, p_logging=F, 
 #                 mcmc_iter=1000, intensity_func="simple", v_parallel=T, exch_iter=20)
-fig_dir <- paste("figures\\optimal_design_model-", exp_args$model_selection,  "_m-", exp_args$m, "_r-", exp_args$data_reps, "\\", sep="")
+
+source(file.path(exp_args$working_dir, "experimental_design_functions.R"))
+source(file.path(exp_args$working_dir, "presence_only_functions.R"))
+stan_models_path <- file.path(exp_args$working_dir, "stan_models", "stan_site_occupancy_models.R")
+source(stan_models_path)
+
+
+
+file.path
+fig_dir <- file.path(exp_args$working_dir, "figures", paste("optimal_design_model-", exp_args$model_selection,  "_m-", exp_args$m, "_r-", exp_args$data_reps, sep=""))
 dir.create(fig_dir)
 data_reps <- exp_args$data_reps
 # Area for whole space, which allows us to set area for sites based on number of sites.
@@ -157,7 +163,7 @@ p <- ggplot() +
   scale_x_continuous(breaks = seq(0, 20, 1)) 
 print(p)
 
-model_path <- "stan_models\\poisson_process_prior_site_occupancy.stan"
+model_path <- file.path(exp_args$working_dir, "stan_models", "poisson_process_prior_site_occupancy.stan")
 # We can experiment with these models in the exchange algorithm
 model_strings <- c(cloglog_site_occupancy, site_occupany_detection, poisson_process_site_occupancy, pp_site_occ_no_aux)
 model_selection <- exp_args$model_selection
@@ -189,7 +195,7 @@ best_site_mat
 if (exp_args$v_parallel==T){
   n_cores <- detectCores()
   print(paste("Using parallel processing. Cores detected: ", n_cores, ". However, this is currently hardcoded into the script based on hardware"))
-  clust <- makeCluster(48)
+  clust <- makeCluster(96)
   # Export the environment to the cluster
   clusterExport(clust, varlist=c("design_criteria", "brier_score_stan"), envir=environment())
 }
