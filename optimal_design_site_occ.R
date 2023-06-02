@@ -29,6 +29,7 @@ parser <- add_option(parser, "--mcmc_iter", type="integer", default=1000, help="
 parser <- add_option(parser, "--intensity_func", type="character", default="simple", help="Intensity function for sampling surface")
 parser <- add_option(parser, "--p_logging", action="store_true", default=F, help="Boolean for logging information about posterior estimates")
 parser <- add_option(parser, "--v_parallel", action="store_true", default=F, help="Boolean for parallel computation of V criterion")
+parser <- add_option(parser, "--cores", type="integer", default=4, help="Number of cores to use for parallel processing")
 
 
 exp_args <- parse_args(parser)
@@ -44,11 +45,12 @@ source(file.path(exp_args$working_dir, "presence_only_functions.R"))
 stan_models_path <- file.path(exp_args$working_dir, "stan_models", "stan_site_occupancy_models.R")
 source(stan_models_path)
 
-
-
-file.path
-fig_dir <- file.path(exp_args$working_dir, "figures", paste("optimal_design_model-", exp_args$model_selection,  "_m-", exp_args$m, "_r-", exp_args$data_reps, sep=""))
+exp_dir <- file.path(exp_args$working_dir, "experimental_runs", paste("optimal_design_model-", exp_args$model_selection,  "_m-", exp_args$m, "_r-", exp_args$data_reps, "itns-", exp_args$intensity_func, sep=""))
+fig_dir <- file.path(exp_dir, "figures")
+stan_dir <- file.path(exp_dir, "stan")
+dir.create(exp_dir)
 dir.create(fig_dir)
+dir.create(stan_dir)
 data_reps <- exp_args$data_reps
 # Area for whole space, which allows us to set area for sites based on number of sites.
 area_D <- 100
@@ -59,7 +61,7 @@ k <- 20
 sites <- k^2
 alpha <- -2 
 beta <- 2
-gamma <- -2
+gamma <- -1
 delta <- 0.5
 p_0 <- 0.7
 #b_0 <- 0
@@ -75,6 +77,7 @@ m <- exp_args$m
 # Based on the size of grid get the auxiliary data and coordinates
 # Because these don't really depend on any random variables and just location 
 # in the grid, there will be one fixed dataset throughout the optimization
+# TODO: Modify this for "donut" named func
 if (exp_args$intensity_func == "simple"){
   sampling_surface <- get_sampling_surface_simple(k)
 }else{
@@ -163,11 +166,21 @@ p <- ggplot() +
   scale_x_continuous(breaks = seq(0, 20, 1)) 
 print(p)
 
-model_path <- file.path(exp_args$working_dir, "stan_models", "poisson_process_prior_site_occupancy.stan")
 # We can experiment with these models in the exchange algorithm
-model_strings <- c(cloglog_site_occupancy, site_occupany_detection, poisson_process_site_occupancy, pp_site_occ_no_aux)
+# Model 1 uses just basic priors over params. Model 3 uses PO data as prior. Model 2
+# uses different link function but is otherwise the same as model 1. Model has constant
+# intensity, which doesn't make that much sense to use in this case.
+model_strings <- list(
+	"cloglog_site_occupancy"=cloglog_site_occupancy, 
+	"site_occ_probit"=site_occupany_detection, 
+	"poisson_poisson_prior"=poisson_process_site_occupancy, 
+	"poisson_process_constant"=pp_site_occ_no_aux)
 model_selection <- exp_args$model_selection
-write(model_strings[model_selection], model_path)
+model_name <- names(model_strings)[model_selection]
+print(paste("Using model", model_name, model_selection))
+model_path <- file.path(stan_dir, paste(model_name, ".stan", sep=""))
+print(paste("Cmdstan model", model_strings[[model_selection]]))
+write(model_strings[[model_selection]], model_path)
 model <- cmdstan_model(model_path) 
 # These are the parameters to report, though this will be model dependent
 if (model_selection==3){
@@ -177,6 +190,7 @@ if (model_selection==3){
 }else{
   params <- c('p', 'alpha', 'beta')
 }
+print(paste("Using params", params))
 generated_vars <- c('g_theta_gen', 'occ_gen')
 
 # The reich paper repeats the entire exchange algorithm procedure 10 times,
@@ -187,15 +201,13 @@ p_logging <- exp_args$p_logging
 random_starts <- exp_args$random_starts
 v_list <- vector(mode="list", length=random_starts)
 names(v_list) <- c(1:random_starts)
-v_list
 best_v <- vector(mode="numeric", length=random_starts)
 best_site_mat <- matrix(nrow=random_starts, ncol=m)
-best_site_mat
 # Initiate parallel processing if specified
 if (exp_args$v_parallel==T){
   n_cores <- detectCores()
-  print(paste("Using parallel processing. Cores detected: ", n_cores, ". However, this is currently hardcoded into the script based on hardware"))
-  clust <- makeCluster(96)
+  print(paste("Using parallel processing. Cores detected: ", n_cores, ". Currently using ", exp_args$cores, " cores."))
+  clust <- makeCluster(exp_args$cores)
   # Export the environment to the cluster
   clusterExport(clust, varlist=c("design_criteria", "brier_score_stan"), envir=environment())
 }
@@ -245,7 +257,7 @@ for (r_start in 1:random_starts){
   print(new_v_est)
   title <- paste("Inital spatial design: v=", round(new_v_est, 10), sep="")
   p <- plot_sites(sampling_surface, site_idx, title)
-  fig_name <- paste(fig_dir, "initial_design.png", sep="")
+  fig_name <- file.path(fig_dir, paste("initial_design.png", sep=""))
   ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm")
   
   while ((convergence_cond==FALSE) & (exchange_iter<exp_args$exch_iter)){
@@ -309,8 +321,8 @@ for (r_start in 1:random_starts){
           #print("No change in optimal design")
           p <- plot_sites_vs_best(sampling_surface, current_site, neighbor_idx, best_neighbor_idx, title)
         }
-        fig_name <- paste(fig_dir, "site_locs_rand-start-", r_start, "_ex-iter_", 
-                          exchange_iter, "_site-iter-", s, "_nn-iter", n_count,".png", sep="")
+        fig_name <- file.path(fig_dir, paste("site_locs_rand-start-", r_start, "_ex-iter_", 
+                          exchange_iter, "_site-iter-", s, "_nn-iter", n_count,".png", sep=""))
         # TODO: Decrease legend size
         ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm")
         # Then go to the next neighbor or site
@@ -334,14 +346,20 @@ for (r_start in 1:random_starts){
       print(site_idx)
       best_iter_idx <- site_idx
     }
+    # Print run time per exchange
+    cur_time <- Sys.time()
+    run_time <- cur_time - start_time
+    print(paste("Current run time is", run_time))
   }
+  
   v_list[[r_start]] <- v_vec
   best_site_mat[r_start,] <- best_iter_idx
   best_v[r_start] <- current_v_est
 }
 end_time <- Sys.time()
 run_time <- end_time - start_time
-run_time
+print("Total run time:")
+print(run_time)
 
 v_list
 best_site_mat
@@ -360,7 +378,7 @@ for(i in 1:random_starts){
   length(rep_labels)
 length(v_concat)
 v_df <- data.frame(x=x_concat, v=v_concat, r=rep_labels)
-fig_name <- paste(fig_dir, "exchange_convergence.png", sep="")
+fig_name <- file.path(fig_dir, paste("exchange_convergence.png", sep=""))
 p <- ggplot(data=v_df, aes(x=x, y=v, colour=r)) +
   geom_line() +
   theme_bw()
@@ -370,7 +388,7 @@ ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm")
 for(rs in 1:random_starts){
   title <- paste("Optimal sites from random init ", rs, " with V(D)=", best_v[rs], sep="")
   p <- plot_sites(sampling_surface, best_site_mat[rs, ], title) 
-  fig_name <- paste(fig_dir, "optimal_sites_random_start-", rs, ".png", sep="")
+  fig_name <- file.path(fig_dir, paste("optimal_sites_random_start-", rs, ".png", sep=""))
   ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm")
 }
 

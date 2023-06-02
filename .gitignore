@@ -1,6 +1,7 @@
-figures/*
 stan_models/*.exe
+experimental_runs/*
 optimal_design_site_occ_files/
+job_output/*
 .Rproj.user
 *Rplots.pdf
 .Rhistory
