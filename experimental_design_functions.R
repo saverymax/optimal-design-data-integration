@@ -298,7 +298,7 @@ get_sampling_surface <- function(k){
   return(sampling_grid)
 }
 
-generate_data_so <- function(data_reps, surface_data, corr_matrix, p_0, b_0, b_1, sigma, n, sites, link){
+generate_data_so <- function(data_reps, surface_data, corr_matrix, p_0, alpha, beta, sigma, n, sites, link){
   # Generate some random covariate data that will be used to model theta
   occupancy_maps <- matrix(nrow=data_reps, ncol=sites)
   Y_detection <- matrix(nrow=data_reps, ncol=sites)
@@ -319,6 +319,10 @@ generate_data_so <- function(data_reps, surface_data, corr_matrix, p_0, b_0, b_1
     Y_detection[r, ] <- rbinom(sites, n, p_0*site_presence)
   } 
   return(list(occupancy=occupancy_maps, Y=Y_detection, theta=theta_reps))
+}
+
+save_basic_plots <- function(fig_name, p){
+  ggsave(fig_name, plot=p)
 }
 
 plot_sites <- function(sampling_surface, select_idx, title){

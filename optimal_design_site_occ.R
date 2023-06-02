@@ -30,6 +30,13 @@ parser <- add_option(parser, "--intensity_func", type="character", default="simp
 parser <- add_option(parser, "--p_logging", action="store_true", default=F, help="Boolean for logging information about posterior estimates")
 parser <- add_option(parser, "--v_parallel", action="store_true", default=F, help="Boolean for parallel computation of V criterion")
 parser <- add_option(parser, "--cores", type="integer", default=4, help="Number of cores to use for parallel processing")
+parser <- add_option(parser, "--alpha", type="double", default=-2, help="Intercept for intensity")
+parser <- add_option(parser, "--beta", type="double", default=2, help="Slope for intensity")
+parser <- add_option(parser, "--gamma", type="double", default=-1, help="Intercept for bias")
+parser <- add_option(parser, "--delta", type="double", default=.5, help="Slope for bias")
+parser <- add_option(parser, "--p", type="double", default=0.7, help="Probability of detection")
+parser <- add_option(parser, "--area", type="integer", default=100, help="Area of region D")
+parser <- add_option(parser, "--k", type="integer", default=20, help="Number of sites along one side of grid")
 
 
 exp_args <- parse_args(parser)
@@ -45,7 +52,9 @@ source(file.path(exp_args$working_dir, "presence_only_functions.R"))
 stan_models_path <- file.path(exp_args$working_dir, "stan_models", "stan_site_occupancy_models.R")
 source(stan_models_path)
 
-exp_dir <- file.path(exp_args$working_dir, "experimental_runs", paste("optimal_design_model-", exp_args$model_selection,  "_m-", exp_args$m, "_r-", exp_args$data_reps, "itns-", exp_args$intensity_func, sep=""))
+exp_dir <- file.path(exp_args$working_dir, "experimental_runs", paste("optimal_design_model-", exp_args$model_selection,  "_m-", 
+  exp_args$m, "_r-", exp_args$data_reps, "-intns-", exp_args$intensity_func, 
+  "-params-a-", exp_args$alpha, "-b-", exp_args$beta, "-g-", exp_args$gamma, "-d-", exp_args$delta, sep=""))
 fig_dir <- file.path(exp_dir, "figures")
 stan_dir <- file.path(exp_dir, "stan")
 dir.create(exp_dir)
@@ -53,21 +62,19 @@ dir.create(fig_dir)
 dir.create(stan_dir)
 data_reps <- exp_args$data_reps
 # Area for whole space, which allows us to set area for sites based on number of sites.
-area_D <- 100
+area_D <- exp_args$area
 # For generating data according to GP
 gp_bool <- F
 # k is one side of grid
-k <- 20
+k <- exp_args$k
 sites <- k^2
-alpha <- -2 
-beta <- 2
-gamma <- -1
-delta <- 0.5
-p_0 <- 0.7
-#b_0 <- 0
-# b_01=2 indicates "good" quality of auxiliary information
-#b_1 <- 2
-# This assumes spatial variance of 1, which was used in the paper (see supplement)
+# alpha=2 indicates "good" quality of auxiliary information
+alpha <- exp_args$alpha
+beta <- exp_args$beta
+gamma <- exp_args$gamma
+delta <- exp_args$delta
+p_0 <- exp_args$p
+# This assumes spatial variance of 1, which was used in Reich 2018 (see supplement)
 sigma <- 1
 # number of surveys at site is equal to n or 0.
 n_surveys <- 5
@@ -102,7 +109,6 @@ r_survey_data$theta[1,]
 # Then generate R presence-only datasets
 params <- list(alpha=alpha, beta=beta, gamma=gamma, delta=delta)
 # Provide occupancy maps and number of data reps, as well as params and sampling surface, to generate pp data.
-#r_po_data <- generate_ppp_data_r(sampling_surface, params, sites, r_survey_data$occupancy, data_reps)
 r_po_data <- generate_ppp_data_r(sampling_surface, params, sites, data_reps, corr_matrix, gp_bool, area_D)
 Y_positive_indices <- which(r_po_data$Y>0)
 # This is the data at which there are counts > 0
@@ -128,32 +134,37 @@ p <- ggplot(sampling_surface, aes(x, y, fill=r_survey_data$Y[data_reps,])) +
   geom_tile() +
   scale_fill_viridis(discrete=FALSE) +
   ggtitle("Generated counts per site")
-print(p)
+fig_name <- file.path(fig_dir, paste("counts-per-site.png", sep=""))
+save_basic_plots(fig_name, p)
 
 p <- ggplot(sampling_surface, aes(x, y, fill=r_survey_data$occupancy[data_reps,])) + 
   geom_tile() +
   scale_fill_viridis(discrete=FALSE) +
   ggtitle("Generated occupancy per site")
-print(p)
+fig_name <- file.path(fig_dir, paste("occ-site.png", sep=""))
+save_basic_plots(fig_name, p)
 
 p <- ggplot(sampling_surface, aes(x, y, fill=r_survey_data$theta[data_reps,])) + 
   geom_tile() +
   scale_fill_viridis(discrete=FALSE) +
   ggtitle("generated occupancy probability per site")
-print(p)
+fig_name <- file.path(fig_dir, paste("occ-p-site.png", sep=""))
+save_basic_plots(fig_name, p)
 
 # Then the PO data
 p <- ggplot(sampling_surface, aes(x, y, fill=r_po_data$lambda[data_reps,])) + 
   geom_tile() +
   scale_fill_viridis(discrete=FALSE) +
   ggtitle("Generated intensity per site")
-print(p)
+fig_name <- file.path(fig_dir, paste("intensity-site.png", sep=""))
+save_basic_plots(fig_name, p)
 
 p <- ggplot(sampling_surface, aes(x, y, fill=r_po_data$bias[data_reps,])) + 
   geom_tile() +
   scale_fill_viridis(discrete=FALSE) +
   ggtitle("Generated bias per site")
-print(p)
+fig_name <- file.path(fig_dir, paste("bias-site.png", sep=""))
+save_basic_plots(fig_name, p)
 
 thinned_intensity <- r_po_data$lambda[data_reps,]*r_po_data$bias[data_reps,]
 p <- ggplot() +
@@ -164,7 +175,8 @@ p <- ggplot() +
   theme(panel.grid.minor = element_line(colour="white")) +
   scale_y_continuous(breaks = seq(0, 20, 1)) +
   scale_x_continuous(breaks = seq(0, 20, 1)) 
-print(p)
+fig_name <- file.path(fig_dir, paste("thinning-per-site.png", sep=""))
+save_basic_plots(fig_name, p)
 
 # We can experiment with these models in the exchange algorithm
 # Model 1 uses just basic priors over params. Model 3 uses PO data as prior. Model 2
@@ -361,22 +373,19 @@ run_time <- end_time - start_time
 print("Total run time:")
 print(run_time)
 
-v_list
-best_site_mat
 
 # Plot the convergence of V(D)
 v_concat <- c()
 x_concat <- c()
 rep_labels <- c()
+# Format v for data frame
 for(i in 1:random_starts){
   v_concat <- c(v_concat, v_list[[i]])
   l_vec <- rep(paste("y", i, sep=""), length(v_list[[i]]))
-  print(length(l_vec))
   x_concat <- c(x_concat, 1:length(l_vec))
   rep_labels <- c(rep_labels, l_vec)
 }
-  length(rep_labels)
-length(v_concat)
+
 v_df <- data.frame(x=x_concat, v=v_concat, r=rep_labels)
 fig_name <- file.path(fig_dir, paste("exchange_convergence.png", sep=""))
 p <- ggplot(data=v_df, aes(x=x, y=v, colour=r)) +
@@ -392,6 +401,12 @@ for(rs in 1:random_starts){
   ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm")
 }
 
+print("V list")
+print(v_list)
+print("Best sites")
+print(best_site_mat)
+print("best V")
+print(best_v)
 print("Avg V(D)")
 print(sum(best_v) / random_starts)
 
