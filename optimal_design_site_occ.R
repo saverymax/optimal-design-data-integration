@@ -20,6 +20,7 @@ library(optparse)
 # Create command line arguments
 parser <- OptionParser()
 parser <- add_option(parser, "--working_dir", type="character", help="Path to the directory containing code to source for the main script")
+parser <- add_option(parser, "--exp_name", type="character", help="Name of current experiment, which is used for dir to save output")
 parser <- add_option(parser, "--data_reps", type="integer", default=10, help="Number of dataset reps for criterion estimation")
 parser <- add_option(parser, "--m", type="integer", default=5, help="Number of sites to survey")
 parser <- add_option(parser, "--model_selection", type="integer", default=3, help="Occupancy model to use")
@@ -37,24 +38,23 @@ parser <- add_option(parser, "--delta", type="double", default=.5, help="Slope f
 parser <- add_option(parser, "--p", type="double", default=0.7, help="Probability of detection")
 parser <- add_option(parser, "--area", type="integer", default=100, help="Area of region D")
 parser <- add_option(parser, "--k", type="integer", default=20, help="Number of sites along one side of grid")
+parser <- add_option(parser, "--aux_cor", type="double", default=0.8, help="Correlation between auxiliary covariates")
 
 
 exp_args <- parse_args(parser)
 print(exp_args)
 # Really don't want to use this until later
 stopifnot(exp_args$p_logging==F)
-# Old experimental setup
-#exp_args <- list(model_selection=3, m=5, data_reps=8, random_starts=3, p_logging=F, 
-#                 mcmc_iter=1000, intensity_func="simple", v_parallel=T, exch_iter=20)
 
 source(file.path(exp_args$working_dir, "experimental_design_functions.R"))
 source(file.path(exp_args$working_dir, "presence_only_functions.R"))
 stan_models_path <- file.path(exp_args$working_dir, "stan_models", "stan_site_occupancy_models.R")
 source(stan_models_path)
 
+exp_name <- exp_args$exp_name
 exp_dir <- file.path(exp_args$working_dir, "experimental_runs", paste("optimal_design_model-", exp_args$model_selection,  "_m-", 
   exp_args$m, "_r-", exp_args$data_reps, "-intns-", exp_args$intensity_func, 
-  "-params-a-", exp_args$alpha, "-b-", exp_args$beta, "-g-", exp_args$gamma, "-d-", exp_args$delta, sep=""))
+  "-params-a-", exp_args$alpha, "-b-", exp_args$beta, "-g-", exp_args$gamma, "-d-", exp_args$delta, "-p-", exp_args$p, "-aux-cor-", exp_args$aux_cor, sep=""))
 fig_dir <- file.path(exp_dir, "figures")
 stan_dir <- file.path(exp_dir, "stan")
 dir.create(exp_dir)
@@ -74,6 +74,7 @@ beta <- exp_args$beta
 gamma <- exp_args$gamma
 delta <- exp_args$delta
 p_0 <- exp_args$p
+aux_cor <- exp_args$aux_cor
 # This assumes spatial variance of 1, which was used in Reich 2018 (see supplement)
 sigma <- 1
 # number of surveys at site is equal to n or 0.
@@ -88,7 +89,7 @@ m <- exp_args$m
 if (exp_args$intensity_func == "simple"){
   sampling_surface <- get_sampling_surface_simple(k)
 }else{
-  sampling_surface <- get_sampling_surface(k)
+  sampling_surface <- get_sampling_surface(k, aux_cor)
   # Filter for only a quarter of the grid.
   # If we filter, we need to change the total sites as well
   sites <- sites/4
@@ -132,37 +133,47 @@ dim(survey_data_df)
 # First PA data
 p <- ggplot(sampling_surface, aes(x, y, fill=r_survey_data$Y[data_reps,])) + 
   geom_tile() +
-  scale_fill_viridis(discrete=FALSE) +
-  ggtitle("Generated counts per site")
+  scale_fill_viridis(discrete=FALSE, name="Counts") +
+  ggtitle("Generated counts per site") +
+  theme(text=element_text(size=5), legend.key.size = unit(0.25, 'cm')) +
+  coord_fixed()
 fig_name <- file.path(fig_dir, paste("counts-per-site.png", sep=""))
 save_basic_plots(fig_name, p)
 
 p <- ggplot(sampling_surface, aes(x, y, fill=r_survey_data$occupancy[data_reps,])) + 
   geom_tile() +
-  scale_fill_viridis(discrete=FALSE) +
-  ggtitle("Generated occupancy per site")
+  scale_fill_viridis(discrete=FALSE, name="Occupancy") +
+  ggtitle("Generated occupancy per site") +
+  theme(text=element_text(size=5), legend.key.size = unit(0.25, 'cm')) +
+  coord_fixed()
 fig_name <- file.path(fig_dir, paste("occ-site.png", sep=""))
 save_basic_plots(fig_name, p)
 
 p <- ggplot(sampling_surface, aes(x, y, fill=r_survey_data$theta[data_reps,])) + 
   geom_tile() +
-  scale_fill_viridis(discrete=FALSE) +
-  ggtitle("generated occupancy probability per site")
+  scale_fill_viridis(discrete=FALSE, name="Theta") +
+  ggtitle("generated occupancy probability per site") +
+  theme(text=element_text(size=5), legend.key.size = unit(0.25, 'cm')) +
+  coord_fixed()
 fig_name <- file.path(fig_dir, paste("occ-p-site.png", sep=""))
 save_basic_plots(fig_name, p)
 
 # Then the PO data
 p <- ggplot(sampling_surface, aes(x, y, fill=r_po_data$lambda[data_reps,])) + 
   geom_tile() +
-  scale_fill_viridis(discrete=FALSE) +
-  ggtitle("Generated intensity per site")
+  scale_fill_viridis(discrete=FALSE, name="Lambda") +
+  ggtitle("Generated intensity per site") +
+  theme(text=element_text(size=5), legend.key.size = unit(0.25, 'cm')) +
+  coord_fixed()
 fig_name <- file.path(fig_dir, paste("intensity-site.png", sep=""))
 save_basic_plots(fig_name, p)
 
 p <- ggplot(sampling_surface, aes(x, y, fill=r_po_data$bias[data_reps,])) + 
   geom_tile() +
-  scale_fill_viridis(discrete=FALSE) +
-  ggtitle("Generated bias per site")
+  scale_fill_viridis(discrete=FALSE, "Bias") +
+  ggtitle("Generated bias per site") +
+  theme(text=element_text(size=5), legend.key.size = unit(0.25, 'cm')) +
+  coord_fixed()
 fig_name <- file.path(fig_dir, paste("bias-site.png", sep=""))
 save_basic_plots(fig_name, p)
 
@@ -174,7 +185,9 @@ p <- ggplot() +
   geom_point(data=r_po_data$Y_coords, mapping=aes(x=x, y=y), size=3, col="white") +
   theme(panel.grid.minor = element_line(colour="white")) +
   scale_y_continuous(breaks = seq(0, 20, 1)) +
-  scale_x_continuous(breaks = seq(0, 20, 1)) 
+  scale_x_continuous(breaks = seq(0, 20, 1)) +
+  theme(text=element_text(size=5), legend.key.size = unit(0.25, 'cm')) +
+  coord_fixed()
 fig_name <- file.path(fig_dir, paste("thinning-per-site.png", sep=""))
 save_basic_plots(fig_name, p)
 
