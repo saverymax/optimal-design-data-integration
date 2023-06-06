@@ -183,7 +183,7 @@ thinned_intensity <- r_po_data$lambda[data_reps,]*r_po_data$bias[data_reps,]
 p <- ggplot() +
   geom_tile(sampling_surface, mapping=aes(x, y, fill=thinned_intensity, width=1, height=1), alpha=.6) + 
   scale_fill_viridis(discrete=FALSE, name="L*b") +
-  ggtitle("Generated thinning per site, including generated (or observed) individuals") +
+  ggtitle("Generated PP thinning per site, including observed PO individuals") +
   geom_point(data=r_po_data$Y_coords, mapping=aes(x=x, y=y), size=3, col="white") +
   theme(panel.grid.minor = element_line(colour="white")) +
   scale_y_continuous(breaks = seq(0, 20, 1)) +
