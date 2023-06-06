@@ -248,7 +248,7 @@ get_sampling_surface_simple <- function(k){
   return(surface_data)
 }
 
-get_sampling_surface <- function(k){
+get_sampling_surface <- function(k, aux_cor){
   # Function generates X and correlated Z auxiliary data
   x <- seq(1:k)
   y <- seq(1:k)
@@ -270,7 +270,7 @@ get_sampling_surface <- function(k){
   # Next generate some correlated data for the bias parameter b.
   # Various ways to generate correlated vector from one already existing:
   # https://stats.stackexchange.com/questions/15011/generate-a-random-variable-with-a-defined-correlation-to-an-existing-variables
-  V <- matrix(c(1, .8, .8, 1), nrow=2, ncol=2)
+  V <- matrix(c(1, aux_cor, aux_cor, 1), nrow=2, ncol=2)
   R <- chol(V)
   aux_z <- rnorm(k*k, 0, 1)
   X <- cbind(sampling_grid$aux_x, aux_z)
@@ -323,6 +323,7 @@ generate_data_so <- function(data_reps, surface_data, corr_matrix, p_0, alpha, b
 
 save_basic_plots <- function(fig_name, p){
   ggsave(fig_name, plot=p)
+  ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm")
 }
 
 plot_sites <- function(sampling_surface, select_idx, title){

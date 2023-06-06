@@ -52,9 +52,11 @@ stan_models_path <- file.path(exp_args$working_dir, "stan_models", "stan_site_oc
 source(stan_models_path)
 
 exp_name <- exp_args$exp_name
-exp_dir <- file.path(exp_args$working_dir, "experimental_runs", paste("optimal_design_model-", exp_args$model_selection,  "_m-", 
-  exp_args$m, "_r-", exp_args$data_reps, "-intns-", exp_args$intensity_func, 
-  "-params-a-", exp_args$alpha, "-b-", exp_args$beta, "-g-", exp_args$gamma, "-d-", exp_args$delta, "-p-", exp_args$p, "-aux-cor-", exp_args$aux_cor, sep=""))
+#exp_dir <- file.path(exp_args$working_dir, "experimental_runs", paste("optimal_design_model-", exp_args$model_selection,  "_m-", 
+#  exp_args$m, "_r-", exp_args$data_reps, "-intns-", exp_args$intensity_func, 
+#  "-params-a-", exp_args$alpha, "-b-", exp_args$beta, "-g-", exp_args$gamma, "-d-", exp_args$delta, "-p-", exp_args$p, "-aux-cor-", exp_args$aux_cor, sep=""))
+
+exp_dir <- file.path(exp_args$working_dir, "experimental_runs", exp_name)
 fig_dir <- file.path(exp_dir, "figures")
 stan_dir <- file.path(exp_dir, "stan")
 dir.create(exp_dir)
