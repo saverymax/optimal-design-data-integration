@@ -1,5 +1,6 @@
 stan_models/*.exe
 experimental_runs/*
+experimental_scripts/oe*
 optimal_design_site_occ_files/
 job_output/*
 .Rproj.user
