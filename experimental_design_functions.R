@@ -362,4 +362,3 @@ write_results <- function(random_starts, best_v, best_site_mat, v_df, exp_dir){
   xlsx_list <- list("v_stat"=v_stat_df, "best_v"=best_v, "v_iterations"=v_df, "best_sites"=site_df)
   write.xlsx(xlsx_list, file=file.path(exp_dir, "results.xlsx"), rowNames=F)
 }
-  
