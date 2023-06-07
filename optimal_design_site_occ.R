@@ -15,6 +15,7 @@ library(reshape2)
 library(spatstat)
 library(parallel)
 library(optparse)
+library(openxlsx)
 
 # R=1000 datasets for monte carlo approx
 # Create command line arguments
@@ -424,6 +425,8 @@ print("best V")
 print(best_v)
 print("Avg V(D)")
 print(sum(best_v) / random_starts)
+
+write_results(random_starts, best_v, best_site_mat, v_df, exp_dir)
 
 # End cluster
 stopCluster(clust)
