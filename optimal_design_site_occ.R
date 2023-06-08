@@ -426,7 +426,7 @@ print(best_v)
 print("Avg V(D)")
 print(sum(best_v) / random_starts)
 
-write_results(random_starts, best_v, best_site_mat, v_df, exp_dir)
+write_results(random_starts, best_v, best_site_mat, v_df, exp_dir, exp_name)
 
 # End cluster
 stopCluster(clust)
