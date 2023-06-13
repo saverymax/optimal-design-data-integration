@@ -24,11 +24,13 @@ parser <- add_option(parser, "--working_dir", type="character", help="Path to th
 parser <- add_option(parser, "--exp_name", type="character", help="Name of current experiment, which is used for dir to save output")
 parser <- add_option(parser, "--data_reps", type="integer", default=10, help="Number of dataset reps for criterion estimation")
 parser <- add_option(parser, "--m", type="integer", default=5, help="Number of sites to survey")
+parser <- add_option(parser, "--n", type="integer", default=5, help="Number of time to visit each site")
 parser <- add_option(parser, "--model_selection", type="integer", default=3, help="Occupancy model to use")
 parser <- add_option(parser, "--random_starts", type="integer", default=3, help="Number of random starts to run the exchange")
 parser <- add_option(parser, "--exch_iter", type="integer", default=20, help="Number of iterations of exchange before ending optimization")
 parser <- add_option(parser, "--mcmc_iter", type="integer", default=1000, help="Number of MCMC iterations in Stan")
 parser <- add_option(parser, "--intensity_func", type="character", default="simple", help="Intensity function for sampling surface")
+parser <- add_option(parser, "--bias_func", type="character", default="exponential", help="Bias function for sampling surface")
 parser <- add_option(parser, "--p_logging", action="store_true", default=F, help="Boolean for logging information about posterior estimates")
 parser <- add_option(parser, "--v_parallel", action="store_true", default=F, help="Boolean for parallel computation of V criterion")
 parser <- add_option(parser, "--cores", type="integer", default=4, help="Number of cores to use for parallel processing")
@@ -81,18 +83,26 @@ aux_cor <- exp_args$aux_cor
 # This assumes spatial variance of 1, which was used in Reich 2018 (see supplement)
 sigma <- 1
 # number of surveys at site is equal to n or 0.
-n_surveys <- 5
+n_surveys <- exp_args$n
 # There will be m sites selected for sampling
 # 36/4 was used in paper
 m <- exp_args$m
 # Based on the size of grid get the auxiliary data and coordinates
 # Because these don't really depend on any random variables and just location 
 # in the grid, there will be one fixed dataset throughout the optimization
-# TODO: Modify this for "donut" named func
 if (exp_args$intensity_func == "simple"){
   sampling_surface <- get_sampling_surface_simple(k)
 }else{
-  sampling_surface <- get_sampling_surface(k, aux_cor)
+  sampling_surface <- get_sampling_surface_donut(k)
+  if (exp_args$bias_func == "exponential"){
+    centroid <- c(5,5)
+    bias_surface <- get_sampling_surface_exponential(sampling_surface, centroid)
+  }else if (exp_args$bias_func == "correlation"){
+    bias_surface <- get_sampling_surface_correlated(sampling_surface, aux_cor)
+  }
+  else{
+    stop("Bias function not implemented")
+  }
   # Filter for only a quarter of the grid.
   # If we filter, we need to change the total sites as well
   sites <- sites/4
@@ -133,7 +143,28 @@ survey_data_df <- data.frame(counts=r_survey_data$Y[1,], o=r_survey_data$occupan
 head(survey_data_df)
 dim(survey_data_df)
 
-# First PA data
+# Plot the covariates
+p <- ggplot(sampling_surface, aes(x, y, fill=aux_x)) + 
+  geom_tile() +
+  scale_fill_viridis(discrete=FALSE, name="X") +
+  ggtitle("Initial sampling surface, X covariate") +
+  theme(text=element_text(size=5), legend.key.size = unit(0.25, 'cm')) +
+  coord_fixed()
+print(p)
+fig_name <- file.path(fig_dir, paste("sampling_surface_aux_x.png", sep=""))
+save_basic_plots(fig_name, p)
+
+p <- ggplot(sampling_surface, aes(x, y, fill=aux_z)) + 
+  geom_tile() +
+  scale_fill_viridis(discrete=FALSE, name="Z") +
+  ggtitle("Initial sampling surface, Z covariate") +
+  theme(text=element_text(size=5), legend.key.size = unit(0.25, 'cm')) +
+  coord_fixed()
+print(p)
+fig_name <- file.path(fig_dir, paste("sampling_surface_aux_z.png", sep=""))
+save_basic_plots(fig_name, p)
+
+# Then plot PA data
 p <- ggplot(sampling_surface, aes(x, y, fill=r_survey_data$Y[data_reps,])) + 
   geom_tile() +
   scale_fill_viridis(discrete=FALSE, name="Counts") +

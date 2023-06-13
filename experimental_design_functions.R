@@ -159,7 +159,7 @@ estimate_v_parallel <- function(combined_df, model, n_surveys, m, sites, samplin
 
 
 distance_func <- function(x, center_coord){
-  dist <- sqrt((x[1] - center_coord)^2 + (x[2] - center_coord)^2)
+  dist <- sqrt((x[1] - center_coord[1])^2 + (x[2] - center_coord[2])^2)
   return(dist)
 }
 
@@ -240,34 +240,31 @@ get_sampling_surface_simple <- function(k){
   
   aux_x <- outer(x0,y0, function (x,y) multiplier*y + 0*x)
   aux_z <- outer(x0,y0, function (x,y) 0*y + multiplier*x)
-  plot(im(aux_x))
-  plot(im(aux_z))
   surface_data$aux_x <- c(t(aux_x))
   surface_data$aux_z <- c(t(aux_z))
-  
   return(surface_data)
 }
 
-get_sampling_surface <- function(k, aux_cor){
-  # Function generates X and correlated Z auxiliary data
+get_sampling_surface_donut <- function(k){
   x <- seq(1:k)
   y <- seq(1:k)
-  center_coord <- k/2
+  center_coord <- c(k/2, k/2)
   # Generate all possible coordinate points
   sampling_grid <- expand.grid(x, y)
   sampling_grid
   # Then compute distance from each location to center of the grid.
   r <- apply(sampling_grid, 1, distance_func, center_coord=center_coord)
-  r
   # Then create x covariate
   x <- exp(-10*((r-7)/5)^2)
   # This gives us the data for the auxiliary surveys x_i in the paper, which will be the 
   # covariates used in the paper X_i^T = [1, X_i1]
   x_1 <- qnorm(0.98*x + .01)
   sampling_grid$aux_x <- x_1
-  
-  # This gives us auxiliary data for the intensity parameter lambda.
-  # Next generate some correlated data for the bias parameter b.
+  colnames(sampling_grid) <- c("x", "y", "aux_x")
+  return(sampling_grid)
+}
+
+get_bias_surface_correlated <- function(sampling_grid, aux_cor){
   # Various ways to generate correlated vector from one already existing:
   # https://stats.stackexchange.com/questions/15011/generate-a-random-variable-with-a-defined-correlation-to-an-existing-variables
   V <- matrix(c(1, aux_cor, aux_cor, 1), nrow=2, ncol=2)
@@ -277,24 +274,22 @@ get_sampling_surface <- function(k, aux_cor){
   cor_X <- X %*% R 
   print("Correlation between X and Z")
   print(cor(cor_X))
+  #cor_X[1:5, 1]
   sampling_grid$aux_z <- cor_X[,2]
-  
-  # Now generate the plot of auxiliary data for the grid
-  colnames(sampling_grid) <- c("x", "y", "aux_x", "aux_z")
-  # Heatmap 
-  p <- ggplot(sampling_grid, aes(x, y, fill=aux_x)) + 
-    geom_tile() +
-    scale_fill_viridis(discrete=FALSE) +
-    ggtitle("Initial sampling surface, X covariate")
-  print(p)
-  
-  p <- ggplot(sampling_grid, aes(x, y, fill=aux_z)) + 
-    geom_tile() +
-    scale_fill_viridis(discrete=FALSE) +
-    ggtitle("Initial sampling surface, Z covariate")
-  print(p)
-  
-  
+  return(sampling_grid)
+}
+
+get_bias_surface_exponential <- function(sampling_grid, centroid){
+  x <- seq(1:k)
+  y <- seq(1:k)
+  # Generate all possible coordinate points
+  grid_points <- expand.grid(x, y)
+  # Then compute distance from centroid to every other location
+  r <- apply(grid_points, 1, function(x, center_coord){sqrt((center_coord[1] - x[1])^2 + (center_coord[2] - x[2])^2)}, center_coord=centroid)
+  # Then create z covariate
+  x <- exp(-2*((r)/5))
+  x_1 <- qnorm(0.98*x + .01)
+  sampling_grid$aux_z <- x_1
   return(sampling_grid)
 }
 
