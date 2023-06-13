@@ -95,10 +95,10 @@ if (exp_args$intensity_func == "simple"){
 }else{
   sampling_surface <- get_sampling_surface_donut(k)
   if (exp_args$bias_func == "exponential"){
-    centroid <- c(5,5)
-    bias_surface <- get_sampling_surface_exponential(sampling_surface, centroid)
+    centroid <- c(10,4)
+    sampling_surface <- get_bias_surface_exponential(sampling_surface, centroid)
   }else if (exp_args$bias_func == "correlation"){
-    bias_surface <- get_sampling_surface_correlated(sampling_surface, aux_cor)
+    sampling_surface <- get_bias_surface_correlated(sampling_surface, aux_cor)
   }
   else{
     stop("Bias function not implemented")
@@ -109,16 +109,16 @@ if (exp_args$intensity_func == "simple"){
   stopifnot(sites>m)
   sampling_surface <- sampling_surface %>% dplyr::filter(x<11, y<11)
 }
-sampling_surface
+print(sampling_surface)
 # Next, we use this data to generate the rest of the datasets
 # The data generating function will sample R occupancy maps|params
 # and then R complete datasets|occupancy maps
 corr_matrix <- specify_corr(sampling_surface[,1:2])
 link_func <- "cloglog"
 r_survey_data <- generate_data_so(data_reps, sampling_surface, corr_matrix, p_0, alpha, beta, sigma, n_surveys, sites, link=link_func)
-r_survey_data$occupancy[1,]
-r_survey_data$Y[1,]
-r_survey_data$theta[1,]
+print(r_survey_data$occupancy[1,])
+print(r_survey_data$Y[1,])
+print(r_survey_data$theta[1,])
 
 # Then generate R presence-only datasets
 params <- list(alpha=alpha, beta=beta, gamma=gamma, delta=delta)
