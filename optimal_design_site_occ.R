@@ -354,9 +354,6 @@ for (r_start in 1:random_starts){
         }
         # Once the posterior is computed on each of R datasets, find the average score:
         new_v_est <- sum(estimate_mat) / data_reps
-        # TODO: Write this to file
-        #print("Design score from most recent exchange")
-        #print(new_v_est)
         v_vec <- c(v_vec, new_v_est)
         
         if (new_v_est < current_v_est){
@@ -382,7 +379,6 @@ for (r_start in 1:random_starts){
         }
         fig_name <- file.path(fig_dir, paste("site_locs_rand-start-", r_start, "_ex-iter_", 
                           exchange_iter, "_site-iter-", s, "_nn-iter", n_count,".png", sep=""))
-        # TODO: Decrease legend size
         ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm")
         # Then go to the next neighbor or site
       }
