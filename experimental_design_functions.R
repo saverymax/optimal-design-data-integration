@@ -327,9 +327,8 @@ plot_sites <- function(sampling_surface, select_idx, title){
     geom_point(data=sampling_surface[select_idx,], aes(x=x, y=y), colour = "white", size = 1.5) +
     scale_fill_viridis(discrete=FALSE) +
     ggtitle(title) + 
-    theme(text=element_text(size=5)) + 
+    theme(text=element_text(size=5), legend.key.size = unit(0.25, 'cm')) +
     coord_fixed() 
-  #print(p)
   return(p)
 }
 
@@ -343,7 +342,7 @@ plot_sites_vs_best <- function(sampling_surface, current_site, select_idx, best_
     geom_point(data=sampling_surface[current_site,], aes(x=x, y=y), colour = "black", size = 0.5) +
     scale_fill_viridis(discrete=FALSE) +
     ggtitle(title) + 
-    theme(text=element_text(size=5)) + 
+    theme(text=element_text(size=5), legend.key.size = unit(0.25, 'cm')) +
     coord_fixed() 
   return(p)
 }
