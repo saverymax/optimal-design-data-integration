@@ -139,10 +139,10 @@ cloglog_site_occupancy <- '
 
 poisson_process_site_occupancy <- '
   data{
-      int<lower = 1> n_surveys;
       int<lower = 1> n_pa_sites;
       int<lower = 1> n_po_sites;
       int<lower=0, upper=1> model_diag;
+      vector[n_pa_sites] n_surveys;
       vector[n_pa_sites] X;
       array[n_pa_sites] int Y;
       vector[n_po_sites] X_po;
@@ -172,11 +172,11 @@ poisson_process_site_occupancy <- '
       g_theta = 1 - exp(-exp(alpha + beta * X));
       for (i in 1:n_pa_sites) {
         if (Y[i] > 0){
-          target += log(g_theta[i]*choose(n_surveys, Y[i])*(p^Y[i])*(1-p)^(n_surveys-Y[i]));
+          target += log(g_theta[i]*choose(n_surveys[i], Y[i])*(p^Y[i])*(1-p)^(n_surveys[i]-Y[i]));
         }
         else{
           // Compute mixture of no detection and no occupancy
-          target += log(g_theta[i]*(1-p)^(n_surveys) + (1 - g_theta[i]));
+          target += log(g_theta[i]*(1-p)^(n_surveys[i]) + (1 - g_theta[i]));
         }
       }
     }

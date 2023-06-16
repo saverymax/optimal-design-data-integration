@@ -20,14 +20,15 @@ library(openxlsx)
 # R=1000 datasets for monte carlo approx
 # Create command line arguments
 parser <- OptionParser()
-parser <- add_option(parser, "--working_dir", type="character", help="Path to the directory containing code to source for the main script")
-parser <- add_option(parser, "--exp_name", type="character", help="Name of current experiment, which is used for dir to save output")
-parser <- add_option(parser, "--data_reps", type="integer", default=10, help="Number of dataset reps for criterion estimation")
+parser <- add_option(parser, "--working_dir", type="character", default=".", help="Path to the directory containing code to source for the main script")
+parser <- add_option(parser, "--exp_name", type="character", default="oe_run", help="Name of current experiment, which is used for dir to save output")
+parser <- add_option(parser, "--data_reps", type="integer", default=4, help="Number of dataset reps for criterion estimation")
 parser <- add_option(parser, "--m", type="integer", default=5, help="Number of sites to survey")
 parser <- add_option(parser, "--n", type="integer", default=5, help="Number of time to visit each site")
 parser <- add_option(parser, "--model_selection", type="integer", default=3, help="Occupancy model to use")
 parser <- add_option(parser, "--random_starts", type="integer", default=3, help="Number of random starts to run the exchange")
-parser <- add_option(parser, "--exch_iter", type="integer", default=20, help="Number of iterations of exchange before ending optimization")
+parser <- add_option(parser, "--exch_iter", type="integer", default=5, 
+                     help="Number of iterations of exchange before ending optimization. Recommended is 20 but default is set low for test runs.")
 parser <- add_option(parser, "--mcmc_iter", type="integer", default=1000, help="Number of MCMC iterations in Stan")
 parser <- add_option(parser, "--intensity_func", type="character", default="simple", help="Intensity function for sampling surface")
 parser <- add_option(parser, "--bias_func", type="character", default="exponential", help="Bias function for sampling surface")
@@ -35,8 +36,8 @@ parser <- add_option(parser, "--p_logging", action="store_true", default=F, help
 parser <- add_option(parser, "--v_parallel", action="store_true", default=F, help="Boolean for parallel computation of V criterion")
 parser <- add_option(parser, "--cores", type="integer", default=4, help="Number of cores to use for parallel processing")
 parser <- add_option(parser, "--alpha", type="double", default=-2, help="Intercept for intensity")
-parser <- add_option(parser, "--beta", type="double", default=2, help="Slope for intensity")
-parser <- add_option(parser, "--gamma", type="double", default=-1, help="Intercept for bias")
+parser <- add_option(parser, "--beta", type="double", default=0.5, help="Slope for intensity")
+parser <- add_option(parser, "--gamma", type="double", default=1, help="Intercept for bias")
 parser <- add_option(parser, "--delta", type="double", default=.5, help="Slope for bias")
 parser <- add_option(parser, "--p", type="double", default=0.7, help="Probability of detection")
 parser <- add_option(parser, "--area", type="integer", default=100, help="Area of region D")
@@ -82,8 +83,6 @@ p_0 <- exp_args$p
 aux_cor <- exp_args$aux_cor
 # This assumes spatial variance of 1, which was used in Reich 2018 (see supplement)
 sigma <- 1
-# number of surveys at site is equal to n or 0.
-n_surveys <- exp_args$n
 # There will be m sites selected for sampling
 # 36/4 was used in paper
 m <- exp_args$m
@@ -110,6 +109,10 @@ if (exp_args$intensity_func == "simple"){
   sampling_surface <- sampling_surface %>% dplyr::filter(x<11, y<11)
 }
 print(sampling_surface)
+
+# number of surveys at site is equal to n or 0.
+# The number of surveys will differ between sites
+n_surveys <- rep(exp_args$n, sites)
 # Next, we use this data to generate the rest of the datasets
 # The data generating function will sample R occupancy maps|params
 # and then R complete datasets|occupancy maps
@@ -335,6 +338,8 @@ for (r_start in 1:random_starts){
       # The inital estimate will be for our initial design.
       # We set the current best set of indices
       #best_neighbor_idx <- site_idx
+      # TODO: Here add loop for number of visits but need to think it through
+      # for (survey_effort in visits){}
       for(nn in neighbor_set){
         n_count <- n_count + 1
         # Select new data using the neighbors (switch out local points)

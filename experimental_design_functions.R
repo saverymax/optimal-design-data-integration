@@ -295,6 +295,8 @@ get_bias_surface_exponential <- function(sampling_grid, centroid){
 
 generate_data_so <- function(data_reps, surface_data, corr_matrix, p_0, alpha, beta, sigma, n, sites, link){
   # Generate some random covariate data that will be used to model theta
+  # n is a vector of surveys at each site
+  stopifnot(length(n)==sites)
   occupancy_maps <- matrix(nrow=data_reps, ncol=sites)
   Y_detection <- matrix(nrow=data_reps, ncol=sites)
   theta_reps <- matrix(nrow=data_reps, ncol=sites)
