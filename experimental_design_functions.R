@@ -331,13 +331,15 @@ plot_sites <- function(sampling_surface, select_idx, title){
   return(p)
 }
 
-plot_sites_vs_best <- function(sampling_surface, current_site, select_idx, best_select_idx, visits, title){
+plot_sites_vs_best <- function(sampling_surface, current_site, select_idx, best_select_idx, prev_visits, optimal_visits, title){
   # Plot current set of sites compared to the best sites. 
   # Best will always be pink
+  prev_size <- prev_visits/(length(prev_visits)) + 1.5
+  best_size <- optimal_visits/(length(optimal_visits)) + 1
   p <- ggplot(sampling_surface, aes(x, y, fill=aux_x)) + 
     geom_tile() +
-    geom_point(data=sampling_surface[select_idx,], aes(x=x, y=y), colour = "white", size = 1.5) +
-    geom_point(data=sampling_surface[best_select_idx,], aes(x=x, y=y), colour = "hotpink1", size = visits/(length(visits)), alpha=1) +
+    geom_point(data=sampling_surface[select_idx,], aes(x=x, y=y), colour = "white", size = prev_size) +
+    geom_point(data=sampling_surface[best_select_idx,], aes(x=x, y=y), colour = "hotpink1", size = best_size, alpha=1) +
     geom_point(data=sampling_surface[current_site,], aes(x=x, y=y), colour = "black", size = 0.5) +
     scale_fill_viridis(discrete=FALSE) +
     ggtitle(title) + 
@@ -346,12 +348,12 @@ plot_sites_vs_best <- function(sampling_surface, current_site, select_idx, best_
   return(p)
 }
 
-write_results <- function(random_starts, best_v, best_site_mat, v_df, exp_dir, exp_name){
+  write_results <- function(random_starts, best_v, best_site_mat, visits, v_df, exp_dir, exp_name){
   # This will be useful if I have multiple criteria
   v_stat_df <- data.frame(v=sum(best_v) / random_starts, v_var=var(best_v))
   best_v <- data.frame(best_v=best_v)
-  site_df <- data.frame(t(best_site_mat))
-  names(site_df) <- paste("rand-start", c(1:random_starts), sep="")
+  site_df <- data.frame(t(best_site_mat), t(visits))
+  names(site_df) <- rep(paste("rand-start", c(1:random_starts), sep=""), 2)
   names(v_df) <- c("iter", "v", "rand-start")
   xlsx_list <- list("v_stat"=v_stat_df, "best_v"=best_v, "v_iterations"=v_df, "best_sites"=site_df)
   write.xlsx(xlsx_list, file=file.path(exp_dir, paste("results_", exp_name, ".xlsx", sep="")), rowNames=F)

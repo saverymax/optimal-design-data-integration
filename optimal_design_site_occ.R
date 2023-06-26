@@ -250,8 +250,8 @@ thinned_intensity <- r_po_data$lambda[data_reps,]*r_po_data$bias[data_reps,]
 p <- ggplot() +
   geom_tile(sampling_surface, mapping=aes(x, y, fill=thinned_intensity, width=1, height=1), alpha=.6) + 
   scale_fill_viridis(discrete=FALSE, name="L*b") +
-  ggtitle("Generated PP thinning per site, including observed PO individuals") +
-  geom_point(data=r_po_data$Y_coords, mapping=aes(x=x, y=y), size=3, col="white") +
+  ggtitle("Generated PP thinning per site, \nincluding observed PO individuals") +
+  geom_point(data=r_po_data$Y_coords, mapping=aes(x=x, y=y), size=2, col="white") +
   theme(panel.grid.minor = element_line(colour="white")) +
   scale_y_continuous(breaks = seq(0, 20, 1)) +
   scale_x_continuous(breaks = seq(0, 20, 1)) +
@@ -297,6 +297,7 @@ v_list <- vector(mode="list", length=random_starts)
 names(v_list) <- c(1:random_starts)
 best_v <- vector(mode="numeric", length=random_starts)
 best_site_mat <- matrix(nrow=random_starts, ncol=m)
+optimal_visit_mat <- matrix(nrow=random_starts, ncol=m)
 
 # Initiate parallel processing if specified
 if (exp_args$v_parallel==T){
@@ -346,7 +347,7 @@ for (r_start in 1:random_starts){
   }
   # Once the posterior is computed on each of R datasets, find the average score:
   new_v_est <- sum(estimate_mat) / data_reps
-  print("Design score from most initial exchange")
+  print("Design score from initial exchange")
   print(new_v_est)
   v_vec <- c(v_vec, new_v_est)
   current_v_est <- new_v_est
@@ -459,11 +460,11 @@ for (r_start in 1:random_starts){
              current_v_est <- new_v_est
              title <- paste("New optimal spatial design: v=", round(new_v_est, 10), sep="")
              # Plot the new best site compared to the previous selection, but need to reverse arguments to function
-             # Use current_visits
-             p <- plot_sites_vs_best(sampling_surface, current_site, best_neighbor_idx, neighbor_idx, current_visits, title)
+             # Use current_visits as optimal visits.
+             p <- plot_sites_vs_best(sampling_surface, current_site, best_neighbor_idx, neighbor_idx, possible_visits, current_visits, title)
              # Then set new best indices
              best_neighbor_idx <- neighbor_idx
-             possible_visits[s] <- current_visits
+             possible_visits <- current_visits
              print("New optimal row ids")
              print(best_neighbor_idx) 
              print("Optimum survey effort")
@@ -477,7 +478,7 @@ for (r_start in 1:random_starts){
             title <- paste("Non-optimal spatial design: v=", round(new_v_est, 10), 
                            "\nvs current optimal design: v=", round(current_v_est, 10), sep="")
             #print("No change in optimal design")
-            p <- plot_sites_vs_best(sampling_surface, current_site, neighbor_idx, best_neighbor_idx, possible_visits, title)
+            p <- plot_sites_vs_best(sampling_surface, current_site, neighbor_idx, best_neighbor_idx, current_visits, possible_visits, title)
           }
           fig_name <- file.path(fig_dir, paste("site_locs_rand-start-", r_start, "_ex-iter_", 
                             exchange_iter, "_site-iter-", s, "_effort_", visit, "_nn-iter", n_count,".png", sep=""))
@@ -518,6 +519,7 @@ for (r_start in 1:random_starts){
   
   v_list[[r_start]] <- v_vec
   best_site_mat[r_start,] <- best_iter_idx
+  optimal_visit_mat[r_start,] <- optimal_visits
   best_v[r_start] <- current_v_est
 }
 end_time <- Sys.time()
@@ -558,13 +560,13 @@ print(v_list)
 print("Best sites")
 print(best_site_mat)
 print("Optimal visits")
-print(optimal_visits)
+print(optimal_visit_mat)
 print("best V")
 print(best_v)
 print("Avg V(D)")
 print(sum(best_v) / random_starts)
 
-write_results(random_starts, best_v, best_site_mat, optimal_visits, v_df, exp_dir, exp_name)
+write_results(random_starts, best_v, best_site_mat, optimal_visit_mat, v_df, exp_dir, exp_name)
 
 # End cluster
 stopCluster(clust)
