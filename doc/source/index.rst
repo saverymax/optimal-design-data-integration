@@ -1,0 +1,24 @@
+.. optimal-design-data-integration documentation master file, created by
+   sphinx-quickstart on Mon Jun 26 16:36:26 2023.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+Welcome to optimal-design-data-integration's documentation!
+===========================================================
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+   introduction.md
+   usage.md
+
+
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
+
