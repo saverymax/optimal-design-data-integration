@@ -6,3 +6,4 @@ job_output/*
 .Rproj.user
 *Rplots.pdf
 .Rhistory
+_build
