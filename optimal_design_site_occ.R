@@ -557,12 +557,14 @@ print("V list")
 print(v_list)
 print("Best sites")
 print(best_site_mat)
+print("Optimal visits")
+print(optimal_visits)
 print("best V")
 print(best_v)
 print("Avg V(D)")
 print(sum(best_v) / random_starts)
 
-write_results(random_starts, best_v, best_site_mat, v_df, exp_dir, exp_name)
+write_results(random_starts, best_v, best_site_mat, optimal_visits, v_df, exp_dir, exp_name)
 
 # End cluster
 stopCluster(clust)
