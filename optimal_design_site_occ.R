@@ -398,8 +398,8 @@ for (r_start in 1:random_starts){
           # This code chunk will "double index" if the current site s already has been selected 
           # to have 1 visit, but that is ok since we just need the data at nn to correspond to 1 visit.
           # For example if possible_visits == c(1,5,5) and then we are the neighbor of the 1st site 
-          # we will select that 1 index neighbor here and also in the if chunk below
-          visit_idx <- c(neighbor_idx[which(possible_visits==1)])
+          # so that current_visits === c(1, 5,5) we will select that index==1 neighbor here 
+          visit_idx <- c(neighbor_idx[which(current_visits==1)])
           print("current s and site")
           print(s)
           print(current_site)
@@ -415,21 +415,26 @@ for (r_start in 1:random_starts){
           r_survey_data$occupancy[, visit_idx] <- r_survey_data_n1$occupancy[, visit_idx]
           r_survey_data$Y[, visit_idx] <- r_survey_data_n1$Y[, visit_idx]
           stopifnot(all(r_survey_data$Y[, visit_idx]<=1))
+          # Check that we're selecting right sites
+          if (visit==1){
+            stopifnot(nn%in%visit_idx)
+          }
           # Don't really need theta as it's only for data generation purposes
           r_survey_data$theta[, visit_idx] <- r_survey_data_n1$theta[, visit_idx]
-          # Need to write over the current visits, for example if possible_vists[1] = 1
-          # but we need to test a neighbor
-          if (visit==5){
-            r_survey_data$occupancy[, nn] <- r_survey_data_n5$occupancy[, nn]
-            r_survey_data$Y[, nn] <- r_survey_data_n5$Y[, nn]
-            r_survey_data$theta[, nn] <- r_survey_data_n5$theta[, nn]
-          }
-          if (visit==1){
-            r_survey_data$occupancy[, nn] <- r_survey_data_n1$occupancy[, nn]
-            r_survey_data$Y[, nn] <- r_survey_data_n1$Y[, nn]
-            stopifnot(all(r_survey_data$Y[, nn]<=1))
-            r_survey_data$theta[, nn] <- r_survey_data_n1$theta[, nn]
-          }
+          # Likely redudancant cod3
+          ## Need to write over the current visits, for example if possible_vists[1] = 1
+          ## but we need to test a neighbor
+          #if (visit==5){
+          #  r_survey_data$occupancy[, nn] <- r_survey_data_n5$occupancy[, nn]
+          #  r_survey_data$Y[, nn] <- r_survey_data_n5$Y[, nn]
+          #  r_survey_data$theta[, nn] <- r_survey_data_n5$theta[, nn]
+          #}
+          #if (visit==1){
+          #  r_survey_data$occupancy[, nn] <- r_survey_data_n1$occupancy[, nn]
+          #  r_survey_data$Y[, nn] <- r_survey_data_n1$Y[, nn]
+          #  stopifnot(all(r_survey_data$Y[, nn]<=1))
+          #  r_survey_data$theta[, nn] <- r_survey_data_n1$theta[, nn]
+          #}
           print("site set")
           print(site_idx)
           print("best neighbor idx")
