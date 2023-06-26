@@ -24,13 +24,13 @@ parser <- add_option(parser, "--working_dir", type="character", default=".", hel
 parser <- add_option(parser, "--exp_name", type="character", default="oe_run", help="Name of current experiment, which is used for dir to save output")
 parser <- add_option(parser, "--data_reps", type="integer", default=4, help="Number of dataset reps for criterion estimation")
 parser <- add_option(parser, "--m", type="integer", default=5, help="Number of sites to survey")
-parser <- add_option(parser, "--n", type="integer", default=5, help="Number of time to visit each site")
+parser <- add_option(parser, "--n", type="integer", default=5, help="Maximum number of time to visit each site")
 parser <- add_option(parser, "--model_selection", type="integer", default=3, help="Occupancy model to use")
 parser <- add_option(parser, "--random_starts", type="integer", default=3, help="Number of random starts to run the exchange")
 parser <- add_option(parser, "--exch_iter", type="integer", default=5, 
                      help="Number of iterations of exchange before ending optimization. Recommended is 20 but default is set low for test runs.")
 parser <- add_option(parser, "--mcmc_iter", type="integer", default=1000, help="Number of MCMC iterations in Stan")
-parser <- add_option(parser, "--intensity_func", type="character", default="simple", help="Intensity function for sampling surface")
+parser <- add_option(parser, "--intensity_func", type="character", default="donut", help="Intensity function for sampling surface")
 parser <- add_option(parser, "--bias_func", type="character", default="exponential", help="Bias function for sampling surface")
 parser <- add_option(parser, "--p_logging", action="store_true", default=F, help="Boolean for logging information about posterior estimates")
 parser <- add_option(parser, "--v_parallel", action="store_true", default=F, help="Boolean for parallel computation of V criterion")
@@ -110,18 +110,22 @@ if (exp_args$intensity_func == "simple"){
 }
 print(sampling_surface)
 
-# number of surveys at site is equal to n or 0.
-# The number of surveys will differ between sites
-n_surveys <- rep(exp_args$n, sites)
+# The number of surveys will differ between sites so it is a vector
+# We will select m sites to have these visits, otherwise the sites will have 0 visits
+# We will compare the number of visits during the optimization
+visits <- c(1, exp_args$n)
 # Next, we use this data to generate the rest of the datasets
 # The data generating function will sample R occupancy maps|params
-# and then R complete datasets|occupancy maps
+# and then R complete datasets|occupancy maps'
+# It turns out that if we want to compare different survey efforts it is convenient to have pre-generated datasets for
+# each number of visits
 corr_matrix <- specify_corr(sampling_surface[,1:2])
 link_func <- "cloglog"
-r_survey_data <- generate_data_so(data_reps, sampling_surface, corr_matrix, p_0, alpha, beta, sigma, n_surveys, sites, link=link_func)
-print(r_survey_data$occupancy[1,])
-print(r_survey_data$Y[1,])
-print(r_survey_data$theta[1,])
+r_survey_data_n1 <- generate_data_so(data_reps, sampling_surface, corr_matrix, p_0, alpha, beta, sigma, visits[1], sites, link=link_func)
+r_survey_data_n5 <- generate_data_so(data_reps, sampling_surface, corr_matrix, p_0, alpha, beta, sigma, visits[2], sites, link=link_func)
+#print(r_survey_data_n1$occupancy[1,])
+#print(r_survey_data_n1$Y[1,])
+#print(r_survey_data_n1$theta[1,])
 
 # Then generate R presence-only datasets
 params <- list(alpha=alpha, beta=beta, gamma=gamma, delta=delta)
@@ -141,10 +145,13 @@ dim(nearest_neighbors)
 nearest_neighbors
 
 # Use the final generation iteration to look at the presence-absence and presence-only data
-survey_data_df <- data.frame(counts=r_survey_data$Y[1,], o=r_survey_data$occupancy[1,], 
-                             x=sampling_surface$x, y=sampling_surface$y, theta=r_survey_data$theta[1,], cor_mat=as.vector(corr_matrix[1,]))
-head(survey_data_df)
-dim(survey_data_df)
+survey_data_df_1 <- data.frame(counts=r_survey_data_n1$Y[1,], o=r_survey_data_n1$occupancy[1,], 
+                             x=sampling_surface$x, y=sampling_surface$y, theta=r_survey_data_n1$theta[1,], cor_mat=as.vector(corr_matrix[1,]))
+
+survey_data_df_5 <- data.frame(counts=r_survey_data_n5$Y[1,], o=r_survey_data_n5$occupancy[1,], 
+                             x=sampling_surface$x, y=sampling_surface$y, theta=r_survey_data_n5$theta[1,], cor_mat=as.vector(corr_matrix[1,]))
+print(head(survey_data_df_1))
+print(head(survey_data_df_5))
 
 # Plot the covariates
 p <- ggplot(sampling_surface, aes(x, y, fill=aux_x)) + 
@@ -153,7 +160,6 @@ p <- ggplot(sampling_surface, aes(x, y, fill=aux_x)) +
   ggtitle("Initial sampling surface, X covariate") +
   theme(text=element_text(size=5), legend.key.size = unit(0.25, 'cm')) +
   coord_fixed()
-print(p)
 fig_name <- file.path(fig_dir, paste("sampling_surface_aux_x.png", sep=""))
 save_basic_plots(fig_name, p)
 
@@ -163,36 +169,62 @@ p <- ggplot(sampling_surface, aes(x, y, fill=aux_z)) +
   ggtitle("Initial sampling surface, Z covariate") +
   theme(text=element_text(size=5), legend.key.size = unit(0.25, 'cm')) +
   coord_fixed()
-print(p)
 fig_name <- file.path(fig_dir, paste("sampling_surface_aux_z.png", sep=""))
 save_basic_plots(fig_name, p)
 
 # Then plot PA data
-p <- ggplot(sampling_surface, aes(x, y, fill=r_survey_data$Y[data_reps,])) + 
+p <- ggplot(sampling_surface, aes(x, y, fill=r_survey_data_n1$Y[data_reps,])) + 
   geom_tile() +
   scale_fill_viridis(discrete=FALSE, name="Counts") +
-  ggtitle("Generated counts per site") +
+  ggtitle("Generated counts per site, sampling effort=1") +
   theme(text=element_text(size=5), legend.key.size = unit(0.25, 'cm')) +
   coord_fixed()
-fig_name <- file.path(fig_dir, paste("counts-per-site.png", sep=""))
+fig_name <- file.path(fig_dir, paste("counts-per-site_n1.png", sep=""))
 save_basic_plots(fig_name, p)
 
-p <- ggplot(sampling_surface, aes(x, y, fill=r_survey_data$occupancy[data_reps,])) + 
+p <- ggplot(sampling_surface, aes(x, y, fill=r_survey_data_n1$occupancy[data_reps,])) + 
   geom_tile() +
   scale_fill_viridis(discrete=FALSE, name="Occupancy") +
-  ggtitle("Generated occupancy per site") +
+  ggtitle("Generated occupancy per site, sampling effort=1") +
   theme(text=element_text(size=5), legend.key.size = unit(0.25, 'cm')) +
   coord_fixed()
-fig_name <- file.path(fig_dir, paste("occ-site.png", sep=""))
+fig_name <- file.path(fig_dir, paste("occ-site_n1.png", sep=""))
 save_basic_plots(fig_name, p)
 
-p <- ggplot(sampling_surface, aes(x, y, fill=r_survey_data$theta[data_reps,])) + 
+p <- ggplot(sampling_surface, aes(x, y, fill=r_survey_data_n1$theta[data_reps,])) + 
   geom_tile() +
   scale_fill_viridis(discrete=FALSE, name="Theta") +
-  ggtitle("generated occupancy probability per site") +
+  ggtitle("generated occupancy probability per site, sampling effort=1") +
   theme(text=element_text(size=5), legend.key.size = unit(0.25, 'cm')) +
   coord_fixed()
-fig_name <- file.path(fig_dir, paste("occ-p-site.png", sep=""))
+fig_name <- file.path(fig_dir, paste("occ-p-site_n1.png", sep=""))
+save_basic_plots(fig_name, p)
+
+p <- ggplot(sampling_surface, aes(x, y, fill=r_survey_data_n5$Y[data_reps,])) + 
+  geom_tile() +
+  scale_fill_viridis(discrete=FALSE, name="Counts") +
+  ggtitle("Generated counts per site, sampling effort=5") +
+  theme(text=element_text(size=5), legend.key.size = unit(0.25, 'cm')) +
+  coord_fixed()
+fig_name <- file.path(fig_dir, paste("counts-per-site_n5.png", sep=""))
+save_basic_plots(fig_name, p)
+
+p <- ggplot(sampling_surface, aes(x, y, fill=r_survey_data_n5$occupancy[data_reps,])) + 
+  geom_tile() +
+  scale_fill_viridis(discrete=FALSE, name="Occupancy") +
+  ggtitle("Generated occupancy per site, sampling effort=5") +
+  theme(text=element_text(size=5), legend.key.size = unit(0.25, 'cm')) +
+  coord_fixed()
+fig_name <- file.path(fig_dir, paste("occ-site_n5.png", sep=""))
+save_basic_plots(fig_name, p)
+
+p <- ggplot(sampling_surface, aes(x, y, fill=r_survey_data_n5$theta[data_reps,])) + 
+  geom_tile() +
+  scale_fill_viridis(discrete=FALSE, name="Theta") +
+  ggtitle("generated occupancy probability per site, sampling effort=5") +
+  theme(text=element_text(size=5), legend.key.size = unit(0.25, 'cm')) +
+  coord_fixed()
+fig_name <- file.path(fig_dir, paste("occ-p-site_n5.png", sep=""))
 save_basic_plots(fig_name, p)
 
 # Then the PO data
@@ -265,6 +297,7 @@ v_list <- vector(mode="list", length=random_starts)
 names(v_list) <- c(1:random_starts)
 best_v <- vector(mode="numeric", length=random_starts)
 best_site_mat <- matrix(nrow=random_starts, ncol=m)
+
 # Initiate parallel processing if specified
 if (exp_args$v_parallel==T){
   n_cores <- detectCores()
@@ -282,27 +315,33 @@ for (r_start in 1:random_starts){
   # These sites will have n_i = n, the others will have n_i = 0
   # Only sites with n_i=n will contribute to likelihood for the site-occupancy model.
   site_idx <- sample(1:sites, m, replace=F)
-  site_idx
   # Initialize for exchange algorithm
+  # I don't need best_neighbor_idx but it allows me to not modify the 
+  # the vector that is looped over during the exchange. Even though this concurrent looping should be ok, as the sites are independently 
+  # exchanged, but for organization purposes they are separate variables. 
   best_neighbor_idx <- site_idx
+  # Vector to hold potential sampling effort at each site
+  # optimal_visits will be initiated in algorithm
+  possible_visits <- rep(visits[-1], m)
+  # Initial sites
   select_sites <- sampling_surface[site_idx,]
-  select_sites
   # Convergence condition will be met where full iteration through all sampled sites results in no change
   # in sites. ie no changes in sites can improve criterion
   convergence_cond <- FALSE
   exchange_iter <- 0
   v_vec <- c()
   # Compute v for initial design
+  # Not comparing sampling effort here
   if (exp_args$v_parallel==T){
-    combined_df <- cbind(r_survey_data$occupancy, r_survey_data$Y, r_po_data$Y)
-    estimate_vec <- parApply(clust, combined_df, 1, FUN=estimate_v_parallel, model, n_surveys, m, sites, sampling_surface, 
+    combined_df <- cbind(r_survey_data_n5$occupancy, r_survey_data_n5$Y, r_po_data$Y)
+    estimate_vec <- parApply(clust, combined_df, 1, FUN=estimate_v_parallel, model, possible_visits, m, sites, sampling_surface, 
                                  site_idx, select_sites, params, generated_vars, model_selection, exp_args$mcmc_iter)
     # Compatible format with non-parallel v
     estimate_mat <- matrix(estimate_vec, nrow=data_reps, ncol=1)
   }
   else{
-    estimate_mat <- estimate_v(model, n_surveys, data_reps, m, sites, sampling_surface, 
-                               site_idx, select_sites, r_survey_data, r_po_data, r,
+    estimate_mat <- estimate_v(model, possible_visits, data_reps, m, sites, sampling_surface, 
+                               site_idx, select_sites, r_survey_data_n5, r_po_data,
                                p_logging, params, generated_vars, model_selection, exp_args$mcmc_iter)
   }
   # Once the posterior is computed on each of R datasets, find the average score:
@@ -322,7 +361,7 @@ for (r_start in 1:random_starts){
   fig_name <- file.path(fig_dir, paste("initial_design.png", sep=""))
   ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm")
   
-  while ((convergence_cond==FALSE) & (exchange_iter<exp_args$exch_iter)){
+  while ((convergence_cond==FALSE) & (exchange_iter<=exp_args$exch_iter)){
     exchange_iter <- exchange_iter + 1
     print(paste("New exchange iteration: ", exchange_iter))
     # Data structure for each score estimate
@@ -333,61 +372,120 @@ for (r_start in 1:random_starts){
       current_site <- site_idx[s]
       print(paste("current site: ", current_site, sep=""))
       neighbor_set <- nearest_neighbors[current_site,]
-      n_count <- 0
+      # Set the current sites to the best from iteration over sites neighbors
+      current_visits <- possible_visits
       # We first iterate through the neighbors of each site, and compute V for each exchange. 
-      # The inital estimate will be for our initial design.
-      # We set the current best set of indices
-      #best_neighbor_idx <- site_idx
-      # TODO: Here add loop for number of visits but need to think it through
-      # for (survey_effort in visits){}
-      for(nn in neighbor_set){
-        n_count <- n_count + 1
-        # Select new data using the neighbors (switch out local points)
-        neighbor_idx <- exchange_coordinates_deterministic(best_neighbor_idx, s, nn)
-        select_sites <- sampling_surface[neighbor_idx,] 
-        if (exp_args$v_parallel==T){
-          combined_df <- cbind(r_survey_data$occupancy, r_survey_data$Y, r_po_data$Y)
-          estimate_vec <- parApply(clust, combined_df, 1, FUN=estimate_v_parallel, model, n_surveys, m, sites, sampling_surface, 
-                                       neighbor_idx, select_sites, params, generated_vars, model_selection, exp_args$mcmc_iter)
-          # Compatible format with non-parallel v
-          estimate_mat <- matrix(estimate_vec, nrow=data_reps, ncol=1)
+      # The initial estimate will be for our initial design.
+      for (visit in visits){
+        n_count <- 0
+        current_visits[s] <- visit
+        for(nn in neighbor_set){
+          # Handle duplicates in sites because the visit optimization is not compatible with 
+          # the same site occurring multiple times in site_idx
+          # Check that the neighbor isn't in the main set of sites
+          if (nn %in% site_idx){
+            print("skipping site")
+            print(site_idx)
+            print(nn)
+            next
+          }
+          n_count <- n_count + 1
+          # Select new data using the neighbors (switch out local points)
+          neighbor_idx <- exchange_coordinates_deterministic(best_neighbor_idx, s, nn)
+          select_sites <- sampling_surface[neighbor_idx,] 
+          # Then set the survey effort for current id set
+          # This code chunk will "double index" if the current site s already has been selected 
+          # to have 1 visit, but that is ok since we just need the data at nn to correspond to 1 visit.
+          # For example if possible_visits == c(1,5,5) and then we are the neighbor of the 1st site 
+          # we will select that 1 index neighbor here and also in the if chunk below
+          visit_idx <- c(neighbor_idx[which(possible_visits==1)])
+          print("current s and site")
+          print(s)
+          print(current_site)
+          print("current visit")
+          print(visit)
+          print("posible visits")
+          print(possible_visits)
+          print("current vistits")
+          print(current_visits)
+          print("ids with visit 1")
+          print(visit_idx)
+          r_survey_data <- r_survey_data_n5
+          r_survey_data$occupancy[, visit_idx] <- r_survey_data_n1$occupancy[, visit_idx]
+          r_survey_data$Y[, visit_idx] <- r_survey_data_n1$Y[, visit_idx]
+          stopifnot(all(r_survey_data$Y[, visit_idx]<=1))
+          # Don't really need theta as it's only for data generation purposes
+          r_survey_data$theta[, visit_idx] <- r_survey_data_n1$theta[, visit_idx]
+          # Need to write over the current visits, for example if possible_vists[1] = 1
+          # but we need to test a neighbor
+          if (visit==5){
+            r_survey_data$occupancy[, nn] <- r_survey_data_n5$occupancy[, nn]
+            r_survey_data$Y[, nn] <- r_survey_data_n5$Y[, nn]
+            r_survey_data$theta[, nn] <- r_survey_data_n5$theta[, nn]
+          }
+          if (visit==1){
+            r_survey_data$occupancy[, nn] <- r_survey_data_n1$occupancy[, nn]
+            r_survey_data$Y[, nn] <- r_survey_data_n1$Y[, nn]
+            stopifnot(all(r_survey_data$Y[, nn]<=1))
+            r_survey_data$theta[, nn] <- r_survey_data_n1$theta[, nn]
+          }
+          print("site set")
+          print(site_idx)
+          print("best neighbor idx")
+          print(best_neighbor_idx)
+          print("neighbors")
+          print(neighbor_idx)
+          print("current neighbor")
+          print(nn)
+          print("current data selction after visits altered")
+          print(r_survey_data$Y[,neighbor_idx])
+          if (exp_args$v_parallel==T){
+            combined_df <- cbind(r_survey_data$occupancycy, r_survey_data$Y, r_po_data$Y)
+            estimate_vec <- parApply(clust, combined_df, 1, FUN=estimate_v_parallel, model, current_visits, m, sites, sampling_surface, 
+                                         neighbor_idx, select_sites, params, generated_vars, model_selection, exp_args$mcmc_iter)
+            # Compatible format with non-parallel v
+            estimate_mat <- matrix(estimate_vec, nrow=data_reps, ncol=1)
+          }
+          else{
+            estimate_mat <- estimate_v(model, current_visits, data_reps, m, sites, sampling_surface, 
+                                       neighbor_idx, select_sites, r_survey_data, r_po_data,
+                                       p_logging, params, generated_vars, model_selection, exp_args$mcmc_iter)
+          }
+          # Once the posterior is computed on each of R datasets, find the average score:
+          new_v_est <- sum(estimate_mat) / data_reps
+          v_vec <- c(v_vec, new_v_est)
+          
+          if (new_v_est < current_v_est){
+             current_v_est <- new_v_est
+             title <- paste("New optimal spatial design: v=", round(new_v_est, 10), sep="")
+             # Plot the new best site compared to the previous selection, but need to reverse arguments to function
+             # Use current_visits
+             p <- plot_sites_vs_best(sampling_surface, current_site, best_neighbor_idx, neighbor_idx, current_visits, title)
+             # Then set new best indices
+             best_neighbor_idx <- neighbor_idx
+             possible_visits[s] <- current_visits
+             print("New optimal row ids")
+             print(best_neighbor_idx) 
+             print("Optimum survey effort")
+             print(possible_visits)
+             print("New coordinates")
+             print(sampling_surface[best_neighbor_idx,1:2])
+             print("New optimal design score")
+             print(current_v_est)
+          }
+          else{
+            title <- paste("Non-optimal spatial design: v=", round(new_v_est, 10), 
+                           "\nvs current optimal design: v=", round(current_v_est, 10), sep="")
+            #print("No change in optimal design")
+            p <- plot_sites_vs_best(sampling_surface, current_site, neighbor_idx, best_neighbor_idx, possible_visits, title)
+          }
+          fig_name <- file.path(fig_dir, paste("site_locs_rand-start-", r_start, "_ex-iter_", 
+                            exchange_iter, "_site-iter-", s, "_effort_", visit, "_nn-iter", n_count,".png", sep=""))
+          ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm")
+          # Then go to the next neighbor or site
         }
-        else{
-          estimate_mat <- estimate_v(model, n_surveys, data_reps, m, sites, sampling_surface, 
-                                     neighbor_idx, select_sites, r_survey_data, r_po_data, r,
-                                     p_logging, params, generated_vars, model_selection, exp_args$mcmc_iter)
-        }
-        # Once the posterior is computed on each of R datasets, find the average score:
-        new_v_est <- sum(estimate_mat) / data_reps
-        v_vec <- c(v_vec, new_v_est)
-        
-        if (new_v_est < current_v_est){
-           current_v_est <- new_v_est
-           title <- paste("New optimal spatial design: v=", round(new_v_est, 10), sep="")
-           # Plot the new best site compared to the previous selection, but need to reverse arguments to function
-           p <- plot_sites_vs_best(sampling_surface, current_site, best_neighbor_idx, neighbor_idx, title)
-           # Then set new best indices
-           #site_idx <- select_idx
-           best_neighbor_idx <- neighbor_idx
-           print("New optimal row ids")
-           print(best_neighbor_idx) 
-           print("New coordinates")
-           print(sampling_surface[best_neighbor_idx,1:2])
-           print("New optimal design score")
-           print(current_v_est)
-        }
-        else{
-          title <- paste("Non-optimal spatial design: v=", round(new_v_est, 10), 
-                         "\nvs current optimal design: v=", round(current_v_est, 10), sep="")
-          #print("No change in optimal design")
-          p <- plot_sites_vs_best(sampling_surface, current_site, neighbor_idx, best_neighbor_idx, title)
-        }
-        fig_name <- file.path(fig_dir, paste("site_locs_rand-start-", r_start, "_ex-iter_", 
-                          exchange_iter, "_site-iter-", s, "_nn-iter", n_count,".png", sep=""))
-        ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm")
-        # Then go to the next neighbor or site
       }
-      # Set design to best from iteration through neighbors of one site
+      # Set design to best from iteration through visits AND neighbors for one site
       # If there is no change from any neighbors, site_idx will not change
       site_idx <- best_neighbor_idx
     }
@@ -396,8 +494,9 @@ for (r_start in 1:random_starts){
     # If it's the first iteration we need to initialize the best sites
     if(exchange_iter==1){
       best_iter_idx <- site_idx
+      optimal_visits <- possible_visits
     }
-    else if(all(best_iter_idx==site_idx)){
+    else if(all(best_iter_idx==site_idx)&all(optimal_visits==possible_visits)){
       convergence_cond <- TRUE
     }
     else{
@@ -405,6 +504,11 @@ for (r_start in 1:random_starts){
       print(best_iter_idx)
       print(site_idx)
       best_iter_idx <- site_idx
+      print("Previous optimal survey effort and new optimal effort")
+      print(optimal_visits)
+      print(possible_visits)
+      # Need to track if there is a change in visits over the course of full iteration
+      optimal_visits <- possible_visits
     }
     # Print run time per exchange
     cur_time <- Sys.time()

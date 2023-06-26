@@ -142,9 +142,9 @@ poisson_process_site_occupancy <- '
       int<lower = 1> n_pa_sites;
       int<lower = 1> n_po_sites;
       int<lower=0, upper=1> model_diag;
-      vector[n_pa_sites] n_surveys;
-      vector[n_pa_sites] X;
       array[n_pa_sites] int Y;
+      array[n_pa_sites] int n_surveys;
+      vector[n_pa_sites] X;
       vector[n_po_sites] X_po;
       vector[n_po_sites] Z_po;
       array[n_po_sites] int PO;
@@ -181,18 +181,6 @@ poisson_process_site_occupancy <- '
       }
     }
     generated quantities{
-      // Dont need these generated quantities at the moment
-      // model diag is model diagnosis but not implemented atm
-      //if (model_diag){
-      //vector[n_po_sites] lambda_rep;
-      //vector[n_po_sites] b_rep;
-      //vector[n_po_sites] lambda_bias_rep;
-      //array[n_po_sites] int y_rep; 
-      //lambda_rep = exp(alpha + beta * X_po);
-      //b_rep = exp(gamma + delta * Z_po);
-      //lambda_bias_rep = exp(alpha + beta * X_po + gamma + delta * Z_po);
-      //y_rep = poisson_log_rng(alpha + beta * X_po + gamma + delta * Z_po);
-      //}
       // Required generated quantities
       // We can generate over all sites, instead of just those being used for PA
       vector[n_po_sites] g_theta_gen;

@@ -40,7 +40,7 @@ design_criteria <- function(criteria, sim_occ, obs_occ){
 }
 
 estimate_v <- function(model, n_surveys, data_reps, m, sites, sampling_surface, 
-                       select_idx, select_sites, r_survey_data, r_po_data, r,
+                       select_idx, select_sites, r_survey_data, r_po_data,
                        p_logging, params, generated_vars, model_selection, mcmc_iter){
   estimate_mat <- matrix(nrow=data_reps, ncol=1)
   for (r in 1:data_reps){
@@ -295,8 +295,6 @@ get_bias_surface_exponential <- function(sampling_grid, centroid){
 
 generate_data_so <- function(data_reps, surface_data, corr_matrix, p_0, alpha, beta, sigma, n, sites, link){
   # Generate some random covariate data that will be used to model theta
-  # n is a vector of surveys at each site
-  stopifnot(length(n)==sites)
   occupancy_maps <- matrix(nrow=data_reps, ncol=sites)
   Y_detection <- matrix(nrow=data_reps, ncol=sites)
   theta_reps <- matrix(nrow=data_reps, ncol=sites)
@@ -319,7 +317,6 @@ generate_data_so <- function(data_reps, surface_data, corr_matrix, p_0, alpha, b
 }
 
 save_basic_plots <- function(fig_name, p){
-  ggsave(fig_name, plot=p)
   ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm")
 }
 
@@ -334,13 +331,13 @@ plot_sites <- function(sampling_surface, select_idx, title){
   return(p)
 }
 
-plot_sites_vs_best <- function(sampling_surface, current_site, select_idx, best_select_idx, title){
+plot_sites_vs_best <- function(sampling_surface, current_site, select_idx, best_select_idx, visits, title){
   # Plot current set of sites compared to the best sites. 
   # Best will always be pink
   p <- ggplot(sampling_surface, aes(x, y, fill=aux_x)) + 
     geom_tile() +
     geom_point(data=sampling_surface[select_idx,], aes(x=x, y=y), colour = "white", size = 1.5) +
-    geom_point(data=sampling_surface[best_select_idx,], aes(x=x, y=y), colour = "hotpink1", size = 1, alpha=1) +
+    geom_point(data=sampling_surface[best_select_idx,], aes(x=x, y=y), colour = "hotpink1", size = visits/(length(visits)), alpha=1) +
     geom_point(data=sampling_surface[current_site,], aes(x=x, y=y), colour = "black", size = 0.5) +
     scale_fill_viridis(discrete=FALSE) +
     ggtitle(title) + 
