@@ -1,0 +1,101 @@
+library(tidyverse)
+library(ggplot2)
+library(openxlsx)
+library(kableExtra)
+library(stringr)
+
+
+#exp_dir <- "C:/Users/msavery/OneDrive - UGent/Documents/ghent_phd_spatial_doe/data/globus_hpc_collection"
+exp_dir <- "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration"
+
+exp_name <- "experimental_runs_full_perm"
+result_dir <- file.path(exp_dir, exp_name)
+print(result_dir)
+# Look at all files corresponding to this set of experiments
+file_list <- list.files(result_dir)
+
+n_f <- length(file_list)
+print(n_f)
+m1_n1 <- c()
+m1_n5 <- c()
+m3_n1 <- c()
+m3_n5 <- c()
+perm1 <- c()
+perm2 <- c()
+perm3 <- c()
+perm4 <- c()
+exp_list <- list(m1_n1, m1_n5, m3_n1, m3_n5)
+exp_col <- c("model-1_n-1", "model-1_n-5", "model-3_n-1", "model-3_n-5")
+perm_list <- list(perm1, perm2, perm3, perm4)
+names(exp_list) <- exp_col
+names(perm_list) <- exp_col
+print(exp_list)
+for (i in 1:length(file_list)){
+  f <- file_list[i]
+  print(f)
+  dir_path <- file.path(result_dir, f)
+  file_name <- list.files(dir_path)[2]
+  params <- str_split(f, "_")
+  print(params)
+  compare_name <- paste(params[[1]][2], params[[1]][4], sep="_")
+  print(compare_name)
+  param_perm <- paste(params[[1]][9], params[[1]][10], sep="_")
+  # Make this list so as to have the permutation names for each subset
+  perm_list[[compare_name]] <- c(perm_list[[compare_name]], param_perm)
+  if (substr(file_name, str_length(file_name)-3, str_length(file_name))!= "xlsx"){
+    print(paste("Incorrect file selected:", file_name))
+    print(paste("Available files:", list.files(dir_path)))
+    exp_list[[compare_name]] <- c(exp_list[[compare_name]], NA)
+  } else{
+      #if (substr(file_name, 1, 1) == "r"){
+      #  new_file <- substr(file_name, 12, str_length(file_name))
+      #  file_path <- file.path(dir_path, new_file)
+      #  old_path <- file.path(dir_path, file_name)
+      #  file.rename(old_path, file_path)
+      #}else{
+      #  file_path <- file.path(dir_path, file_name)
+      #}
+      file_path <- file.path(dir_path, file_name)
+      #print(file_path)
+      results <- read.xlsx(file_path, sheet="v_stat")
+      # Split strings, get params, and then organize table somehow
+      exp_list[[compare_name]] <- c(exp_list[[compare_name]], results$v)
+      #if(str_detect(f, "model-1")==T){
+      #  if(str_detect(f, "n-1")==T){
+      #    m1_n1 <- c(m1_n1, results$v)
+      #  } else if(str_detect(f, "n-5")==T){
+      #    m1_n5 <- c(m1_n5, results$v)
+      #  }
+      #}
+      #if(str_detect(f, "model-3")==T){
+      #  if(str_detect(f, "n-1")==T){
+      #    m3_n1 <- c(m3_n1, results$v)
+      #  } else if(str_detect(f, "n-5")==T){
+      #    m3_n5 <- c(m3_n5, results$v)
+      #  }
+      #}
+   }
+}
+print(exp_list)
+print(perm_list)
+stopifnot(identical(perm_list[[1]], perm_list[[2]]))
+stopifnot(identical(perm_list[[1]], perm_list[[3]]))
+stopifnot(identical(perm_list[[1]], perm_list[[4]]))
+v_mat <- matrix(ncol=4, nrow=n_f/4)
+print(dim(v_mat))
+v_mat[,1] <- exp_list[[exp_col[1]]]
+v_mat[,2] <- exp_list[[exp_col[2]]]
+v_mat[,3] <- exp_list[[exp_col[3]]]
+v_mat[,4] <- exp_list[[exp_col[4]]]
+print(v_mat)
+v_df <- as.data.frame(v_mat)
+names(v_df) <- exp_col
+row.names(v_df) <- perm_list[[1]]
+print(v_df)
+caption <- paste("Comparison of models, sampling effort, and parameter permutations")
+label <- paste("survey_eval", sep="")
+print(kbl(v_df, booktabs = T, escape=T, caption=caption, label=label, 
+          align=c('lcccc'), digits=4, format="latex") %>% 
+        kable_styling(latex_options = c("HOLD_position")) )
+#%>%  
+#        add_header_above(c(" " = 1, "w/ station" = 2, "w/o station" = 2)))
