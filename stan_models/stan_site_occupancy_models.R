@@ -90,13 +90,13 @@ site_occupany_detection_site_specific <- '
 '
 cloglog_site_occupancy <- '
   data{
-      int<lower = 1> n_surveys;
       int<lower = 1> n_sites;
       int<lower = 1> total_sites;
       // Distinction in the model for total sites and selected ones
       vector[n_sites] X;
       vector[total_sites] X_all;
       array[n_sites] int Y;
+      array[n_sites] int n_surveys;
     }
     parameters{
       real alpha;
@@ -115,11 +115,11 @@ cloglog_site_occupancy <- '
       g_theta = 1 - exp(-exp(alpha + beta * X));
       for (i in 1:n_sites) {
         if (Y[i] > 0){
-          target += log(g_theta[i]*choose(n_surveys, Y[i])*(p^Y[i])*(1-p)^(n_surveys-Y[i]));
+          target += log(g_theta[i]*choose(n_surveys[i], Y[i])*(p^Y[i])*(1-p)^(n_surveys[i]-Y[i]));
         }
         else{
           // Compute mixture of no detection and no occupancy
-          target += log(g_theta[i]*(1-p)^(n_surveys) + (1 - g_theta[i]));
+          target += log(g_theta[i]*(1-p)^(n_surveys[i]) + (1 - g_theta[i]));
         }
       }
     }
