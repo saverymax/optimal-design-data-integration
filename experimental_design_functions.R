@@ -355,5 +355,6 @@ write_results <- function(random_starts, best_v, best_site_mat, v_df, exp_dir, e
   names(site_df) <- paste("rand-start", c(1:random_starts), sep="")
   names(v_df) <- c("iter", "v", "rand-start")
   xlsx_list <- list("v_stat"=v_stat_df, "best_v"=best_v, "v_iterations"=v_df, "best_sites"=site_df)
-  write.xlsx(xlsx_list, file=file.path(exp_dir, paste("results_", exp_name, ".xlsx", sep="")), rowNames=F)
+  #write.xlsx(xlsx_list, file=file.path(exp_dir, paste("results_", exp_name, ".xlsx", sep="")), rowNames=F)
+  write.xlsx(xlsx_list, file=file.path(exp_dir, "results.xlsx", sep=""), rowNames=F)
 }
