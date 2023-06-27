@@ -2,29 +2,115 @@
 
 Basic usage of this code is described here.
 
-The parameters used in the code are as follows:
+## CLI Arguments
+
+The parameters used in the code are as follows, as per the argument parser used in the main script:
 ```
 "--working_dir", type="character", help="Path to the directory containing code to source for the main script"
+```
+This is the directory where the main scripts are stored, which will allow us to properly source the functions.
+```
 "--exp_name", type="character", help="Name of current experiment, which is used for dir to save output"
+```
+The exp_name will allow us to properly save each experiment in a unique directory.
+```
 "--data_reps", type="integer", default=10, help="Number of dataset reps for criterion estimation"
+```
+The V criterion is estimated as an expectation through numerical integration. data_reps is the number of integration points.
+```
 "--m", type="integer", default=5, help="Number of sites to survey"
+```
+We will randomly select m sites to use in the exchange algorithm. While it would be interesting to optimize this during
+the exchange algorithm, at the moment this is computationally intensive and we leave this as a fixed integer.
+```
 "--n", type="integer", default=5, help="Number of time to visit each site"
+```
+This is the number of times each of m sites will be visited. This can be optimized during the exchange.
+```
 "--model_selection", type="integer", default=3, help="Occupancy model to use"
+```
+There are various possible models to use. By model we refer to the site occupancy likelihood with varying priors. 
+Further documentation will be provided in the modelling section.
+```
 "--random_starts", type="integer", default=3, help="Number of random starts to run the exchange"
+```
+The exchange algorithm is run multiple times to average over the random m sites initially selected.
+```
 "--exch_iter", type="integer", default=20, help="Number of iterations of exchange before ending optimization"
+```
+The algorithm will converge either when there is no change in sites or visits over two full iterations of the algorithm.
+However, for practical efficiency purposes, it can also be set to stop after a certain number of iterations.
+```
 "--mcmc_iter", type="integer", default=1000, help="Number of MCMC iterations in Stan"
+```
+This is the number of iterations of the HMC algorithm within Stan.
+```
 "--intensity_func", type="character", default="simple", help="Intensity function for sampling surface"
+```
+The Presence-Absence data is generated via an intensity which is specified via covariates. These covariates
+are generated in two ways: Either in a smooth gradient across the space, or by a donut shape.
+```
 "--bias_func", type="character", default="exponential", help="Bias function for sampling surface"
+```
+Similarly to the intensity, the bias can also be generated in multiple ways. Currently either as an exponential mountain
+from a single point in the region, or as a donut correlated with the intensity.
+```
 "--p_logging", action="store_true", default=F, help="Boolean for logging information about posterior estimates"
+```
+Run diagnostics on the Stan model. This has not been recently tested with all the functionality of the code, but it may
+be useful if there are suspicious issues with the Stan models.
+```
 "--v_parallel", action="store_true", default=F, help="Boolean for parallel computation of V criterion"
+```
+For computational speed-up, the estimation of V can be run in parallel, if you have the cores available.
+```
 "--cores", type="integer", default=4, help="Number of cores to use for parallel processing"
+```
+If using parallel computation, please specify the number of cores to use.
+```
 "--alpha", type="double", default=-2, help="Intercept for intensity"
+```
+The parameters for that specify the intensity and models will be explained in 
+greater detail in the modelling section. Alpha is used as the slope for the intensity
+```
 "--beta", type="double", default=2, help="Slope for intensity"
+```
+Beta is defined as the intercept of the intensity, or the "quality" of the covariate for intensity.
+```
 "--gamma", type="double", default=-1, help="Intercept for bias"
+```
+Gamma is defined as the intercept for the bias.
+```
 "--delta", type="double", default=.5, help="Slope for bias"
+```
+Delta is the slop for the bias.
+```
 "--p", type="double", default=0.7, help="Probability of detection"
+```
+p is the probability that, given a site is occupied, a surveyor will detect a species of interest. In this implementation, it is a constant defined
+here.
+```
 "--area", type="integer", default=100, help="Area of region D"
+```
+D is the area of the region. This is important in order to correctly scale the covariates.
+```
 "--k", type="integer", default=20, help="Number of sites along one side of grid"
+```
+k will define the number of quadrats along one side of D, thereby determining the area of each site in conjunction with D.
+```
 "--aux_cor", type="double", default=0.8, help="Correlation between auxiliary covariates"
 ```
+If specifying the donut intensity and bias, this argument will determine the extent to which the bias donut is correlated with 
+the donut for intensity.
 
+
+## Running
+For example, you can run an experiment like this
+```
+Rscript optimal_design_site_occ.R --working_dir=. --exp_name=oe_run --data_reps=100 --m=5 --n=5 --model_selection=3 --random_starts=3 --exch_iter=20 --mcmc_iter=1000 --intensity_func="donut" --bias_func="exponential" --v_parallel --cores=48 --alpha=-2 --beta=0.5 --gamma=1 --delta=0.25 --p=0.2 --aux_cor=0.8
+```
+
+Setting the initial values for the alpha, beta, gamma, and delta parameters will control the data generation process 
+and specify a higher or lower intensity and bias.
+
+The experimental results will be written to a folder named experimental_runs, which you have to create yourself. However, this will include only plots from the exchange and figures of the intial data generation. The rest of the output printed during the experiment is written to std-out, which is also up to you how to control. Typically I write these to properly named .o and .e files when running on the HPC cluster.
