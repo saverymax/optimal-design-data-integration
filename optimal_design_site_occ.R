@@ -33,7 +33,7 @@ parser <- add_option(parser, "--mcmc_iter", type="integer", default=1000, help="
 parser <- add_option(parser, "--intensity_func", type="character", default="donut", help="Intensity function for sampling surface")
 parser <- add_option(parser, "--bias_func", type="character", default="exponential", help="Bias function for sampling surface")
 parser <- add_option(parser, "--p_logging", action="store_true", default=F, help="Boolean for logging information about posterior estimates")
-parser <- add_option(parser, "--v_parallel", action="store_true", default=T, help="Boolean for parallel computation of V criterion")
+parser <- add_option(parser, "--v_parallel", action="store_true", default=F, help="Boolean for parallel computation of V criterion")
 parser <- add_option(parser, "--cores", type="integer", default=4, help="Number of cores to use for parallel processing")
 parser <- add_option(parser, "--alpha", type="double", default=-2, help="Intercept for intensity")
 parser <- add_option(parser, "--beta", type="double", default=0.5, help="Slope for intensity")
