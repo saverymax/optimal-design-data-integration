@@ -33,7 +33,7 @@ parser <- add_option(parser, "--mcmc_iter", type="integer", default=1000, help="
 parser <- add_option(parser, "--intensity_func", type="character", default="donut", help="Intensity function for sampling surface")
 parser <- add_option(parser, "--bias_func", type="character", default="exponential", help="Bias function for sampling surface")
 parser <- add_option(parser, "--p_logging", action="store_true", default=F, help="Boolean for logging information about posterior estimates")
-parser <- add_option(parser, "--v_parallel", action="store_true", default=F, help="Boolean for parallel computation of V criterion")
+parser <- add_option(parser, "--v_parallel", action="store_true", default=T, help="Boolean for parallel computation of V criterion")
 parser <- add_option(parser, "--cores", type="integer", default=4, help="Number of cores to use for parallel processing")
 parser <- add_option(parser, "--alpha", type="double", default=-2, help="Intercept for intensity")
 parser <- add_option(parser, "--beta", type="double", default=0.5, help="Slope for intensity")
@@ -446,7 +446,7 @@ for (r_start in 1:random_starts){
           print("current data selction after visits altered")
           print(r_survey_data$Y[,neighbor_idx])
           if (exp_args$v_parallel==T){
-            combined_df <- cbind(r_survey_data$occupancycy, r_survey_data$Y, r_po_data$Y)
+            combined_df <- cbind(r_survey_data$occupancy, r_survey_data$Y, r_po_data$Y)
             estimate_vec <- parApply(clust, combined_df, 1, FUN=estimate_v_parallel, model, current_visits, m, sites, sampling_surface, 
                                          neighbor_idx, select_sites, params, generated_vars, model_selection, exp_args$mcmc_iter)
             # Compatible format with non-parallel v
