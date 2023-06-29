@@ -1,8 +1,8 @@
 stan_models/*.exe
-experimental_runs/*
+experimental_runs*/*
 experimental_scripts/oe*
 optimal_design_site_occ_files/
-job_output/*
+job_output*/*
 .Rproj.user
 *Rplots.pdf
 .Rhistory
