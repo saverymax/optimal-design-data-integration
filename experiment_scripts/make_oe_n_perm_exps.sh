@@ -31,7 +31,7 @@ echo "#!/bin/bash
 #PBS -o /data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/job_output/
 #PBS -e /data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/job_output/
 #PBS -N $exp_name
-#PBS -l walltime=03:00:00
+#PBS -l walltime=02:00:00
 #PBS -l nodes=1:ppn=$cores
 #PBS -l mem=100gb
 

@@ -357,5 +357,5 @@ plot_sites_vs_best <- function(sampling_surface, current_site, select_idx, best_
   names(v_df) <- c("iter", "v", "rand-start")
   xlsx_list <- list("v_stat"=v_stat_df, "best_v"=best_v, "v_iterations"=v_df, "best_sites"=site_df)
   #write.xlsx(xlsx_list, file=file.path(exp_dir, paste("results_", exp_name, ".xlsx", sep="")), rowNames=F)
-  write.xlsx(xlsx_list, file=file.path(exp_dir, "results.xlsx", rowNames=F))
+  write.xlsx(xlsx_list, file=file.path(exp_dir, "results.xlsx"), rowNames=F)
 }
