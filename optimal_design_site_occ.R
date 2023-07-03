@@ -25,6 +25,7 @@ parser <- add_option(parser, "--exp_name", type="character", default="oe_run", h
 parser <- add_option(parser, "--data_reps", type="integer", default=4, help="Number of dataset reps for criterion estimation")
 parser <- add_option(parser, "--m", type="integer", default=5, help="Number of sites to survey")
 parser <- add_option(parser, "--n", type="integer", default=5, help="Maximum number of time to visit each site")
+parser <- add_option(parser, "--vary_vists", action="store_true", default=T, help="Allow varying survey effort between sites")
 parser <- add_option(parser, "--model_selection", type="integer", default=3, help="Occupancy model to use")
 parser <- add_option(parser, "--random_starts", type="integer", default=3, help="Number of random starts to run the exchange")
 parser <- add_option(parser, "--exch_iter", type="integer", default=5, 
@@ -109,24 +110,28 @@ if (exp_args$intensity_func == "simple"){
   sampling_surface <- sampling_surface %>% dplyr::filter(x<11, y<11)
 }
 print(sampling_surface)
+corr_matrix <- specify_corr(sampling_surface[,1:2])
 
-# The number of surveys will differ between sites so it is a vector
-# We will select m sites to have these visits, otherwise the sites will have 0 visits
-# We will compare the number of visits during the optimization
-visits <- c(1, exp_args$n)
 # Next, we use this data to generate the rest of the datasets
 # The data generating function will sample R occupancy maps|params
 # and then R complete datasets|occupancy maps'
 # It turns out that if we want to compare different survey efforts it is convenient to have pre-generated datasets for
 # each number of visits
-corr_matrix <- specify_corr(sampling_surface[,1:2])
+# The number of surveys can differ between sites so it is a vector
+# We will select m sites to have these visits, otherwise the sites will have 0 visits
+# We will compare the number of visits during the optimization
 link_func <- "cloglog"
-r_survey_data_n1 <- generate_data_so(data_reps, sampling_surface, corr_matrix, p_0, alpha, beta, sigma, visits[1], sites, link=link_func)
-r_survey_data_n5 <- generate_data_so(data_reps, sampling_surface, corr_matrix, p_0, alpha, beta, sigma, visits[2], sites, link=link_func)
-#print(r_survey_data_n1$occupancy[1,])
-#print(r_survey_data_n1$Y[1,])
-#print(r_survey_data_n1$theta[1,])
-
+if (exp_args$vary_vists == TRUE){
+  visits <- c(1, exp_args$n)
+  print("Creating datasets for varying survey effort between sites")
+  r_survey_data_n1 <- generate_data_so(data_reps, sampling_surface, corr_matrix, p_0, alpha, beta, sigma, visits[1], sites, link=link_func)
+  r_survey_data_n5 <- generate_data_so(data_reps, sampling_surface, corr_matrix, p_0, alpha, beta, sigma, visits[2], sites, link=link_func)
+} else{
+  visits <- c(exp_args$n)
+  print("Creating datasets for fixed survey effort across sites")
+  r_survey_data_n1 <- generate_data_so(data_reps, sampling_surface, corr_matrix, p_0, alpha, beta, sigma, visits[1], sites, link=link_func)
+  r_survey_data_n5 <- generate_data_so(data_reps, sampling_surface, corr_matrix, p_0, alpha, beta, sigma, visits[1], sites, link=link_func)
+}
 # Then generate R presence-only datasets
 params <- list(alpha=alpha, beta=beta, gamma=gamma, delta=delta)
 # Provide occupancy maps and number of data reps, as well as params and sampling surface, to generate pp data.
@@ -399,6 +404,7 @@ for (r_start in 1:random_starts){
           # to have 1 visit, but that is ok since we just need the data at nn to correspond to 1 visit.
           # For example if possible_visits == c(1,5,5) and then we are the neighbor of the 1st site 
           # so that current_visits === c(1, 5,5) we will select that index==1 neighbor here 
+          # If visits is fixed between sites this vector will always be of 0 length.
           visit_idx <- c(neighbor_idx[which(current_visits==1)])
           print("current s and site")
           print(s)
@@ -421,20 +427,6 @@ for (r_start in 1:random_starts){
           }
           # Don't really need theta as it's only for data generation purposes
           r_survey_data$theta[, visit_idx] <- r_survey_data_n1$theta[, visit_idx]
-          # Likely redudancant cod3
-          ## Need to write over the current visits, for example if possible_vists[1] = 1
-          ## but we need to test a neighbor
-          #if (visit==5){
-          #  r_survey_data$occupancy[, nn] <- r_survey_data_n5$occupancy[, nn]
-          #  r_survey_data$Y[, nn] <- r_survey_data_n5$Y[, nn]
-          #  r_survey_data$theta[, nn] <- r_survey_data_n5$theta[, nn]
-          #}
-          #if (visit==1){
-          #  r_survey_data$occupancy[, nn] <- r_survey_data_n1$occupancy[, nn]
-          #  r_survey_data$Y[, nn] <- r_survey_data_n1$Y[, nn]
-          #  stopifnot(all(r_survey_data$Y[, nn]<=1))
-          #  r_survey_data$theta[, nn] <- r_survey_data_n1$theta[, nn]
-          #}
           print("site set")
           print(site_idx)
           print("best neighbor idx")
