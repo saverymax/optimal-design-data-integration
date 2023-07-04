@@ -193,15 +193,12 @@ poisson_process_site_occupancy <- '
   }
 '
 
-# This model is "intractably" specified because either we assume 
-# lambda is constant over all of the region or use covariate data
-# which is the same as the other models. Alternatively, we use a GP
-# but then it becomes a LGCP
-pp_site_occ_no_aux <- '
+# Using constant intensity parameterized by only an intercept with prior PO
+pp_site_occ_constant_po <- '
   data{
-      int<lower = 1> n_surveys;
       int<lower = 1> n_pa_sites;
       int<lower = 1> n_po_sites;
+      array[n_pa_sites] int n_surveys;
       array[n_pa_sites] int Y;
       array[n_po_sites] int PO;
     }
@@ -209,19 +206,21 @@ pp_site_occ_no_aux <- '
       real lambda;
       real<lower = 0, upper = 1> p;
     }
+    transformed parameters{
+      real<lower = 0, upper = 1> g_theta;
+    }
     model{
       // priors
-      target += gamma_lpdf(lambda | 1,1);
-      vector[n_pa_sites] g_theta;
-      target += poisson_log_lpmf(PO | lambda);
-      g_theta = 1 - exp(-exp(lambda));
+      target += normal_lpdf(alpha |   0,10);
+      target += poisson_log_lpmf(PO | alpha);
+      g_theta = 1 - exp(-exp(alpha));
       for (i in 1:n_pa_sites) {
         if (Y[i] > 0){
-          target += log(g_theta[i]*choose(n_surveys, Y[i])*(p^Y[i])*(1-p)^(n_surveys-Y[i]));
+          target += log(g_theta[i]*choose(n_surveys[i], Y[i])*(p^Y[i])*(1-p)^(n_surveys[i]-Y[i]));
         }
         else{
           // Compute mixture of no detection and no occupancy
-          target += log(g_theta[i]*(1-p)^(n_surveys) + (1 - g_theta[i]));
+          target += log(g_theta[i]*(1-p)^(n_surveys[i]) + (1 - g_theta[i]));
         }
       }
     }
@@ -234,4 +233,44 @@ pp_site_occ_no_aux <- '
       occ_gen = bernoulli_rng(g_theta_gen);
   }
 '
+
+# Using constant intensity parameterized by only an intercept with no PO data
+pp_site_occ_constant_no_po <- '
+  data{
+      int<lower = 1> n_pa_sites;
+      int<lower = 1> n_po_sites;
+      array[n_pa_sites] int n_surveys;
+      array[n_pa_sites] int Y;
+    }
+    parameters{
+      real lambda;
+      real<lower = 0, upper = 1> p;
+    }
+    transformed parameters{
+      real<lower = 0, upper = 1> g_theta;
+    }
+    model{
+      // priors
+      target += normal_lpdf(alpha |   0,10);
+      g_theta = 1 - exp(-exp(alpha));
+      for (i in 1:n_pa_sites) {
+        if (Y[i] > 0){
+          target += log(g_theta[i]*choose(n_surveys[i], Y[i])*(p^Y[i])*(1-p)^(n_surveys[i]-Y[i]));
+        }
+        else{
+          // Compute mixture of no detection and no occupancy
+          target += log(g_theta[i]*(1-p)^(n_surveys[i]) + (1 - g_theta[i]));
+        }
+      }
+    }
+    generated quantities{
+      // We can generate over all sites, instead of just those being used for PA
+      vector[n_po_sites] g_theta_gen;
+      array[n_po_sites] int occ_gen; 
+      g_theta_gen = 1 - exp(-exp(lambda));
+      // Posterior predictive distribution for occupancy
+      occ_gen = bernoulli_rng(g_theta_gen);
+  }
+'
+
 
