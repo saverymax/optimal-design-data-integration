@@ -24,8 +24,9 @@ parser <- add_option(parser, "--working_dir", type="character", default=".", hel
 parser <- add_option(parser, "--exp_name", type="character", default="oe_run", help="Name of current experiment, which is used for dir to save output")
 parser <- add_option(parser, "--data_reps", type="integer", default=4, help="Number of dataset reps for criterion estimation")
 parser <- add_option(parser, "--m", type="integer", default=5, help="Number of sites to survey")
-parser <- add_option(parser, "--n", type="integer", default=5, help="Maximum number of time to visit each site")
-parser <- add_option(parser, "--vary_vists", action="store_true", default=T, help="Allow varying survey effort between sites")
+parser <- add_option(parser, "--max_visits", type="integer", default=5, help="Maximum number of time to visit each site")
+parser <- add_option(parser, "--min_visits", type="integer", default=1, help="Minimum number of time to visit each site")
+parser <- add_option(parser, "--vary_vists", action="store_true", default=F, help="Allow varying survey effort between sites")
 parser <- add_option(parser, "--model_selection", type="integer", default=3, help="Occupancy model to use")
 parser <- add_option(parser, "--random_starts", type="integer", default=3, help="Number of random starts to run the exchange")
 parser <- add_option(parser, "--exch_iter", type="integer", default=5, 
@@ -122,12 +123,12 @@ corr_matrix <- specify_corr(sampling_surface[,1:2])
 # We will compare the number of visits during the optimization
 link_func <- "cloglog"
 if (exp_args$vary_vists == TRUE){
-  visits <- c(1, exp_args$n)
+  visits <- c(exp_args$min_visits, exp_args$max_visits)
   print("Creating datasets for varying survey effort between sites")
   r_survey_data_n1 <- generate_data_so(data_reps, sampling_surface, corr_matrix, p_0, alpha, beta, sigma, visits[1], sites, link=link_func)
   r_survey_data_n5 <- generate_data_so(data_reps, sampling_surface, corr_matrix, p_0, alpha, beta, sigma, visits[2], sites, link=link_func)
 } else{
-  visits <- c(exp_args$n)
+  visits <- c(exp_args$max_visits)
   print("Creating datasets for fixed survey effort across sites")
   r_survey_data_n1 <- generate_data_so(data_reps, sampling_surface, corr_matrix, p_0, alpha, beta, sigma, visits[1], sites, link=link_func)
   r_survey_data_n5 <- generate_data_so(data_reps, sampling_surface, corr_matrix, p_0, alpha, beta, sigma, visits[1], sites, link=link_func)
@@ -328,7 +329,7 @@ for (r_start in 1:random_starts){
   best_neighbor_idx <- site_idx
   # Vector to hold potential sampling effort at each site
   # optimal_visits will be initiated in algorithm
-  possible_visits <- rep(visits[-1], m)
+  possible_visits <- rep(visits[length(visits)], m)
   # Initial sites
   select_sites <- sampling_surface[site_idx,]
   # Convergence condition will be met where full iteration through all sampled sites results in no change
@@ -403,9 +404,9 @@ for (r_start in 1:random_starts){
           # This code chunk will "double index" if the current site s already has been selected 
           # to have 1 visit, but that is ok since we just need the data at nn to correspond to 1 visit.
           # For example if possible_visits == c(1,5,5) and then we are the neighbor of the 1st site 
-          # so that current_visits === c(1, 5,5) we will select that index==1 neighbor here 
+          # so that current_visits == c(1, 5,5) we will select that index==1 neighbor here 
           # If visits is fixed between sites this vector will always be of 0 length.
-          visit_idx <- c(neighbor_idx[which(current_visits==1)])
+          visit_idx <- c(neighbor_idx[which(current_visits==exp_args$min_visits)])
           print("current s and site")
           print(s)
           print(current_site)
@@ -420,10 +421,14 @@ for (r_start in 1:random_starts){
           r_survey_data <- r_survey_data_n5
           r_survey_data$occupancy[, visit_idx] <- r_survey_data_n1$occupancy[, visit_idx]
           r_survey_data$Y[, visit_idx] <- r_survey_data_n1$Y[, visit_idx]
-          stopifnot(all(r_survey_data$Y[, visit_idx]<=1))
+          stopifnot(all(r_survey_data$Y[, visit_idx]<=exp_args$min_visits))
           # Check that we're selecting right sites
-          if (visit==1){
+          if (visit==exp_args$min_visits){
             stopifnot(nn%in%visit_idx)
+          }
+          # Check that vector is empty if not varying visits
+          if(exp_args$vary_vists==F){
+            stopifnot(length(visit_idx)==0)
           }
           # Don't really need theta as it's only for data generation purposes
           r_survey_data$theta[, visit_idx] <- r_survey_data_n1$theta[, visit_idx]
