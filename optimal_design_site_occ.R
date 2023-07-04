@@ -26,7 +26,7 @@ parser <- add_option(parser, "--data_reps", type="integer", default=4, help="Num
 parser <- add_option(parser, "--m", type="integer", default=5, help="Number of sites to survey")
 parser <- add_option(parser, "--max_visits", type="integer", default=5, help="Maximum number of time to visit each site")
 parser <- add_option(parser, "--min_visits", type="integer", default=1, help="Minimum number of time to visit each site")
-parser <- add_option(parser, "--vary_vists", action="store_true", default=F, help="Allow varying survey effort between sites")
+parser <- add_option(parser, "--vary_visits", action="store_true", default=F, help="Allow varying survey effort between sites")
 parser <- add_option(parser, "--model_selection", type="integer", default=3, help="Occupancy model to use")
 parser <- add_option(parser, "--random_starts", type="integer", default=3, help="Number of random starts to run the exchange")
 parser <- add_option(parser, "--exch_iter", type="integer", default=5, 
@@ -35,7 +35,7 @@ parser <- add_option(parser, "--mcmc_iter", type="integer", default=1000, help="
 parser <- add_option(parser, "--intensity_func", type="character", default="donut", help="Intensity function for sampling surface")
 parser <- add_option(parser, "--bias_func", type="character", default="exponential", help="Bias function for sampling surface")
 parser <- add_option(parser, "--p_logging", action="store_true", default=F, help="Boolean for logging information about posterior estimates")
-parser <- add_option(parser, "--v_parallel", action="store_true", default=F, help="Boolean for parallel computation of V criterion")
+parser <- add_option(parser, "--v_parallel", action="store_true", default=T, help="Boolean for parallel computation of V criterion")
 parser <- add_option(parser, "--cores", type="integer", default=4, help="Number of cores to use for parallel processing")
 parser <- add_option(parser, "--alpha", type="double", default=-2, help="Intercept for intensity")
 parser <- add_option(parser, "--beta", type="double", default=0.5, help="Slope for intensity")
@@ -58,10 +58,6 @@ stan_models_path <- file.path(exp_args$working_dir, "stan_models", "stan_site_oc
 source(stan_models_path)
 
 exp_name <- exp_args$exp_name
-#exp_dir <- file.path(exp_args$working_dir, "experimental_runs", paste("optimal_design_model-", exp_args$model_selection,  "_m-", 
-#  exp_args$m, "_r-", exp_args$data_reps, "-intns-", exp_args$intensity_func, 
-#  "-params-a-", exp_args$alpha, "-b-", exp_args$beta, "-g-", exp_args$gamma, "-d-", exp_args$delta, "-p-", exp_args$p, "-aux-cor-", exp_args$aux_cor, sep=""))
-
 exp_dir <- file.path(exp_args$working_dir, "experimental_runs", exp_name)
 fig_dir <- file.path(exp_dir, "figures")
 stan_dir <- file.path(exp_dir, "stan")
@@ -122,7 +118,7 @@ corr_matrix <- specify_corr(sampling_surface[,1:2])
 # We will select m sites to have these visits, otherwise the sites will have 0 visits
 # We will compare the number of visits during the optimization
 link_func <- "cloglog"
-if (exp_args$vary_vists == TRUE){
+if (exp_args$vary_visits == TRUE){
   visits <- c(exp_args$min_visits, exp_args$max_visits)
   print("Creating datasets for varying survey effort between sites")
   r_survey_data_n1 <- generate_data_so(data_reps, sampling_surface, corr_matrix, p_0, alpha, beta, sigma, visits[1], sites, link=link_func)
@@ -133,13 +129,13 @@ if (exp_args$vary_vists == TRUE){
   r_survey_data_n1 <- generate_data_so(data_reps, sampling_surface, corr_matrix, p_0, alpha, beta, sigma, visits[1], sites, link=link_func)
   r_survey_data_n5 <- generate_data_so(data_reps, sampling_surface, corr_matrix, p_0, alpha, beta, sigma, visits[1], sites, link=link_func)
 }
-# Then generate R presence-only datasets
+# Then generate 1 presence-only dataset
 params <- list(alpha=alpha, beta=beta, gamma=gamma, delta=delta)
-# Provide occupancy maps and number of data reps, as well as params and sampling surface, to generate pp data.
 r_po_data <- generate_ppp_data_r(sampling_surface, params, sites, data_reps, corr_matrix, gp_bool, area_D)
 Y_positive_indices <- which(r_po_data$Y>0)
 # This is the data at which there are counts > 0
 r_po_data$Y[Y_positive_indices]
+print(r_po_data)
 # So that gives us R complete datasets for 400 sites.
 # These will stay fixed throughout the rest of the procedure
 
@@ -427,7 +423,7 @@ for (r_start in 1:random_starts){
             stopifnot(nn%in%visit_idx)
           }
           # Check that vector is empty if not varying visits
-          if(exp_args$vary_vists==F){
+          if(exp_args$vary_visits==F){
             stopifnot(length(visit_idx)==0)
           }
           # Don't really need theta as it's only for data generation purposes
