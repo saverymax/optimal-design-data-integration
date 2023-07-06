@@ -1,15 +1,15 @@
 rm run_initial_model_comparison.sh
-models="1 3"
+models="1 3 4 5"
 #alpha="-2 -1.5 -1 -0.5"
 alpha="-2"
 beta="0.5"
-gamma="-1"
+gamma="1"
 #gamma="-2 -1 -0.5 1"
 #delta="0.25"
 delta="-0.25 0.25 2"
 #detection_p="0.2 0.7"
 detection_p="0.2"
-n_surveys="1 10"
+n_surveys="1 5"
 # Might be nice to write job output to the experimental run dir but it's nice to leave that dir created by the R script
 # so as to seperate the HPC and local run capabilities.
 WORKDIR=$VSC_DATA/projects/optimal_design_presence_only/optimal-design-data-integration
@@ -36,11 +36,11 @@ echo "#!/bin/bash
 #PBS -l mem=100gb
 
 module load CmdStanR
-Rscript $WORKDIR/optimal_design_site_occ.R --working_dir=$WORKDIR --exp_name=$exp_name --data_reps=$(($cores*2)) --m=5 --min_visits=1 --max_visits=$n --vary_visits --model_selection=$m --random_starts=3 --exch_iter=20 --mcmc_iter=1000 --intensity_func=\"$intensity\" --bias_func=\"$bias\" --v_parallel --cores=$cores --alpha=$alpha --beta=$beta --gamma=$g --delta=$d --p=$p" --aux_cor=0.8 > $exp_name.sh
-#Rscript $WORKDIR/optimal_design_site_occ.R --working_dir=$WORKDIR --exp_name=$exp_name --data_reps=$(($cores*2)) --m=5 --max_visits=$n j-model_selection=$m --random_starts=3 --exch_iter=20 --mcmc_iter=1000 --intensity_func=\"$intensity\" --bias_func=\"$bias\" --v_parallel --cores=$cores --alpha=$alpha --beta=$beta --gamma=$g --delta=$d --p=$p" --aux_cor=0.8 > $exp_name.sh
+Rscript $WORKDIR/optimal_design_site_occ.R --working_dir=$WORKDIR --exp_name=$exp_name --data_reps=$(($cores*2)) --m=5 --min_visits=0 --max_visits=$n --model_selection=$m --random_starts=3 --exch_iter=20 --mcmc_iter=1000 --intensity_func=\"$intensity\" --bias_func=\"$bias\" --v_parallel --cores=$cores --alpha=$alpha --beta=$beta --gamma=$g --delta=$d --p=$p" --aux_cor=0.8 > $exp_name.sh
 echo "qsub $exp_name.sh" >> run_initial_model_comparison.sh
 done
 done
 done
 done
 done
+#Rscript $WORKDIR/optimal_design_site_occ.R --working_dir=$WORKDIR --exp_name=$exp_name --data_reps=$(($cores*2)) --m=5 --min_visits=1 --max_visits=$n --vary_visits --model_selection=$m --random_starts=3 --exch_iter=20 --mcmc_iter=1000 --intensity_func=\"$intensity\" --bias_func=\"$bias\" --v_parallel --cores=$cores --alpha=$alpha --beta=$beta --gamma=$g --delta=$d --p=$p" --aux_cor=0.8 > $exp_name.sh
