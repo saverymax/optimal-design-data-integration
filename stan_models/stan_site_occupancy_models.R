@@ -1,7 +1,7 @@
 site_occupany_detection <- '
   data{
-      int<lower = 1> n_surveys;
       int<lower = 1> n_sites;
+      array[n_sites] int n_surveys;
       vector[n_sites] X;
       array[n_sites] int Y;
     }
@@ -23,11 +23,11 @@ site_occupany_detection <- '
       g_theta = Phi(beta_0 + beta_1*X);
       for (i in 1:n_sites) {
         if (Y[i] > 0){
-          target += log(g_theta[i]*choose(n_surveys, Y[i])*(p^Y[i])*(1-p)^(n_surveys-Y[i]));
+          target += log(g_theta[i]*choose(n_surveys[i], Y[i])*(p^Y[i])*(1-p)^(n_surveys[i]-Y[i]));
         }
         else{
           // Compute mixture of no detection and no occupancy
-          target += log(g_theta[i]*(1-p)^(n_surveys) + (1 - g_theta[i]));
+          target += log(g_theta[i]*(1-p)^(n_surveys[i]) + (1 - g_theta[i]));
         }
       }
     }
@@ -43,8 +43,8 @@ site_occupany_detection <- '
 
 site_occupany_detection_site_specific <- '
   data{
-      int<lower = 1> n_surveys;
       int<lower = 1> n_sites;
+      array[n_sites] int n_surveys;
       vector[n_sites] X;
       array[n_sites] int Y;
       matrix[n_sites, n_sites] cor_mat;
@@ -70,11 +70,11 @@ site_occupany_detection_site_specific <- '
         // Not a bad idea to parameterize in terms of cholesky
         // Also, chunking the site specific effects would be more interesting and efficient.
         if (Y[i] > 0){
-          target += log(g_theta[i]*choose(n_surveys, Y[i])*(p^Y[i])*(1-p)^(n_surveys-Y[i]));
+          target += log(g_theta[i]*choose(n_surveys[i], Y[i])*(p^Y[i])*(1-p)^(n_surveys[i]-Y[i]));
         }
         else{
           // Compute mixture of no detection and no occupancy
-          target += log(g_theta[i]*(1-p)^(n_surveys) + (1 - g_theta[i]));
+          target += log(g_theta[i]*(1-p)^(n_surveys[i]) + (1 - g_theta[i]));
         }
       }
     }
@@ -124,11 +124,6 @@ cloglog_site_occupancy <- '
       }
     }
     generated quantities{
-      //vector[n_sites] lambda_rep;
-      //array[n_sites] int y_rep; 
-      //lambda_rep = exp(alpha + beta * X);
-      // Is poisson the right choice here?
-      //y_rep = poisson_log_rng(alpha + beta * X);
       vector[total_sites] g_theta_gen;
       array[total_sites] int occ_gen; 
       g_theta_gen = 1 - exp(-exp(alpha + beta * X_all));
@@ -193,6 +188,45 @@ poisson_process_site_occupancy <- '
   }
 '
 
+# Using constant intensity parameterized by only an intercept with no PO data
+pp_site_occ_constant_no_po <- '
+  data{
+      int<lower = 1> n_pa_sites;
+      int<lower = 1> total_sites;
+      array[n_pa_sites] int n_surveys;
+      array[n_pa_sites] int Y;
+    }
+    parameters{
+      real alpha;
+      real<lower = 0, upper = 1> p;
+    }
+    model{
+      real g_theta;
+      // priors
+      target += normal_lpdf(alpha |   0,10);
+      g_theta = 1 - exp(-exp(alpha));
+      for (i in 1:n_pa_sites) {
+        if (Y[i] > 0){
+          target += log(g_theta*choose(n_surveys[i], Y[i])*(p^Y[i])*(1-p)^(n_surveys[i]-Y[i]));
+        }
+        else{
+          // Compute mixture of no detection and no occupancy
+          target += log(g_theta*(1-p)^(n_surveys[i]) + (1 - g_theta));
+        }
+      }
+    }
+    generated quantities{
+      // We can generate over all sites, instead of just those being used for PA
+      real g_theta_gen;
+      vector[total_sites] g_theta_vec;
+      array[total_sites] int occ_gen; 
+      g_theta_gen = 1 - exp(-exp(alpha));
+      g_theta_vec = rep_vector(g_theta_gen, total_sites);
+      // Posterior predictive distribution for occupancy
+      occ_gen = bernoulli_rng(g_theta_vec);
+  }
+'
+
 # Using constant intensity parameterized by only an intercept with prior PO
 pp_site_occ_constant_po <- '
   data{
@@ -203,74 +237,33 @@ pp_site_occ_constant_po <- '
       array[n_po_sites] int PO;
     }
     parameters{
-      real lambda;
+      real alpha;
       real<lower = 0, upper = 1> p;
     }
-    transformed parameters{
-      real<lower = 0, upper = 1> g_theta;
-    }
     model{
+      real g_theta;
       // priors
       target += normal_lpdf(alpha |   0,10);
       target += poisson_log_lpmf(PO | alpha);
       g_theta = 1 - exp(-exp(alpha));
       for (i in 1:n_pa_sites) {
         if (Y[i] > 0){
-          target += log(g_theta[i]*choose(n_surveys[i], Y[i])*(p^Y[i])*(1-p)^(n_surveys[i]-Y[i]));
+          target += log(g_theta*choose(n_surveys[i], Y[i])*(p^Y[i])*(1-p)^(n_surveys[i]-Y[i]));
         }
         else{
           // Compute mixture of no detection and no occupancy
-          target += log(g_theta[i]*(1-p)^(n_surveys[i]) + (1 - g_theta[i]));
+          target += log(g_theta*(1-p)^(n_surveys[i]) + (1 - g_theta));
         }
       }
     }
     generated quantities{
       // We can generate over all sites, instead of just those being used for PA
-      vector[n_po_sites] g_theta_gen;
+      real g_theta_gen;
+      vector[n_po_sites] g_theta_vec;
       array[n_po_sites] int occ_gen; 
-      g_theta_gen = 1 - exp(-exp(lambda));
+      g_theta_gen = 1 - exp(-exp(alpha));
+      g_theta_vec = rep_vector(g_theta_gen, n_po_sites);
       // Posterior predictive distribution for occupancy
-      occ_gen = bernoulli_rng(g_theta_gen);
+      occ_gen = bernoulli_rng(g_theta_vec);
   }
 '
-
-# Using constant intensity parameterized by only an intercept with no PO data
-pp_site_occ_constant_no_po <- '
-  data{
-      int<lower = 1> n_pa_sites;
-      int<lower = 1> n_po_sites;
-      array[n_pa_sites] int n_surveys;
-      array[n_pa_sites] int Y;
-    }
-    parameters{
-      real lambda;
-      real<lower = 0, upper = 1> p;
-    }
-    transformed parameters{
-      real<lower = 0, upper = 1> g_theta;
-    }
-    model{
-      // priors
-      target += normal_lpdf(alpha |   0,10);
-      g_theta = 1 - exp(-exp(alpha));
-      for (i in 1:n_pa_sites) {
-        if (Y[i] > 0){
-          target += log(g_theta[i]*choose(n_surveys[i], Y[i])*(p^Y[i])*(1-p)^(n_surveys[i]-Y[i]));
-        }
-        else{
-          // Compute mixture of no detection and no occupancy
-          target += log(g_theta[i]*(1-p)^(n_surveys[i]) + (1 - g_theta[i]));
-        }
-      }
-    }
-    generated quantities{
-      // We can generate over all sites, instead of just those being used for PA
-      vector[n_po_sites] g_theta_gen;
-      array[n_po_sites] int occ_gen; 
-      g_theta_gen = 1 - exp(-exp(lambda));
-      // Posterior predictive distribution for occupancy
-      occ_gen = bernoulli_rng(g_theta_gen);
-  }
-'
-
-

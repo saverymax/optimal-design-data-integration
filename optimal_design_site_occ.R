@@ -29,7 +29,7 @@ parser <- add_option(parser, "--min_visits", type="integer", default=1, help="Mi
 parser <- add_option(parser, "--vary_visits", action="store_true", default=F, help="Allow varying survey effort between sites")
 parser <- add_option(parser, "--model_selection", type="integer", default=3, help="Occupancy model to use")
 parser <- add_option(parser, "--random_starts", type="integer", default=3, help="Number of random starts to run the exchange")
-parser <- add_option(parser, "--exch_iter", type="integer", default=5, 
+parser <- add_option(parser, "--exch_iter", type="integer", default=3, 
                      help="Number of iterations of exchange before ending optimization. Recommended is 20 but default is set low for test runs.")
 parser <- add_option(parser, "--mcmc_iter", type="integer", default=1000, help="Number of MCMC iterations in Stan")
 parser <- add_option(parser, "--intensity_func", type="character", default="donut", help="Intensity function for sampling surface")
@@ -147,15 +147,6 @@ dim(nearest_neighbors)
 nearest_neighbors
 
 # Use the final generation iteration to look at the presence-absence and presence-only data
-survey_data_df_1 <- data.frame(counts=r_survey_data_n1$Y[1,], o=r_survey_data_n1$occupancy[1,], 
-                             x=sampling_surface$x, y=sampling_surface$y, theta=r_survey_data_n1$theta[1,], cor_mat=as.vector(corr_matrix[1,]))
-
-survey_data_df_5 <- data.frame(counts=r_survey_data_n5$Y[1,], o=r_survey_data_n5$occupancy[1,], 
-                             x=sampling_surface$x, y=sampling_surface$y, theta=r_survey_data_n5$theta[1,], cor_mat=as.vector(corr_matrix[1,]))
-print(head(survey_data_df_1))
-print(head(survey_data_df_5))
-
-# Plot the covariates
 p <- ggplot(sampling_surface, aes(x, y, fill=aux_x)) + 
   geom_tile() +
   scale_fill_viridis(discrete=FALSE, name="X") +
@@ -259,7 +250,7 @@ p <- ggplot() +
   scale_x_continuous(breaks = seq(0, 20, 1)) +
   theme(text=element_text(size=5), legend.key.size = unit(0.25, 'cm')) +
   coord_fixed()
-fig_name <- file.path(fig_dir, paste("thinning-per-site.png", sep=""))
+fig_name <- file.path(fig_dir, paste("po-thinning-per-site.png", sep=""))
 save_basic_plots(fig_name, p)
 
 # We can experiment with these models in the exchange algorithm
@@ -270,7 +261,9 @@ model_strings <- list(
 	"cloglog_site_occupancy"=cloglog_site_occupancy, 
 	"site_occ_probit"=site_occupany_detection, 
 	"poisson_poisson_prior"=poisson_process_site_occupancy, 
-	"poisson_process_constant"=pp_site_occ_no_aux)
+	"poisson_process_constant"=pp_site_occ_constant_no_po,
+	"poisson_process_constant_po_prior"=pp_site_occ_constant_po
+	)
 model_selection <- exp_args$model_selection
 model_name <- names(model_strings)[model_selection]
 print(paste("Using model", model_name, model_selection))
@@ -278,11 +271,13 @@ model_path <- file.path(stan_dir, paste(model_name, ".stan", sep=""))
 print(paste("Cmdstan model", model_strings[[model_selection]]))
 write(model_strings[[model_selection]], model_path)
 model <- cmdstan_model(model_path) 
-# These are the parameters to report, though this will be model dependent
+# These are the parameters to report
+# Only the PO prior model needs gamma and delta. 
+# Then constant models need only alpha
 if (model_selection==3){
   params <- c('p', 'alpha', 'beta', 'gamma', 'delta')
-}else if (model_selection==4){
-  params <- c('p', 'lambda')
+}else if ((model_selection==4)|(model_selection==5)){
+  params <- c('p', 'alpha')
 }else{
   params <- c('p', 'alpha', 'beta')
 }
@@ -361,7 +356,7 @@ for (r_start in 1:random_starts){
   print(new_v_est)
   title <- paste("Inital spatial design: v=", round(new_v_est, 10), sep="")
   p <- plot_sites(sampling_surface, site_idx, title)
-  fig_name <- file.path(fig_dir, paste("initial_design.png", sep=""))
+  fig_name <- file.path(fig_dir, paste("initial_design_", r_start, ".png", sep=""))
   ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm")
   
   while ((convergence_cond==FALSE) & (exchange_iter<=exp_args$exch_iter)){
@@ -539,16 +534,18 @@ for(i in 1:random_starts){
 }
 
 v_df <- data.frame(x=x_concat, v=v_concat, r=rep_labels)
-fig_name <- file.path(fig_dir, paste("exchange_convergence.png", sep=""))
+fig_name <- file.path(fig_dir, "exchange_convergence.png")
 p <- ggplot(data=v_df, aes(x=x, y=v, colour=r)) +
   geom_line() +
   theme_bw()
 print(p)
 ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm")
 
+# Plot best sites
 for(rs in 1:random_starts){
-  title <- paste("Optimal sites from random init ", rs, " with V(D)=", best_v[rs], sep="")
-  p <- plot_sites(sampling_surface, best_site_mat[rs, ], title) 
+  title <- paste("PO data and Optimal sites from random init ", rs, "\n with V(D)=", best_v[rs], sep="")
+  #p <- plot_sites(sampling_surface, best_site_mat[rs, ], title) 
+  p <- plot_po_optimal_sites(sampling_surface, r_po_data, best_site_mat[rs,], optimal_visit_mat[rs,], title)
   fig_name <- file.path(fig_dir, paste("optimal_sites_random_start-", rs, ".png", sep=""))
   ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm")
 }

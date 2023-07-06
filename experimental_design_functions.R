@@ -60,7 +60,10 @@ estimate_v <- function(model, n_surveys, data_reps, m, sites, sampling_surface,
       data_site_occ = list(n_surveys=n_surveys, n_sites=m, total_sites=sites, X=select_sites$aux_x, X_all=sampling_surface$aux_x, Y=selected_data)
     }
     else if(model_selection==4){
-      data_site_occ = list(n_surveys=n_surveys, n_sites=m, total_sites=sites, Y=selected_data)
+      data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, total_sites=sites, Y=selected_data)
+    }
+    else if(model_selection==5){
+      data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, Y=selected_data, PO=selected_po)
     }
     else{
       stop("Other models implementation needs to be checked")
@@ -142,7 +145,10 @@ estimate_v_parallel <- function(combined_df, model, n_surveys, m, sites, samplin
     data_site_occ = list(n_surveys=n_surveys, n_sites=m, total_sites=sites, X=select_sites$aux_x, X_all=sampling_surface$aux_x, Y=selected_data)
   }
   else if(model_selection==4){
-    data_site_occ = list(n_surveys=n_surveys, n_sites=m, total_sites=sites, Y=selected_data)
+    data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, total_sites=sites, Y=selected_data)
+  }
+  else if(model_selection==5){
+    data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, Y=selected_data, PO=PO_data)
   }
   else{
     stop("Other models implementation needs to be checked")
@@ -347,6 +353,19 @@ plot_sites_vs_best <- function(sampling_surface, current_site, select_idx, best_
     coord_fixed() 
   return(p)
 }
+
+plot_po_optimal_sites <- function(sampling_surface, r_po_data, best_select_idx, optimal_visits, title){
+  best_size <- optimal_visits/(length(optimal_visits)) + 1
+  p <- ggplot() +
+    geom_tile(sampling_surface, mapping=aes(x, y, fill=aux_x)) + 
+    geom_point(data=r_po_data$Y_coords, mapping=aes(x=x, y=y), size=2, colour="orange") +
+    geom_point(data=sampling_surface[best_select_idx,], aes(x=x, y=y), colour = "white", size = best_size) +
+    scale_fill_viridis(discrete=FALSE, name="aux_x") +
+    ggtitle(title) +
+    theme(text=element_text(size=5), legend.key.size = unit(0.25, 'cm')) +
+    coord_fixed() 
+  return(p)
+  }
 
   write_results <- function(random_starts, best_v, best_site_mat, visits, v_df, exp_dir, exp_name){
   # This will be useful if I have multiple criteria
