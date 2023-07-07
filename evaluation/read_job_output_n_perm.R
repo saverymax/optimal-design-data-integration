@@ -27,9 +27,13 @@ perm1 <- c()
 perm2 <- c()
 perm3 <- c()
 perm4 <- c()
-exp_list <- list(m1_n5, m1_n10, m3_n5, m3_n10)
-exp_col <- c("model-1_n-5", "model-1_n-10", "model-3_n-5", "model-3_n-10")
-perm_list <- list(perm1, perm2, perm3, perm4)
+#exp_list <- list(m1_n5, m1_n10, m3_n5, m3_n10)
+#exp_list <- list(m1_n1, m1_n5, m3_n1, m3_n5, m4_n1, m4_n5, m5_n1, m5_n5)
+#exp_col <- c("model-1_n-5", "model-1_n-10", "model-3_n-5", "model-3_n-10")
+exp_col <- c("model-1_n-1", "model-1_n-5", "model-3_n-1", "model-3_n-5", "model-4_n-1", "model-4_n-5", "model-5_n-1", "model-5_n-5")
+exp_list <- vector("list", length=length(exp_col))
+perm_list <- vector("list", length=length(exp_col))
+#perm_list <- list(perm1, perm2, perm3, perm4)
 names(exp_list) <- exp_col
 names(perm_list) <- exp_col
 print("inital list to save results")
@@ -90,19 +94,19 @@ print("result list")
 print(exp_list)
 print("Params per model. Make sure each model has params ordered in the same way")
 print(perm_list)
-stopifnot(identical(perm_list[[1]], perm_list[[2]]))
-stopifnot(identical(perm_list[[1]], perm_list[[3]]))
-stopifnot(identical(perm_list[[1]], perm_list[[4]]))
-v_mat <- matrix(ncol=4, nrow=n_f/length(exp_col))
+for (i in 1:length(exp_col)){
+  stopifnot(identical(perm_list[[1]], perm_list[[i]]))
+}
+v_mat <- matrix(nrow=length(exp_col), ncol=n_f/length(exp_col))
 print(dim(v_mat))
-v_mat[,1] <- exp_list[[exp_col[1]]]
-v_mat[,2] <- exp_list[[exp_col[2]]]
-v_mat[,3] <- exp_list[[exp_col[3]]]
-v_mat[,4] <- exp_list[[exp_col[4]]]
+for (i in 1:length(exp_col)){
+  v_mat[i,] <- exp_list[[exp_col[i]]]
+  #v_mat[,i] <- exp_list[[exp_col[i]]]
+}
 print(v_mat)
 v_df <- as.data.frame(v_mat)
-names(v_df) <- exp_col
-row.names(v_df) <- perm_list[[1]]
+rownames(v_df) <- exp_col
+colnames(v_df) <- perm_list[[1]]
 print(v_df)
 caption <- paste("Comparison of models, sampling effort, and parameter permutations")
 label <- paste("survey_eval", sep="")
