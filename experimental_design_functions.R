@@ -259,6 +259,7 @@ get_sampling_surface_donut <- function(k){
   sampling_grid <- expand.grid(x, y)
   sampling_grid
   # Then compute distance from each location to center of the grid.
+  # This gives a gaussain function that peaks a certain distance (7) away from the centroid
   r <- apply(sampling_grid, 1, distance_func, center_coord=center_coord)
   # Then create x covariate
   x <- exp(-10*((r-7)/5)^2)
