@@ -1,1 +1,0 @@
-file.path("data", "ebird", "ebdata.csv")
