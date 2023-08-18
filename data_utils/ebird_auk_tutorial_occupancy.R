@@ -162,6 +162,6 @@ pred_occ
 
 ##############################
 # Now start working on occupancy with my own data.
-# I need to get the covariate data (2019 ideally) and the SO data in the same year (make sure there is nuthatch data for the year)
+# I need to get the covariate data (2019 ideally) and the SO data in the same year (MAKE SURE THERE IS NUTHATCH DATA FOR THE YEAR)
 # Also need to work with single season.
 # Where is that species_observed variable

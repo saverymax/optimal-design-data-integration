@@ -157,6 +157,10 @@ nuthatch <- read_ebd(file.path(base_data_dir, "ebd_bnhnut_smp_relJun-2023/nuthat
 # Full map of us
 map_proj <- st_crs("ESRI:102003")
 us_map <- ne_countries(country = "united states of america", returnclass = "sf") %>% st_transform(crs=map_proj)
+class(us_map)
+crs(us_map)
+us_vect <- vect(us_map)
+writeVector(us_vect, "us_filetype.shp")
 # Or load just one state downloaded from https://apps.nationalmap.gov/downloader/
 read_sf(file.path(base_data_dir, "us_states/GOVTUNIT_Tennessee_State_GPKG/GOVTUNIT_Tennessee_State_GPKG.gpkg"))
 state_bound <- read_sf(file.path(base_data_dir, "us_states/GOVTUNIT_Tennessee_State_GPKG/GOVTUNIT_Tennessee_State_GPKG.gpkg")) %>% 
