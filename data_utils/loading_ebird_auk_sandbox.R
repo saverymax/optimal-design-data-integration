@@ -274,9 +274,6 @@ ggplot() +
 
 state_sf <- st_sf(state_bound)
 class(state_sf)
-state_buff <- terra::buffer(vect(state_sf), width=-1000000)
-state_buff
-plot(state_buff)
 crop_lc_rast <- crop(projected_lc, state_sf)
 plot(crop_lc_rast)
 
@@ -289,5 +286,31 @@ ggplot() +
   theme_minimal()+
   ggtitle("Brown-headed Nuthatch Intensity in Tennessee")
 
+# Can we also load some modis data?
+# This was downloaded from https://appeears.earthdatacloud.nasa.gov/
+# by selecting the landcover type prodcut for 2019.
+# We can see more information about the layers from this download here:
+# https://lpdaac.usgs.gov/products/mcd12q1v061/
+# Different layers can be loaded.
+# Which to use for occupancy modelling?
+#modis_landcover_filename <- file.path(base_data_dir, "modis_landcover_types/MCD12Q1.061_LC_Prop1_Assessment_doy2019001_aid0001.tif")
+modis_landcover_filename <- file.path(base_data_dir, "modis_landcover_types/MCD12Q1.061_LC_Type1_doy2019001_aid0001.tif")
+file.exists(modis_landcover_filename)
+modis_lc_rast <- rast(modis_landcover_filename) 
+#modis_lc_prj <- terra::project(modis_lc_rast, state_bound)
+# Do cropping in the crs of raster
+state_bound_proj <- terra::project(vect(state_bound), modis_lc_rast)
+plot(state_bound_proj)
+crop_lc_rast <- crop(modis_lc_rast, state_bound_proj)
+plot(crop_lc_rast)
+# Project raster back to state
+modis_lc_prj <- terra::project(crop_lc_rast, crs(vect(state_bound)))
+plot(modis_lc_prj)
 
-
+ggplot() + 
+  geom_spatraster(data=modis_lc_prj) +
+  geom_sf(data=state_pp, color=alpha("orange", 0.9))+
+  geom_sf(data = state_bound, color=alpha("white",0.9), fill='transparent') + 
+  scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7) +
+  theme_minimal()+
+  ggtitle("Brown-headed Nuthatch Intensity in Tennessee")
