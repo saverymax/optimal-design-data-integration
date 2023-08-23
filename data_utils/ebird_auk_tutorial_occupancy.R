@@ -5,7 +5,8 @@
 #   which the population can be considered closed. The auk function filter_repeat_visits() is designed to extract subsets 
 #   of eBird data that meet these criteria.
 library(auk)
-library(raster)
+library(terra)
+library(tidyterra)
 library(tidyverse)
 library(rnaturalearth)
 library(sf)
@@ -259,6 +260,7 @@ file.exists(landcover_filename)
 lc_se_us <- rast(landcover_filename) 
 # Project state to raster crs
 # Then crop raster in crs of raster, and convert raster back to original state crs
+max(lc_se_us)
 prj_state <- terra::project(vect(state_bound), lc_se_us)
 plot(prj_state)
 crs(prj_state)
@@ -266,6 +268,8 @@ crs(lc_se_us)
 crop_lc_rast <- crop(lc_se_us, prj_state)
 plot(crop_lc_rast)
 projected_lc <- terra::project(crop_lc_rast, crs(vect(state_bound)))
+max(projected_lc)
+
 ggplot() + 
   geom_spatraster(data=projected_lc) +
   geom_sf(data=state_pp, color=alpha("orange", 0.9))+
@@ -285,8 +289,43 @@ ggplot() +
   ggtitle("Brown-headed Nuthatch Intensity in Tennessee")
 
 # Now we need to do some processing of the MODIS data to make it a bit more suitable for occupancy modelling
-ceiling(max(res(projected_lc))) / 2
-neighbors_rad <- 5 * ceiling(max(res(landcover))) / 2
+# "approximately 2.5 km by 2.5 km neighborhood (5 by 5 MODIS cells) centered on the checklist location is 
+# sufficient to account for the spatial precision in the data when the maximum distance of travelling counts has been limited to 5 km"
+neighborhood_radius <- 5 * ceiling(max(res(projected_lc))) / 2
+
+nuthatch_unique <- nuthatch %>% distinct(locality_id, latitude, longitude) 
+
+nuthatch_buffer <- nuthatch_unique %>% st_as_sf(coords = c("longitude", "latitude"), crs=4326) %>% 
+  # transform to modis projection
+  st_transform(crs = crs(projected_lc)) %>% 
+  # buffer to create neighborhood around each point
+  st_buffer(dist = neighborhood_radius) 
+  
+nh_state_buff <- st_intersection(nuthatch_buffer, state_bound)
+nh_state_buff
+plot(nh_state_buff)
+
+calculate_pland <- function(sites, lc) {
+  # Remove geometry
+  locs <- st_set_geometry(sites, NULL)
+  map(~ count(., landcover = value)) %>% 
+    tibble(locs, data = .)
+  
+}
+
+# TODO: Working on calculating pland from the buffers
+lc_ext <- terra::extract(projected_lc, vect(nh_state_buff))
+lc_ext
+dim(lc_ext)
+ 
+pland <- lc_ext %>% 
+# calculate proporiton
+group_by(locality_id) %>% 
+mutate(pland = n / sum(n)) %>% 
+ungroup() %>% 
+select(-n) %>% 
+# remove NAs after tallying so pland is relative to total number of cells
+filter(!is.na(landcover))                            
 
 # Then prepare occupancy data for modelling
 # combine ebird and modis data
