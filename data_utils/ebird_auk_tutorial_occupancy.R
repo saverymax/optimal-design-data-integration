@@ -13,6 +13,8 @@ library(sf)
 library(lubridate)
 library(dggridR)
 library(unmarked)
+library(exactextractr)
+library(cartography)
 
 
 base_data_dir <- "C:\\Users\\msavery\\OneDrive - UGent\\Documents\\ghent_phd_spatial_doe\\data\\"
@@ -261,62 +263,78 @@ lc_se_us <- rast(landcover_filename)
 # Project state to raster crs
 # Then crop raster in crs of raster, and convert raster back to original state crs
 max(lc_se_us)
+unique_rasts_val <- unique(lc_se_us)
+unique_rasts_val
+dim(unique_rasts_val)
 prj_state <- terra::project(vect(state_bound), lc_se_us)
 plot(prj_state)
 crs(prj_state)
 crs(lc_se_us)
 crop_lc_rast <- crop(lc_se_us, prj_state)
 plot(crop_lc_rast)
-projected_lc <- terra::project(crop_lc_rast, crs(vect(state_bound)))
-max(projected_lc)
+# projected_lc <- terra::project(crop_lc_rast, crs(vect(state_bound)))
+# unique(projected_lc)
+# max(projected_lc)
+state_pp_prj <- terra::project(vect(state_pp), lc_se_us)
+
+
+#ggplot() + 
+#  geom_spatraster(data=projected_lc) +
+#  geom_sf(data=state_pp_prj, color=alpha("orange", 0.9))+
+#  #geom_spatvector(data=state_grid, fill = 'transparent', colour="lightblue") +
+#  geom_sf(data = state_bound, color=alpha("white",0.9), fill='transparent') + 
+#  scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7) +
+#  theme_minimal()+
+#  ggtitle("Brown-headed Nuthatch Intensity in Tennessee")
 
 ggplot() + 
-  geom_spatraster(data=projected_lc) +
-  geom_sf(data=state_pp, color=alpha("orange", 0.9))+
-  #geom_spatvector(data=state_grid, fill = 'transparent', colour="lightblue") +
-  geom_sf(data = state_bound, color=alpha("white",0.9), fill='transparent') + 
+  geom_spatraster(data=crop_lc_rast) +
+  geom_sf(data=state_pp_prj, color=alpha("orange", 0.9))+
+  #geom_sf(data = state_bound, color=alpha("white",0.9), fill='transparent') + 
+  geom_sf(data = prj_state, color=alpha("white",0.9), fill='transparent', linewidth=0.7) + 
   scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7) +
-  theme_minimal()+
-  ggtitle("Brown-headed Nuthatch Intensity in Tennessee")
-
-ggplot() + 
-  geom_spatraster(data=projected_lc) +
-  geom_sf(data=state_pp, color=alpha("orange", 0.9))+
-  #geom_spatvector(data=state_grid, fill = 'transparent', colour="lightblue") +
-  geom_sf(data = state_bound, color=alpha("white"), fill='transparent', linewidth=0.7) + 
-  scale_fill_viridis_c(name="landcover", option="viridis",alpha=0.6) +
   theme_minimal()+
   ggtitle("Brown-headed Nuthatch Intensity in Tennessee")
 
 # Now we need to do some processing of the MODIS data to make it a bit more suitable for occupancy modelling
 # "approximately 2.5 km by 2.5 km neighborhood (5 by 5 MODIS cells) centered on the checklist location is 
 # sufficient to account for the spatial precision in the data when the maximum distance of travelling counts has been limited to 5 km"
-neighborhood_radius <- 5 * ceiling(max(res(projected_lc))) / 2
+neighborhood_radius <- 5 * ceiling(max(res(crop_lc_rast))) / 2
+neighborhood_radius
 
 nuthatch_unique <- nuthatch %>% distinct(locality_id, latitude, longitude) 
 
 nuthatch_buffer <- nuthatch_unique %>% st_as_sf(coords = c("longitude", "latitude"), crs=4326) %>% 
-  # transform to modis projection
-  st_transform(crs = crs(projected_lc)) %>% 
+  # transform to state crs projection
+  st_transform(crs = crs(state_pp)) %>% 
   # buffer to create neighborhood around each point
   st_buffer(dist = neighborhood_radius) 
   
+class(st_as_sf(prj_state))
+sf_prj_state <- st_as_sf(prj_state)
+state_border <- getBorders(sf_prj_state)
+
+# Do the intersection in the crs of the state
 nh_state_buff <- st_intersection(nuthatch_buffer, state_bound)
 nh_state_buff
 plot(nh_state_buff)
 
-calculate_pland <- function(sites, lc) {
-  # Remove geometry
-  locs <- st_set_geometry(sites, NULL)
-  map(~ count(., landcover = value)) %>% 
-    tibble(locs, data = .)
-  
-}
-
 # TODO: Working on calculating pland from the buffers
-lc_ext <- terra::extract(projected_lc, vect(nh_state_buff))
+# Then go back to crs of raster
+buff_prj <- st_transform(nh_state_buff, crs=crs(crop_lc_rast))
+lc_ext <- exact_extract(crop_lc_rast, buff_prj)
 lc_ext
-dim(lc_ext)
+lc_ext[1:2] %>% lapply(function(x) head(x))
+
+require(reshape2)
+mapped_lc <- map(lc_ext, dplyr::count, value)
+mapped_lc
+rbind(mapped_lc)
+melt(mapped_lc)
+mapped_lc
+tibble(nh_state_buff, mapped_lc)
+
+lc_group <- lc_ext %>% group_by(ID)
  
 pland <- lc_ext %>% 
 # calculate proporiton
