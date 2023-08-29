@@ -9,22 +9,88 @@ library(dggridR)
 library(unmarked)
 library(exactextractr)
 library(cartography)
+library(AICcmodavg)
 library(stringr)
 
+select <- dplyr::select
+
+base_data_dir <- "C:\\Users\\msavery\\OneDrive - UGent\\Documents\\ghent_phd_spatial_doe\\data\\"
+ebd_download_dir <- "ebd_US_bnhnut_201901_201912_smp_relJul-2023"
 ##############################
 # Now start working on occupancy with my own data.
 # I need to get the covariate data (2019 ideally) and the SO data in the same year (MAKE SURE THERE IS NUTHATCH DATA FOR THE YEAR)
 # Also need to work with single season.
 # Where is that species_observed variable
 map_proj <- st_crs("ESRI:102003")
-ebd_nh <- auk_ebd(file.path(base_data_dir, "ebd_bnhnut_smp_relJun-2023/ebd_bnhnut_smp_relJun-2023.txt"))
+ebd_nh <- auk_ebd(file.path(base_data_dir, ebd_download_dir, "ebd_US_bnhnut_201901_201912_smp_relJul-2023.txt"),
+                  file_sampling = file.path(base_data_dir, ebd_download_dir, "ebd_US_bnhnut_201901_201912_smp_relJul-2023_sampling.txt"))
 ebd_nh %>% auk_date(date = c("2019-01-01", "2019-12-31")) %>% 
   auk_complete() -> ebd_nh_filtered
+auk_filter(ebd_nh_filtered, file = file.path(base_data_dir, ebd_download_dir, "nuthatch_filtered_2019.txt"), 
+                            file_sampling=file.path(base_data_dir, ebd_download_dir, "nuthatch_filtered_2019_sampling.txt"), overwrite=T) 
+nuthatch_obs <- read_ebd(file.path(base_data_dir, ebd_download_dir, "nuthatch_filtered_2019.txt"))
+nuthatch_sampling <- read_sampling(file.path(base_data_dir, ebd_download_dir, "nuthatch_filtered_2019_sampling.txt"))
+nuthatch_obs
+nuthatch_sampling
 
-auk_filter(ebd_nh_filtered, file = file.path(base_data_dir, "ebd_bnhnut_smp_relJun-2023/nuthatch_filtered_2019.txt"), overwrite=T)
-nuthatch <- read_ebd(file.path(base_data_dir, "ebd_bnhnut_smp_relJun-2023/nuthatch_filtered_2019.txt"))
+# This allows us to combine the 2 sets. 
+nuthatch_zf <- auk_zerofill(nuthatch_obs, nuthatch_sampling, collapse = TRUE)
+# Some 4 million rows
+nuthatch_zf
 
-read_sf(file.path(base_data_dir, "us_states/GOVTUNIT_Tennessee_State_GPKG/GOVTUNIT_Tennessee_State_GPKG.gpkg"))
+# Do some preprocessing of the data so that it is easier for modelling.
+# This follows https://cornelllabofornithology.github.io/ebird-best-practices/ebird.html exactly
+time_to_decimal <- function(x) {
+  x <- hms(x, quiet = TRUE)
+  hour(x) + minute(x) / 60 + second(x) / 3600
+}
+
+# clean up variables
+nuthatch_zf_filter1 <- nuthatch_zf %>% 
+  mutate(
+    # convert X to NA
+    observation_count = if_else(observation_count == "X", 
+                                NA_character_, observation_count),
+    observation_count = as.integer(observation_count),
+    # effort_distance_km to 0 for non-travelling counts
+    effort_distance_km = if_else(protocol_type != "Traveling", 
+                                 0, effort_distance_km),
+    # convert time to decimal hours since midnight
+    time_observations_started = time_to_decimal(time_observations_started),
+    # split date into year and day of year
+    year = year(observation_date),
+    day_of_year = yday(observation_date)
+  )
+
+# additional filtering
+nuthatch_zf_filter2 <- nuthatch_zf_filter1 %>% 
+  filter(
+    # effort filters
+    duration_minutes <= 5 * 60,
+    effort_distance_km <= 5,
+    # last 10 years of data
+    year >= 2010,
+    # 10 or fewer observers
+    number_observers <= 10)
+
+nuthatch <- nuthatch_zf_filter2 %>% 
+  select(checklist_id, observer_id, sampling_event_identifier,
+         scientific_name,
+         observation_count, species_observed, 
+         state_code, locality_id, latitude, longitude,
+         protocol_type, all_species_reported,
+         observation_date, year, day_of_year,
+         time_observations_started, 
+         duration_minutes, effort_distance_km,
+         number_observers)
+# Save that csv for later use
+write_csv(nuthatch, file.path(base_data_dir, ebd_download_dir, "nuthatch_filtered_for_occ.csv"), na = "")
+# Read that data (useful to skip prev steps)
+nuthatch <- read_csv(file.path(base_data_dir, ebd_download_dir, "nuthatch_filtered_for_occ.csv")) %>% 
+  mutate(year = year(observation_date),
+         # occupancy modeling requires an integer response
+         species_observed = as.integer(species_observed))
+
 state_bound <- read_sf(file.path(base_data_dir, "us_states/GOVTUNIT_Tennessee_State_GPKG/GOVTUNIT_Tennessee_State_GPKG.gpkg")) %>% 
   st_transform(crs = map_proj) %>% 
   st_geometry()
@@ -33,8 +99,9 @@ state_bound
 plot(state_bound)
 st_crs(state_bound)
 
+# TODO: There's a problem because now that I have the PA data all the processing is much more intensive than with the PO only.
+# Convert to sf for spatial processing
 nuthatch_sf <- nuthatch %>% 
-  # convert to spatial points
   st_as_sf(coords = c("longitude", "latitude"), crs = 4326) %>% st_transform(crs="ESRI:102003") %>% st_geometry()
 st_crs(nuthatch_sf) == st_crs(state_bound) 
 
@@ -48,9 +115,11 @@ plot(nuthatch_sf, pch = 19, cex = 0.1, col = alpha("#555555", 0.25), add = TRUE)
 crs(state_bound)
 state_grid <- state_bound %>% st_make_grid(cellsize=c(2500,2500), what = "polygons", crs = "ESRI:102003")
 state_grid
-# get points just in state
+# get points in state
+# One way to do it
+# state_pp_within <- st_within(nuthatch_sf, state_bound, prepared = T, sparse=F)
+# state_pp <- nuthatch_sf[state_pp_within]
 state_pp <- st_intersection(nuthatch_sf, state_bound)
-state_pp
 class(state_pp)
 # Using [] to select the cells is the way to go
 subgrid <- state_grid[state_bound]
@@ -107,8 +176,12 @@ ggplot() +
 
 subgrid$counts
 st_geometry(subgrid)
+
+
 # That sets up our grid and PO data properly
 # Now prepare the landcover covariate
+# See https://land.copernicus.eu/global/products/lc and go the the viewer.
+# The documentation is also on this page ^
 landcover_filename <- file.path(base_data_dir, "copernicus_landcover/W100N40_PROBAV_LC100_global_v3.0.1_2019-nrt_Discrete-Classification-map_EPSG-4326.tif")
 file.exists(landcover_filename)
 lc_se_us <- rast(landcover_filename) 
@@ -117,7 +190,7 @@ lc_se_us <- rast(landcover_filename)
 max(lc_se_us)
 unique_rasts_val <- unique(lc_se_us)
 unique_rasts_val
-dim(unique_rasts_val)
+  dim(unique_rasts_val)
 prj_state <- terra::project(vect(state_bound), lc_se_us)
 plot(prj_state)
 crs(prj_state)
@@ -170,10 +243,10 @@ nuthatch_buffer <- nuthatch_unique_state %>%
   st_buffer(dist = neighborhood_radius)
 nuthatch_buffer
 
-class(prj_state)
-sf_prj_state <- st_as_sf(prj_state)
-state_border <- getBorders(sf_prj_state)
-getBorders(sf_prj_state)
+#class(prj_state)
+#sf_prj_state <- st_as_sf(prj_state)
+#state_border <- getBorders(sf_prj_state)
+#getBorders(sf_prj_state)
 # :(
 
 # TODO: Working on calculating pland from the buffers
@@ -212,14 +285,53 @@ lc_ext_frac$locality_id <- buff_prj$locality_id
 nuthatch_unique_covars <- inner_join(nuthatch_unique_state, lc_ext_frac, by=c("locality_id"))
 dim(nuthatch_unique_covars)
 nuthatch_unique_covars
+names(nuthatch_unique_covars)
+class(nuthatch_unique_covars)
+plot(nuthatch_unique_covars, max.plot=17)
 
-# TODO: Need to get "species_observed" by doing zero-filling
-# with auk_zerofill and then collapse_zerofill(ebd_zf)
-# See https://strimas.com/ebp-workshop-au/presabs.html
-# Need the sampling event data which was not included in my download somehow.
-auk_zerofill(nuthatch, sampling_events = )
+ggplot() + 
+  geom_sf(data=buff_prj, color=alpha("black", 1), linewidth=0.5)+
+  geom_sf(data = prj_state, color=alpha("black",0.5), fill='transparent', linewidth=0.7) + 
+  geom_spatvector(data=nuthatch_unique_covars, aes(col=frac_126)) +
+  scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7) +
+  theme_minimal()+
+  ggtitle("Brown-headed Nuthatch Intensity in Tennessee")
 
-# Then prepare occupancy data for modelling
+ggplot() + 
+  geom_sf(data=buff_prj, color=alpha("black", 1), linewidth=0.5)+
+  geom_sf(data = prj_state, color=alpha("black",0.5), fill='transparent', linewidth=0.7) + 
+  geom_spatvector(data=nuthatch_unique_covars, aes(col=frac_40)) +
+  scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7) +
+  theme_minimal()+
+  ggtitle("Brown-headed Nuthatch Intensity in Tennessee")
+
+ggplot() + 
+  geom_sf(data=buff_prj, color=alpha("black", 1), linewidth=0.5)+
+  geom_sf(data = prj_state, color=alpha("black",0.5), fill='transparent', linewidth=0.7) + 
+  geom_spatvector(data=nuthatch_unique_covars, aes(col=frac_30)) +
+  scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7) +
+  theme_minimal()+
+  ggtitle("Brown-headed Nuthatch Intensity in Tennessee")
+
+ggplot() + 
+  geom_sf(data=buff_prj, color=alpha("black", 1), linewidth=0.5)+
+  geom_sf(data = prj_state, color=alpha("black",0.5), fill='transparent', linewidth=0.7) + 
+  geom_spatvector(data=nuthatch_unique_covars, aes(col=frac_114)) +
+  scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7) +
+  theme_minimal()+
+  ggtitle("Brown-headed Nuthatch Intensity in Tennessee")
+
+ggplot() + 
+  geom_sf(data=buff_prj, color=alpha("black", 1), linewidth=0.5)+
+  geom_sf(data = prj_state, color=alpha("black",0.5), fill='transparent', linewidth=0.7) + 
+  geom_spatvector(data=nuthatch_unique_covars, aes(col=frac_116)) +
+  scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7) +
+  theme_minimal()+
+  ggtitle("Brown-headed Nuthatch Intensity in Tennessee")
+
+
+
+# Then final step to prepare occupancy data for modelling
 # combine ebird and modis data
 # This will reduce nuthatch to only locality_id in the state
 ebird_habitat <- inner_join(nuthatch, nuthatch_unique_covars, by = c("locality_id"))
@@ -235,10 +347,66 @@ occ <- filter_repeat_visits(ebird_filtered,
                             annual_closure = TRUE,
                             date_var = "observation_date",
                             site_vars = c("locality_id", "observer_id"))
-occ$n_observations
+
+class(occ)
+rename(occ, open_forest_unknown=frac_126)
+covar_names <- c(colnames(occ)[26:length(colnames(occ))], "latitude", "longitude")
+covar_names
+select_covar <- covar_names[c(1,2,8, 10, 13, 14, 15)]
+covar_labels <- c("herbaceuos_vegetation", "agriculture", "close_forest_decid_broad", 
+                                   "closed_forest_unknown", "open_forest_unknown")
 
 occ_wide <- format_unmarked_occu(occ, 
                                  site_id = "site", 
-                                 response = "n_observations",
-                                 site_covs = c("landcover"))
+                                 response = "species_observed",
+                                 site_covs = select_covar,
+                                 obs_covs = c("duration_minutes", "number_observers"))
 occ_wide
+
+
+# Do some spatial subsampling to reduce bias
+dggs <- dgconstruct(spacing = 5)
+# get hexagonal cell id for each site
+occ_wide_cell <- occ_wide %>% 
+  mutate(cell = dgGEO_to_SEQNUM(dggs, longitude, latitude)$seqnum)
+# sample one site per grid cell
+occ_ss <- occ_wide_cell %>% 
+  group_by(cell) %>% 
+  sample_n(size = 1) %>% 
+  ungroup() %>% 
+  select(-cell)
+# calculate the percent decrease in the number of sites
+1 - nrow(occ_ss) / nrow(occ_wide)
+occ_ss
+
+# Unmarked formatting
+occ_um <- formatWide(occ_ss, type = "unmarkedFrameOccu")
+summary(occ_um)
+
+occ_model <- occu(~ duration_minutes + 
+                    number_observers 
+                  ~ frac_30 + 
+                    frac_126, 
+                  data = occ_um)
+summary(occ_model)
+occ_gof <- mb.gof.test(occ_model, nsim = 10, plot.hist = T)
+occ_gof
+
+occ_gof$chisq.table <- NULL
+print(occ_gof)
+# Just hacking this together based on already existing data
+occ_pred <- predict(occ_model, 
+                    newdata = lc_ext_frac,
+                    type = "state")
+occ_pred$Predicted
+nuthatch_unique_covars
+nuthatch_unique_covars$preds <- occ_pred$Predicted
+
+r_pred <- nuthatch_unique_covars %>% 
+  # convert to spatial features
+  #st_as_sf(coords = c("longitude", "latitude"), crs = 4326) %>% 
+  st_transform(crs = crs(crop_lc_rast)) %>% 
+  rasterize(crop_lc_rast)
+r_pred
+plot(r_pred)
+plot(prj_state, add=T)

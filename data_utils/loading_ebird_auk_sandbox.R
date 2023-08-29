@@ -144,7 +144,9 @@ se_us_grid[1]
 us_cnts <- st_intersects(se_us_grid, st_geometry(ebird_sf), sparse=F)
 
 
-######## 
+####################### ####################### ####################### 
+####################### ####################### ####################### 
+####################### ####################### ####################### 
 # Processing my own downloaded data: Brown-Headed Nuthatch
 # file name: ebd_bnhnut_smp_relJun-2023
 ebd_nh <- auk_ebd(file.path(base_data_dir, "ebd_bnhnut_smp_relJun-2023/ebd_bnhnut_smp_relJun-2023.txt"))
@@ -154,13 +156,23 @@ ebd_nh %>% auk_date(date = c("2019-01-01", "2019-12-31")) %>%
 auk_filter(ebd_nh_filtered, file = file.path(base_data_dir, "ebd_bnhnut_smp_relJun-2023/nuthatch_filtered_2019.txt"), overwrite=T)
 nuthatch <- read_ebd(file.path(base_data_dir, "ebd_bnhnut_smp_relJun-2023/nuthatch_filtered_2019.txt"))
 
+# Other data:
+ebd_download_dir <- "ebd_US_bnhnut_201901_201912_smp_relJul-2023"
+ebd_nh <- auk_ebd(file.path(base_data_dir, ebd_download_dir, "ebd_US_bnhnut_201901_201912_smp_relJul-2023.txt"),
+                  file_sampling = file.path(base_data_dir, ebd_download_dir, "ebd_US_bnhnut_201901_201912_smp_relJul-2023_sampling.txt"))
+ebd_nh %>% auk_date(date = c("2019-01-01", "2019-12-31")) %>% 
+  auk_complete() -> ebd_nh_filtered
+auk_filter(ebd_nh_filtered, file = file.path(base_data_dir, ebd_download_dir, "nuthatch_filtered_2019.txt"), 
+           file_sampling=file.path(base_data_dir, ebd_download_dir, "nuthatch_filtered_2019_sampling.txt"), overwrite=T) 
+nuthatch <- read_ebd(file.path(base_data_dir, ebd_download_dir, "nuthatch_filtered_2019.txt"))
+
 # Full map of us
 map_proj <- st_crs("ESRI:102003")
 us_map <- ne_countries(country = "united states of america", returnclass = "sf") %>% st_transform(crs=map_proj)
 class(us_map)
 crs(us_map)
 us_vect <- vect(us_map)
-writeVector(us_vect, "us_filetype.shp")
+#writeVector(us_vect, "us_filetype.shp")
 # Or load just one state downloaded from https://apps.nationalmap.gov/downloader/
 read_sf(file.path(base_data_dir, "us_states/GOVTUNIT_Tennessee_State_GPKG/GOVTUNIT_Tennessee_State_GPKG.gpkg"))
 state_bound <- read_sf(file.path(base_data_dir, "us_states/GOVTUNIT_Tennessee_State_GPKG/GOVTUNIT_Tennessee_State_GPKG.gpkg")) %>% 

@@ -71,6 +71,9 @@ occ <- filter_repeat_visits(ebird_filtered,
                             date_var = "observation_date",
                             site_vars = c("locality_id", "observer_id"))
 
+occ
+occ$pland_13_urban
+
 occ_wide <- format_unmarked_occu(occ, 
                                  site_id = "site", 
                                  response = "species_observed",
@@ -88,6 +91,7 @@ occ_wide <- format_unmarked_occu(occ,
                                               "pland_04_deciduous_broadleaf", 
                                               "pland_05_mixed_forest"))
 occ_wide
+occ_wide$time_observations_started.1
 
 dggs <- dgconstruct(spacing = 5)
 # get hexagonal cell id for each site
@@ -101,32 +105,6 @@ point_counts <- occ_wide_cell %>% group_by(cell) %>% summarise(count=n())
 point_counts
 dim(point_counts)
 colnames(point_counts)
-
-# Working to make a grid
-dgcellstogrid(point_counts)
-
-ggplot() +
-  geom_polygon(data=occ_wide_cell,  aes(x=longitude, y=latitude, group=group), fill=NA, color="black")   +
-  scale_fill_gradient(low="blue", high="red")+
-  geom_sf(data=hgrids[[1]], fill=NA, color="#1B9E77")+
-  geom_sf(data=hgrids[[2]], fill=NA, color="#D95F02")+
-  geom_sf(data=hgrids[[3]], fill=NA, color="#7570B3")+
-  # coord_sf(crs="+proj=ortho +lat_0=0 +lon_0=90")+
-  xlab('')+ylab('')+
-  theme(axis.ticks.x=element_blank())+
-  theme(axis.ticks.y=element_blank())+
-  theme(axis.text.x=element_blank())+
-  theme(axis.text.y=element_blank())
-
-ggplot() +
-  geom_polygon(data=occ_wide_cell,  aes(x=longitude, y=latitude))   +
-  scale_fill_gradient(low="blue", high="red")+
-  geom_sf(data=hgrids[[1]], fill=NA, color="#1B9E77")+
-  xlab('')+ylab('')+
-  theme(axis.ticks.x=element_blank())+
-  theme(axis.ticks.y=element_blank())+
-  theme(axis.text.x=element_blank())+
-  theme(axis.text.y=element_blank())
 
 
 # sample one site per grid cell
