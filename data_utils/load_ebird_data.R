@@ -15,13 +15,50 @@ load_ebird <- function(base_data_dir, ebd_download_dir){
            # occupancy modeling requires an integer response
            species_observed = as.integer(species_observed))
   
+  nuthatch_sf <- nuthatch %>% 
+    st_as_sf(coords = c("longitude", "latitude"), crs = 4326) %>% st_transform(crs="ESRI:102003") %>% st_geometry()
+  st_crs(nuthatch_sf) == st_crs(state_bound) 
+  
+  par(mar = c(0.25, 0.25, 0.25, 0.25))
+  plot(state_bound)
+  plot(nuthatch_sf, pch = 19, cex = 0.1, col = alpha("#555555", 0.25), add = TRUE)
+  
+  # Then plot over the state
+  # Set up a grid first
+  # Shoudl be 2500 x 2500 meters
+  crs(state_bound)
+  state_grid <- state_bound %>% st_make_grid(cellsize=c(2500,2500), what = "polygons", crs = "ESRI:102003")
+  state_grid
+  # get points in state
+  # One way to do it
+  # state_pp_within <- st_within(nuthatch_sf, state_bound, prepared = T, sparse=F)
+  # state_pp <- nuthatch_sf[state_pp_within]
+  state_pp <- st_intersection(nuthatch_sf, state_bound)
+  class(state_pp)
+  # Using [] to select the cells is the way to go
+  subgrid <- state_grid[state_bound]
+  plot(state_bound)
+  plot(state_pp, pch = 19, cex = 0.5, col = alpha("orange", 0.5), add = TRUE)
+  plot(subgrid, col = alpha("black", 0.0001), add=T)
+  #plot(state_grid, col = alpha("black", 0.0001), add=T)
+  
+  
+  # Then create an intensity map of the points per cell
+  point_counts <- st_intersects(subgrid, state_pp, sparse=F)
+  dim(point_counts)
+  # Count the number of points in each cell
+  pp_counts <- apply(point_counts, MARGIN=1, FUN=sum)
+  length(pp_counts)
+  which(pp_counts>0)
 }
 
 load_landcover <- function(){
+  # Load preprocessed landcover raster
 }
 
 
 load_evi <- function(){
+  # Load preprocessed EVI
 }
 
 create_pp_grid <- function(){
