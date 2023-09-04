@@ -32,6 +32,10 @@ nuthatch_obs <- read_ebd(file.path(base_data_dir, ebd_download_dir, "nuthatch_fi
 nuthatch_sampling <- read_sampling(file.path(base_data_dir, ebd_download_dir, "nuthatch_filtered_2019_sampling.txt"))
 nuthatch_obs
 nuthatch_sampling
+names(nuthatch_obs)
+names(nuthatch_sampling)
+nuthatch_obs$locality_id
+unique(nuthatch_obs$locality_id)
 
 # This allows us to combine the 2 sets. 
 nuthatch_zf <- auk_zerofill(nuthatch_obs, nuthatch_sampling, collapse = TRUE)
@@ -90,7 +94,6 @@ nuthatch <- read_csv(file.path(base_data_dir, ebd_download_dir, "nuthatch_filter
   mutate(year = year(observation_date),
          # occupancy modeling requires an integer response
          species_observed = as.integer(species_observed))
-
 state_bound <- read_sf(file.path(base_data_dir, "us_states/GOVTUNIT_Tennessee_State_GPKG/GOVTUNIT_Tennessee_State_GPKG.gpkg")) %>% 
   st_transform(crs = map_proj) %>% 
   st_geometry()
@@ -312,74 +315,39 @@ evi_df <- data.frame(evi=evi_buff, locality_id=buff_prj$locality_id)
 dim(nuthatch_unique_state)
 lc_ext_frac$locality_id <- buff_prj$locality_id
 names(lc_ext_frac)
-#nuthatch_unique_state$landcover <- lc_ext_mode 
+# If we join on the nuthatch_unique_state df, we get points,
+# but if we join on the buffer we get to keep the polygons. Processing the polygon version will be much slower
+# but looks better in rasterized plots.
+#nuthatch_unique_covars <- inner_join(nuthatch_unique_state, lc_ext_frac, by=c("locality_id"))
 nuthatch_unique_covars <- inner_join(buff_prj, lc_ext_frac, by=c("locality_id"))
 nuthatch_unique_covars <- inner_join(nuthatch_unique_covars, evi_df, by=c("locality_id"))
+# We could also just do this join but then we can't plot the covariates as easily
+# It is convenient for saving though
+nuthatch_unique_covars_save <- inner_join(lc_ext_frac, evi_df, by=c("locality_id"))
+write_csv(nuthatch_unique_covars_save, file.path(base_data_dir, ebd_download_dir, "nuthatch_unique_site_covars.csv"))
+
 dim(nuthatch_unique_covars)
-nuthatch_unique_covars
+head(nuthatch_unique_covars)
 names(nuthatch_unique_covars)
 class(nuthatch_unique_covars)
-#plot(nuthatch_unique_covars, max.plot09=19)
+# Plot all covars lower down
 
-
+# Trying to plot rasterized version of covars
 evi_rast <- terra::rasterize(vect(nuthatch_unique_covars), crop_evi_rast, field="evi")
 evi_rast
 evi_rast[is.na(evi_rast)] <- 0
 plot(evi_rast)
 
 p <- ggplot() + 
-  geom_sf(data = prj_state, color=alpha("black",0.5), fill='transparent', linewidth=0.7) + 
-  geom_spatvector(data=nuthatch_unique_covars, aes(col=frac_126)) +
-  scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7, name="open_forest_unknown") +
-  theme_minimal()+
-    ggtitle("Brown-headed Nuthatch Intensity in Tennessee")
-print(p)
-
-p <- ggplot() + 
-  geom_sf(data=buff_prj, color=alpha("black", 1), linewidth=0.5)+
-  geom_sf(data = prj_state, color=alpha("black",0.5), fill='transparent', linewidth=0.7) + 
-  geom_spatvector(data=nuthatch_unique_covars, aes(col=frac_40)) +
-  scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7) +
-  theme_minimal()+
-  ggtitle("Brown-headed Nuthatch Intensity in Tennessee")
-
-p <- ggplot() + 
-  geom_sf(data=buff_prj, color=alpha("black", 1), linewidth=0.5)+
-  geom_sf(data = prj_state, color=alpha("black",0.5), fill='transparent', linewidth=0.7) + 
-  geom_spatvector(data=nuthatch_unique_covars, aes(col=frac_30)) +
-  scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7) +
-  theme_minimal()+
-  ggtitle("Brown-headed Nuthatch Intensity in Tennessee")
-
-p <- ggplot() + 
-  geom_sf(data=buff_prj, color=alpha("black", 1), linewidth=0.5)+
-  geom_sf(data = prj_state, color=alpha("black",0.5), fill='transparent', linewidth=0.7) + 
-  geom_spatvector(data=nuthatch_unique_covars, aes(col=frac_114)) +
-  scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7) +
-  theme_minimal()+
-  ggtitle("Brown-headed Nuthatch Intensity in Tennessee")
-
-p <- ggplot() + 
-  geom_sf(data=buff_prj, color=alpha("black", 1), linewidth=0.5)+
-  geom_sf(data = prj_state, color=alpha("black",0.5), fill='transparent', linewidth=0.7) + 
-  geom_spatvector(data=nuthatch_unique_covars, aes(col=frac_116)) +
-  scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7) +
-  theme_minimal()+
-  ggtitle("Brown-headed Nuthatch Intensity in Tennessee")
-
-p <- ggplot() + 
   geom_sf(data=buff_prj, color=alpha("black", 1), linewidth=0.5)+
   geom_sf(data = prj_state, color=alpha("black",0.5), fill='transparent', linewidth=0.7) + 
   geom_spatraster(data=evi_rast) +
-  scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7) +
+  scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7, na.value="white") +
   theme_minimal()+
   ggtitle("Nuthatch EVI in Tennessee at Nuthatch sites")
 print(p)
 fig_name="data/ebird/site_evi.png"
 ggsave(fig_name, plot=p, dpi=300, width=15, height=8, units="cm", bg="white", device="png", type="cairo")
-
-
-
 
 # Then final step to prepare occupancy data for modelling
 # combine ebird and modis data
@@ -399,14 +367,31 @@ occ <- filter_repeat_visits(ebird_filtered,
                             site_vars = c("locality_id", "observer_id"))
 
 class(occ)
+colnames(occ)
 covar_names <- c(colnames(occ)[26:length(colnames(occ))], "latitude", "longitude")
 covar_names
-select_covar <- covar_names[c(1,2, 7, 8, 9, 10, 11, 13, 14, 15)]
+select_covar <- covar_names[c(1,2, 7, 8, 9, 10, 11, 13, 14, 15, 16)]
 select_covar
 covar_labels <- c("herbaceuos_vegetation", "agriculture", "closed_forest_evergreen_needle", 
                   "close_forest_decid_broad", "closed_forest_mixed", 
                   "closed_forest_unknown", "open_forest_evergreen_needle", 
-                  "open_forest_decid_needle", "open_forest_unknown")
+                  "open_forest_decid_needle", "open_forest_unknown", "evi")
+
+# Take a look at all the covariates by plotting rasterized versions of them, which is faster
+covar_names[1:(length(covar_names)-3)]
+for(covar in covar_names[1:(length(covar_names)-3)]){
+  print(covar)
+  covar_rast <- terra::rasterize(vect(nuthatch_unique_covars), crop_evi_rast, field=covar)
+  p <- ggplot() + 
+    geom_spatraster(data=covar_rast) +
+    scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.8, na.value="white") +
+    #geom_sf(data = prj_state, color=alpha("black",0.4), fill='transparent', linewidth=0.7) + 
+    theme_minimal()+
+    ggtitle(paste(covar, " in Tennessee at Nuthatch sites", sep=""))
+  print(p)
+  fig_name <- paste("data/ebird/", covar, "_covar_tenn.png", sep="")
+  ggsave(fig_name, plot=p, dpi=300, width=15, height=8, units="cm", bg="white", device="png", type="cairo")
+}
 
 # Use closed forests for detection prob
 occ$protocol_type <- as.factor(occ$protocol_type)
@@ -416,10 +401,12 @@ occ_wide <- format_unmarked_occu(occ,
                                  site_covs = select_covar,
                                  obs_covs = c("duration_minutes", "number_observers",  "effort_distance_km",
                                               "time_observations_started", "protocol_type", 
-                                              "frac_111", "frac_114", "frac_116"))
+                                              "frac_111", "frac_114", "frac_116", "evi"))
+
 
 # Do some spatial subsampling to reduce bias
 dggs <- dgconstruct(spacing = 5)
+dggs
 # get hexagonal cell id for each site
 occ_wide_cell <- occ_wide %>% 
   mutate(cell = dgGEO_to_SEQNUM(dggs, longitude, latitude)$seqnum)
@@ -433,6 +420,15 @@ occ_ss <- occ_wide_cell %>%
 1 - nrow(occ_ss) / nrow(occ_wide)
 occ_ss
 
+hexagons <- dgcellstogrid(dggs, unique(occ_wide_cell$cell)) %>% 
+  st_as_sf()
+
+p <- ggplot() +
+  geom_sf(data = hexagons) +
+geom_sf(data=state_pp_prj, color=alpha("orange", 0.1))+
+  theme_bw()
+print(p)
+
 # Unmarked formatting
 occ_um <- formatWide(occ_ss, type = "unmarkedFrameOccu")
 summary(occ_um)
@@ -442,6 +438,9 @@ occ_model <- occu(~ duration_minutes + frac_111 + frac_114 + frac_116 +
                   ~ frac_30 + frac_40 + frac_111 + frac_114 + frac_115 + frac_116 + frac_121 +
                     frac_126, 
                   data = occ_um)
+occ_model <- occu(~ effort_distance_km + time_observations_started + frac_115
+                  ~ frac_116 + evi,
+                  data = occ_um)
 summary(occ_model)
 occ_gof <- mb.gof.test(occ_model, nsim = 10, plot.hist = T)
 occ_gof
@@ -450,7 +449,7 @@ print(occ_gof)
 # Just hacking this together based on already existing data
 # Using the proportions for the buffers already calculated
 occ_pred <- unmarked::predict(occ_model, 
-                    newdata = lc_ext_frac,
+                    newdata = nuthatch_unique_covars,
                     type = "state")
 occ_pred$Predicted
 nuthatch_unique_covars
