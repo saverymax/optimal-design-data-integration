@@ -194,13 +194,14 @@ lc_se_us <- rast(landcover_filename)
 max(lc_se_us)
 unique_rasts_val <- unique(lc_se_us)
 unique_rasts_val
-  dim(unique_rasts_val)
+dim(unique_rasts_val)
 prj_state <- terra::project(vect(state_bound), lc_se_us)
 plot(prj_state)
 crs(prj_state)
 crs(lc_se_us)
 crop_lc_rast <- crop(lc_se_us, prj_state)
 plot(crop_lc_rast)
+
 lc_mask <- terra::mask(lc_se_us, prj_state)
 plot(lc_mask)
 # projected_lc <- terra::project(crop_lc_rast, crs(vect(state_bound)))
@@ -221,6 +222,21 @@ plot(modis_evi_rast)
 # Project full raster then crop.
 evi_rast_prj <- terra::project(modis_evi_rast, lc_se_us)
 crop_evi_rast <- crop(evi_rast_prj, prj_state)
+
+# Add in some elevation data
+#elev_filename <- file.path(base_data_dir, "elevation_earth_env/elevation_1KMmd_GMTEDmd.tif")
+elev_filename <- file.path(base_data_dir, "elevation_aster/ASTGTM_NC.003_ASTER_GDEM_DEM_doy2000061_aid0001.tif")
+file.exists(elev_filename)
+elev_rast <- rast(elev_filename) 
+plot(elev_rast)
+stopifnot(crs(elev_rast)==crs(lc_se_us))
+stopifnot(crs(elev_rast)==crs(prj_state))
+# Don't need to project either source of rast 
+#elev_rast_prj <- terra::project(elev_rast, lc_se_us)
+crop_elev_rast <- crop(elev_rast, prj_state)
+crop_elev_rast
+plot(crop_elev_rast)
+
 
 # Plot evi
 p <- ggplot() + 
@@ -245,6 +261,17 @@ p <- ggplot() +
   ggtitle("Brown-headed Nuthatch and landcover in Tennessee")
 print(p)
 fig_name="data/ebird/landcover.png"
+ggsave(fig_name, plot=p, dpi=300, width=15, height=8, units="cm", bg="white", device="png", type="cairo")
+
+# Plot elevation
+p <- ggplot() + 
+  geom_spatraster(data=crop_elev_rast) +
+  geom_sf(data = prj_state, color=alpha("white",0.9), fill='transparent', linewidth=0.4) + 
+  scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7) +
+  theme_minimal()+
+  ggtitle("Brown-headed Nuthatch and elevation in Tennessee")
+print(p)
+fig_name="data/ebird/elevation.png"
 ggsave(fig_name, plot=p, dpi=300, width=15, height=8, units="cm", bg="white", device="png", type="cairo")
 
 
@@ -311,6 +338,13 @@ evi_buff
 class(evi_buff)
 evi_df <- data.frame(evi=evi_buff, locality_id=buff_prj$locality_id)
 
+# Then extract from the elevation
+elev_buff <- exact_extract(crop_elev_rast, buff_prj, "mean")
+head(elev_buff)
+class(evi_buff)
+elev_df <- data.frame(elev=elev_buff, locality_id=buff_prj$locality_id)
+
+
 # Mapping unique sites to covariates using the locality_id
 dim(nuthatch_unique_state)
 lc_ext_frac$locality_id <- buff_prj$locality_id
@@ -321,9 +355,11 @@ names(lc_ext_frac)
 #nuthatch_unique_covars <- inner_join(nuthatch_unique_state, lc_ext_frac, by=c("locality_id"))
 nuthatch_unique_covars <- inner_join(buff_prj, lc_ext_frac, by=c("locality_id"))
 nuthatch_unique_covars <- inner_join(nuthatch_unique_covars, evi_df, by=c("locality_id"))
+nuthatch_unique_covars <- inner_join(nuthatch_unique_covars, elev_df, by=c("locality_id"))
 # We could also just do this join but then we can't plot the covariates as easily
 # It is convenient for saving though
 nuthatch_unique_covars_save <- inner_join(lc_ext_frac, evi_df, by=c("locality_id"))
+nuthatch_unique_covars_save <- inner_join(nuthatch_unique_covars_save, elev_df, by=c("locality_id"))
 write_csv(nuthatch_unique_covars_save, file.path(base_data_dir, ebd_download_dir, "nuthatch_unique_site_covars.csv"))
 
 dim(nuthatch_unique_covars)
@@ -332,11 +368,18 @@ names(nuthatch_unique_covars)
 class(nuthatch_unique_covars)
 # Plot all covars lower down
 
-# Trying to plot rasterized version of covars
+# Trying to plot rasterized version of site evi 
 evi_rast <- terra::rasterize(vect(nuthatch_unique_covars), crop_evi_rast, field="evi")
 evi_rast
 evi_rast[is.na(evi_rast)] <- 0
 plot(evi_rast)
+
+# rasterized version of site elev 
+elev_site_rast <- terra::rasterize(vect(nuthatch_unique_covars), crop_evi_rast, field="elev")
+elev_site_rast
+elev_site_rast[is.na(elev_site_rast)] <- 0
+plot(elev_site_rast)
+
 
 p <- ggplot() + 
   geom_sf(data=buff_prj, color=alpha("black", 1), linewidth=0.5)+
@@ -344,10 +387,22 @@ p <- ggplot() +
   geom_spatraster(data=evi_rast) +
   scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7, na.value="white") +
   theme_minimal()+
-  ggtitle("Nuthatch EVI in Tennessee at Nuthatch sites")
+  ggtitle("EVI in Tennessee at Nuthatch sites")
 print(p)
 fig_name="data/ebird/site_evi.png"
 ggsave(fig_name, plot=p, dpi=300, width=15, height=8, units="cm", bg="white", device="png", type="cairo")
+
+p <- ggplot() + 
+  geom_sf(data=buff_prj, color=alpha("black", 1), linewidth=0.5)+
+  geom_sf(data = prj_state, color=alpha("black",0.5), fill='transparent', linewidth=0.7) + 
+  geom_spatraster(data=elev_site_rast) +
+  scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7, na.value="white") +
+  theme_minimal()+
+  ggtitle("Elevation in Tennessee at Nuthatch sites")
+print(p)
+fig_name="data/ebird/site_elevation.png"
+ggsave(fig_name, plot=p, dpi=300, width=15, height=8, units="cm", bg="white", device="png", type="cairo")
+
 
 # Then final step to prepare occupancy data for modelling
 # combine ebird and modis data
@@ -370,16 +425,16 @@ class(occ)
 colnames(occ)
 covar_names <- c(colnames(occ)[26:length(colnames(occ))], "latitude", "longitude")
 covar_names
-select_covar <- covar_names[c(1,2, 7, 8, 9, 10, 11, 13, 14, 15, 16)]
+select_covar <- covar_names[c(1,2, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17)]
 select_covar
 covar_labels <- c("herbaceuos_vegetation", "agriculture", "closed_forest_evergreen_needle", 
                   "close_forest_decid_broad", "closed_forest_mixed", 
                   "closed_forest_unknown", "open_forest_evergreen_needle", 
-                  "open_forest_decid_needle", "open_forest_unknown", "evi")
+                  "open_forest_decid_needle", "open_forest_unknown", "evi", "elevation")
 
 # Take a look at all the covariates by plotting rasterized versions of them, which is faster
-covar_names[1:(length(covar_names)-3)]
-for(covar in covar_names[1:(length(covar_names)-3)]){
+covar_names[1:(length(covar_names)-4)]
+for(covar in covar_names[1:(length(covar_names)-4)]){
   print(covar)
   covar_rast <- terra::rasterize(vect(nuthatch_unique_covars), crop_evi_rast, field=covar)
   p <- ggplot() + 
@@ -401,7 +456,7 @@ occ_wide <- format_unmarked_occu(occ,
                                  site_covs = select_covar,
                                  obs_covs = c("duration_minutes", "number_observers",  "effort_distance_km",
                                               "time_observations_started", "protocol_type", 
-                                              "frac_111", "frac_114", "frac_116", "evi"))
+                                              "frac_111", "frac_114", "frac_116", "evi", "elev"))
 
 
 # Do some spatial subsampling to reduce bias
@@ -436,7 +491,7 @@ summary(occ_um)
 occ_model <- occu(~ duration_minutes + frac_111 + frac_114 + frac_116 +
                     number_observers + effort_distance_km + time_observations_started + protocol_type
                   ~ frac_30 + frac_40 + frac_111 + frac_114 + frac_115 + frac_116 + frac_121 +
-                    frac_126, 
+                    frac_126 + evi + elev, 
                   data = occ_um)
 occ_model <- occu(~ effort_distance_km + time_observations_started + frac_115
                   ~ frac_116 + evi,
@@ -457,7 +512,6 @@ nuthatch_unique_covars$preds <- occ_pred$Predicted
 
 # Prepare to convert to raster
 preds_select <- nuthatch_unique_covars %>% select(geometry, preds)
-preds_select
 class(preds_select)
 # We can just plot as vector
 plot(preds_select)
@@ -469,10 +523,8 @@ r_pred <- preds_select %>%
     #st_as_sf(coords = c("longitude", "latitude"), crs = 4326) %>% 
   st_transform(crs = crs(crop_lc_rast))
 
-# TODO
-# This isn't using the prediction probabilities for some reason
-r_pred <- terra::rasterize(r_pred, crop_lc_rast)
-r_pred
+r_pred <- terra::rasterize(vect(nuthatch_unique_covars), crop_lc_rast, field="preds")
 crs(r_pred)
-plot(r_pred)
-plot(prj_state, add=T)
+plot(prj_state)
+plot(r_pred, add=T)
+

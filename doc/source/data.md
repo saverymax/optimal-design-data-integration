@@ -1,5 +1,17 @@
 # Data
 
+## eBird 
+
+The optimal design procedure available in this project can be applied to real or simulated data. In the associated paper with 
+this documentation, we apply the algorithm to eBird data in Tennessee. 
+
+To download and process the data for the experiments or your own usage, you can follow the following steps. 
+
+	1. 
+	2. 
+	3. When the data is downloaded and placed in the appropriate directory, run the processing script process_ebird.R
+		```Rscript process_ebird.R```
+
 ## Land cover data
 
 Land cover data can be acquired from numerous sources. These include products from MODIS, Sentinel-II, Landsat, or Proba-V. In this documentation we
