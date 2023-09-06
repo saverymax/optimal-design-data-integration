@@ -85,3 +85,6 @@ p <- ggplot() +
   ggtitle("Brown-headed Nuthatch and elevation in Tennessee")
 print(p)
 
+# TODO: 
+# Create grid and counts: create_pp_grid
+# Based on grid, generate covariate summaries: generate_covariates
