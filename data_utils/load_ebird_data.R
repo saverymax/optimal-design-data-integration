@@ -88,102 +88,43 @@ load_elevation <- function(base_data_dir, elev_path, prj_state){
   return(crop_elev_rast)
 }
 
-create_pp_grid <- function(){
-  # Then plot over the state
-  # Set up a grid first
-  # Shoudl be 2500 x 2500 meters
-  crs(state_bound)
+create_pp_grid <- function(state_bound, state_pa, rast_crs){
+  # WOrk in the CRS with units of meters that state_bound was put in
   state_grid <- state_bound %>% st_make_grid(cellsize=c(2500,2500), what = "polygons", crs = "ESRI:102003")
-  state_grid
-  # get points in state
-  # One way to do it
-  # state_pp_within <- st_within(nuthatch_sf, state_bound, prepared = T, sparse=F)
-  # state_pp <- nuthatch_sf[state_pp_within]
-  state_pp <- st_intersection(nuthatch_sf, state_bound)
-  class(state_pp)
   # Using [] to select the cells is the way to go
   subgrid <- state_grid[state_bound]
-  plot(state_bound)
-  plot(state_pp, pch = 19, cex = 0.5, col = alpha("orange", 0.5), add = TRUE)
-  plot(subgrid, col = alpha("black", 0.0001), add=T)
-  #plot(state_grid, col = alpha("black", 0.0001), add=T)
+  # Then project back to the raster crs and convert to sf object from sfc
+  subgrid_prj <- st_transform(subgrid, rast_crs) %>% st_sf()
+  return(subgrid_prj)
   
-  # Then create an intensity map of the points per cell
-  point_counts <- st_intersects(subgrid, state_pp, sparse=F)
-  dim(point_counts)
-  # Count the number of points in each cell
-  pp_counts <- apply(point_counts, MARGIN=1, FUN=sum)
-  length(pp_counts)
-  which(pp_counts>0)
 }
 
-generate_covariates <- function(){
-  # Function to create covariates based on the grid and buffer.
-  neighborhood_radius <- 5000 * ceiling(max(res(crop_lc_rast))) / 2
-  neighborhood_radius
-  nuthatch_unique <- nuthatch %>% distinct(locality_id, latitude, longitude) 
-  # Select only the unique observations within the state
-  nuthatch_unique_state <- nuthatch_unique %>% st_as_sf(coords = c("longitude", "latitude"), crs=4326) %>% 
-    # transform to state crs projection
-    st_transform(crs = crs(state_bound)) %>% 
-    st_intersection(state_bound)
-  nuthatch_unique_state
-  
-  nuthatch_buffer <- nuthatch_unique_state %>% 
-    # buffer to create neighborhood around each point
-    st_buffer(dist = neighborhood_radius)
-  nuthatch_buffer
-  
-  # Take a look at the buff on -headed Nuthatch  in Tennessee the map
-  # The buffer will have all sampled sites, not just observed PO sites
-  buff_prj <- st_transform(nuthatch_buffer, crs=crs(crop_lc_rast))
-  crs(buff_prj)
-  p <- ggplot() + 
-    geom_spatraster(data=crop_lc_rast) +
-    geom_sf(data=buff_prj, color=alpha("black", 1), linewidth=0.5)+
-    geom_sf(data=state_pp_prj, color=alpha("orange", 0.5))+
-    #geom_sf(data = state_bound, color=alpha("white",0.9), fill='transparent') + 
-    geom_sf(data = prj_state, color=alpha("white",0.9), fill='transparent', linewidth=0.4) + 
-    scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7) +
-    theme_minimal()+
-    ggtitle("Buffer on observed sites")
-  print(p)
-  #fig_name="data/ebird/site_buffer.png"
-  #ggsave(fig_name, plot=p, dpi=300, width=15, height=8, units="cm", bg="white", device="png", type="cairo")`
-  
+aggregate_point_counts <- function(subgrid, state_po_prj){
+  # At the moment, the aggregating is done in the crs of the raster
+  # Then create an intensity map of the points per cell
+  point_counts <- st_intersects(subgrid, state_po_prj, sparse=F)
+  # Count the number of points in each cell
+  pp_counts <- apply(point_counts, MARGIN=1, FUN=sum)
+  return(pp_counts)
+}
+
+generate_gridded_covariates <- function(subgrid, crop_lc_rast, crop_evi_rast, crop_elev_rast){
+  # Function to create covariates based on the grid.
   # Create the fractional covariates
-  lc_ext_frac <- exact_extract(crop_lc_rast, buff_prj, "frac", progress=F)
+  lc_ext_frac <- exact_extract(crop_lc_rast, subgrid, "frac", progress=F)
   colnames(lc_ext_frac)
   dim(lc_ext_frac)
   max_cols <- max.col(lc_ext_frac)
   max_col_names <- colnames(lc_ext_frac)[max_cols]
   mode_sites <- as.numeric(str_sub(max_col_names, 6, -1))
   # Take mode
-  lc_ext_mode <- exact_extract(crop_lc_rast, buff_prj, "mode", progress=F)
+  lc_ext_mode <- exact_extract(crop_lc_rast, subgrid, "mode", progress=F)
   # Manual mode from frac should equal mode using function .
   stopifnot(lc_ext_mode == mode_sites)
-  
   # Let's do the same for the EVI data
-  evi_buff <- exact_extract(crop_evi_rast, buff_prj, "mean", progress=F)
-  evi_df <- data.frame(evi=evi_buff, locality_id=buff_prj$locality_id)
-  
+  evi_buff <- exact_extract(crop_evi_rast, subgrid, "mean", progress=F)
   # Then extract from the elevation
-  elev_buff <- exact_extract(crop_elev_rast, buff_prj, "mean", progress=F)
-  head(elev_buff)
-  class(evi_buff)
-  elev_df <- data.frame(elev=elev_buff, locality_id=buff_prj$locality_id)
+  elev_buff <- exact_extract(crop_elev_rast, subgrid, "mean", progress=F)
   
-  # Mapping unique sites to covariates using the locality_id
-  dim(nuthatch_unique_state)
-  lc_ext_frac$locality_id <- buff_prj$locality_id
-  names(lc_ext_frac)
-  #nuthatch_unique_state$landcover <- lc_ext_mode 
-  # In this way we will keep the buffer polygons
-  nuthatch_unique_covars <- inner_join(buff_prj, lc_ext_frac, by=c("locality_id"))
-  nuthatch_unique_covars <- inner_join(nuthatch_unique_covars, evi_df, by=c("locality_id"))
-  nuthatch_unique_covars <- inner_join(nuthatch_unique_covars, elev_df, by=c("locality_id"))
-  dim(nuthatch_unique_covars)
-  nuthatch_unique_covars
-  names(nuthatch_unique_covars)
-  class(nuthatch_unique_covars)
+  return(list(lc_frac=lc_ext_frac, evi_agg=evi_buff, elev_agg=elev_buff))
 }
