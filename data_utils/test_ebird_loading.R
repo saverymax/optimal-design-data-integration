@@ -197,7 +197,3 @@ for(i in 1:length(covar_names[1:length(covar_names)])){
 
 # Everything looks good which means we can proceed to modelling
 
-
-
-
-
