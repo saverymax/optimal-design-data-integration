@@ -15,11 +15,11 @@ load_ebird <- function(base_data_dir, ebd_download_dir, state_bound, map_prj){
   # Convert to sf for spatial processing
   # Separate files for the pure PO data and the data merged with checklists so that absences are included.
   nuthatch_sf <- nuthatch %>% 
-    st_as_sf(coords = c("longitude", "latitude"), crs = 4326) %>% st_transform(crs="ESRI:102003") %>% st_geometry()
+    st_as_sf(coords = c("longitude", "latitude"), crs = 4326) %>% st_transform(crs="ESRI:102003") #%>% st_geometry()
   st_crs(nuthatch_sf) == st_crs(state_bound) 
  
   nuthatch_po_sf <- nuthatch_obs %>% 
-    st_as_sf(coords = c("longitude", "latitude"), crs = 4326) %>% st_transform(crs="ESRI:102003") %>% st_geometry()
+    st_as_sf(coords = c("longitude", "latitude"), crs = 4326) %>% st_transform(crs="ESRI:102003") #%>% st_geometry()
   st_crs(nuthatch_po_sf) == st_crs(state_bound) 
   
   # Get the points within the state
@@ -88,9 +88,10 @@ load_elevation <- function(base_data_dir, elev_path, prj_state){
   return(crop_elev_rast)
 }
 
-create_pp_grid <- function(state_bound, state_pa, rast_crs){
+create_pp_grid <- function(state_bound, rast_crs){
+  cell_size <- 10000
   # WOrk in the CRS with units of meters that state_bound was put in
-  state_grid <- state_bound %>% st_make_grid(cellsize=c(2500,2500), what = "polygons", crs = "ESRI:102003")
+  state_grid <- state_bound %>% st_make_grid(cellsize=c(cell_size,cell_size), what = "polygons", crs = "ESRI:102003")
   # Using [] to select the cells is the way to go
   subgrid <- state_grid[state_bound]
   # Then project back to the raster crs and convert to sf object from sfc
@@ -108,7 +109,7 @@ aggregate_point_counts <- function(subgrid, state_po_prj){
   return(pp_counts)
 }
 
-generate_gridded_covariates <- function(subgrid, crop_lc_rast, crop_evi_rast, crop_elev_rast){
+generate_gridded_covariates <- function(subgrid, crop_lc_rast, crop_evi_rast, crop_elev_rast, state_po_prj){
   # Function to create covariates based on the grid.
   # Create the fractional covariates
   lc_ext_frac <- exact_extract(crop_lc_rast, subgrid, "frac", progress=F)
@@ -125,6 +126,8 @@ generate_gridded_covariates <- function(subgrid, crop_lc_rast, crop_evi_rast, cr
   evi_buff <- exact_extract(crop_evi_rast, subgrid, "mean", progress=F)
   # Then extract from the elevation
   elev_buff <- exact_extract(crop_elev_rast, subgrid, "mean", progress=F)
+  # Get ebird covariates buffered; didn't want to work.
+  #observers_buff <- subgrid %>% st_intersection(state_po_prj) %>% group_by(id) %>% summarise(avg_observers=mean(number_observers))
   
   return(list(lc_frac=lc_ext_frac, evi_agg=evi_buff, elev_agg=elev_buff))
 }
