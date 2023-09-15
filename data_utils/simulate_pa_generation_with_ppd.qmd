@@ -1,0 +1,124 @@
+---
+title: "Simulation of Presence-Absence data using Prior predictive distribution from Presence-Only data"
+data: today
+author: Max Savery
+format: pdf
+---
+
+The theoretical set up takes place in the context of Bayesian Optimal Design. We need to generate data according to different designs, and to generate the data, we need to draw from 
+the predictive distribution. But in the fully Bayesian sense, we don't have the marginal predictive distribution and need to simulate from it. Therefore, we can fit a Bayesian model (the posterior will be used as the prior) and draw from the prior predictive distribution in this way. 
+
+In the optimal design set-up, we define the expectation of our utility as
+
+$$
+E[U(d)] = \int_y \int_{\theta} u(d, y, \theta)p(\theta|y)p(y|d)d\theta dy
+$$
+In this Bayesian formulation, we integrate both over $\theta$ and $y$. Since this integral is not tractable in many applications, we need computational methods to approximate the integral. One approach is to compute the Posterior Predictive Distribution (PPD) integrated over $\theta$ by fitting a Bayesian model for $\theta$ and $y$ and drawing $\tilde{y}$ from the PPD. The draw of $\tilde{y}$ can then be used to compute the loss in the utility function. 
+
+To integrate over $y$, we need to repeatedly draw over the marginal distribution $p(y|\theta)$. This can be done by computing the prior predictive distribution of y:
+$$
+p(y|d) = \int p(y|\theta)p(\theta)
+$$
+This requires us to define a prior for $\theta$ and generate y according to it's conditional on $\theta$ (this needs to be known). However, consider if the prior for $\theta$ is based on prior data. In that case we can fit a bayesian model to the prior data, compute $p(\theta)$ as the posterior $p(\theta|y_{prior}\propto p(y_{prior}|\theta_0}p(\theta_0}$, and use draws from this posterior to generate draws from the prior predictive of $y$. We still have to specify an initial prior for $\theta$ $p(\theta_0)$, but such is the sequential nature of Bayesian models. 
+  
+Now, we can move into the context of occupancy data. Here, $y_{prior}$ is Presence-Only (PO) data, $y$ is Presence-Absence (PA) data, and $\theta$ refers to a vector of parameters used to model the occupancy probability.
+
+TODO: Discuss using PP as prior and how PA and PO relate
+
+The problem we run into is that we need to be able to draw from $p(y|d)$ before we fit our site-occupancy model. But we do not have a point estimate of $\theta$ or known distribution of $\theta$ to 
+draw from. One possibility is to fit a point process model using the PO data to generate a posterior for $\theta$. Then we can draw from this posterior and generate sets of $y$, the PA data. However, in our utility function, we will AGAIN use the PO data as a prior when we integrate over theta. Any biases present in our PO data will effect the generation of the PA data. For example, if our PO data is gathered in convenient locations near urban centers AND this sampling bias is not considered in the estimation of $b$, such bias will show up as underestimating the occupancy of other areas. In the utility function, sites where occupancy has been underestimated (i.e., under-generated) in the PA data will not be considered as important, and this distribution will only be falsely validated by the PO data that has been doubly used.
+
+Therefore, we would like to explore the effect that sampling bias (mispecification of the PP) can effect the PA generation. To do so, we will conduct the following experiments:
+
+Assume a known distribution for $\theta$, p(\theta). We can then generate PA data in two ways:
+  1. Generate PA $p(y|D)$ data by repeatedly drawing from this distribution and simulating from the conditional of y
+  2. Generate PO data by drawing from $p(\theta)$. We then fit the PP, draw from the posterior $p(\theta|y_0)$ and then simulate the conditional of $y$.
+  
+We then fit the SO model and see the extent to which we can recover the true occupancy pattern given varying amounts of sampling bias. 
+```{r stan-models}
+poisson_process <- '
+    data{
+      int<lower = 1> N;
+      int<lower=0> k_i; // number of predictors for intensity
+      int<lower=0> k_b; // number of predictors for bias
+      matrix[N, k_i] X; // predictor matrix for intensity
+      matrix[N, k_b] Z; // predictor matrix for bias
+      array[N] int y;
+    }
+    parameters{
+      real alpha;
+      real gamma;
+      vector[k_i] beta;       // vector of params for intensity
+      vector[k_b] delta;      // vector of params for bias
+    }
+    model{
+      //priors
+      target += normal_lpdf(alpha | 0,10);
+      target += normal_lpdf(beta | 0,10);
+      target += normal_lpdf(gamma | 0,10);
+      target += normal_lpdf(delta | 0,10);
+
+      // likelihood
+      // log parameterization so we dont have to exponentiate coefs before passing into poisson distribution
+      // https://mc-stan.org/docs/functions-reference/poisson-distribution-log-parameterization.html
+      target += poisson_log_lpmf(y | alpha + X * beta + gamma + Z * delta);
+    }
+    generated quantities{
+      array[N] int y_rep;
+      y_rep = poisson_log_rng(alpha + X * beta + gamma + Z * delta);
+    }
+'
+
+poisson_process_site_occupancy <- '
+    data{
+      int<lower = 1> n_pa_sites;
+      int<lower = 1> n_po_sites;
+      int<lower=0> k_i;
+      int<lower=0> k_b;
+      int<lower=0, upper=1> model_diag;
+      array[n_pa_sites] int Y;
+      array[n_pa_sites] int n_surveys;
+      matrix[n_pa_sites, k_i] X;
+      array[n_po_sites] int PO;
+      matrix[n_po_sites, k_i] X_po; // predictor matrix for intensity
+      matrix[n_po_sites, k_b] Z_po; // predictor matrix for bias
+    }
+    parameters{
+      real alpha;           // intercepts
+      real gamma;
+      vector[k_i] beta;       // vector of params for intensity
+      vector[k_b] delta;      // vector of params for bias
+      real<lower = 0, upper = 1> p;
+    }
+    model{
+      // priors
+      target += normal_lpdf(alpha |   0,10);
+      target += normal_lpdf(gamma | 0,10);
+      target += normal_lpdf(beta | 0,10);
+      target += normal_lpdf(delta | 0,10);
+      vector[n_pa_sites] g_theta;
+      target += poisson_log_lpmf(PO | alpha + X_po*beta + gamma + Z_po*delta);
+      g_theta = 1 - exp(-exp(alpha + X*beta));
+      for (i in 1:n_pa_sites) {
+        if (Y[i] > 0){
+          target += log(g_theta[i]*choose(n_surveys[i], Y[i])*(p^Y[i])*(1-p)^(n_surveys[i]-Y[i]));
+        }
+        else{
+          // Compute mixture of no detection and no occupancy
+          target += log(g_theta[i]*(1-p)^(n_surveys[i]) + (1 - g_theta[i]));
+        }
+      }
+    }
+    generated quantities{
+      // Required generated quantities
+      // We can generate over all sites, instead of just those being used for PA
+      vector[n_po_sites] g_theta_gen;
+      array[n_po_sites] int occ_gen; 
+      // Note that we do not include gamma here because the 
+      // probability of occupancy is just P(N(C_i)>0) = G(alpha + beta X)
+      g_theta_gen = 1 - exp(-exp(alpha + X_po*beta));
+      // Posterior predictive distribution for occupancy
+      occ_gen = bernoulli_rng(g_theta_gen);
+    }
+'
+
