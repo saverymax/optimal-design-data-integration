@@ -223,13 +223,13 @@ link <- "cloglog"
 data_reps <- 20
 covar_df <- st_drop_geometry(subgrid_covars)
 colnames(covar_df)
-intensity_covars <- covar_df[c("evi", "elev", "frac_115", "frac_124")]
+#intensity_covars <- covar_df[c("evi", "elev", "frac_111", )]
+intensity_covars <- covar_df[c("evi", "elev", "frac_111", "frac_115", "frac_124")]
 bias_covars <- covar_df[c("frac_50")]#"duration_minutes", "number_observers",  "effort_distance_km", "time_observations_started", 
 k_param_intn <- length(colnames(intensity_covars)) 
 k_param_bias <- length(colnames(bias_covars)) 
 dim(as.matrix(covar_df))
 p_detection <- 0.2
-m <- 5
 n_surveys <- 5
 sites <- nrow(covar_df)
 sites
@@ -289,13 +289,15 @@ model_string <- nuthatch_poisson_process
 write(model_string, model_path)
 data_site_occ = list(N=sites, X=intensity_covars, y=covar_df$counts, Z=bias_covars, k_i=k_param_intn, k_b=k_param_bias)
 model <- cmdstan_model(model_path) 
-fit <- model$sample(data=data_site_occ, seed=13, chains=1, iter_sampling=1000, iter_warmup=100) 
+fit <- model$sample(data=data_site_occ, seed=13, chains=3, iter_sampling=2000, iter_warmup=500) 
 ```
 Take a look at the fit.
 ```{r pp-fit}
 fit$summary()
-all_params <- c("alpha", "gamma", "beta[1]", "beta[2]", "beta[3]", "beta[4]", "delta[1]")
-intensity_params <- c("alpha", "beta[1]", "beta[2]", "beta[3]", "beta[4]")
+all_params <- c("alpha", "gamma", "beta[1]", "beta[2]", "beta[3]", "beta[4]", "beta[5]", "delta[1]")
+#all_params <- c("alpha", "gamma", "beta[1]", "beta[2]", "beta[3]", "delta[1]")
+#intensity_params <- c("alpha", "beta[1]", "beta[2]", "beta[3]")
+intensity_params <- c("alpha", "beta[1]", "beta[2]", "beta[3]", "beta[4]", "beta[5]")
 params_intercept <- c("alpha", "gamma")
 posterior <- fit$draws(all_params)
 
@@ -309,6 +311,7 @@ mcmc_areas(posterior,  prob = 0.8, point_est="mean", pars=c("beta[1]")) + plot_t
 mcmc_areas(posterior,  prob = 0.8, point_est="mean", pars=c("beta[2]")) + plot_title
 mcmc_areas(posterior,  prob = 0.8, point_est="mean", pars=c("beta[3]")) + plot_title
 mcmc_areas(posterior,  prob = 0.8, point_est="mean", pars=c("beta[4]")) + plot_title
+mcmc_areas(posterior,  prob = 0.8, point_est="mean", pars=c("beta[5]")) + plot_title
 
 plot_title <- ggtitle(paste("Posterior distributions of detection probability, mean and 90% interval"))
 p_post <- mcmc_areas(posterior,  prob = 0.8, point_est="mean", pars = params_intercept) + plot_title
@@ -324,7 +327,9 @@ mcmc_pairs(fit$draws(), pars=all_params)
 mcmc_scatter(fit$draws(), pars=c('alpha', 'gamma'))
 mcmc_scatter(fit$draws(), pars=c('beta[1]', 'beta[2]'))
 mcmc_scatter(fit$draws(), pars=c('beta[2]', 'beta[3]'))
+mcmc_scatter(fit$draws(), pars=c('beta[1]', 'beta[3]'))
 mcmc_scatter(fit$draws(), pars=c('beta[1]', 'beta[4]'))
+mcmc_scatter(fit$draws(), pars=c('beta[1]', 'beta[5]'))
 
 # Examine the ppd for y
 generated_yrep <- fit$draws("y_rep", format="matrix")
@@ -348,6 +353,10 @@ print(p)
 # Extract the posterior draws from the stan fit
 pp_posterior <- fit$draws(intensity_params, format="matrix")
 colnames(pp_posterior)
+dim(pp_posterior)
+# Get 1000 samples from the posterior
+p_index <- sample(c(1:1000), size = 1000, replace = T)
+pp_posterior <- pp_posterior[p_index, ]
 dim(pp_posterior)
 
 generate_ebird_pa <- function(data_reps, surface_data, p_0, pp_posterior, n, sites, link){
@@ -474,13 +483,15 @@ Using the PO data and generated PA data, we can now fit our site-occupancy model
 ```{r model-fit}
 # We will use the same data as we used to fit the PO model, only now we will also randomly sample a select set of 
 # sites to use as PA data in the SO model. Otherwise the set-up stays the same.
-site_idx <- sample(which(pa_gen$Y[10,]>0), m, replace=F)
-#site_idx <- sample(1:sites, m, replace=F)
+m <- 20
+#site_idx <- sample(which(pa_gen$Y[10,]>0), m, replace=F)
+site_idx <- sample(1:sites, m, replace=F)
 site_idx
 covars_sampled_sites <- intensity_covars[site_idx, ]
 dim(covars_sampled_sites)
 covars_sampled_sites
 # The PA counts are those generated from the PP parameters above.
+# For the sake of illustration we pick 1 dataset
 selected_counts <- pa_gen$Y[10,site_idx]
 selected_counts
 n_surveys <- rep(n_surveys, m)
@@ -490,14 +501,11 @@ model_path <- "nuthatch_site_occ.stan"
 model_string <- nuthatch_poisson_process_site_occupancy
 write(model_string, model_path)
 model <- cmdstan_model(model_path) 
-fit <- model$sample(data=data_site_occ, seed=13, chains=1, iter_sampling=2000, iter_warmup=500) 
+fit <- model$sample(data=data_site_occ, seed=13, chains=3, iter_sampling=2000, iter_warmup=500) 
 ```
 
 ```{r model-inspect}
 #fit$summary()
-all_params <- c("alpha", "gamma", "beta[1]", "beta[2]", "beta[3]", "beta[4]", "delta[1]")
-intensity_params <- c("alpha", "beta[1]", "beta[2]", "beta[3]", "beta[4]")
-params_intercept <- c("alpha", "gamma")
 posterior <- fit$draws(all_params)
 
 color_scheme_set("mix-blue-pink")
@@ -506,17 +514,12 @@ p_trace <- mcmc_trace(posterior,
 print(p_trace + facet_text(size = 15))
 
 plot_title <- ggtitle(paste("Posterior distributions, with means and 90% interval"))
-mcmc_areas(posterior,  prob = 0.8, point_est="mean", pars=c("beta[1]")) + plot_title
-mcmc_areas(posterior,  prob = 0.8, point_est="mean", pars=c("beta[2]")) + plot_title
-mcmc_areas(posterior,  prob = 0.8, point_est="mean", pars=c("beta[3]")) + plot_title
-mcmc_areas(posterior,  prob = 0.8, point_est="mean", pars=c("beta[4]")) + plot_title
+for (aux_param in all_params){
+  mcmc_areas(posterior,  prob = 0.8, point_est="mean", pars=c(aux_param)) + plot_title
+}
 
 plot_title <- ggtitle(paste("Posterior distributions of detection probability, mean and 90% interval"))
 p_post <- mcmc_areas(posterior,  prob = 0.8, point_est="mean", pars = params_intercept) + plot_title
-print(p_post)
-
-plot_title <- ggtitle(paste("Posterior distributions of detection probability, mean and 90% interval"))
-p_post <- mcmc_areas(posterior,  prob = 0.9, point_est="mean", pars = c("delta[1]")) + plot_title
 print(p_post)
 
 mcmc_intervals(fit$draws(), pars=all_params)
@@ -526,14 +529,26 @@ mcmc_scatter(fit$draws(), pars=c('alpha', 'gamma'))
 mcmc_scatter(fit$draws(), pars=c('beta[1]', 'beta[2]'))
 mcmc_scatter(fit$draws(), pars=c('beta[2]', 'beta[3]'))
 mcmc_scatter(fit$draws(), pars=c('beta[1]', 'beta[4]'))
+mcmc_scatter(fit$draws(), pars=c('beta[1]', 'beta[5]'))
 
 # Examine the ppd for y
-generated_yrep <- fit$draws("g_theta_gen", format="matrix")
-dim(generated_yrep)
-yrep_means <- colMeans(generated_yrep)
+generated_occ <- fit$draws("occ_gen", format="matrix")
+generated_prob <- fit$draws("g_theta_gen", format="matrix")
+dim(generated_occ)
+occ_means <- colMeans(generated_occ)
+get_mode <- function(x) {
+  ux <- unique(x)
+  ux[which.max(tabulate(match(x, ux)))]
+}
+occ_mode <- apply(generated_occ, MARGIN=2, FUN="get_mode")
+length(occ_mode)
+length(occ_means)
+prob_means <- colMeans(generated_prob)
 # Create new sf for the preds
 subgrid_geo <- st_geometry(subgrid_covars) %>% st_sf()
-subgrid_geo$preds <- yrep_means
+subgrid_geo$preds <- occ_means
+subgrid_geo$occ_mode <- occ_mode
+subgrid_geo$prob_pred <-  prob_means
 # Then plot the predictions
 occ_pred_rast <- terra::rasterize(vect(subgrid_geo), crop_evi_rast, field="preds")
 p <- ggplot() + 
@@ -541,6 +556,24 @@ p <- ggplot() +
     scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.8, na.value="white") +
     #geom_sf(data = prj_state, color=alpha("black",0.4), fill='transparent', linewidth=0.7) + 
     theme_minimal()+
-    ggtitle("Predicted counts at nuthatch sites")
+    ggtitle("Predicted occupancy at nuthatch sites")
+print(p)
+occ_mode_rast <- terra::rasterize(vect(subgrid_geo), crop_evi_rast, field="occ_mode")
+p <- ggplot() + 
+    geom_spatraster(data=occ_mode_rast) +
+    scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.8, na.value="white") +
+    #geom_sf(data = prj_state, color=alpha("black",0.4), fill='transparent', linewidth=0.7) + 
+    theme_minimal()+
+    ggtitle("Predicted occupancy mode at nuthatch sites")
+print(p)
+# Oops if we have probability less than 0.5 mode is always 0.
+prob_pred_rast <- terra::rasterize(vect(subgrid_geo), crop_evi_rast, field="prob_pred")
+p <- ggplot() + 
+    geom_spatraster(data=prob_pred_rast) +
+    scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.8, na.value="white") +
+    #geom_sf(data = prj_state, color=alpha("black",0.4), fill='transparent', linewidth=0.7) + 
+    theme_minimal()+
+    ggtitle("Generated occupancy probability at nuthatch sites")
 print(p)
 ```
+That summarizes the work needed to generate PA data using the prior predictive distribution from a PP when we have real data.
