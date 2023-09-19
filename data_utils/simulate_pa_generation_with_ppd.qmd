@@ -5,8 +5,18 @@ author: Max Savery
 format: pdf
 ---
 
-The theoretical set up takes place in the context of Bayesian Optimal Design. We need to generate data according to different designs, and to generate the data, we need to draw from 
-the predictive distribution. But in the fully Bayesian sense, we don't have the marginal predictive distribution and need to simulate from it. Therefore, we can fit a Bayesian model (the posterior will be used as the prior) and draw from the prior predictive distribution in this way. 
+```{r init-set-up, include=FALSE}
+library(tidyverse)
+library(cmdstanr)
+library(bayesplot)
+library(viridis)
+
+working_dir <- "C:\\Users\\msavery\\OneDrive - UGent\\Documents\\ghent_phd_spatial_doe\\code\\optimal_design_site_occ"
+source(file.path(working_dir, "experimental_design_functions.R"))
+source(file.path(working_dir, "presence_only_functions.R"))
+```
+
+The theoretical set up takes place in the context of Bayesian Optimal Design. We need to generate data according to different designs, and to generate the data, we need to draw from the predictive distribution. But in the fully Bayesian sense, we don't have the marginal predictive distribution $p(y|d)$ and need to simulate from it. To do so, we can fit a Bayesian model (the posterior will be used as the prior) and draw from the prior predictive distribution in this way. 
 
 In the optimal design set-up, we define the expectation of our utility as
 
@@ -19,7 +29,7 @@ To integrate over $y$, we need to repeatedly draw over the marginal distribution
 $$
 p(y|d) = \int p(y|\theta)p(\theta)
 $$
-This requires us to define a prior for $\theta$ and generate y according to it's conditional on $\theta$ (this needs to be known). However, consider if the prior for $\theta$ is based on prior data. In that case we can fit a bayesian model to the prior data, compute $p(\theta)$ as the posterior $p(\theta|y_{prior}\propto p(y_{prior}|\theta_0}p(\theta_0}$, and use draws from this posterior to generate draws from the prior predictive of $y$. We still have to specify an initial prior for $\theta$ $p(\theta_0)$, but such is the sequential nature of Bayesian models. 
+This requires us to define a prior for $\theta$ and generate y according to it's conditional on $\theta$ (this needs to be known). However, consider if the prior for $\theta$ is based on prior data. In that case we can fit a bayesian model to the prior data, compute $p(\theta)$ as the posterior $p(\theta|y_{prior})\propto p(y_{prior}|\theta_0)p(\theta_0)$, and use draws from this posterior to generate draws from the prior predictive of $y$. We still have to specify an initial prior for $\theta$ $p(\theta_0)$, but such is the sequential nature of Bayesian models. 
   
 Now, we can move into the context of occupancy data. Here, $y_{prior}$ is Presence-Only (PO) data, $y$ is Presence-Absence (PA) data, and $\theta$ refers to a vector of parameters used to model the occupancy probability.
 
@@ -28,10 +38,11 @@ TODO: Discuss using PP as prior and how PA and PO relate
 The problem we run into is that we need to be able to draw from $p(y|d)$ before we fit our site-occupancy model. But we do not have a point estimate of $\theta$ or known distribution of $\theta$ to 
 draw from. One possibility is to fit a point process model using the PO data to generate a posterior for $\theta$. Then we can draw from this posterior and generate sets of $y$, the PA data. However, in our utility function, we will AGAIN use the PO data as a prior when we integrate over theta. Any biases present in our PO data will effect the generation of the PA data. For example, if our PO data is gathered in convenient locations near urban centers AND this sampling bias is not considered in the estimation of $b$, such bias will show up as underestimating the occupancy of other areas. In the utility function, sites where occupancy has been underestimated (i.e., under-generated) in the PA data will not be considered as important, and this distribution will only be falsely validated by the PO data that has been doubly used.
 
-Therefore, we would like to explore the effect that sampling bias (mispecification of the PP) can effect the PA generation. To do so, we will conduct the following experiments:
+Therefore, we would like to explore how the effect of sampling bias (mispecification of the PP) can effect the PA generation. To do so, we will conduct the following experiments:
 
 Assume a known distribution for $\theta$, p(\theta). We can then generate PA data in two ways:
-  1. Generate PA $p(y|D)$ data by repeatedly drawing from this distribution and simulating from the conditional of y
+  1. Generate PA $p(y|D)$ data by repeatedly drawing from this distribution and simulating from the conditional of y. Here we also generate PO data
+    by simulating from the draws of $\theta$ as the parameters induce both PO and PA processes.
   2. Generate PO data by drawing from $p(\theta)$. We then fit the PP, draw from the posterior $p(\theta|y_0)$ and then simulate the conditional of $y$.
   
 We then fit the SO model and see the extent to which we can recover the true occupancy pattern given varying amounts of sampling bias. 
@@ -121,4 +132,412 @@ poisson_process_site_occupancy <- '
       occ_gen = bernoulli_rng(g_theta_gen);
     }
 '
+```
+First set hyperparameters used throughout the data generation and model fitting:
+```{r set-vars}
+n <- 5
+k <- 20
+sites <- k^2
+area_D <- 400
+centroid <- c(10,4)
+exp_args <- list(bias_func="exponential")
+link_func <- "cloglog"
+data_reps <- 10
+p_detection <- 0.2
+```
+Then generate the simulated sampling surface data
+```{r surface-data}
+sampling_surface <- get_sampling_surface_donut(k)
+sampling_surface <- get_bias_surface_exponential(sampling_surface, centroid)
+p <- ggplot(sampling_surface, aes(x, y, fill=aux_x)) + 
+  geom_tile() +
+  scale_fill_viridis(discrete=FALSE, name="X") +
+  ggtitle("Initial sampling surface, X covariate") +
+  theme(text=element_text(size=5), legend.key.size = unit(0.25, 'cm')) +
+  coord_fixed()
+print(p)
 
+p <- ggplot(sampling_surface, aes(x, y, fill=aux_z)) + 
+  geom_tile() +
+  scale_fill_viridis(discrete=FALSE, name="Z") +
+  ggtitle("Initial sampling surface, Z covariate") +
+  theme(text=element_text(size=5), legend.key.size = unit(0.25, 'cm')) +
+  coord_fixed()
+print(p)
+
+```
+Define functions for data generation. The PA functions take either a distribution for $\theta$ or pre-computed prior values.
+```{r data-gen-func}
+# This function is a little different than in the optimal design code as I am using multiple prior draws
+# of params instead of fixed values
+generate_pa <- function(data_reps, surface_data, p_0, prior, n, sites, link){
+  # Add a column of 1s to the auxiliary data
+  a_intercept <- rep(1, nrow(surface_data))
+  surface_data <- cbind(a_intercept, surface_data)
+  occupancy_maps <- matrix(nrow=data_reps, ncol=sites)
+  Y_detection <- matrix(nrow=data_reps, ncol=sites)
+  theta_reps <- matrix(nrow=data_reps, ncol=sites)
+  print(prior[1, ])
+  print(as.matrix(prior[1, ]))
+  print(matrix(surface_data))
+  
+  for (r in 1:data_reps){
+    param_vec <- as.matrix(prior[r,])
+    if (link=="cloglog"){
+      g_theta <- 1 - exp(-exp(as.matrix(surface_data)%*%matrix(param_vec)))
+    }else{
+      stop("Link not available")
+    }
+    stopifnot(sites==length(g_theta))
+    site_presence <- rbinom(sites, 1, g_theta)
+    theta_reps[r, ] <- g_theta
+    occupancy_maps[r, ] <- site_presence
+    Y_detection[r, ] <- rbinom(sites, n, p_0*site_presence)
+  } 
+  return(list(occupancy=occupancy_maps, Y=Y_detection, theta=theta_reps))
+}
+
+```
+There are two data generating procedures that we will compare here: 
+
+First, draw from the prior $p(\theta)$. Then, using those draws, generate PA and PO data accordingly, and fit the SO model with a PP prior.
+
+Second, draw from the prior $p(\theta_0)$. Then, generate PO data, fit the PP model, and use these estimates to generate PA data. Then fit the SO model with a PP prior, again using the generated PO data. 
+
+For generating (one draw of) the PO data, we will need a fixed value of $\theta$. This will reflect the effect of the parameters on the data generating process for that particular data collection period. We can use the mean of the true distribution, or a draw, but it doesn't matter exactly what fixed value we use because the draws for the PA and PO data, regardless of the experiment, are coming from the same distribution. In the PP model, we take that uncertainty into account by incorporating a prior. The important thing is that, given the PO data, we see the extent to which it can bias the PA data generation and hence the SO model fitting, in comparison to a case in which the PA and PO data generating processes are not tied together explicitly through the PO and only through the parameters.
+
+We run the first experiment now:
+```{r oracle-data-gen}
+# Draw from priors
+alpha_draws <- rnorm(data_reps, -2, 0.5)
+beta_draws <- rnorm(data_reps, 1, 0.25)
+pa_param_draws <- cbind(alpha_draws, beta_draws)
+
+# Use mean as fixed values for PO params 
+gamma <- 0.1
+delta <- 2
+po_param_vec <- list(alpha=alpha_draws[1], beta=beta_draws[1], gamma=gamma, delta=delta)
+
+# Using pre-defined funcky
+po_gen <- generate_ppp_data_r(sampling_surface, po_param_vec, sites, data_reps, corr_matrix=NA, gp_bool=FALSE, area_D)
+pa_gen <- generate_pa(data_reps, sampling_surface[c("aux_x")], p_detection, pa_param_draws, n, sites, link_func)
+
+# Check the generated_data
+text_size <- 10
+# Plot PA data
+for (d in 1:data_reps){
+  subtitle <- paste("alpha=", alpha_draws[d],", beta=", beta_draws[d], sep="")
+  p <- ggplot(sampling_surface, aes(x, y, fill=pa_gen$Y[d,])) + 
+    geom_tile() +
+    scale_fill_viridis(discrete=FALSE, name="Counts") +
+    ggtitle("Generated counts per site", subtitle=subtitle) +
+    theme(text=element_text(size=text_size), legend.key.size = unit(0.25, 'cm')) +
+    coord_fixed()
+  print(p)
+  
+  p <- ggplot(sampling_surface, aes(x, y, fill=pa_gen$occupancy[d,])) + 
+    geom_tile() +
+    scale_fill_viridis(discrete=FALSE, name="Occupancy") +
+    ggtitle("Generated occupancy per site", subtitle=subtitle) +
+    theme(text=element_text(size=text_size), legend.key.size = unit(0.25, 'cm')) +
+    coord_fixed()
+  print(p)
+  
+  p <- ggplot(sampling_surface, aes(x, y, fill=pa_gen$theta[d,])) + 
+    geom_tile() +
+    scale_fill_viridis(discrete=FALSE, name="Theta") +
+    ggtitle("generated occupancy probability per site", subtitle=subtitle) +
+    theme(text=element_text(size=text_size), legend.key.size = unit(0.25, 'cm')) +
+    coord_fixed()
+  print(p)
+}
+
+# Then the PO data. Only 1 set of repeated po data
+p <- ggplot(sampling_surface, aes(x, y, fill=po_gen$lambda[data_reps,])) + 
+  geom_tile() +
+  scale_fill_viridis(discrete=FALSE, name="Lambda") +
+  ggtitle("Generated intensity per site") +
+  theme(text=element_text(size=text_size), legend.key.size = unit(0.25, 'cm')) +
+  coord_fixed()
+print(p)
+
+p <- ggplot(sampling_surface, aes(x, y, fill=po_gen$bias[data_reps,])) + 
+  geom_tile() +
+  scale_fill_viridis(discrete=FALSE, "Bias") +
+  ggtitle("Generated bias per site") +
+  theme(text=element_text(size=text_size), legend.key.size = unit(0.25, 'cm')) +
+  coord_fixed()
+print(p)
+
+thinned_intensity <- po_gen$lambda[data_reps,]*po_gen$bias[data_reps,]
+p <- ggplot() +
+  geom_tile(sampling_surface, mapping=aes(x, y, fill=thinned_intensity, width=1, height=1), alpha=.6) + 
+  scale_fill_viridis(discrete=FALSE, name="L*b") +
+  ggtitle("Generated PP thinning per site, \nincluding observed PO individuals") +
+  geom_point(data=po_gen$Y_coords, mapping=aes(x=x, y=y), size=2, col="white") +
+  theme(panel.grid.minor = element_line(colour="white")) +
+  scale_y_continuous(breaks = seq(0, 20, 1)) +
+  scale_x_continuous(breaks = seq(0, 20, 1)) +
+  theme(text=element_text(size=text_size), legend.key.size = unit(0.25, 'cm')) +
+  coord_fixed()
+print(p)
+```
+First compile the model for both experiments
+```{r stan-compile}
+model_path <- "pp_so_for_sim.stan"
+model_string <- poisson_process_site_occupancy
+write(model_string, model_path)
+model_so <- cmdstan_model(model_path) 
+```
+
+One question is what effect does sampling $m$ subset of sites versus using the full set of sites in the the SO model in the context of this experiment.
+```{r oracle-stan-fit}
+# Using all sites for now
+m <- sites
+#site_idx <- sample(which(pa_gen$Y[10,]>0), m, replace=F)
+#site_idx <- sample(1:sites, m, replace=F)
+#site_idx
+covars_sampled_sites <- sampling_surface$aux_x
+dim(as.matrix(covars_sampled_sites))
+dim(covars_sampled_sites)
+#covars_sampled_sites
+# The PA counts are those generated from the PP parameters above.
+# For the sake of illustration we pick 1 dataset
+#selected_counts <- pa_gen$Y[10,site_idx]
+#selected_counts
+# n is for number of visits
+n_surveys <- rep(n, sites)
+k_i <- 1
+k_b <- 1
+
+data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, X=as.matrix(covars_sampled_sites), Y=pa_gen$Y[1, ], PO=po_gen$Y[1,],
+                         X_po=as.matrix(sampling_surface$aux_x), Z_po=as.matrix(sampling_surface$aux_z), k_i=k_i, k_b=k_b, model_diag=0)
+# Using the earlier compiled model, fit to PO+PA data
+fit_so_1 <- model_so$sample(data=data_site_occ, seed=13, chains=3, iter_sampling=2000, iter_warmup=500) 
+```
+```{r oracle-diag}
+all_params <- c("alpha", "beta[1]", "gamma", "delta[1]")
+params_intercept <- c("alpha", "gamma")
+fit_so_1$summary(all_params)
+posterior <- fit_so_1$draws(all_params)
+
+color_scheme_set("mix-blue-pink")
+p_trace <- mcmc_trace(posterior,
+                      facet_args = list(nrow = 2, labeller = label_parsed))
+print(p_trace + facet_text(size = 15))
+
+plot_title <- ggtitle(paste("Posterior distributions, with means and 90% interval"))
+for (aux_param in all_params){
+  mcmc_areas(posterior,  prob = 0.8, point_est="mean", pars=c(aux_param)) + plot_title
+}
+
+plot_title <- ggtitle(paste("Posterior distributions of detection probability, mean and 90% interval"))
+p_post <- mcmc_areas(posterior,  prob = 0.8, point_est="mean", pars = params_intercept) + plot_title
+print(p_post)
+
+mcmc_intervals(fit_so_1$draws(), pars=all_params)
+mcmc_hist(fit_so_1$draws(), pars = all_params)
+mcmc_pairs(fit_so_1$draws(), pars=all_params)
+mcmc_scatter(fit_so_1$draws(), pars=c('alpha', 'gamma'))
+
+# Examine the ppd for y
+generated_occ <- fit_so_1$draws("occ_gen", format="matrix")
+generated_prob <- fit_so_1$draws("g_theta_gen", format="matrix")
+dim(generated_occ)
+occ_means <- colMeans(generated_occ)
+get_mode <- function(x) {
+  ux <- unique(x)
+  ux[which.max(tabulate(match(x, ux)))]
+}
+occ_mode <- apply(generated_occ, MARGIN=2, FUN="get_mode")
+length(occ_mode)
+length(occ_means)
+prob_means <- colMeans(generated_prob)
+
+ppd_df <- data.frame(x=sampling_surface$x, y=sampling_surface$y, occ_mode=occ_mode, occ_rep=occ_means, theta_rep=prob_means)
+head(ppd_df)
+
+# Plot generated ys and thetas on the sampling grid
+p <- ggplot(ppd_df, aes(x, y, fill=occ_rep)) + 
+    geom_tile() +
+    scale_fill_viridis(discrete=FALSE) +
+    ggtitle("PPD occupancy per site")
+print(p)
+
+# theta_rep is already in prob space
+p <- ggplot(ppd_df, aes(x, y, fill=theta_rep)) + 
+    geom_tile() +
+    scale_fill_viridis(discrete=FALSE) +
+    ggtitle("PPD occupancy probability per site")
+print(p)
+
+p <- ggplot(ppd_df, aes(x, y, fill=occ_mode)) + 
+    geom_tile() +
+    scale_fill_viridis(discrete=FALSE) +
+    ggtitle("PPD occupancy mode per site")
+print(p)
+```
+
+In the next experiment, we use the same generated PO dataset, using the same values of the parameters.
+Use the same generated PO dataset. We then fit the PP model to this dataset, and use the estimates from this model to generate the PA data.
+```{r po-est}
+data_site_occ = list(N=sites, X=as.matrix(sampling_surface$aux_x), y=po_gen$Y[1,], Z=as.matrix(sampling_surface$aux_z), k_i=k_i, k_b=k_b)
+model_path <- "poisson_process_sim.stan"
+model_string <- poisson_process
+write(model_string, model_path)
+model_pp <- cmdstan_model(model_path) 
+fit_pp <- model_pp$sample(data=data_site_occ, seed=13, chains=3, iter_sampling=2000, iter_warmup=500) 
+```
+
+```{r pp-diag}
+fit_pp$summary(all_params)
+posterior <- fit_pp$draws(all_params)
+
+color_scheme_set("mix-blue-pink")
+p_trace <- mcmc_trace(posterior,
+                      facet_args = list(nrow = 2, labeller = label_parsed))
+print(p_trace + facet_text(size = 15))
+
+plot_title <- ggtitle(paste("Posterior distributions, with means and 90% interval"))
+for (aux_param in all_params){
+  mcmc_areas(posterior,  prob = 0.8, point_est="mean", pars=c(aux_param)) + plot_title
+}
+
+plot_title <- ggtitle(paste("Posterior distributions of detection probability, mean and 90% interval"))
+p_post <- mcmc_areas(posterior,  prob = 0.8, point_est="mean", pars = params_intercept) + plot_title
+print(p_post)
+
+mcmc_intervals(fit_pp$draws(), pars=all_params)
+mcmc_hist(fit_pp$draws(), pars = all_params)
+mcmc_pairs(fit_pp$draws(), pars=all_params)
+mcmc_scatter(fit_pp$draws(), pars=c('alpha', 'gamma'))
+
+generated_y <- fit_pp$draws("y_rep", format="matrix")
+yrep_mean <- colMeans(generated_y)
+ppd_df <- data.frame(x=sampling_surface$x, y=sampling_surface$y, yrep_mean=yrep_mean)
+
+p <- ggplot(ppd_df, aes(x, y, fill=yrep_mean)) + 
+    geom_tile() +
+    scale_fill_viridis(discrete=FALSE) +
+    ggtitle("PPD Counts per site")
+print(p)
+```
+
+```{r pa-gen-with-pp}
+pp_posterior <- fit_pp$draws(c("alpha", "beta[1]"), format="matrix")
+#fit_pp$draws(["gamma"])
+colnames(pp_posterior)
+dim(pp_posterior)
+# Get 1000 samples from the posterior
+p_index <- sample(c(1:data_reps), size = data_reps, replace = T)
+pp_posterior <- pp_posterior[p_index, ]
+stopifnot(dim(pa_param_draws)==dim(pp_posterior))
+
+# Generate a new set of pa data reps
+pa_gen <- generate_pa(data_reps, sampling_surface[c("aux_x")], p_detection, pp_posterior, n, sites, link_func)
+
+# Check the generated_data over the iterations
+text_size <- 10
+for (d in 1:data_reps){
+  subtitle <- paste("alpha=", pp_posterior[d, 1],", beta=", pp_posterior[d, 2], sep="")
+  p <- ggplot(sampling_surface, aes(x, y, fill=pa_gen$Y[d,])) + 
+    geom_tile() +
+    scale_fill_viridis(discrete=FALSE, name="Counts") +
+    ggtitle("Generated counts per site", subtitle=subtitle) +
+    theme(text=element_text(size=text_size), legend.key.size = unit(0.25, 'cm')) +
+    coord_fixed()
+  print(p)
+  
+  p <- ggplot(sampling_surface, aes(x, y, fill=pa_gen$occupancy[d,])) + 
+    geom_tile() +
+    scale_fill_viridis(discrete=FALSE, name="Occupancy") +
+    ggtitle("Generated occupancy per site", subtitle=subtitle) +
+    theme(text=element_text(size=text_size), legend.key.size = unit(0.25, 'cm')) +
+    coord_fixed()
+  print(p)
+  
+  p <- ggplot(sampling_surface, aes(x, y, fill=pa_gen$theta[d,])) + 
+    geom_tile() +
+    scale_fill_viridis(discrete=FALSE, name="Theta") +
+    ggtitle("generated occupancy probability per site", subtitle=subtitle) +
+    theme(text=element_text(size=text_size), legend.key.size = unit(0.25, 'cm')) +
+    coord_fixed()
+  print(p)
+}
+```
+Using the newly generated PA data, we fit another SO model
+```{r estimated-po-stan-fit}
+data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, X=as.matrix(covars_sampled_sites), Y=pa_gen$Y[1, ], PO=po_gen$Y[1,],
+                         X_po=as.matrix(sampling_surface$aux_x), Z_po=as.matrix(sampling_surface$aux_z), k_i=k_i, k_b=k_b, model_diag=0)
+# Using the earlier compiled model, fit to PO+PA data
+fit_so_2 <- model_so$sample(data=data_site_occ, seed=13, chains=3, iter_sampling=2000, iter_warmup=500) 
+```
+
+
+```{r estimated-diag}
+all_params <- c("alpha", "beta[1]", "gamma", "delta[1]")
+params_intercept <- c("alpha", "gamma")
+fit_so_2$summary(all_params)
+posterior <- fit_so_2$draws(all_params)
+
+color_scheme_set("mix-blue-pink")
+p_trace <- mcmc_trace(posterior,
+                      facet_args = list(nrow = 2, labeller = label_parsed))
+print(p_trace + facet_text(size = 15))
+
+plot_title <- ggtitle(paste("Posterior distributions, with means and 90% interval"))
+for (aux_param in all_params){
+  mcmc_areas(posterior,  prob = 0.8, point_est="mean", pars=c(aux_param)) + plot_title
+}
+
+plot_title <- ggtitle(paste("Posterior distributions of detection probability, mean and 90% interval"))
+p_post <- mcmc_areas(posterior,  prob = 0.8, point_est="mean", pars = params_intercept) + plot_title
+print(p_post)
+
+mcmc_intervals(fit_so_2$draws(), pars=all_params)
+mcmc_hist(fit_so_2$draws(), pars = all_params)
+mcmc_pairs(fit_so_2$draws(), pars=all_params)
+mcmc_scatter(fit_so_2$draws(), pars=c('alpha', 'gamma'))
+
+# Examine the ppd for y
+generated_occ <- fit_so_2$draws("occ_gen", format="matrix")
+generated_prob <- fit_so_2$draws("g_theta_gen", format="matrix")
+dim(generated_occ)
+occ_means <- colMeans(generated_occ)
+get_mode <- function(x) {
+  ux <- unique(x)
+  ux[which.max(tabulate(match(x, ux)))]
+}
+occ_mode <- apply(generated_occ, MARGIN=2, FUN="get_mode")
+length(occ_mode)
+length(occ_means)
+prob_means <- colMeans(generated_prob)
+
+ppd_df <- data.frame(x=sampling_surface$x, y=sampling_surface$y, occ_mode=occ_mode, occ_rep=occ_means, theta_rep=prob_means)
+head(ppd_df)
+
+# Plot generated ys and thetas on the sampling grid
+p <- ggplot(ppd_df, aes(x, y, fill=occ_rep)) + 
+    geom_tile() +
+    scale_fill_viridis(discrete=FALSE) +
+    ggtitle("PPD occupancy per site")
+print(p)
+
+# theta_rep is already in prob space
+p <- ggplot(ppd_df, aes(x, y, fill=theta_rep)) + 
+    geom_tile() +
+    scale_fill_viridis(discrete=FALSE) +
+    ggtitle("PPD occupancy probability per site")
+print(p)
+
+p <- ggplot(ppd_df, aes(x, y, fill=occ_mode)) + 
+    geom_tile() +
+    scale_fill_viridis(discrete=FALSE) +
+    ggtitle("PPD occupancy mode per site")
+print(p)
+```
+
+```{r compare}
+print(fit_so_1$summary(all_params))
+print(fit_so_2$summary(all_params))
+```
