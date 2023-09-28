@@ -1,10 +1,10 @@
 ---
-title: "Simulation of Presence-Absence data using Prior predictive distribution from Presence-Only data"
+title: "Simulation of Presence-Absence data when integrating over priors for parameters"
 data: today
 author: Max Savery
 format: pdf
 ---
-
+  
 ```{r init-set-up, include=FALSE}
 library(tidyverse)
 library(cmdstanr)
@@ -18,6 +18,9 @@ source(file.path(working_dir, "presence_only_functions.R"))
 over_prior <- FALSE
 ```
 
+This report is intented to show the detoriating quality of data generation as we draw from wide priors. We need well-generated PA datasets, but if we draw from the priors of parameters that are too wide, we end up with PA data is overly noisy and will not lead to us being able to easily discriminate models, regardless of the improvements of one model versus another. This is related to the report generating PA data using both an oracle distribution and priors taken from a PP model.
+
+EDIT:
 The theoretical set up takes place in the context of Bayesian Optimal Design. We need to generate data according to different designs, and to generate the data, we need to draw from the predictive distribution. But in the fully Bayesian sense, we don't have the marginal predictive distribution $p(y|d)$ and need to simulate from it. To do so, we can fit a Bayesian model (the posterior will be used as the prior) and draw from the prior predictive distribution in this way. 
 
 In the optimal design set-up, we define the expectation of our utility as
@@ -32,7 +35,7 @@ $$
 p(y|d) = \int p(y|\theta)p(\theta)d\theta
 $$
 This requires us to define a prior for $\theta$ and generate y according to it's conditional on $\theta$ (this needs to be known). However, consider if the prior for $\theta$ is based on prior data. In that case we can fit a bayesian model to the prior data, compute $p(\theta)$ as the posterior $p(\theta|y_{prior})\propto p(y_{prior}|\theta_0)p(\theta_0)$, and use draws from this posterior to generate draws from the prior predictive of $y$. We still have to specify an initial prior for $\theta$ $p(\theta_0)$, but such is the sequential nature of Bayesian models. 
-  
+
 Now, we can move into the context of occupancy data. Here, $y_{prior}$ is Presence-Only (PO) data, $y$ is Presence-Absence (PA) data, and $\theta$ refers to a vector of parameters used to model the occupancy probability.
 
 TODO: Discuss using PP as prior and how PA and PO relate
@@ -41,12 +44,12 @@ The problem we run into is that we need to be able to draw from $p(y|d)$ before 
 draw from. One possibility is to fit a point process model using the PO data to generate a posterior for $\theta$. Then we can draw from this posterior and generate sets of $y$, the PA data. However, in our utility function, we will AGAIN use the PO data as a prior when we integrate over theta. Any biases present in our PO data will effect the generation of the PA data. For example, if our PO data is gathered in convenient locations near urban centers AND this sampling bias is not considered in the estimation of $b$, such bias will show up as underestimating the occupancy of other areas. In the utility function, sites where occupancy has been underestimated (i.e., under-generated) in the PA data will not be considered as important, and this distribution will only be falsely validated by the PO data that has been doubly used.
 
 Therefore, we would like to explore how the effect of sampling bias (mispecification of the PP) can effect the PA generation. To do so, we will conduct the following experiments:
-
-Assume a known distribution for $\theta$, p(\theta). We can then generate PA data in two ways:
-  1. Generate PA $p(y|D)$ data by repeatedly drawing from this distribution and simulating from the conditional of y. Here we also generate PO data
-    by simulating from the draws of $\theta$ as the parameters induce both PO and PA processes.
-  2. Generate PO data by drawing from $p(\theta)$. We then fit the PP, draw from the posterior $p(\theta|y_0)$ and then simulate the conditional of $y$.
   
+  Assume a known distribution for $\theta$, p(\theta). We can then generate PA data in two ways:
+  1. Generate PA $p(y|D)$ data by repeatedly drawing from this distribution and simulating from the conditional of y. Here we also generate PO data
+by simulating from the draws of $\theta$ as the parameters induce both PO and PA processes.
+2. Generate PO data by drawing from $p(\theta)$. We then fit the PP, draw from the posterior $p(\theta|y_0)$ and then simulate the conditional of $y$.
+
 We then fit the SO model and see the extent to which we can recover the true occupancy pattern given varying amounts of sampling bias. 
 ```{r stan-models}
 poisson_process <- '
@@ -106,8 +109,8 @@ poisson_process_site_occupancy <- '
     model{
       // priors
       target += normal_lpdf(alpha |   0,10);
-      target += normal_lpdf(beta | 0,10);
       target += normal_lpdf(gamma | 0,10);
+      target += normal_lpdf(beta | 0,10);
       target += normal_lpdf(delta | 0,10);
       vector[n_pa_sites] g_theta;
       target += poisson_log_lpmf(PO | alpha + X_po*beta + gamma + Z_po*delta);
@@ -136,7 +139,7 @@ poisson_process_site_occupancy <- '
 '
 ```
 First set hyperparameters used throughout the data generation and model fitting:
-```{r set-vars}
+  ```{r set-vars}
 n <- 5
 k <- 20
 sites <- k^2
@@ -168,7 +171,6 @@ sampling_surface <- get_sampling_surface_donut(k)
 sampling_surface <- get_bias_surface_exponential(sampling_surface, centroid)
 # Strength of 0.5
 sampling_surface <- get_bias_surface_misspecified(sampling_surface, centroid_2, 0.5)
-sampling_surface <- get_bias_surface_misspecified(sampling_surface, centroid_2, 0.01)
 
 p <- ggplot(sampling_surface, aes(x, y, fill=aux_x)) + 
   geom_tile() +
@@ -193,9 +195,6 @@ p <- ggplot(sampling_surface, aes(x, y, fill=aux_e)) +
   theme(text=element_text(size=5), legend.key.size = unit(0.25, 'cm')) +
   coord_fixed()
 print(p)
-
-# But for these first experiments, let's not use any misspecification 
-sampling_surface$aux_e <- rep(0, nrow(sampling_surface))
 
 ```
 Define functions for data generation. The PA functions take either a distribution for $\theta$ or pre-computed prior values.
@@ -256,8 +255,8 @@ generate_ppp_data_misspecified <- function(surface_data, params, n_sites, data_r
 
 ```
 There are two data generating procedures that we will compare here: 
-
-First, draw from the prior $p(\theta)$. Then, using those draws, generate PA and PO data accordingly, and fit the SO model with a PP prior.
+  
+  First, draw from the prior $p(\theta)$. Then, using those draws, generate PA and PO data accordingly, and fit the SO model with a PP prior.
 
 Second, draw from the prior $p(\theta_0)$. Then, generate PO data, fit the PP model, and use these estimates to generate PA data. Then fit the SO model with a PP prior, again using the generated PO data. 
 
@@ -265,15 +264,15 @@ For generating (one draw of) the PO data, we will need a fixed value of $\theta$
 
 We run the first experiment now:
 ```{r oracle-data-gen}
-alpha <- -2
-beta <- 1
 if (over_prior == T){
   # Draw from priors
-  alpha_draws <- rnorm(data_reps, alpha, 0.5)
-  beta_draws <- rnorm(data_reps, beta, 0.25)
+  alpha_draws <- rnorm(data_reps, -2, 0.5)
+  beta_draws <- rnorm(data_reps, 1, 0.25)
   pa_param_draws <- cbind(alpha_draws, beta_draws)
 }else{
   # Or just set to the mean and use as fixed
+  alpha <- -2
+  beta <- 1
   alpha_draws <- rep(alpha, data_reps)
   beta_draws <- rep(beta, data_reps)
   pa_param_draws <- cbind(alpha_draws, beta_draws)
@@ -283,8 +282,7 @@ if (over_prior == T){
 gamma <- 0.1
 delta <- 2
 epsilon <- 1.5
-#po_param_vec <- list(alpha=alpha, beta=beta, gamma=gamma, delta=delta)
-po_param_vec <- list(alpha=alpha, beta=beta, gamma=gamma, delta=delta, epsilon=epsilon)
+po_param_vec <- list(alpha=alpha, beta=beta, gamma=gamma, delta=delta, epsilon=1.5)
 
 # Using pre-defined funcky for PO
 po_gen <- generate_ppp_data_misspecified(sampling_surface, po_param_vec, sites, data_reps, corr_matrix=NA, gp_bool=FALSE, area_D)
@@ -366,17 +364,17 @@ uncertainty of Y into account in these experiments. We just consider a fixed dat
 ```{r oracle-stan-fit}
 # Using all sites for now
 m <- sites
-# site_idx <- sample(which(pa_gen$Y[1,]>0), m, replace=F)
+#site_idx <- sample(which(pa_gen$Y[10,]>0), m, replace=F)
 #site_idx <- sample(1:sites, m, replace=F)
 #site_idx
+covars_sampled_sites <- sampling_surface$aux_x
+dim(as.matrix(covars_sampled_sites))
 #covars_sampled_sites
 # The PA counts are those generated from the PP parameters above.
 # For the sake of illustration we pick 1 dataset
-#selected_counts <- pa_gen$Y[1,site_idx]
+#selected_counts <- pa_gen$Y[10,site_idx]
 #selected_counts
 # n is for number of visits
-covars_sampled_sites <- sampling_surface$aux_x
-dim(as.matrix(covars_sampled_sites))
 n_surveys <- rep(n, sites)
 k_i <- 1
 k_b <- 1
@@ -385,7 +383,6 @@ data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, X=as.m
 # Using the earlier compiled model, fit to PO+PA data
 fit_so_1 <- model_so$sample(data=data_site_occ, seed=13, chains=3, iter_sampling=2000, iter_warmup=500) 
 ```
-
 ```{r oracle-diag}
 all_params <- c("alpha", "beta[1]", "gamma", "delta[1]")
 params_intercept <- c("alpha", "gamma")
@@ -414,13 +411,17 @@ mcmc_scatter(fit_so_1$draws(), pars=c('alpha', 'gamma'))
 # Examine the ppd for y
 generated_occ <- fit_so_1$draws("occ_gen", format="matrix")
 generated_prob <- fit_so_1$draws("g_theta_gen", format="matrix")
+dim(generated_occ)
 occ_means <- colMeans(generated_occ)
 get_mode <- function(x) {
   ux <- unique(x)
   ux[which.max(tabulate(match(x, ux)))]
 }
 occ_mode <- apply(generated_occ, MARGIN=2, FUN="get_mode")
+length(occ_mode)
+length(occ_means)
 prob_means <- colMeans(generated_prob)
+
 ppd_df <- data.frame(x=sampling_surface$x, y=sampling_surface$y, occ_mode=occ_mode, occ_rep=occ_means, theta_rep=prob_means)
 head(ppd_df)
 
@@ -614,110 +615,4 @@ print(p)
 ```{r compare}
 print(fit_so_1$summary(all_params))
 print(fit_so_2$summary(all_params))
-```
-Ok, fine, that is the comparison of models with some fixed misspecification in the sampling bias. But now, let's compare over different levels of misspecification.
-```{r misspec-iter}
-# TODO: Vary the misspec a little more carefully.
-misspec_strength <- c(0, 0.01, 0.1, 0.5, 1)
-beta_oracle_vec <- c()
-beta_gen_vec <- c()
-delta_oracle_vec <- c()
-delta_gen_vec <- c()
-pp_beta_vec <- c()
-for (strength in misspec_strength){
-  sampling_surface <- get_bias_surface_misspecified(sampling_surface, centroid_2, strength)
-  if (strength == 0){
-    sampling_surface$aux_e = rep(0, nrow(sampling_surface))
-  }
-  # PA data is the same as below as only the PO data modelling is misspecified. All variables except PO dataset will change from above
-  po_gen <- generate_ppp_data_misspecified(sampling_surface, po_param_vec, sites, data_reps, corr_matrix=NA, gp_bool=FALSE, area_D)
-  # Look at the data for each iter
-  # Sampling surface
-  p <- ggplot(sampling_surface, aes(x, y, fill=aux_e)) + 
-    geom_tile() +
-    scale_fill_viridis(discrete=FALSE, name="E") +
-    ggtitle("Initial sampling surface, E covariate") +
-    theme(text=element_text(size=5), legend.key.size = unit(0.25, 'cm')) +
-    coord_fixed()
-  print(p)
-  # Bias
-  p <- ggplot(sampling_surface, aes(x, y, fill=po_gen$bias[data_reps,])) + 
-    geom_tile() +
-    scale_fill_viridis(discrete=FALSE, "Bias") +
-    ggtitle("Generated bias per site") +
-    theme(text=element_text(size=text_size), legend.key.size = unit(0.25, 'cm')) +
-    coord_fixed()
-  print(p)
-  # Thinned bias
-  thinned_intensity <- po_gen$lambda[data_reps,]*po_gen$bias[data_reps,]
-  p <- ggplot() +
-    geom_tile(sampling_surface, mapping=aes(x, y, fill=thinned_intensity, width=1, height=1), alpha=.6) + 
-    scale_fill_viridis(discrete=FALSE, name="L*b") +
-    ggtitle("Generated PP thinning per site, \nincluding observed PO individuals") +
-    geom_point(data=po_gen$Y_coords, mapping=aes(x=x, y=y), size=2, col="white") +
-    theme(panel.grid.minor = element_line(colour="white")) +
-    scale_y_continuous(breaks = seq(0, 20, 1)) +
-    scale_x_continuous(breaks = seq(0, 20, 1)) +
-    theme(text=element_text(size=text_size), legend.key.size = unit(0.25, 'cm')) +
-    coord_fixed()
-  print(p)
-  # Oracle model 
-  data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, X=as.matrix(covars_sampled_sites), Y=pa_gen$Y[1, ], 
-                      PO=po_gen$Y[1,], X_po=as.matrix(sampling_surface$aux_x), Z_po=as.matrix(sampling_surface$aux_z), k_i=k_i, k_b=k_b, 
-                      model_diag=0)
-  fit_so_1 <- model_so$sample(data=data_site_occ, seed=13, chains=3, iter_sampling=2000, iter_warmup=500) 
-  
-  # Then PP-based data gen model  
-  data_site_occ = list(N=sites, X=as.matrix(sampling_surface$aux_x), y=po_gen$Y[1,], Z=as.matrix(sampling_surface$aux_z), k_i=k_i, k_b=k_b)
-  fit_pp <- model_pp$sample(data=data_site_occ, seed=13, chains=3, iter_sampling=2000, iter_warmup=500) 
-  pp_posterior_draws <- fit_pp$draws(c("alpha", "beta[1]"), format="matrix")
-  pp_beta_vec <- c(pp_beta_vec, fit_pp$summary("beta[1]")$mean)
-  # Get 1000 samples from the posterior
-  if (over_prior==TRUE){
-    p_index <- sample(c(1:data_reps), size = data_reps, replace = T)
-    pp_posterior <- pp_posterior_draws[p_index, ]
-  } else{
-    pp_posterior <- matrix(rep(colMeans(pp_posterior_draws), data_reps), nrow=data_reps, byrow = T)
-  }
-  stopifnot(dim(pa_param_draws)==dim(pp_posterior))
-  
-  # Generate a new set of pa data reps using the PP posterior
-  pa_gen <- generate_pa(data_reps, sampling_surface[c("aux_x")], p_detection, pp_posterior, n, sites, link_func)
-  data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, X=as.matrix(covars_sampled_sites), Y=pa_gen$Y[1, ], 
-                      PO=po_gen$Y[1,], X_po=as.matrix(sampling_surface$aux_x), Z_po=as.matrix(sampling_surface$aux_z), k_i=k_i, k_b=k_b, 
-                      model_diag=0)
-  # Using the earlier compiled model, fit to PO+PA data
-  fit_so_2 <- model_so$sample(data=data_site_occ, seed=13, chains=3, iter_sampling=2000, iter_warmup=500) 
-  
-  # Then print the results for each misspecification
-  print(paste("Misspecification strength: ", strength, sep=""))
-  print("Oracle")
-  print(fit_so_1$summary(all_params))
-  print("Sequential generation")
-  print(fit_so_2$summary(all_params))
-  beta_oracle_vec <- c(beta_oracle_vec, fit_so_1$summary("beta[1]")$mean)
-  beta_gen_vec <- c(beta_gen_vec, fit_so_2$summary("beta[1]")$mean)
-  delta_oracle_vec <- c(delta_oracle_vec, fit_so_1$summary("delta[1]")$mean)
-  delta_gen_vec <- c(delta_gen_vec, fit_so_2$summary("delta[1]")$mean)
-}
-```
-Let's take a look at a plot of the parameters as we change the strength of the misspecification.
-
-I should also plot the PP estimates to see how the error is propagated. It may also be useful to compute these in expectation,
-either over PA or PO or both datasets. There is more variability in the beta estimates than I was expecting.
-```{r plot-params}
-beta_df <- data.frame(beta_oracle=beta_oracle_vec, beta_gen=beta_gen_vec, pp_beta=pp_beta_vec, spec=misspec_strength) %>% gather(model, beta, beta_oracle:pp_beta)
-p <- ggplot(data=beta_df, aes(x=spec, y=beta, colour=model)) +
-  geom_line() +
-  theme_bw() + 
-  ggtitle("Comparison in estimates of beta as misspecification in PO model increases")
-print(p)
-
-delta_df <- data.frame(delta_oracle=delta_oracle_vec, delta_gen=delta_gen_vec, spec=misspec_strength) %>% gather(model, delta, delta_oracle:delta_gen)
-p <- ggplot(data=delta_df, aes(x=spec, y=delta, colour=model)) +
-  geom_line() +
-  theme_bw() + 
-  ggtitle("Comparison in estimates of delta as misspecification in PO model increases")
-print(p)
-
 ```
