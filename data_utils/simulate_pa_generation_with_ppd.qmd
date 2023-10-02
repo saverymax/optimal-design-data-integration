@@ -16,73 +16,86 @@ source(file.path(working_dir, "experimental_design_functions.R"))
 source(file.path(working_dir, "presence_only_functions.R"))
 # Bool to draw over priors for all experiments
 over_prior <- FALSE
-run_spec_iter <- FALSE
+run_spec_iter <- TRUE
 run_expectation <- FALSE
 ```
 
-The theoretical set up takes place in the context of Bayesian Optimal Design. We need to generate data according to different designs, and to generate the data, we need to draw from the predictive distribution. But in the fully Bayesian sense, we don't have the marginal predictive distribution $p(y|d)$ and need to simulate from it. To do so, we can fit a Bayesian model (the posterior will be used as the prior) and draw from the prior predictive distribution in this way. 
+This report concerns itself with Bayesian Optimal Design when integrating Presence-Absence (PA) and Presence-Only (PO) data. In this scenario, as in others, we need to generate PA data according to different designs, and to generate the data, we need to draw from the predictive distribution. Of course, we don't have the marginal predictive distribution $p(y|d)$ and need to simulate from it. To do so, we can fit a Bayesian model on some prior data (the posterior will be used as the prior) and draw from the prior predictive distribution in this way. This report will examine the implications of data generation in this order for use in a design algorithm.
 
-In the optimal design set-up, we condition on a design $d$ and define the expectation of our utility as
-
-TODO: Write joint $p(y, \theta, z)$ and what happens when we instead write the joint as $p(y|\theta, d)p(\theta)$. In this way, we draw from prior (which can be posterior of PO pp model) and then generate y as $PA$. But this isn't Bayesian and it also doesn't fallow approach of Reich? Plus we don't get Z ppd. Or could we from the generated PA? No, then we don't have SO model, which is the point, to estimate a certain set of PA y. Hmm check Dorazio 2006.
-
+We first describe the theoretical optimal design set-up. Typically we condition on a design $d$ and define the expectation of our utility function as
 $$
 E[U(d)] = \int_y \int_{\theta}u(d,y,\theta)p(y,\theta|d)d\theta dy = \int_y \int_{\theta} u(d, y, \theta)p(\theta|y)p(y|d)d\theta dy
 $$
-In this Bayesian formulation, we integrate both over $\theta$ and $y$. These are two separate problems, so to speak. Integrating over $\theta$ requires a prior on $\theta$. Integrating over $y$ requires the marginal distribution of $y$. In any case, since the integral for the expected utility is not tractable in many applications, we need computational methods to approximate it. One approach is to compute the Posterior Predictive Distribution (PPD) by fitting a Bayesian model for $\theta$ and subsequently draw $\tilde{y}$ from the PPD. The draw of $\tilde{y}$ can then be used to compute the loss in the utility function. This doesn't solve the problem of integrating over $\theta$ in the expected utility, however. This integration will be addressed further down. 
-
-The integral can be approximated in a variety of ways (Ryan et al, 2016). We consider Monte Carlo Integration here:
+such that we will need to sample from the joint distribution $p(y, \theta)$. In the fully Bayesian formulation of Bayesian Optimal Design, we write factor the joint as the posterior for $\theta$ and the marginal for $y$. We then need to integrate both over $\theta$ and $y$. These are two separate problems, so to speak. Integrating over $\theta$ requires drawing from a prior on $\theta$. Integrating over $y$ requires the marginal distribution of $y$. In any case, since the integral for the expected utility is not tractable in many applications, we need computational methods to approximate it. The integral can be approximated in a variety of ways (Ryan et al, 2016). We consider Monte Carlo Integration here:
 $$
-E[U(d)] \approx \frac{1}{R}\sum^R_{r=1}u(d, y_i, \theta_i)
+E[U(d)] \approx \frac{1}{R}\sum^R_{r=1}u(d, y^{(r)}, \theta^{(r)})
 $$
-for a given design $d$. This approach requires draws of both $y_i$ and $\theta_i$ from $p(\theta, y|d)$. We need therefore, methods to draw generate samples of both variables.
+for a given design $d$. This approach takes draws $y_i$ and $\theta_i$ from $p(\theta, y|d)$. We therefore, also, need methods to generate samples of both variables.
 
-To integrate over $y$, we need to repeatedly draw over the marginal distribution $p(y|\theta)$. This can be done by computing the prior predictive distribution of y:
+Let's first consider $y$. We need to repeatedly draw over the marginal distribution $p(y|d)$. This can be done by sampling from the prior predictive distribution of y by sampling from an initial prior on $\theta$ and then from the condition of $y|\theta$:
 $$
 p(y|d) = \int p(y|\theta)p(\theta)d\theta
 $$
-This requires us to define a prior for $\theta$ and generate y according to it's conditional on $\theta$ (if this conditional is known). However, consider if we have on prior data for $y$. In that case we can fit a Bayesian model to the prior data, compute $p(\theta)$ as the posterior $p(\theta|y_{prior})\propto p(y_{prior}|\theta_0)p(\theta_0)$, and use draws from this posterior to generate draws from the prior predictive of $y$. 
+If we have on prior data for $y$, call it $y_{\text{prior}}$, we can fit a Bayesian model to the prior data, compute $p(\theta)$ as the posterior $p(\theta|y_{\text{prior}})\propto p(y_{prior}|\theta)p_0(\theta)$, and use draws from this posterior to generate draws from the prior predictive of $y$. 
 $$
 p(\tilde{y}|d) = \int p(\tilde{y}|\theta)p(\theta|y) d\theta
 $$
 
-These draws, $\tilde{y}$, are from the posterior predictive for "$y_0$" based on the prior data, but are from the prior predictive from the perspective of our experimental design. We still have to specify an initial prior for $\theta$ $p(\theta_0)$, but such is the sequential nature of Bayesian models. 
+These draws, $\tilde{y}$, are from the posterior predictive for $y_{\text{prior}}$ based on the Bayesian model for prior data, but are from the prior predictive from the perspective of our experimental design. We still have to specify an initial prior for $\theta$ $p_0(\theta)$, but such is the sequential nature of Bayesian models. 
 
-Now, we can move into the context of occupancy data. Here, $y_{prior}$ is Presence-Only (PO) data, $Y$ is Presence-Absence (PA) data, and $\theta$ refers to a vector of parameters used to model the occupancy probability. Furthermore, $Z$ will be a latent variable representing occupancy status, and it is with draws of Z that we will compute our loss function. The utility expectation is then written as
+Now, we can move into the context of occupancy data. Here, $y_{prior}$ is Presence-Only (PO) data, $y$ is Presence-Absence (PA) data, and $\theta$ refers to a vector of parameters used to model the occupancy probability. Furthermore, $z$ will be a latent variable representing occupancy status, and it is with draws of z that we will compute our loss function. The utility expectation is then written as
 
 $$
-    E[U(d)] = \int_y \int_{\theta} \int_z u(y, z, d, \theta) p(z|y,d)p(\theta|y, d)p(y|d)dz d\theta dy
+    E[U(d)] = \int_z \int_y \int_{\theta} u(y, z, d, \theta) p(z|y,d)p(\theta|y, d)p(y|d)d\theta dy dz
 $$
 The Monte Carlo approximation will still be
 $$
 E[U(d)] \approx \frac{1}{R}\sum^R_{r=1}u(d, y^{(r)}, \theta^{(r)}, z^{(r)})
 $$
 
-Let's consider what we are integrating over. $p(y|d)$ is the marginal prior predictive density of $y$, as shown above. $p(\theta|y, d)$ is the posterior of $\theta$ given $y = (y_1, y_2, ..., y_n)$. $p(z|y,d)$ is the posterior predictive for the occupancy status $z$: 
+Let's consider what we are integrating over. $p(y|d)$ is the marginal prior predictive density of $y$, as shown above. $p(\theta|y, d)$ is the posterior of $\theta$ given a PA draw $y = (y_1, y_2, ..., y_n)$ and $n$ is the number of sites in region $D$. $p(z|y,d)$ is the posterior predictive for the occupancy status $z$ generated from the posterior of $\theta$: 
 $$
 p(\tilde{z}|y, d) = \int p(\tilde{z}|\theta)p(\theta|y) d\theta
 $$
 
 
-Therefore, both drawing $z$ from its ppd and $y$ from its prior pd will involve drawing from distributions in which integrating over $\theta$ is implicitly done. This can be seen below
+Therefore, drawing both $z$ from its posterior-pd and $y$ from its prior-pd will involve drawing from distributions in which integrating over $\theta$ is implicitly done. This can be seen below
 $$
-E[U(d)] = \int_y \int_{\theta} \int_z u(y, z, d) \left[\int p(\tilde{z}|\theta)p(\theta|y) d\theta\right]p(\theta|y, d)\left[\int  p(\tilde{y}|\theta)p(\theta|y) d\theta\right]dz d\theta dy
+E[U(d)] = \int_z \int_y \int_{\theta} u(y, z, d) \left[\int p(\tilde{z}|\theta)p(\theta|y) d\theta\right]p(y|\theta, d)p(\theta)\left[\int  p(\tilde{y}|\theta)p(\theta|y) d\theta\right]d\theta dy dz
 $$
-We still need to integrate the utility function over $\theta$. Pseudo-Bayesian approaches average the utility function over draws from the prior for $\theta$, but otherwise are not Bayesian. The expectation above is a functional of the posterior distribution, or rather, a functional of the latent variable generated from the posterior. But 
+Note that Pseudo-Bayesian approaches average the utility function over draws from the prior for $\theta$, but otherwise are not Bayesian. The expectation above is a functional of the posterior distribution, or rather, a functional of the latent variable generated from the posterior and, according to Ryan et al (2016), is therefore fully Bayesian.
 
-Now, we can describe the primary problem that this report is investigating. In our design procedure, we generate $r$ repetitions of $y$, which in this case is Presence-Absence (PA) data.
+The important thing to recognize from above is that we have a double-use of the prior data. Once to draw from the prior-pd for $y$ and again to fit the posterior for $\theta$. This brings us to the primary problem that this report examines: In our design procedure, we generate $r$ repetitions of $y$, which in this case is Presence-Absence (PA) data. However, we need to be able to draw from $p(y|d)$ before we fit our site-occupancy model. But we do not have a point estimate of $\theta$ or known distribution of $\theta$ to 
+draw from. One possibility is to fit a point process model using the PO data to generate a posterior for $\theta$. Then we can draw from this posterior and generate sets of $y$, the PA data. However, we AGAIN use the PO data as a prior when we integrate over theta. Any biases present in our PO data will effect the generation of the PA data. For example, if our PO data is gathered in convenient locations near urban centers AND this sampling bias is not considered in the estimation of $b$, such bias will show up as overestimating the intensity and occupancy of other areas. In the utility function, sites where occupancy has been overestimated will be considered as overly important to the design, and this distribution will only be falsely validated by the PO data that has been doubly used.
 
-The problem we run into is that we need to be able to draw from $p(y|d)$ before we fit our site-occupancy model. But we do not have a point estimate of $\theta$ or known distribution of $\theta$ to 
-draw from. One possibility is to fit a point process model using the PO data to generate a posterior for $\theta$. Then we can draw from this posterior and generate sets of $y$, the PA data. However, in our utility function, we will AGAIN use the PO data as a prior when we integrate over theta. Any biases present in our PO data will effect the generation of the PA data. For example, if our PO data is gathered in convenient locations near urban centers AND this sampling bias is not considered in the estimation of $b$, such bias will show up as underestimating the occupancy of other areas. In the utility function, sites where occupancy has been underestimated (i.e., under-generated) in the PA data will not be considered as important, and this distribution will only be falsely validated by the PO data that has been doubly used.
+TODO: EDIT: The above isn't that clear.  
 
 Therefore, we would like to explore how the effect of sampling bias (mispecification of the PP model) can effect the PA generation. To do so, we will conduct the following experiments:
 
 Assume a known distribution for $\theta$, p(\theta). We can then generate PA data in two ways:
   1. Generate PA $p(y|D)$ data by repeatedly drawing from this distribution and simulating from the conditional of y. Here we also generate PO data
     by simulating from the draws of $\theta$ as the parameters induce both PO and PA processes.
+$$
+\begin{aligned}
+p(\theta) \sim N(\mu, \sigma)\\
+PO \sim Poisson(\lambda(\theta))
+PA \sim Binomial(n, G(\theta))\\
+\end{aligned}
+$$
+
   2. Generate PO data by drawing from $p(\theta)$. We then fit the PP, draw from the posterior $p(\theta|y_0)$ and then simulate the conditional of $y$.
+$$
+\begin{aligned}
+p(\theta) \sim N(\mu, \sigma)\\
+PO \sim Poisson(\lambda(\theta))
+\theta = NHPP(PO; \theta)\\
+PA \sim Binomial(n, G(\theta))
+\end{aligned}
+$$
   
-We then fit the SO model and see the extent to which we can recover the true occupancy pattern given varying amounts of sampling bias. 
+We then fit the SO model and see the extent to which we can recover the true occupancy pattern given varying amounts of sampling bias. For the sake of comparison, we can choose to hold $\theta$ constant or draw it's prior in a more Bayesian way. In the Second experiment, we would draw from the posterior of $\theta$ fit in the PP model, or just take the mean of the posterior and use this to generate $PA$.
+
+In practice, we will typically just have a single PO dataset available. The practical question/effect is then what happens when we estimate a poorly specified $\theta$ from the PP model fit to the PO data and proceed to generate PA data with this estimate.
 ```{r stan-models}
 poisson_process <- '
     data{
@@ -653,7 +666,7 @@ print(fit_so_2$summary(all_params))
 Ok, fine, that is the comparison of models with some fixed misspecification in the sampling bias. But now, let's compare over different levels of misspecification.
 ```{r misspec-iter, eval=run_spec_iter}
 # misspec is a little sensitive. Smaller values mean it is going to be more spread out, and "stronger"
-misspec_strength <- c(0, 0.01, 0.1, 0.5, 0.75)
+misspec_strength <- c(0, 0.01, 0.02, 0.05, 0.1)
 beta_oracle_vec <- c()
 beta_gen_vec <- c()
 delta_oracle_vec <- c()
@@ -738,8 +751,7 @@ for (strength in misspec_strength){
 ```
 Let's take a look at a plot of the parameters as we change the strength of the misspecification.
 
-I should also plot the PP estimates to see how the error is propagated. It may also be useful to compute these in expectation,
-either over PA or PO or both datasets. There is more variability in the beta estimates than I was expecting.
+One issue with looking at this is that sometimes the increased bias just leads to an overall increase in the number of observations which means that using the PO data to first estimate $\theta$ will work pretty well.
 ```{r plot-params, eval=run_spec_iter}
 beta_df <- data.frame(beta_oracle=beta_oracle_vec, beta_gen=beta_gen_vec, pp_beta=pp_beta_vec, spec=misspec_strength) %>% gather(model, beta, beta_oracle:pp_beta)
 p <- ggplot(data=beta_df, aes(x=spec, y=beta, colour=model)) +
@@ -755,9 +767,9 @@ p <- ggplot(data=delta_df, aes(x=spec, y=delta, colour=model)) +
   ggtitle("Comparison in estimates of delta as misspecification in bias model increases")
 print(p)
 ```
-Then do the same thing but over data reps
+Then do the same thing but over data reps. Then we are taking the expectation over the PA data sets $y$.
 TODO: Write this expectation
-```{r misspec-iter-expec, eval=run_expecation}
+```{r misspec-iter-expec, eval=run_expectation}
 # Init vecs to save params for multiple estimates of PA params given a misspec
 beta_oracle_mat <- matrix(nrow=data_reps, ncol=length(misspec_strength))
 beta_gen_mat <- matrix(nrow=data_reps, ncol=length(misspec_strength))
@@ -809,7 +821,7 @@ for (si in 1:length(misspec_strength)){
 }
 ```
 Look at params
-```{r plot-params, eval=run_expectation}
+```{r plot-expect-params, eval=run_expectation}
 # Average over data`reps
 beta_oracle_vec <- colMeans(beta_oracle_mat)
 beta_gen_vec <- colMeans(beta_gen_mat)
