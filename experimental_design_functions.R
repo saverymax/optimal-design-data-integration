@@ -128,7 +128,7 @@ estimate_v <- function(model, n_surveys, data_reps, m, sites, sampling_surface,
 
 
 estimate_v_parallel <- function(combined_df, model, n_surveys, m, sites, sampling_surface, 
-                       select_idx, select_sites, params, generated_vars, model_selection, mcmc_iter){
+                       select_idx, select_sites, generated_vars, model_selection, mcmc_iter){
   
   # For each rth dataset get the m randomly chosen sites for the occupancy data, Y surveys, and PO.
   selected_occ <- combined_df[select_idx]
