@@ -131,3 +131,25 @@ generate_gridded_covariates <- function(subgrid, crop_lc_rast, crop_evi_rast, cr
   
   return(list(lc_frac=lc_ext_frac, evi_agg=evi_buff, elev_agg=elev_buff))
 }
+
+generate_ebird_pa <- function(data_reps, surface_data, p_0, pp_posterior, n, sites, link){
+  # Add a column of 1s to the auxiliary data
+  a_intercept <- rep(1, nrow(surface_data))
+  surface_data <- cbind(a_intercept, surface_data)
+  occupancy_maps <- matrix(nrow=data_reps, ncol=sites)
+  Y_detection <- matrix(nrow=data_reps, ncol=sites)
+  theta_reps <- matrix(nrow=data_reps, ncol=sites)  
+  for (r in 1:data_reps){
+    # The posterior values can be either draws from the PP posterior or the expectation
+    param_vec <- pp_posterior[r,]
+    if (link=="cloglog"){
+      g_theta <- 1 - exp(-exp(as.matrix(surface_data)%*%t(param_vec)))
+    }
+    stopifnot(sites==length(g_theta))
+    site_presence <- rbinom(sites, 1, g_theta)
+    theta_reps[r, ] <- g_theta
+    occupancy_maps[r, ] <- site_presence
+    Y_detection[r, ] <- rbinom(sites, n, p_0*site_presence)
+  } 
+  return(list(occupancy=occupancy_maps, Y=Y_detection, theta=theta_reps))
+}
