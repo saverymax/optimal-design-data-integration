@@ -27,19 +27,21 @@ set.seed(13)
 # Create command line arguments
 parser <- OptionParser()
 parser <- add_option(parser, "--working_dir", type="character", default=".", help="Path to the directory containing code to source for the main script")
-parser <- add_option(parser, "--po_data_file", type="character", default="po_gen_ints-donut_a=-2_b=0.5_g=1_d=0.5.Rds", help="File name of PO data to use in optimization")
+parser <- add_option(parser, "--base_data_dir", type="character", default="./data", help="Path to the directory containing covariate data")
+parser <- add_option(parser, "--base_data_dir", type="character", default="./data", help="Path to the directory containing covariate data")
 parser <- add_option(parser, "--exp_name", type="character", default="oe_run", help="Name of current experiment, which is used for dir to save output")
 parser <- add_option(parser, "--data_reps", type="integer", default=4, help="Number of dataset reps for criterion estimation")
 parser <- add_option(parser, "--m", type="integer", default=5, help="Number of sites to survey")
 parser <- add_option(parser, "--max_visits", type="integer", default=5, help="Maximum number of time to visit each site")
 parser <- add_option(parser, "--min_visits", type="integer", default=1, help="Minimum number of time to visit each site")
 parser <- add_option(parser, "--vary_visits", action="store_true", default=F, help="Allow varying survey effort between sites")
-parser <- add_option(parser, "--model_selection", type="integer", default=3, help="Occupancy model to use")
+parser <- add_option(parser, "--model_selection", type="integer", default=1, help="Occupancy model to use. For application, currently using only 1 model")
 parser <- add_option(parser, "--random_starts", type="integer", default=3, help="Number of random starts to run the exchange")
 parser <- add_option(parser, "--exch_iter", type="integer", default=3, 
                      help="Number of iterations of exchange before ending optimization. Recommended is 20 but default is set low for test runs.")
 parser <- add_option(parser, "--mcmc_iter", type="integer", default=1000, help="Number of MCMC iterations in Stan")
 parser <- add_option(parser, "--p_logging", action="store_true", default=F, help="Boolean for logging information about posterior estimates")
+parser <- add_option(parser, "--pp_diagnostic", action="store_true", default=F, help="Boolean for printing diagnostics for point process model")
 parser <- add_option(parser, "--v_parallel", action="store_true", default=F, help="Boolean for parallel computation of V criterion")
 parser <- add_option(parser, "--cores", type="integer", default=4, help="Number of cores to use for parallel processing")
 parser <- add_option(parser, "--p", type="double", default=0.7, help="Probability of detection")
@@ -49,10 +51,10 @@ exp_args <- parse_args(parser)
 print(exp_args)
 stopifnot(exp_args$p_logging==F)
 select <- dplyr::select
+sort <- base::sort
 
 # Set important global variables 
 base_data_dir <- "C:\\Users\\msavery\\OneDrive - UGent\\Documents\\ghent_phd_spatial_doe\\data\\"
-working_dir <- "C:\\Users\\msavery\\OneDrive - UGent\\Documents\\ghent_phd_spatial_doe\\code\\optimal_design_site_occ"
 ebd_download_dir <- "ebd_US_bnhnut_201901_201912_smp_relJul-2023"
 lc_path <- "copernicus_landcover/W100N40_PROBAV_LC100_global_v3.0.1_2019-nrt_Discrete-Classification-map_EPSG-4326.tif"
 modis_path <- "modis_landcover_dynamics/MCD12Q2.061_EVI_Area_0_doy2019001_aid0001.tif"
@@ -77,9 +79,7 @@ dir.create(stan_dir)
 data_reps <- exp_args$data_reps
 # Most of the parameters from the simulation code we don't need. Some we keep, such as m and the prob of detection
 p_0 <- exp_args$p
-aux_cor <- exp_args$aux_cor
 # There will be m sites selected for sampling
-# 36/4 was used in paper
 m <- exp_args$m
 # That set the intial experimental environment up. Now we can focus on loading our covariates and data
 # This involves a lot of data processing
@@ -259,61 +259,66 @@ bias_covars <- covar_df[c("frac_50")]#"duration_minutes", "number_observers",  "
 k_param_intn <- length(colnames(intensity_covars)) 
 k_param_bias <- length(colnames(bias_covars)) 
 dim(as.matrix(covar_df))
-p_detection <- 0.2
-n_surveys <- 5
+# Number of sites depends upon how the grid is created
 sites <- nrow(covar_df)
 sites
 sum(covar_df$counts)
+length(covar_df$counts)
+# Generate po data to match format of simulation script. 
+# TODO: Put this all in function or preprocessing script
+Y_po <- matrix(rep(covar_df$counts, data_reps), nrow=data_reps, ncol=sites, byrow=T)
+r_po_data <- list(Y=Y_po)
 
 # Fit the point process model to the PO data
 model_path <- "nuthatch_poisson_process.stan"
 model_string <- nuthatch_poisson_process
 write(model_string, model_path)
-data_site_occ = list(N=sites, X=intensity_covars, y=covar_df$counts, Z=bias_covars, k_i=k_param_intn, k_b=k_param_bias)
+data_site_occ = list(N=sites, X=intensity_covars, y=r_po_data$Y[1,], Z=bias_covars, k_i=k_param_intn, k_b=k_param_bias)
 model <- cmdstan_model(model_path) 
 fit <- model$sample(data=data_site_occ, seed=13, chains=3, iter_sampling=2000, iter_warmup=500) 
 
-fit$summary()
+print(fit$summary())
 all_params <- c("alpha", "gamma", "beta[1]", "beta[2]", "beta[3]", "beta[4]", "beta[5]", "delta[1]")
 #all_params <- c("alpha", "gamma", "beta[1]", "beta[2]", "beta[3]", "delta[1]")
 #intensity_params <- c("alpha", "beta[1]", "beta[2]", "beta[3]")
 intensity_params <- c("alpha", "beta[1]", "beta[2]", "beta[3]", "beta[4]", "beta[5]")
 params_intercept <- c("alpha", "gamma")
-posterior <- fit$draws(all_params)
 
-color_scheme_set("mix-blue-pink")
-p_trace <- mcmc_trace(posterior,
-                      facet_args = list(nrow = 2, labeller = label_parsed))
-print(p_trace + facet_text(size = 15))
-
-plot_title <- ggtitle(paste("Posterior distributions, with means and 90% interval"))
-mcmc_areas(posterior,  prob = 0.8, point_est="mean", pars=c("beta[1]")) + plot_title
-mcmc_areas(posterior,  prob = 0.8, point_est="mean", pars=c("beta[2]")) + plot_title
-mcmc_areas(posterior,  prob = 0.8, point_est="mean", pars=c("beta[3]")) + plot_title
-mcmc_areas(posterior,  prob = 0.8, point_est="mean", pars=c("beta[4]")) + plot_title
-mcmc_areas(posterior,  prob = 0.8, point_est="mean", pars=c("beta[5]")) + plot_title
-
-plot_title <- ggtitle(paste("Posterior distributions of detection probability, mean and 90% interval"))
-p_post <- mcmc_areas(posterior,  prob = 0.8, point_est="mean", pars = params_intercept) + plot_title
-print(p_post)
-
-plot_title <- ggtitle(paste("Posterior distributions of detection probability, mean and 90% interval"))
-p_post <- mcmc_areas(posterior,  prob = 0.9, point_est="mean", pars = c("delta[1]")) + plot_title
-print(p_post)
-
-mcmc_intervals(fit$draws(), pars=all_params)
-mcmc_hist(fit$draws(), pars = all_params)
-mcmc_pairs(fit$draws(), pars=all_params)
-mcmc_scatter(fit$draws(), pars=c('alpha', 'gamma'))
-mcmc_scatter(fit$draws(), pars=c('beta[1]', 'beta[2]'))
-mcmc_scatter(fit$draws(), pars=c('beta[2]', 'beta[3]'))
-mcmc_scatter(fit$draws(), pars=c('beta[1]', 'beta[3]'))
-mcmc_scatter(fit$draws(), pars=c('beta[1]', 'beta[4]'))
-mcmc_scatter(fit$draws(), pars=c('beta[1]', 'beta[5]'))
-
+if (exp_args$pp_diagnostic == T){
+  posterior <- fit$draws(all_params)
+  color_scheme_set("mix-blue-pink")
+  p_trace <- mcmc_trace(posterior,
+                        facet_args = list(nrow = 2, labeller = label_parsed))
+  print(p_trace + facet_text(size = 15))
+  
+  plot_title <- ggtitle(paste("Posterior distributions, with means and 90% interval"))
+  mcmc_areas(posterior,  prob = 0.8, point_est="mean", pars=c("beta[1]")) + plot_title
+  mcmc_areas(posterior,  prob = 0.8, point_est="mean", pars=c("beta[2]")) + plot_title
+  mcmc_areas(posterior,  prob = 0.8, point_est="mean", pars=c("beta[3]")) + plot_title
+  mcmc_areas(posterior,  prob = 0.8, point_est="mean", pars=c("beta[4]")) + plot_title
+  mcmc_areas(posterior,  prob = 0.8, point_est="mean", pars=c("beta[5]")) + plot_title
+  
+  plot_title <- ggtitle(paste("Posterior distributions of detection probability, mean and 90% interval"))
+  p_post <- mcmc_areas(posterior,  prob = 0.8, point_est="mean", pars = params_intercept) + plot_title
+  print(p_post)
+  
+  plot_title <- ggtitle(paste("Posterior distributions of detection probability, mean and 90% interval"))
+  p_post <- mcmc_areas(posterior,  prob = 0.9, point_est="mean", pars = c("delta[1]")) + plot_title
+  print(p_post)
+  
+  mcmc_intervals(fit$draws(), pars=all_params)
+  mcmc_hist(fit$draws(), pars = all_params)
+  mcmc_pairs(fit$draws(), pars=all_params)
+  mcmc_scatter(fit$draws(), pars=c('alpha', 'gamma'))
+  mcmc_scatter(fit$draws(), pars=c('beta[1]', 'beta[2]'))
+  mcmc_scatter(fit$draws(), pars=c('beta[2]', 'beta[3]'))
+  mcmc_scatter(fit$draws(), pars=c('beta[1]', 'beta[3]'))
+  mcmc_scatter(fit$draws(), pars=c('beta[1]', 'beta[4]'))
+  mcmc_scatter(fit$draws(), pars=c('beta[1]', 'beta[5]'))
+}
+  
 # Examine the ppd for y
 generated_yrep <- fit$draws("y_rep", format="matrix")
-dim(generated_yrep)
 yrep_means <- colMeans(generated_yrep)
 # Create new sf for the preds
 subgrid_geo <- st_geometry(subgrid_covars) %>% st_sf()
@@ -331,6 +336,7 @@ print(p)
 # Take expectation from the PP params
 pp_posterior <- fit$draws(intensity_params, format="matrix")
 pp_posterior <- matrix(rep(colMeans(pp_posterior), data_reps), nrow=data_reps, byrow = T)
+print(dim(pp_posterior))
 
 # We fit the PP model to the PO data and use the expectation of this posterior to generate the PA data
 # There is a question of whether to use draws from the posterior or just the expectation. This will have to be resolved
@@ -344,29 +350,30 @@ link_func <- "cloglog"
 if (exp_args$vary_visits == TRUE){
   visits <- c(exp_args$min_visits, exp_args$max_visits)
   print("Creating datasets for varying survey effort between sites")
-  r_survey_data_n1  <- generate_ebird_pa(data_reps, sampling_surface, p_0, pp_posterior, visits[1], sites, link=link_func)
-  r_survey_data_n5  <- generate_ebird_pa(data_reps, sampling_surface, p_0, pp_posterior, visits[2], sites, link=link_func)
+  r_survey_data_n1  <- generate_ebird_pa(data_reps, intensity_covars, p_0, pp_posterior, visits[1], sites, link=link_func)
+  r_survey_data_n5  <- generate_ebird_pa(data_reps, intensity_covars, p_0, pp_posterior, visits[2], sites, link=link_func)
 } else{
   visits <- c(exp_args$max_visits)
   print("Creating datasets for fixed survey effort across sites")
-  r_survey_data_n1  <- generate_ebird_pa(data_reps, sampling_surface, p_0, pp_posterior, visits[1], sites, link=link_func)
-  r_survey_data_n5  <- generate_ebird_pa(data_reps, sampling_surface, p_0, pp_posterior, visits[1], sites, link=link_func)
+  r_survey_data_n1  <- generate_ebird_pa(data_reps, intensity_covars, p_0, pp_posterior, visits[1], sites, link=link_func)
+  r_survey_data_n5  <- generate_ebird_pa(data_reps, intensity_covars, p_0, pp_posterior, visits[1], sites, link=link_func)
 }
 print(paste("Current visit options:", paste(visits, collapse=" ")))
 
 # For the coordinate exchange algorithm, we will need to precompute the nearest neighbors.
-# I take a naive approach here of choosing the top l neighbors
+# Need matrix of size: matrix(nrow=nrow(surface), ncol=l). In the simulate we computed distances between 
+# cells. st_distance allows us to do the same here, between grid cells
 l <- 4
-nearest_neighbors <- get_neighbors(sampling_surface, l)
+nearest_neighbors <- get_neighbors_sf_grid(subgrid, l)
 dim(nearest_neighbors)
-nearest_neighbors
 
 # Create plots of the occupancy and probability maps
-for(d_i in 1:20){
+d_examine <- ifelse(data_reps<10, data_reps, 10)
+for(d_i in 1:d_examine){
   occ_map <- st_geometry(subgrid_covars) %>% st_sf()
-  occ_map$occ <- pa_gen$occupancy[d_i,]
-  occ_map$prob <- pa_gen$theta[d_i,]
-  occ_map$counts <- pa_gen$Y[d_i,]
+  occ_map$occ <- r_survey_data_n1$occupancy[d_i,]
+  occ_map$prob <- r_survey_data_n1$theta[d_i,]
+  occ_map$counts <- r_survey_data_n1$Y[d_i,]
   
   # Then plot the predictions
   occ_rast <- terra::rasterize(vect(occ_map), crop_evi_rast, field="occ")
@@ -402,7 +409,7 @@ for(d_i in 1:20){
 # uses different link function but is otherwise the same as model 1. Model has constant
 # intensity, which doesn't make that much sense to use in this case.
 model_strings <- list(
-	"nuthatch_site_occ"=nuthatch_poisson_process_site_occupancy,
+	"nuthatch_site_occ"=nuthatch_poisson_process_site_occupancy
 	)
 model_selection <- exp_args$model_selection
 model_name <- names(model_strings)[model_selection]
@@ -416,7 +423,7 @@ model <- cmdstan_model(model_path)
 # If I look at models with and without PO data then I will need to add more options
 params <- c("alpha", "gamma", "beta[1]", "beta[2]", "beta[3]", "beta[4]", "beta[5]", "delta[1]")
 print(paste("Using params", paste(params, collapse=" ")))
-generated_vars <- c('g_theta_gen', 'occ_gen')
+generated_vars <- c('g_theta_gen')
 
 # The reich paper repeats the entire exchange algorithm procedure 10 times,
 # and retains solution with lowest V(D)
@@ -456,7 +463,8 @@ for (r_start in 1:random_starts){
   # optimal_visits will be initiated in algorithm
   possible_visits <- rep(visits[length(visits)], m)
   # Initial sites
-  select_sites <- sampling_surface[site_idx,]
+  # Use the covariates for just the intensity since these correspond to the sites in the PA likelihood
+  select_sites <- intensity_covars[site_idx,]
   # Convergence condition will be met where full iteration through all sampled sites results in no change
   # in sites. ie no changes in sites can improve criterion
   convergence_cond <- FALSE
@@ -466,13 +474,15 @@ for (r_start in 1:random_starts){
   # Not comparing sampling effort here
   if (exp_args$v_parallel==T){
     combined_df <- cbind(r_survey_data_n5$occupancy, r_survey_data_n5$Y, r_po_data$Y)
-    estimate_vec <- parApply(clust, combined_df, 1, FUN=estimate_v_parallel, model, possible_visits, m, sites, sampling_surface, 
-                                 site_idx, select_sites, generated_vars, model_selection, exp_args$mcmc_iter)
+    estimate_vec <- parApply(clust, combined_df, 1, FUN=estimate_v_parallel_nuthatch, model, possible_visits, m, sites, 
+                             intensity_covars, bias_covars, site_idx, select_sites, generated_vars, k_param_intn, k_param_bias, 
+                             model_selection, exp_args$mcmc_iter)
     # Compatible format with non-parallel v
     estimate_mat <- matrix(estimate_vec, nrow=data_reps, ncol=1)
   }
   else{
-    estimate_mat <- estimate_v(model, possible_visits, data_reps, m, sites, sampling_surface, 
+    # TODO: fix arguments, create function
+    estimate_mat <- estimate_v_nuthatch(model, possible_visits, data_reps, m, sites, sampling_surface, 
                                site_idx, select_sites, r_survey_data_n5, r_po_data,
                                p_logging, params, generated_vars, model_selection, exp_args$mcmc_iter)
   }
@@ -484,8 +494,6 @@ for (r_start in 1:random_starts){
   current_v_est <- new_v_est
   print("Initial row ids")
   print(site_idx)
-  print("Initial coordinates")
-  print(sampling_surface[site_idx,1:2])
   print("Initial design score")
   print(new_v_est)
   title <- paste("Inital spatial design: v=", round(new_v_est, 10), sep="")
@@ -569,8 +577,9 @@ for (r_start in 1:random_starts){
           #print(r_survey_data$Y[,neighbor_idx])
           if (exp_args$v_parallel==T){
             combined_df <- cbind(r_survey_data$occupancy, r_survey_data$Y, r_po_data$Y)
-            estimate_vec <- parApply(clust, combined_df, 1, FUN=estimate_v_parallel, model, current_visits, m, sites, sampling_surface, 
-                                         neighbor_idx, select_sites, params, generated_vars, model_selection, exp_args$mcmc_iter)
+            estimate_vec <- parApply(clust, combined_df, 1, FUN=estimate_v_parallel_nuthatch, model, current_visits, m, sites, 
+                                     intensity_covars, bias_covars, neighbor_idx, select_sites, generated_vars, k_param_intn, k_param_bias, 
+                                     model_selection, exp_args$mcmc_iter)
             # Compatible format with non-parallel v
             estimate_mat <- matrix(estimate_vec, nrow=data_reps, ncol=1)
           }
@@ -588,7 +597,7 @@ for (r_start in 1:random_starts){
              title <- paste("New optimal spatial design: v=", round(new_v_est, 10), sep="")
              # Plot the new best site compared to the previous selection, but need to reverse arguments to function
              # Use current_visits as optimal visits.
-             p <- plot_sites_vs_best(sampling_surface, current_site, best_neighbor_idx, neighbor_idx, possible_visits, current_visits, title)
+             p <- plot_sites_vs_best_nuthatch(intensity_covars, current_site, best_neighbor_idx, neighbor_idx, possible_visits, current_visits, title)
              # Then set new best indices
              best_neighbor_idx <- neighbor_idx
              possible_visits <- current_visits
@@ -605,7 +614,7 @@ for (r_start in 1:random_starts){
             title <- paste("Non-optimal spatial design: v=", round(new_v_est, 10), 
                            "\nvs current optimal design: v=", round(current_v_est, 10), sep="")
             #print("No change in optimal design")
-            p <- plot_sites_vs_best(sampling_surface, current_site, neighbor_idx, best_neighbor_idx, current_visits, possible_visits, title)
+            p <- plot_sites_vs_best_nuthatch(sampling_surface, current_site, neighbor_idx, best_neighbor_idx, current_visits, possible_visits, title)
           }
           fig_name <- file.path(fig_dir, paste("site_locs_rand-start-", r_start, "_ex-iter_", 
                             exchange_iter, "_site-iter-", s, "_effort_", visit, "_nn-iter", n_count,".png", sep=""))

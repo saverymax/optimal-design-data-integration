@@ -143,7 +143,8 @@ generate_ebird_pa <- function(data_reps, surface_data, p_0, pp_posterior, n, sit
     # The posterior values can be either draws from the PP posterior or the expectation
     param_vec <- pp_posterior[r,]
     if (link=="cloglog"){
-      g_theta <- 1 - exp(-exp(as.matrix(surface_data)%*%t(param_vec)))
+      #g_theta <- 1 - exp(-exp(as.matrix(surface_data)%*%t(param_vec)))
+      g_theta <- 1 - exp(-exp(as.matrix(surface_data)%*%param_vec))
     }
     stopifnot(sites==length(g_theta))
     site_presence <- rbinom(sites, 1, g_theta)

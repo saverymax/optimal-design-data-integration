@@ -92,7 +92,8 @@ nuthatch_poisson_process_site_occupancy <- '
       // Note that we do not include gamma here because the 
       // probability of occupancy is just P(N(C_i)>0) = G(alpha + beta X)
       g_theta_gen = 1 - exp(-exp(alpha + X_po*beta));
-      // Posterior predictive distribution for occupancy
+      // We dont need to generate the occupancy if we take gtheta
+      // since we take the mean of the occupancy anyway which is the mean of gtheta
       occ_gen = bernoulli_rng(g_theta_gen);
     }
 '

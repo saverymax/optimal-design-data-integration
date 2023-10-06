@@ -127,6 +127,32 @@ estimate_v <- function(model, n_surveys, data_reps, m, sites, sampling_surface,
 }
 
 
+estimate_v_parallel_nuthatch <- function(combined_df, model, n_surveys, m, sites, intensity_covars, bias_covars, 
+                       select_idx, select_sites, generated_vars, k_i, k_b, model_selection, mcmc_iter){
+  
+  # For each rth dataset get the m randomly chosen sites for the occupancy data, Y surveys, and PO.
+  selected_occ <- combined_df[select_idx]
+  selected_data <- combined_df[sites+select_idx]
+  PO_data <- combined_df[(2*sites+1):length(combined_df)] 
+  # Here I use the same X covariate for the presence-only data as used for the survey data. The difference is that
+  # the survey data here is a subset (select_sites) of the sites, whereas the presence only data 
+  # needs covariates for the whole grid to approximate the expected count in the entire region.
+  if (model_selection==1){
+    data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, X=select_sites, Y=selected_data, PO=PO_data,
+                         X_po=intensity_covars, Z_po=bias_covars, k_i=k_i, k_b=k_b, model_diag=0)
+  }else{
+    stop("No other models implemented")
+  }
+  # refresh=0 turns off messages except errors from stan
+  # quiet function silences stan output 
+  fit <- model$sample(data=data_site_occ, seed=13, chains=1, 
+                            iter_sampling=mcmc_iter, iter_warmup=100, refresh=0, show_messages=F)
+  
+  gen_occupancy <- fit$summary(variables=generated_vars[1])$mean[select_idx]
+  v_est <- design_criteria(criteria="brier", sim_occ=gen_occupancy, obs_occ=selected_occ)
+  return(v_est)
+}
+
 estimate_v_parallel <- function(combined_df, model, n_surveys, m, sites, sampling_surface, 
                        select_idx, select_sites, generated_vars, model_selection, mcmc_iter){
   
@@ -184,6 +210,22 @@ get_neighbors <- function(surface, l){
     # Take column names, which gives us a character vector annoyingly
     nearest_neighbor_rows <- as.numeric(names(min_points))
     nearest_neighbors[row,] <- nearest_neighbor_rows
+  }
+  return(nearest_neighbors)
+}
+
+get_neighbors_sf_grid <- function(grid, l){
+  # st_distances gives us the nearest distance from one feature to another
+  # So if two polygons are touching, distance will be 0 (ie, not calculated between centroids)
+  distances <- st_distance(grid, subgrid)
+  nearest_neighbors <- matrix(nrow=nrow(grid), ncol=l)
+  for (row in 1:nrow(grid)){
+    # This gives us the closest neighboring rows
+    min_points <- order(distances[row, ])[2:(l+1)]
+    stopifnot(!(1%in%min_points))
+    stopifnot(length(min_points)==l)
+    # Take column names, which gives us a character vector annoyingly
+    nearest_neighbors[row,] <- min_points 
   }
   return(nearest_neighbors)
 }

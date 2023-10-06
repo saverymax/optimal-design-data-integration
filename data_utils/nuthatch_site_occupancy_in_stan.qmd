@@ -385,7 +385,6 @@ Using the PO data and generated PA data, we can now fit our site-occupancy model
 ```{r model-fit}
 # We will use the same data as we used to fit the PO model, only now we will also randomly sample a select set of 
 # sites to use as PA data in the SO model. Otherwise the set-up stays the same.
-m <- 20
 #site_idx <- sample(which(pa_gen$Y[10,]>0), m, replace=F)
 site_idx <- sample(1:sites, m, replace=F)
 site_idx
