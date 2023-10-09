@@ -42,6 +42,7 @@ design_criteria <- function(criteria, sim_occ, obs_occ){
 estimate_v <- function(model, n_surveys, data_reps, m, sites, sampling_surface, 
                        select_idx, select_sites, r_survey_data, r_po_data,
                        p_logging, params, generated_vars, model_selection, mcmc_iter){
+  
   estimate_mat <- matrix(nrow=data_reps, ncol=1)
   for (r in 1:data_reps){
     # For each rth dataset get the m randomly chosen sites
@@ -127,31 +128,56 @@ estimate_v <- function(model, n_surveys, data_reps, m, sites, sampling_surface,
 }
 
 
-estimate_v_parallel_nuthatch <- function(combined_df, model, n_surveys, m, sites, intensity_covars, bias_covars, 
-                       select_idx, select_sites, generated_vars, k_i, k_b, model_selection, mcmc_iter){
+estimate_v_nuthatch <- function(model, n_surveys, data_reps, m, sites, intensity_covars, bias_covars, 
+                                select_idx, select_sites, r_survey_data, r_po_data,
+                                p_logging, params, generated_vars, k_i, k_b, model_selection, mcmc_iter){
   
-  # For each rth dataset get the m randomly chosen sites for the occupancy data, Y surveys, and PO.
-  selected_occ <- combined_df[select_idx]
-  selected_data <- combined_df[sites+select_idx]
-  PO_data <- combined_df[(2*sites+1):length(combined_df)] 
-  # Here I use the same X covariate for the presence-only data as used for the survey data. The difference is that
-  # the survey data here is a subset (select_sites) of the sites, whereas the presence only data 
-  # needs covariates for the whole grid to approximate the expected count in the entire region.
-  if (model_selection==1){
-    data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, X=select_sites, Y=selected_data, PO=PO_data,
-                         X_po=intensity_covars, Z_po=bias_covars, k_i=k_i, k_b=k_b, model_diag=0)
-  }else{
-    stop("No other models implemented")
+  estimate_mat <- matrix(nrow=data_reps, ncol=1)
+  for (r in 1:data_reps){
+    # For each rth dataset get the m randomly chosen sites
+    selected_data <- r_survey_data$Y[r, select_idx]
+    selected_occ <- r_survey_data$occupancy[r, select_idx]
+    # We use all po data for given r
+    selected_po <- r_po_data$Y[r,]
+    # Here I use the same X covariate for the presence-only data as used for the survey data. The difference is that
+    # the survey data here is a subset (select_sites) of the sites, whereas the presence only data 
+    # needs covariates for the whole grid to approximate the expected count in the entire region.
+    if (model_selection==1){
+      data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, X=select_sites, Y=selected_data, PO=selected_po,
+                           X_po=intensity_covars, Z_po=bias_covars, k_i=k_i, k_b=k_b, model_diag=0)
+    }else{
+      stop("No other models implemented")
+    }
+    # refresh=0 turns off messages except errors from stan
+    # quiet function silences stan output 
+    fit <- model$sample(data=data_site_occ, seed=13, chains=1, 
+                        iter_sampling=mcmc_iter, iter_warmup=100, refresh=0, show_messages=F)
+    if (p_logging==T){
+      print("Logging posterior")
+      posterior <- fit$draws()
+      print(fit$summary(variables=params))
+      
+      color_scheme_set("mix-blue-pink")
+      p_trace <- mcmc_trace(posterior,  pars = params,
+                            facet_args = list(nrow = 2, labeller = label_parsed))
+      print(p_trace + facet_text(size = 15))
+      
+      plot_title <- ggtitle(paste("Posterior distributions, with means and 90% interval"))
+      p_post <- mcmc_areas(posterior,  prob = 0.9, point_est="mean", regex_pars = params) + plot_title
+      print(p_post)
+     
+      # Check issues with divergences
+      color_scheme_set("darkgray")
+      nuts_fit <- nuts_params(fit)
+      diverge_p <- mcmc_parcoord(posterior, pars = params, np = nuts_fit, alpha=.1, 
+                                 np_style=parcoord_style_np(div_alpha=1, div_size=.5))
+      print(diverge_p)
+    }
+    gen_occupancy <- fit$summary(variables=generated_vars[1])$mean[select_idx]
+    estimate_mat[r,1] <- design_criteria(criteria="brier", sim_occ=gen_occupancy, obs_occ=selected_occ)
   }
-  # refresh=0 turns off messages except errors from stan
-  # quiet function silences stan output 
-  fit <- model$sample(data=data_site_occ, seed=13, chains=1, 
-                            iter_sampling=mcmc_iter, iter_warmup=100, refresh=0, show_messages=F)
-  
-  gen_occupancy <- fit$summary(variables=generated_vars[1])$mean[select_idx]
-  v_est <- design_criteria(criteria="brier", sim_occ=gen_occupancy, obs_occ=selected_occ)
-  return(v_est)
 }
+  
 
 estimate_v_parallel <- function(combined_df, model, n_surveys, m, sites, sampling_surface, 
                        select_idx, select_sites, generated_vars, model_selection, mcmc_iter){
@@ -189,6 +215,30 @@ estimate_v_parallel <- function(combined_df, model, n_surveys, m, sites, samplin
   return(v_est)
 }
 
+estimate_v_parallel_nuthatch <- function(combined_df, model, n_surveys, m, sites, intensity_covars, bias_covars, 
+                                         select_idx, select_sites, generated_vars, k_i, k_b, model_selection, mcmc_iter){
+  # For each rth dataset get the m randomly chosen sites for the occupancy data, Y surveys, and PO.
+  selected_occ <- combined_df[select_idx]
+  selected_data <- combined_df[sites+select_idx]
+  PO_data <- combined_df[(2*sites+1):length(combined_df)] 
+  # Here I use the same X covariate for the presence-only data as used for the survey data. The difference is that
+  # the survey data here is a subset (select_sites) of the sites, whereas the presence only data 
+  # needs covariates for the whole grid to approximate the expected count in the entire region.
+  if (model_selection==1){
+    data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, X=select_sites, Y=selected_data, PO=PO_data,
+                         X_po=intensity_covars, Z_po=bias_covars, k_i=k_i, k_b=k_b, model_diag=0)
+  }else{
+    stop("No other models implemented")
+  }
+  # refresh=0 turns off messages except errors from stan
+  # quiet function silences stan output 
+  fit <- model$sample(data=data_site_occ, seed=13, chains=1, 
+                      iter_sampling=mcmc_iter, iter_warmup=100, refresh=0, show_messages=F)
+  
+  gen_occupancy <- fit$summary(variables=generated_vars[1])$mean[select_idx]
+  v_est <- design_criteria(criteria="brier", sim_occ=gen_occupancy, obs_occ=selected_occ)
+  return(v_est)
+}
 
 distance_func <- function(x, center_coord){
   dist <- sqrt((x[1] - center_coord[1])^2 + (x[2] - center_coord[2])^2)
@@ -408,9 +458,52 @@ plot_po_optimal_sites <- function(sampling_surface, r_po_data, best_select_idx, 
     theme(text=element_text(size=5), legend.key.size = unit(0.25, 'cm')) +
     coord_fixed() 
   return(p)
-  }
+}
 
-  write_results <- function(random_starts, best_v, best_site_mat, visits, v_df, exp_dir, exp_name){
+# Another set of functions for plotting design over a map
+plot_sites_ebird <- function(site_centroids, rast_surface, site_idx, title){
+  p <- ggplot() + 
+    geom_spatraster(data=rast_surface) +
+    geom_sf(data = site_centroids[site_idx], color=alpha("red",1), fill="orange") + 
+    scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7, na.value="white") +
+    theme_minimal()+
+    ggtitle(title) +
+    theme(text=element_text(size=5), legend.key.size = unit(0.25, 'cm'))
+  return(p)
+}
+
+plot_sites_vs_best_ebird <- function(site_centroids, rast_surface, current_site, select_idx, best_select_idx, prev_visits, optimal_visits, title){
+  # Plot current set of sites compared to the best sites. 
+  # Best will always be pink
+  prev_size <- prev_visits/(length(prev_visits)) + 1.5
+  best_size <- optimal_visits/(length(optimal_visits)) + 1
+  # Site centroids are 1 dimensional
+  p <- ggplot() + 
+    geom_spatraster(data=rast_surface) +
+    geom_sf(data = site_centroids[select_idx], fill="white", size=prev_size) + 
+    geom_sf(data = subgrid_covars[best_select_idx], fill="hotpink1", size=best_size) + 
+    geom_sf(data = subgrid_covars[current_site], fill="black", size=0.5) + 
+    scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7, na.value="grey") +
+    theme_minimal()+
+    ggtitle(title) +
+    theme(text=element_text(size=5), legend.key.size = unit(0.25, 'cm'))
+  return(p)
+}
+
+plot_po_optimal_sites_ebird <- function(site_centroids, rast_surface, po_data, best_select_idx, optimal_visits, title){
+  best_size <- optimal_visits/(length(optimal_visits)) + 1
+  p <- ggplot() + 
+    geom_spatraster(data=rast_surface) +
+    geom_sf(data=po_data, color=alpha("orange",0.5), size=0.5)+
+    geom_sf(data = site_centroids[best_select_idx], fill="white", size=best_size) + 
+    scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7, na.value="grey") +
+    theme_minimal()+
+    ggtitle(title) +
+    theme(text=element_text(size=5), legend.key.size = unit(0.25, 'cm'))
+  return(p)
+}
+
+write_results <- function(random_starts, best_v, best_site_mat, visits, v_df, exp_dir, exp_name){
   # This will be useful if I have multiple criteria
   v_stat_df <- data.frame(v=sum(best_v) / random_starts, v_var=var(best_v))
   best_v <- data.frame(best_v=best_v)

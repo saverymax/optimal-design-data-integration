@@ -60,9 +60,10 @@ print(p)
 
 crop_lc_rast <- load_landcover(base_data_dir, lc_path, state_bound)
 # Convert crs to the landcover
-state_pa_prj <- terra::project(vect(state_pa), crop_lc_rast)
-state_po_prj <- terra::project(vect(state_po), crop_lc_rast)
-prj_state <- terra::project(vect(state_bound), crop_lc_rast)
+#state_pa_prj <- terra::project(vect(state_pa), crop_lc_rast)
+#state_po_prj <- terra::project(vect(state_po), crop_lc_rast)
+#prj_state <- terra::project(vect(state_bound), crop_lc_rast)
+# Yay we can use either version of terra or sf transform
 state_pa_prj <- st_transform(state_pa, crs(crop_lc_rast))
 state_po_prj <- st_transform(state_po, crs(crop_lc_rast))
 prj_state <- st_transform(state_bound, crs(crop_lc_rast))
@@ -211,7 +212,24 @@ for(i in 1:length(covar_names[1:length(covar_names)])){
   #ggsave(fig_name, plot=p, dpi=300, width=15, height=8, units="cm", bg="white", device="png", type="cairo")
 }
 
+# And just for later use, make a plot with a mark on a specific site
+p <- ggplot() + 
+  geom_spatraster(data=elev_site_rast) +
+  geom_sf(data = subgrid_covars[c(500, 600, 700),], color=alpha("red",1), fill="orange") + 
+  scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7, na.value="white") +
+  theme_minimal()+
+  ggtitle("Labeled nuthatch site")
+print(p)
 
+# We can also plot the centroids
+site_centroids <- st_centroid(st_geometry(subgrid_covars))
+p <- ggplot() + 
+  geom_spatraster(data=elev_site_rast) +
+  geom_sf(data = site_centroids[c(500,1000, 1100)], color=alpha("red",1), size=5, fill="orange") + 
+  scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7, na.value="white") +
+  theme_minimal()+
+  ggtitle("Labeled nuthatch site")
+print(p)
 ```
 Everything looks good which means we can proceed to modelling. First we have to generate Presence-Absence data. To do so, we are going to nee
 to make some assumptions about the parameters.

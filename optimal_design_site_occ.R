@@ -149,7 +149,7 @@ if (exp_args$use_sim_po==T){
 }else{
   # Load data from actual PO survey
   # Will need to replicate this by the number of data reps.
-  stop("No real data source implemented")
+  stop("No real data source implemented in this script")
 }
   
   

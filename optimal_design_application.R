@@ -28,7 +28,11 @@ set.seed(13)
 parser <- OptionParser()
 parser <- add_option(parser, "--working_dir", type="character", default=".", help="Path to the directory containing code to source for the main script")
 parser <- add_option(parser, "--base_data_dir", type="character", default="./data", help="Path to the directory containing covariate data")
-parser <- add_option(parser, "--base_data_dir", type="character", default="./data", help="Path to the directory containing covariate data")
+parser <- add_option(parser, "--ebird_data_dir", type="character", default="ebird", help="Name of directory containing processed ebird data, within basedir")
+parser <- add_option(parser, "--map_file", type="character", help="Nmae of file containing processed US geopackage fil")
+parser <- add_option(parser, "--landcover_file", type="character", help="Name of landcover tif")
+parser <- add_option(parser, "--modis_file", type="character", help="Name of modis EVI tif")
+parser <- add_option(parser, "--elevation_file", type="character", help="Name of elevation tif")
 parser <- add_option(parser, "--exp_name", type="character", default="oe_run", help="Name of current experiment, which is used for dir to save output")
 parser <- add_option(parser, "--data_reps", type="integer", default=4, help="Number of dataset reps for criterion estimation")
 parser <- add_option(parser, "--m", type="integer", default=5, help="Number of sites to survey")
@@ -54,11 +58,12 @@ select <- dplyr::select
 sort <- base::sort
 
 # Set important global variables 
-base_data_dir <- "C:\\Users\\msavery\\OneDrive - UGent\\Documents\\ghent_phd_spatial_doe\\data\\"
-ebd_download_dir <- "ebd_US_bnhnut_201901_201912_smp_relJul-2023"
-lc_path <- "copernicus_landcover/W100N40_PROBAV_LC100_global_v3.0.1_2019-nrt_Discrete-Classification-map_EPSG-4326.tif"
-modis_path <- "modis_landcover_dynamics/MCD12Q2.061_EVI_Area_0_doy2019001_aid0001.tif"
-elev_path <- "elevation_aster/ASTGTM_NC.003_ASTER_GDEM_DEM_doy2000061_aid0001.tif"
+#base_data_dir <- "C:\\Users\\msavery\\OneDrive - UGent\\Documents\\ghent_phd_spatial_doe\\data\\"
+#ebd_download_dir <- "ebd_US_bnhnut_201901_201912_smp_relJul-2023"
+#lc_path <- "copernicus_landcover/W100N40_PROBAV_LC100_global_v3.0.1_2019-nrt_Discrete-Classification-map_EPSG-4326.tif"
+#modis_path <- "modis_landcover_dynamics/MCD12Q2.061_EVI_Area_0_doy2019001_aid0001.tif"
+#elev_path <- "elevation_aster/ASTGTM_NC.003_ASTER_GDEM_DEM_doy2000061_aid0001.tif"
+#map_file <- "us_states/GOVTUNIT_Tennessee_State_GPKG/GOVTUNIT_Tennessee_State_GPKG.gpkg"
 map_prj <- st_crs("ESRI:102003")
 
 # Source modules
@@ -67,30 +72,36 @@ source(file.path(exp_args$working_dir, "experimental_design_functions.R"))
 source(file.path(exp_args$working_dir, "presence_only_functions.R"))
 stan_models_path <- file.path(exp_args$working_dir, "stan_models", "stan_nuthatch_models.R")
 source(stan_models_path)
-map_path <- file.path(base_data_dir, "us_states/GOVTUNIT_Tennessee_State_GPKG/GOVTUNIT_Tennessee_State_GPKG.gpkg")
-
+# Set data paths
 exp_name <- exp_args$exp_name
 exp_dir <- file.path(exp_args$working_dir, "experimental_runs", exp_name)
+base_data_dir <- file.path(exp_args$base_data_dir)
+ebd_download_dir <- file.path(exp_args$ebird_data_dir)
+map_path <- file.path(base_data_dir, exp_args$map_file)
+modis_path <- exp_args$modis_file
+lc_path <- exp_args$landcover_file
+elev_path <- exp_args$elevation_file
+# Create dir for figures and stan files
 fig_dir <- file.path(exp_dir, "figures")
 stan_dir <- file.path(exp_dir, "stan")
 dir.create(exp_dir)
 dir.create(fig_dir)
 dir.create(stan_dir)
-data_reps <- exp_args$data_reps
+# Set up the rest of the parameters
 # Most of the parameters from the simulation code we don't need. Some we keep, such as m and the prob of detection
+data_reps <- exp_args$data_reps
 p_0 <- exp_args$p
 # There will be m sites selected for sampling
 m <- exp_args$m
+
 # That set the intial experimental environment up. Now we can focus on loading our covariates and data
 # This involves a lot of data processing
 state_bound <- load_map(map_prj, map_path)
-
 # TODO: Include preprocessing file for creating the file "nuthatch_filtered_for_occ.csv"
 nuthatch_list <- load_ebird(base_data_dir, ebd_download_dir, state_bound, map_prj)
 state_pa <- nuthatch_list$state_pa
 state_po <- nuthatch_list$state_po
 
-# TODO: Save these babies
 # Plot the data
 p <- ggplot() + 
   #geom_spatvector(data=state_grid, fill = 'transparent', colour="lightblue") +
@@ -101,13 +112,12 @@ p <- ggplot() +
   theme_minimal() +
   theme(text=element_text(size=10)) +
   coord_sf()
-print(p)
+fig_name=file.path(exp_dir, "nuthatch_checklists.png")
+ggsave(fig_name, plot=p, dpi=300, width=15, height=8, units="cm", bg="white", device="png", type="cairo")
 
 crop_lc_rast <- load_landcover(base_data_dir, lc_path, state_bound)
-# Convert crs to the landcover
-state_pa_prj <- terra::project(vect(state_pa), crop_lc_rast)
-state_po_prj <- terra::project(vect(state_po), crop_lc_rast)
-prj_state <- terra::project(vect(state_bound), crop_lc_rast)
+# Convert crs to the landcover which we will work in for the rest of the script, though the size of the 
+# grid/raster conversion is probably ok for either
 state_pa_prj <- st_transform(state_pa, crs(crop_lc_rast))
 state_po_prj <- st_transform(state_po, crs(crop_lc_rast))
 prj_state <- st_transform(state_bound, crs(crop_lc_rast))
@@ -122,8 +132,8 @@ p <- ggplot() +
   theme_minimal()+
   ggtitle("Brown-headed Nuthatch and landcover in Tennessee")
 print(p)
-#fig_name="data/ebird/landcover.png"
-#ggsave(fig_name, plot=p, dpi=300, width=15, height=8, units="cm", bg="white", device="png", type="cairo")
+fig_name=file.path(exp_dir, "landcover.png")
+ggsave(fig_name, plot=p, dpi=300, width=15, height=8, units="cm", bg="white", device="png", type="cairo")
 
 # Get modis data
 crop_evi_rast <- load_evi(base_data_dir, modis_path, prj_state, crop_lc_rast)
@@ -135,7 +145,8 @@ p <- ggplot() +
   scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7) +
   theme_minimal()+
   ggtitle("Brown-headed Nuthatch and EVI in Tennessee")
-print(p)
+fig_name=file.path(exp_dir, "evi.png")
+ggsave(fig_name, plot=p, dpi=300, width=15, height=8, units="cm", bg="white", device="png", type="cairo")
 
 crop_elev_rast <- load_elevation(base_data_dir, elev_path, prj_state)
 # Shouldn't need to project either source of rast for elevation rasters
@@ -149,7 +160,8 @@ p <- ggplot() +
   scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7) +
   theme_minimal()+
   ggtitle("Brown-headed Nuthatch and elevation in Tennessee")
-print(p)
+fig_name=file.path(exp_dir, "elevation.png")
+ggsave(fig_name, plot=p, dpi=300, width=15, height=8, units="cm", bg="white", device="png", type="cairo")
 
 subgrid <- create_pp_grid(state_bound, crs(crop_lc_rast))
 stopifnot(st_crs(subgrid)==st_crs(crop_lc_rast))
@@ -161,31 +173,17 @@ p <- ggplot() +
   scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7) +
   theme_minimal()+
   ggtitle("2.5km by 2.5km grid over Tennessee")
-print(p)
-#fig_name="data/ebird/state_grid.png"
-#ggsave(fig_name, plot=p, dpi=300, width=15, height=8, units="cm", bg="white", device="png", type="cairo")
+fig_name=file.path(exp_dir, "tennessee_grid.png")
+ggsave(fig_name, plot=p, dpi=300, width=15, height=8, units="cm", bg="white", device="png", type="cairo")
 
 pp_counts <- aggregate_point_counts(subgrid, state_po_prj)
 pp_counts[which(pp_counts>1)]
 hist(pp_counts[which(pp_counts>1)])
 subgrid$counts <- pp_counts
 
-# We can plot the subgrid (either as sfc or sf) with spatvector
-# make_grid produces sfc but st_sf turns this to sf, to which 
-# we can add attributes such as point counts
-p <- ggplot() + 
-  geom_spatvector(data=subgrid, aes(fill=counts), color=alpha("#B6B6B6", 0.5)) +
-  scale_fill_viridis_c(begin=0.2, end=1, option="magma",alpha=0.7) +
-  theme_minimal()+
-  ggtitle("Brown-headed Nuthatch aggregated intensity in Tennessee")
-print(p)
-
 # Next calculate covariate aggregation based on the grid.
-evi_buff <- exact_extract(crop_evi_rast, subgrid, "mean", progress=T)
-plot(evi_buff)
 # TODO: Add ebird covariates from the buuffer: number_observers and duration_minutes
 agg_covars <- generate_gridded_covariates(subgrid, crop_lc_rast, crop_evi_rast, crop_elev_rast, state_po_prj)
-agg_covars$lc_frac
 subgrid$evi <- agg_covars$evi_agg
 subgrid$elev <- agg_covars$elev_agg
 subgrid_covars <- bind_cols(subgrid, agg_covars$lc_frac)
@@ -195,7 +193,8 @@ p <- ggplot() +
   scale_fill_viridis_c(begin=0.2, end=1, option="magma",alpha=0.7) +
   theme_minimal()+
   ggtitle("Brown-headed Nuthatch aggregated intensity in Tennessee")
-print(p)
+fig_name=file.path(exp_dir, "aggregated_intensity.png")
+ggsave(fig_name, plot=p, dpi=300, width=15, height=8, units="cm", bg="white", device="png", type="cairo")
 
 # rasterized version of site evi 
 evi_rast <- terra::rasterize(subgrid_covars, crop_evi_rast, field="evi")
@@ -213,7 +212,9 @@ p <- ggplot() +
   scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7, na.value="white") +
   theme_minimal()+
   ggtitle("Nuthatch EVI in Tennessee at Nuthatch sites")
-print(p)
+fig_name=file.path(exp_dir, "site_evi.png")
+ggsave(fig_name, plot=p, dpi=300, width=15, height=8, units="cm", bg="white", device="png", type="cairo")
+
 
 p <- ggplot() + 
   geom_sf(data = prj_state, color=alpha("black",0.5), fill='transparent', linewidth=0.7) + 
@@ -221,7 +222,8 @@ p <- ggplot() +
   scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7, na.value="white") +
   theme_minimal()+
   ggtitle("Elevation in Tennessee at Nuthatch sites")
-print(p)
+fig_name=file.path(exp_dir, "site_elevation.png")
+ggsave(fig_name, plot=p, dpi=300, width=15, height=8, units="cm", bg="white", device="png", type="cairo")
 
 colnames(subgrid_covars)
 covar_names <- c(colnames(subgrid_covars)[5:(length(colnames(subgrid_covars))-1)])
@@ -247,12 +249,15 @@ for(i in 1:length(covar_names[1:length(covar_names)])){
     theme_minimal()+
     ggtitle(paste(covar, "; ", covar_name, " in Tennessee at Nuthatch sites", sep=""))
   print(p)
-  #fig_name <- paste("data/ebird/", covar, "_covar_tenn.png", sep="")
-  #ggsave(fig_name, plot=p, dpi=300, width=15, height=8, units="cm", bg="white", device="png", type="cairo")
+  fig_name <- paste(covar, "_covar_tenn.png", sep="")
+  fig_name <- file.path(exp_dir, fig_name)
+  ggsave(fig_name, plot=p, dpi=300, width=15, height=8, units="cm", bg="white", device="png", type="cairo")
 }
 
 covar_df <- st_drop_geometry(subgrid_covars)
 colnames(covar_df)
+# Let's save the centroids for plotting
+site_centroids <- st_centroid(st_geometry(subgrid_covars))
 #intensity_covars <- covar_df[c("evi", "elev", "frac_111", )]
 intensity_covars <- covar_df[c("evi", "elev", "frac_111", "frac_115", "frac_124")]
 bias_covars <- covar_df[c("frac_50")]#"duration_minutes", "number_observers",  "effort_distance_km", "time_observations_started", 
@@ -275,6 +280,7 @@ model_string <- nuthatch_poisson_process
 write(model_string, model_path)
 data_site_occ = list(N=sites, X=intensity_covars, y=r_po_data$Y[1,], Z=bias_covars, k_i=k_param_intn, k_b=k_param_bias)
 model <- cmdstan_model(model_path) 
+print("Fitting Point Process model to PO data")
 fit <- model$sample(data=data_site_occ, seed=13, chains=3, iter_sampling=2000, iter_warmup=500) 
 
 print(fit$summary())
@@ -292,11 +298,11 @@ if (exp_args$pp_diagnostic == T){
   print(p_trace + facet_text(size = 15))
   
   plot_title <- ggtitle(paste("Posterior distributions, with means and 90% interval"))
-  mcmc_areas(posterior,  prob = 0.8, point_est="mean", pars=c("beta[1]")) + plot_title
-  mcmc_areas(posterior,  prob = 0.8, point_est="mean", pars=c("beta[2]")) + plot_title
-  mcmc_areas(posterior,  prob = 0.8, point_est="mean", pars=c("beta[3]")) + plot_title
-  mcmc_areas(posterior,  prob = 0.8, point_est="mean", pars=c("beta[4]")) + plot_title
-  mcmc_areas(posterior,  prob = 0.8, point_est="mean", pars=c("beta[5]")) + plot_title
+  print(mcmc_areas(posterior,  prob = 0.8, point_est="mean", pars=c("beta[1]")) + plot_title)
+  print(mcmc_areas(posterior,  prob = 0.8, point_est="mean", pars=c("beta[2]")) + plot_title)
+  print(mcmc_areas(posterior,  prob = 0.8, point_est="mean", pars=c("beta[3]")) + plot_title)
+  print(mcmc_areas(posterior,  prob = 0.8, point_est="mean", pars=c("beta[4]")) + plot_title)
+  print(mcmc_areas(posterior,  prob = 0.8, point_est="mean", pars=c("beta[5]")) + plot_title)
   
   plot_title <- ggtitle(paste("Posterior distributions of detection probability, mean and 90% interval"))
   p_post <- mcmc_areas(posterior,  prob = 0.8, point_est="mean", pars = params_intercept) + plot_title
@@ -306,15 +312,15 @@ if (exp_args$pp_diagnostic == T){
   p_post <- mcmc_areas(posterior,  prob = 0.9, point_est="mean", pars = c("delta[1]")) + plot_title
   print(p_post)
   
-  mcmc_intervals(fit$draws(), pars=all_params)
-  mcmc_hist(fit$draws(), pars = all_params)
-  mcmc_pairs(fit$draws(), pars=all_params)
-  mcmc_scatter(fit$draws(), pars=c('alpha', 'gamma'))
-  mcmc_scatter(fit$draws(), pars=c('beta[1]', 'beta[2]'))
-  mcmc_scatter(fit$draws(), pars=c('beta[2]', 'beta[3]'))
-  mcmc_scatter(fit$draws(), pars=c('beta[1]', 'beta[3]'))
-  mcmc_scatter(fit$draws(), pars=c('beta[1]', 'beta[4]'))
-  mcmc_scatter(fit$draws(), pars=c('beta[1]', 'beta[5]'))
+  print(mcmc_intervals(fit$draws(), pars=all_params))
+  print(mcmc_hist(fit$draws(), pars = all_params))
+  print(mcmc_pairs(fit$draws(), pars=all_params))
+  print(mcmc_scatter(fit$draws(), pars=c('alpha', 'gamma')))
+  print(mcmc_scatter(fit$draws(), pars=c('beta[1]', 'beta[2]')))
+  print(mcmc_scatter(fit$draws(), pars=c('beta[2]', 'beta[3]')))
+  print(mcmc_scatter(fit$draws(), pars=c('beta[1]', 'beta[3]')))
+  print(mcmc_scatter(fit$draws(), pars=c('beta[1]', 'beta[4]')))
+  print(mcmc_scatter(fit$draws(), pars=c('beta[1]', 'beta[5]')))
 }
   
 # Examine the ppd for y
@@ -331,12 +337,14 @@ p <- ggplot() +
   #geom_sf(data = prj_state, color=alpha("black",0.4), fill='transparent', linewidth=0.7) + 
   theme_minimal()+
   ggtitle("Predicted counts at nuthatch sites")
-print(p)
+fig_name=file.path(exp_dir, "pp_predictions.png")
+ggsave(fig_name, plot=p, dpi=300, width=15, height=8, units="cm", bg="white", device="png", type="cairo")
 
 # Take expectation from the PP params
 pp_posterior <- fit$draws(intensity_params, format="matrix")
 pp_posterior <- matrix(rep(colMeans(pp_posterior), data_reps), nrow=data_reps, byrow = T)
-print(dim(pp_posterior))
+print("Estimates from pp model")
+print(pp_posterior)
 
 # We fit the PP model to the PO data and use the expectation of this posterior to generate the PA data
 # There is a question of whether to use draws from the posterior or just the expectation. This will have to be resolved
@@ -367,8 +375,9 @@ l <- 4
 nearest_neighbors <- get_neighbors_sf_grid(subgrid, l)
 dim(nearest_neighbors)
 
+# Have to use subgrid_covars for this since it still has geometry and not intensity_/bias_covars
 # Create plots of the occupancy and probability maps
-d_examine <- ifelse(data_reps<10, data_reps, 10)
+d_examine <- ifelse(data_reps<3, data_reps, 3)
 for(d_i in 1:d_examine){
   occ_map <- st_geometry(subgrid_covars) %>% st_sf()
   occ_map$occ <- r_survey_data_n1$occupancy[d_i,]
@@ -383,7 +392,8 @@ for(d_i in 1:d_examine){
     #geom_sf(data = prj_state, color=alpha("black",0.4), fill='transparent', linewidth=0.7) + 
     theme_minimal()+
     ggtitle("Occupancy maps generated over Prior Predictive Distribtion")
-  print(p)
+  fig_name=file.path(exp_dir, paste("gen_pa_occ", d_i, ".png", sep=""))
+  ggsave(fig_name, plot=p, dpi=300, width=15, height=8, units="cm", bg="white", device="png", type="cairo")
   
   prob_rast <- terra::rasterize(vect(occ_map), crop_evi_rast, field="prob")
   p <- ggplot() + 
@@ -392,7 +402,8 @@ for(d_i in 1:d_examine){
     #geom_sf(data = prj_state, color=alpha("black",0.4), fill='transparent', linewidth=0.7) + 
     theme_minimal()+
     ggtitle("Probability maps generated over Prior Predictive Distribtion")
-  print(p)
+  fig_name=file.path(exp_dir, paste("gen_pa_prob", d_i, ".png", sep=""))
+  ggsave(fig_name, plot=p, dpi=300, width=15, height=8, units="cm", bg="white", device="png", type="cairo")
   
   count_rast <- terra::rasterize(vect(occ_map), crop_evi_rast, field="counts")
   p <- ggplot() + 
@@ -401,7 +412,8 @@ for(d_i in 1:d_examine){
     #geom_sf(data = prj_state, color=alpha("black",0.4), fill='transparent', linewidth=0.7) + 
     theme_minimal()+
     ggtitle("Counts at sites generated over Prior Predictive Distribtion")
-  print(p)
+  fig_name=file.path(exp_dir, paste("gen_pa_y", d_i, ".png", sep=""))
+  ggsave(fig_name, plot=p, dpi=300, width=15, height=8, units="cm", bg="white", device="png", type="cairo")
 }
 
 # We can experiment with these models in the exchange algorithm
@@ -481,10 +493,9 @@ for (r_start in 1:random_starts){
     estimate_mat <- matrix(estimate_vec, nrow=data_reps, ncol=1)
   }
   else{
-    # TODO: fix arguments, create function
-    estimate_mat <- estimate_v_nuthatch(model, possible_visits, data_reps, m, sites, sampling_surface, 
+    estimate_mat <- estimate_v_nuthatch(model, possible_visits, data_reps, m, sites, intensity_covars, bias_covars, 
                                site_idx, select_sites, r_survey_data_n5, r_po_data,
-                               p_logging, params, generated_vars, model_selection, exp_args$mcmc_iter)
+                               p_logging, params, generated_vars, k_param_intn, k_param_bias, model_selection, exp_args$mcmc_iter)
   }
   # Once the posterior is computed on each of R datasets, find the average score:
   new_v_est <- sum(estimate_mat) / data_reps
@@ -497,7 +508,8 @@ for (r_start in 1:random_starts){
   print("Initial design score")
   print(new_v_est)
   title <- paste("Inital spatial design: v=", round(new_v_est, 10), sep="")
-  p <- plot_sites(sampling_surface, site_idx, title)
+  # Use the evi as the background for these plots
+  p <- plot_sites_ebird(site_centroids, evi_rast, site_idx, title)
   fig_name <- file.path(fig_dir, paste("initial_design_", r_start, ".png", sep=""))
   ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm")
   
@@ -532,7 +544,7 @@ for (r_start in 1:random_starts){
           n_count <- n_count + 1
           # Select new data using the neighbors (switch out local points)
           neighbor_idx <- exchange_coordinates_deterministic(best_neighbor_idx, s, nn)
-          select_sites <- sampling_surface[neighbor_idx,] 
+          select_sites <- intensity_covars[neighbor_idx,] 
           # Then set the survey effort for current id set
           # This code chunk will "double index" if the current site s already has been selected 
           # to have 1 visit, but that is ok since we just need the data at nn to correspond to 1 visit.
@@ -545,9 +557,9 @@ for (r_start in 1:random_starts){
           print(current_site)
           print("current visit")
           print(visit)
-          print("posible visits")
+          print("possible visits")
           print(possible_visits)
-          print("current vistits")
+          print("current visits")
           print(current_visits)
           print("ids with visit 1")
           print(visit_idx)
@@ -584,9 +596,9 @@ for (r_start in 1:random_starts){
             estimate_mat <- matrix(estimate_vec, nrow=data_reps, ncol=1)
           }
           else{
-            estimate_mat <- estimate_v(model, current_visits, data_reps, m, sites, sampling_surface, 
-                                       neighbor_idx, select_sites, r_survey_data, r_po_data,
-                                       p_logging, params, generated_vars, model_selection, exp_args$mcmc_iter)
+            estimate_mat <- estimate_v_nuthatch(model, current_visits, data_reps, m, sites, intensity_covars, bias_covars, 
+                                                neighbor_idx, select_sites, r_survey_data, r_po_data,
+                                                p_logging, params, generated_vars, k_param_intn, k_param_bias, model_selection, exp_args$mcmc_iter)
           }
           # Once the posterior is computed on each of R datasets, find the average score:
           new_v_est <- sum(estimate_mat) / data_reps
@@ -597,7 +609,7 @@ for (r_start in 1:random_starts){
              title <- paste("New optimal spatial design: v=", round(new_v_est, 10), sep="")
              # Plot the new best site compared to the previous selection, but need to reverse arguments to function
              # Use current_visits as optimal visits.
-             p <- plot_sites_vs_best_nuthatch(intensity_covars, current_site, best_neighbor_idx, neighbor_idx, possible_visits, current_visits, title)
+             p <- plot_sites_vs_best_ebird(site_centroids, evi_rast, current_site, best_neighbor_idx, neighbor_idx, possible_visits, current_visits, title)
              # Then set new best indices
              best_neighbor_idx <- neighbor_idx
              possible_visits <- current_visits
@@ -605,8 +617,6 @@ for (r_start in 1:random_starts){
              print(best_neighbor_idx) 
              print("Optimum survey effort")
              print(possible_visits)
-             print("New coordinates")
-             print(sampling_surface[best_neighbor_idx,1:2])
              print("New optimal design score")
              print(current_v_est)
           }
@@ -614,7 +624,7 @@ for (r_start in 1:random_starts){
             title <- paste("Non-optimal spatial design: v=", round(new_v_est, 10), 
                            "\nvs current optimal design: v=", round(current_v_est, 10), sep="")
             #print("No change in optimal design")
-            p <- plot_sites_vs_best_nuthatch(sampling_surface, current_site, neighbor_idx, best_neighbor_idx, current_visits, possible_visits, title)
+            p <- plot_sites_vs_best_ebird(site_centroids, evi_rast, current_site, neighbor_idx, best_neighbor_idx, current_visits, possible_visits, title)
           }
           fig_name <- file.path(fig_dir, paste("site_locs_rand-start-", r_start, "_ex-iter_", 
                             exchange_iter, "_site-iter-", s, "_effort_", visit, "_nn-iter", n_count,".png", sep=""))
@@ -687,8 +697,7 @@ ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm")
 # Plot best sites
 for(rs in 1:random_starts){
   title <- paste("PO data and Optimal sites from random init ", rs, "\n with V(D)=", best_v[rs], sep="")
-  #p <- plot_sites(sampling_surface, best_site_mat[rs, ], title) 
-  p <- plot_po_optimal_sites(sampling_surface, r_po_data, best_site_mat[rs,], optimal_visit_mat[rs,], title)
+  p <- plot_po_optimal_sites_ebird(site_centroids, evi_rast, state_po_prj, r_po_data, best_site_mat[rs,], optimal_visit_mat[rs,], title)
   fig_name <- file.path(fig_dir, paste("optimal_sites_random_start-", rs, ".png", sep=""))
   ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm")
 }
