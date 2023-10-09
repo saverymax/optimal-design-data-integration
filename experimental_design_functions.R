@@ -481,8 +481,8 @@ plot_sites_vs_best_ebird <- function(site_centroids, rast_surface, current_site,
   p <- ggplot() + 
     geom_spatraster(data=rast_surface) +
     geom_sf(data = site_centroids[select_idx], fill="white", size=prev_size) + 
-    geom_sf(data = subgrid_covars[best_select_idx], fill="hotpink1", size=best_size) + 
-    geom_sf(data = subgrid_covars[current_site], fill="black", size=0.5) + 
+    geom_sf(data = site_centroids[best_select_idx], fill="hotpink1", size=best_size) + 
+    geom_sf(data = site_centroids[current_site], fill="black", size=0.5) + 
     scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7, na.value="grey") +
     theme_minimal()+
     ggtitle(title) +

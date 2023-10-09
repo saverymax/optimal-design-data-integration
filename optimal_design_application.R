@@ -49,7 +49,6 @@ parser <- add_option(parser, "--pp_diagnostic", action="store_true", default=F, 
 parser <- add_option(parser, "--v_parallel", action="store_true", default=F, help="Boolean for parallel computation of V criterion")
 parser <- add_option(parser, "--cores", type="integer", default=4, help="Number of cores to use for parallel processing")
 parser <- add_option(parser, "--p", type="double", default=0.7, help="Probability of detection")
-parser <- add_option(parser, "--area", type="integer", default=100, help="Area of region D")
 
 exp_args <- parse_args(parser)
 print(exp_args)
