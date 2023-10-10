@@ -464,7 +464,7 @@ plot_po_optimal_sites <- function(sampling_surface, r_po_data, best_select_idx, 
 plot_sites_ebird <- function(site_centroids, rast_surface, site_idx, title){
   p <- ggplot() + 
     geom_spatraster(data=rast_surface) +
-    geom_sf(data = site_centroids[site_idx], color=alpha("red",1), fill="orange") + 
+    geom_sf(data = site_centroids[site_idx], color=alpha("orange",1)) + 
     scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7, na.value="white") +
     theme_minimal()+
     ggtitle(title) +
@@ -480,9 +480,9 @@ plot_sites_vs_best_ebird <- function(site_centroids, rast_surface, current_site,
   # Site centroids are 1 dimensional
   p <- ggplot() + 
     geom_spatraster(data=rast_surface) +
-    geom_sf(data = site_centroids[select_idx], fill="white", size=prev_size) + 
-    geom_sf(data = site_centroids[best_select_idx], fill="hotpink1", size=best_size) + 
-    geom_sf(data = site_centroids[current_site], fill="black", size=0.5) + 
+    geom_sf(data = site_centroids[c(1,2,3)], color=alpha("white",1), size=prev_size) + 
+    geom_sf(data = site_centroids[c(100, 200, 300)], color=alpha("hotpink",1), size=best_size) + 
+    geom_sf(data = site_centroids[400], color=alpha("black",1), size=0.5) +
     scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7, na.value="grey") +
     theme_minimal()+
     ggtitle(title) +
@@ -495,7 +495,7 @@ plot_po_optimal_sites_ebird <- function(site_centroids, rast_surface, po_data, b
   p <- ggplot() + 
     geom_spatraster(data=rast_surface) +
     geom_sf(data=po_data, color=alpha("orange",0.5), size=0.5)+
-    geom_sf(data = site_centroids[best_select_idx], fill="white", size=best_size) + 
+    geom_sf(data = site_centroids[best_select_idx], color=alpha("white",1), size=best_size) + 
     scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7, na.value="grey") +
     theme_minimal()+
     ggtitle(title) +
