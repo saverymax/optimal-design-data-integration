@@ -128,7 +128,7 @@ estimate_v <- function(model, n_surveys, data_reps, m, sites, sampling_surface,
 }
 
 
-estimate_v_nuthatch <- function(model, n_surveys, data_reps, m, sites, intensity_covars, bias_covars, 
+estimate_v_nuthatch <- function(model, n_surveys, data_reps, m, sites, area_a, intensity_covars, bias_covars, 
                                 select_idx, select_sites, r_survey_data, r_po_data,
                                 p_logging, params, generated_vars, k_i, k_b, model_selection, mcmc_iter){
   
@@ -143,7 +143,7 @@ estimate_v_nuthatch <- function(model, n_surveys, data_reps, m, sites, intensity
     # the survey data here is a subset (select_sites) of the sites, whereas the presence only data 
     # needs covariates for the whole grid to approximate the expected count in the entire region.
     if (model_selection==1){
-      data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, X=select_sites, Y=selected_data, PO=selected_po,
+      data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, area_a=area_a, X=select_sites, Y=selected_data, PO=selected_po,
                            X_po=intensity_covars, Z_po=bias_covars, k_i=k_i, k_b=k_b, model_diag=0)
     }else{
       stop("No other models implemented")
@@ -215,7 +215,7 @@ estimate_v_parallel <- function(combined_df, model, n_surveys, m, sites, samplin
   return(v_est)
 }
 
-estimate_v_parallel_nuthatch <- function(combined_df, model, n_surveys, m, sites, intensity_covars, bias_covars, 
+estimate_v_parallel_nuthatch <- function(combined_df, model, n_surveys, m, sites, area_a, intensity_covars, bias_covars, 
                                          select_idx, select_sites, generated_vars, k_i, k_b, model_selection, mcmc_iter){
   # For each rth dataset get the m randomly chosen sites for the occupancy data, Y surveys, and PO.
   selected_occ <- combined_df[select_idx]
@@ -225,7 +225,7 @@ estimate_v_parallel_nuthatch <- function(combined_df, model, n_surveys, m, sites
   # the survey data here is a subset (select_sites) of the sites, whereas the presence only data 
   # needs covariates for the whole grid to approximate the expected count in the entire region.
   if (model_selection==1){
-    data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, X=select_sites, Y=selected_data, PO=PO_data,
+    data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, area_a=area_a, X=select_sites, Y=selected_data, PO=PO_data,
                          X_po=intensity_covars, Z_po=bias_covars, k_i=k_i, k_b=k_b, model_diag=0)
   }else{
     stop("No other models implemented")

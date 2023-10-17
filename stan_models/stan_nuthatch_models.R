@@ -24,7 +24,7 @@ nuthatch_poisson_process <- '
       // likelihood
       // log parameterization so we dont have to exponentiate coefs before passing into poisson distribution
       // https://mc-stan.org/docs/functions-reference/poisson-distribution-log-parameterization.html
-      target += poisson_log_lpmf(y |  log(area_a) * (alpha + X * beta + gamma + Z * delta));
+      target += poisson_log_lpmf(y |  log(area_a) + (alpha + X * beta + gamma + Z * delta));
     }
     generated quantities{
       //vector[N] lambda_rep;

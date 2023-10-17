@@ -29,6 +29,7 @@ parser <- OptionParser()
 parser <- add_option(parser, "--working_dir", type="character", default=".", help="Path to the directory containing code to source for the main script")
 parser <- add_option(parser, "--base_data_dir", type="character", default="./data", help="Path to the directory containing covariate data")
 parser <- add_option(parser, "--ebird_data_dir", type="character", default="ebird", help="Name of directory containing processed ebird data, within basedir")
+parser <- add_option(parser, "--data_save_dir", type="character", default="data", help="Directory to in which preporcessed covariate data is saved")
 parser <- add_option(parser, "--map_file", type="character", help="Nmae of file containing processed US geopackage fil")
 parser <- add_option(parser, "--landcover_file", type="character", help="Name of landcover tif")
 parser <- add_option(parser, "--modis_file", type="character", help="Name of modis EVI tif")
@@ -45,6 +46,7 @@ parser <- add_option(parser, "--exch_iter", type="integer", default=3,
                      help="Number of iterations of exchange before ending optimization. Recommended is 20 but default is set low for test runs.")
 parser <- add_option(parser, "--mcmc_iter", type="integer", default=1000, help="Number of MCMC iterations in Stan")
 parser <- add_option(parser, "--p_logging", action="store_true", default=F, help="Boolean for logging information about posterior estimates")
+parser <- add_option(parser, "--pp_fit", action="store_true", default=F, help="Boolean to fit the Point Process posterior after data saving steps")
 parser <- add_option(parser, "--pp_diagnostic", action="store_true", default=F, help="Boolean for printing diagnostics for point process model")
 parser <- add_option(parser, "--v_parallel", action="store_true", default=F, help="Boolean for parallel computation of V criterion")
 parser <- add_option(parser, "--cores", type="integer", default=4, help="Number of cores to use for parallel processing")
@@ -64,7 +66,6 @@ sort <- base::sort
 #modis_path <- "modis_landcover_dynamics/MCD12Q2.061_EVI_Area_0_doy2019001_aid0001.tif"
 #elev_path <- "elevation_aster/ASTGTM_NC.003_ASTER_GDEM_DEM_doy2000061_aid0001.tif"
 #map_path <- "us_states/GOVTUNIT_Tennessee_State_GPKG/GOVTUNIT_Tennessee_State_GPKG.gpkg"
-#map_prj <- st_crs("ESRI:102003")
 
 # Source modules
 source(file.path(exp_args$working_dir, "data_utils", "load_ebird_data.R"))
@@ -77,10 +78,11 @@ exp_name <- exp_args$exp_name
 exp_dir <- file.path(exp_args$working_dir, "experimental_runs", exp_name)
 base_data_dir <- file.path(exp_args$base_data_dir)
 ebd_download_dir <- file.path(exp_args$ebird_data_dir)
-map_path <- file.path(base_data_dir, exp_args$map_file)
+map_path <- exp_args$map_file
 modis_path <- exp_args$modis_file
 lc_path <- exp_args$landcover_file
 elev_path <- exp_args$elevation_file
+data_save_dir <- file.path(exp_args$working_dir, exp_args$data_save_dir)
 # Create dir for figures and stan files
 fig_dir <- file.path(exp_dir, "figures")
 stan_dir <- file.path(exp_dir, "stan")
@@ -98,10 +100,9 @@ cell_size <- exp_args$cell_size
 # That set the intial experimental environment up. Now we can focus on loading our covariates and data
 # This involves a lot of data processing which we pack intothe main_data_handling function
 # TODO: Include preprocessing file for creating the file "nuthatch_filtered_for_occ.csv"
-# TODO: run a script to create the files below first, so we can just load and go.
-rast_surface_path <- file.path(exp_dir, "rast_surface.tif")
-main_data_handling_oe(map_prj, map_path, base_data_dir, ebd_download_dir, exp_dir, lc_path, modis_path, elev_path, rast_surface_path, cell_size)
-data_pack <- read_rds(file.path(exp_dir, "data_pack.RDS"))
+# It is necessary to run the process_ebird script first to generate the rds file. See documentation about data generation.
+rast_surface_path <- file.path(data_save_dir, "rast_surface.tif")
+data_pack <- read_rds(file.path(data_save_dir, "data_pack.RDS"))
 # Unpack
 bias_covars <- data_pack$bias_covars
 intensity_covars <- data_pack$intensity_covars
@@ -111,21 +112,32 @@ site_centroids <- data_pack$site_centroids
 subgrid <- data_pack$subgrid
 state_po_prj <- data_pack$state_po_prj
 rast_surface <- rast(rast_surface_path) 
+sites <- nrow(intensity_covars)
 # Generate po data to match format of simulation script. 
 Y_po <- matrix(rep(data_pack$counts, data_reps), nrow=data_reps, ncol=sites, byrow=T)
 r_po_data <- list(Y=Y_po)
 
 stan_path <- file.path(exp_args$working_dir, "stan_models")
 # Cell size is in meters but let's work with our parameters in kilometer scale
-area_a <- (cell_size/1000)^2
-fit_point_process_ebird(stan_path, exp_dir, sites, area_a, data_reps, intensity_covars, bias_covars, r_po_data, k_param_intn, k_param_bias, pp_diagnostic,
+#area_a <- (cell_size/1000)^2
+# Set to one for practical purposes
+area_a <- 1
+# The point process model can be fit here or in the process_ebird script. To run it here, provide the fit_pp flag.
+# This will save a new rds file which can be loaded below
+if (exp_args$pp_fit == TRUE){
+  # We fit the PP model to the PO data and use the expectation of this posterior to generate the PA data
+  fit_point_process_ebird(stan_path, exp_dir, sites, area_a, data_reps, intensity_covars, bias_covars, r_po_data, k_param_intn, k_param_bias, pp_diagnostic,
                         subgrid, rast_surface)
-# We fit the PP model to the PO data and use the expectation of this posterior to generate the PA data
-pp_posterior <- read_rds(file.path(exp_dir, "pp_posterior_ebird.RDS"))
+}
+pp_posterior <- read_rds(file.path(data_save_dir, "pp_posterior_ebird.RDS"))
+print("Intensity fit from point process")
+print(pp_posterior)
 # There is a question of whether to use draws from the posterior or just the expectation. This will have to be resolved
 # later when discussing Bayesian optimal  design
+
+# Then generate PA data.
 # It turns out that if we want to compare different survey efforts it is convenient to have pre-generated datasets for
-# each number of visits
+# each number of visits, though it is coded a bit awkwardly here.
 # The number of surveys can differ between sites so it is a vector
 # We will select m sites to have these visits, otherwise the sites will have 0 visits
 # We will compare the number of visits during the optimization
@@ -261,14 +273,14 @@ for (r_start in 1:random_starts){
   # Not comparing sampling effort here
   if (exp_args$v_parallel==T){
     combined_df <- cbind(r_survey_data_n5$occupancy, r_survey_data_n5$Y, r_po_data$Y)
-    estimate_vec <- parApply(clust, combined_df, 1, FUN=estimate_v_parallel_nuthatch, model, possible_visits, m, sites, 
+    estimate_vec <- parApply(clust, combined_df, 1, FUN=estimate_v_parallel_nuthatch, model, possible_visits, m, sites, area_a, 
                              intensity_covars, bias_covars, site_idx, select_sites, generated_vars, k_param_intn, k_param_bias, 
                              model_selection, exp_args$mcmc_iter)
     # Compatible format with non-parallel v
     estimate_mat <- matrix(estimate_vec, nrow=data_reps, ncol=1)
   }
   else{
-    estimate_mat <- estimate_v_nuthatch(model, possible_visits, data_reps, m, sites, intensity_covars, bias_covars, 
+    estimate_mat <- estimate_v_nuthatch(model, possible_visits, data_reps, m, sites, area_a, intensity_covars, bias_covars, 
                                site_idx, select_sites, r_survey_data_n5, r_po_data,
                                p_logging, params, generated_vars, k_param_intn, k_param_bias, model_selection, exp_args$mcmc_iter)
   }
@@ -364,14 +376,14 @@ for (r_start in 1:random_starts){
           #print(r_survey_data$Y[,neighbor_idx])
           if (exp_args$v_parallel==T){
             combined_df <- cbind(r_survey_data$occupancy, r_survey_data$Y, r_po_data$Y)
-            estimate_vec <- parApply(clust, combined_df, 1, FUN=estimate_v_parallel_nuthatch, model, current_visits, m, sites, 
+            estimate_vec <- parApply(clust, combined_df, 1, FUN=estimate_v_parallel_nuthatch, model, current_visits, m, sites, area_a, 
                                      intensity_covars, bias_covars, neighbor_idx, select_sites, generated_vars, k_param_intn, k_param_bias, 
                                      model_selection, exp_args$mcmc_iter)
             # Compatible format with non-parallel v
             estimate_mat <- matrix(estimate_vec, nrow=data_reps, ncol=1)
           }
           else{
-            estimate_mat <- estimate_v_nuthatch(model, current_visits, data_reps, m, sites, intensity_covars, bias_covars, 
+            estimate_mat <- estimate_v_nuthatch(model, current_visits, data_reps, m, sites, area_a, intensity_covars, bias_covars, 
                                                 neighbor_idx, select_sites, r_survey_data, r_po_data,
                                                 p_logging, params, generated_vars, k_param_intn, k_param_bias, model_selection, exp_args$mcmc_iter)
           }

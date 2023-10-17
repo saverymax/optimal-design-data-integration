@@ -4,6 +4,67 @@
 #############################################################
 
 
+inital_auk_processing <- function(base_data_dir, ebd_download_dir){
+  # Function to generate and save csv as "nuthatch_filtered_for_occ.csv"
+  # and "nuthatch_filtered_po_2019.txt"
+  
+  # See code in ebird_auk_nuthatch_occupancy
+  ebd_nh <- auk_ebd(file.path(base_data_dir, ebd_download_dir, "ebd_US_bnhnut_201901_201912_smp_relJul-2023.txt"),
+                    file_sampling = file.path(base_data_dir, ebd_download_dir, "ebd_US_bnhnut_201901_201912_smp_relJul-2023_sampling.txt"))
+  ebd_nh %>% auk_date(date = c("2019-01-01", "2019-12-31")) %>%  auk_protocol(protocol = c("Stationary", "Traveling")) %>% auk_complete() -> ebd_nh_filtered
+  auk_filter(ebd_nh_filtered, file = file.path(base_data_dir, ebd_download_dir, "nuthatch_filtered_po_2019.txt"), 
+             file_sampling=file.path(base_data_dir, ebd_download_dir, "nuthatch_filtered_2019_sampling.txt"), overwrite=T) 
+  nuthatch_obs <- read_ebd(file.path(base_data_dir, ebd_download_dir, "nuthatch_filtered_po_2019.txt"))
+  # TODO: Make plots only using the PO data and not the merged sampling + PO data
+  nuthatch_sampling <- read_sampling(file.path(base_data_dir, ebd_download_dir, "nuthatch_filtered_2019_sampling.txt"))
+  nuthatch_zf <- auk_zerofill(nuthatch_obs, nuthatch_sampling, collapse = TRUE)
+  # Some 4 million rows
+  head(nuthatch_zf)
+  time_to_decimal <- function(x) {
+    x <- hms(x, quiet = TRUE)
+    hour(x) + minute(x) / 60 + second(x) / 3600
+  }
+  
+  # clean up variables
+  nuthatch_zf_filter1 <- nuthatch_zf %>% 
+    mutate(
+      # convert X to NA
+      observation_count = if_else(observation_count == "X", 
+                                  NA_character_, observation_count),
+      observation_count = as.integer(observation_count),
+      # effort_distance_km to 0 for non-travelling counts
+      effort_distance_km = if_else(protocol_type != "Traveling", 
+                                   0, effort_distance_km),
+      # convert time to decimal hours since midnight
+      time_observations_started = time_to_decimal(time_observations_started),
+      # split date into year and day of year
+      year = year(observation_date),
+      day_of_year = yday(observation_date)
+    )
+  
+  # additional filtering
+  nuthatch_zf_filter2 <- nuthatch_zf_filter1 %>% 
+    filter(
+      # effort filters
+      duration_minutes <= 5 * 60,
+      effort_distance_km <= 5,
+      # 10 or fewer observers
+      number_observers <= 10)
+  
+  nuthatch <- nuthatch_zf_filter2 %>% 
+    select(checklist_id, observer_id, sampling_event_identifier,
+           scientific_name,
+           observation_count, species_observed, 
+           state_code, locality_id, latitude, longitude,
+           protocol_type, all_species_reported,
+           observation_date, year, day_of_year,
+           time_observations_started, 
+           duration_minutes, effort_distance_km,
+           number_observers)
+  # Save that csv for later use
+  write_csv(nuthatch, file.path(base_data_dir, ebd_download_dir, "nuthatch_filtered_for_occ.csv"), na = "")
+}
+
 main_data_handling_oe <- function(map_prj, map_path, base_data_dir, ebd_download_dir, exp_dir, lc_path, modis_path, elev_path, rast_surface_path, cell_size){
   # Function to do the initial covariate/count data processing and create dataframe and PO data matrix
   # This can/should be run ahead of the OE experiments separately.
@@ -161,7 +222,7 @@ main_data_handling_oe <- function(map_prj, map_path, base_data_dir, ebd_download
   k_param_intn <- length(colnames(intensity_covars)) 
   k_param_bias <- length(colnames(bias_covars)) 
   # Need to save a file for use as the rast surface for later
-  writeRaster(evi_rast, rast_surface_path) 
+  writeRaster(evi_rast, rast_surface_path, overwrite=T) 
   # Save evi as the rast surface
   data_pack <- list(counts=covar_df$counts, intensity_covars=intensity_covars, bias_covars=bias_covars, k_param_intn=k_param_intn, k_param_bias=k_param_bias,
               site_centroids=site_centroids, subgrid=subgrid, state_po_prj=state_po_prj, rast_surface=evi_rast)
@@ -394,7 +455,7 @@ fit_point_process_ebird <- function(stan_path, exp_dir, sites, area_a, data_reps
   # Take expectation from the PP params
   pp_posterior <- fit$draws(intensity_params, format="matrix")
   pp_posterior <- matrix(rep(colMeans(pp_posterior), data_reps), nrow=data_reps, byrow = T)
-  print("Estimates from pp model")
+  print("Estimates for intensity (not bias) from pp model")
   print(pp_posterior)
   saveRDS(pp_posterior, file.path(exp_dir, "pp_posterior_ebird.RDS"))
 }
