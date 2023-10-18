@@ -24,6 +24,8 @@ select <- dplyr::select
 # Set important global variables 
 base_data_dir <- "C:\\Users\\msavery\\OneDrive - UGent\\Documents\\ghent_phd_spatial_doe\\data\\"
 working_dir <- "C:\\Users\\msavery\\OneDrive - UGent\\Documents\\ghent_phd_spatial_doe\\code\\optimal_design_site_occ"
+data_save_dir <- "data/ebird"
+save_dir <- file.path(working_dir, data_save_dir)
 ebd_download_dir <- "ebd_US_bnhnut_201901_201912_smp_relJul-2023"
 lc_path <- "copernicus_landcover/W100N40_PROBAV_LC100_global_v3.0.1_2019-nrt_Discrete-Classification-map_EPSG-4326.tif"
 modis_path <- "modis_landcover_dynamics/MCD12Q2.061_EVI_Area_0_doy2019001_aid0001.tif"
@@ -35,186 +37,33 @@ source(file.path(working_dir, "data_utils", "load_ebird_data.R"))
 source(file.path(working_dir, "experimental_design_functions.R"))
 stan_models_path <- file.path(working_dir, "stan_models", "stan_nuthatch_models.R")
 source(stan_models_path)
+
+pp_fit <- FALSE
 ```
 
 ```{r load-initial-data}
-map_path <- file.path(base_data_dir, "us_states/GOVTUNIT_Tennessee_State_GPKG/GOVTUNIT_Tennessee_State_GPKG.gpkg")
-state_bound <- load_map(map_prj, map_path)
-
-# TODO: Include preprocessing for creating the file "nuthatch_filtered_for_occ.csv"
-nuthatch_list <- load_ebird(base_data_dir, ebd_download_dir, state_bound, map_prj)
-state_pa <- nuthatch_list$state_pa
-state_po <- nuthatch_list$state_po
-
-# Plot the data
-p <- ggplot() + 
-  #geom_spatvector(data=state_grid, fill = 'transparent', colour="lightblue") +
-  geom_sf(data = state_bound, color=alpha("white",0.9)) + 
-  geom_sf(data=state_pa, color=alpha("darkgrey",0.2), size=0.5)+
-  geom_sf(data=state_po, color=alpha("#FFC81C",0.5), size=0.5)+
-  ggtitle("Brown-headed Nuthatch checklists in Tennessee") +
-  theme_minimal() +
-  theme(text=element_text(size=10)) +
-  coord_sf()
-print(p)
-
-crop_lc_rast <- load_landcover(base_data_dir, lc_path, state_bound)
-# Convert crs to the landcover
-#state_pa_prj <- terra::project(vect(state_pa), crop_lc_rast)
-#state_po_prj <- terra::project(vect(state_po), crop_lc_rast)
-#prj_state <- terra::project(vect(state_bound), crop_lc_rast)
-# Yay we can use either version of terra or sf transform
-state_pa_prj <- st_transform(state_pa, crs(crop_lc_rast))
-state_po_prj <- st_transform(state_po, crs(crop_lc_rast))
-prj_state <- st_transform(state_bound, crs(crop_lc_rast))
-
-
-# Plot landcover
-p <- ggplot() + 
-  geom_spatraster(data=crop_lc_rast) +
-  #geom_sf(data=state_pp_prj, color=alpha("darkgrey", 0.3))+
-  geom_sf(data=state_po_prj, color=alpha("#FFC81C",0.5), size=0.5)+
-  geom_sf(data = prj_state, color=alpha("white",0.9), fill='transparent', linewidth=0.4) + 
-  scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7) +
-  theme_minimal()+
-  ggtitle("Brown-headed Nuthatch and landcover in Tennessee")
-print(p)
-#fig_name="data/ebird/landcover.png"
-#ggsave(fig_name, plot=p, dpi=300, width=15, height=8, units="cm", bg="white", device="png", type="cairo")
-
-# Get modis data
-crop_evi_rast <- load_evi(base_data_dir, modis_path, prj_state, crop_lc_rast)
-p <- ggplot() + 
-  geom_spatraster(data=crop_evi_rast) +
-  #geom_sf(data=state_pp_prj, color=alpha("darkgrey", 0.3))+
-  geom_sf(data=state_po_prj, color=alpha("#FFC81C",0.5), size=0.5)+
-  geom_sf(data = prj_state, color=alpha("white",0.9), fill='transparent', linewidth=0.4) + 
-  scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7) +
-  theme_minimal()+
-  ggtitle("Brown-headed Nuthatch and EVI in Tennessee")
-print(p)
-
-crop_elev_rast <- load_elevation(base_data_dir, elev_path, prj_state)
-# Shouldn't need to project either source of rast for elevation rasters
-stopifnot(crs(crop_elev_rast)==crs(crop_lc_rast))
-stopifnot(st_crs(crop_elev_rast)==st_crs(prj_state))
-p <- ggplot() + 
-  geom_spatraster(data=crop_elev_rast) +
-  #geom_sf(data=state_pp_prj, color=alpha("darkgrey", 0.3))+
-  geom_sf(data=state_po, color=alpha("#FFC81C",0.5), size=0.5)+
-  geom_sf(data = prj_state, color=alpha("white",0.9), fill='transparent', linewidth=0.4) + 
-  scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7) +
-  theme_minimal()+
-  ggtitle("Brown-headed Nuthatch and elevation in Tennessee")
-print(p)
+data_reps <- 10
+data_pack <- read_rds(file.path(save_dir, "data_pack.RDS"))
+# Unpack
+bias_covars <- data_pack$bias_covars
+intensity_covars <- data_pack$intensity_covars
+k_param_intn <- data_pack$k_param_intn
+k_param_bias <- data_pack$k_param_bias
+site_centroids <- data_pack$site_centroids
+subgrid <- data_pack$subgrid
+state_po_prj <- data_pack$state_po_prj
+rast_surface <- rast(rast_surface_path) 
+sites <- nrow(intensity_covars)
+print(paste("Total sites: ", sites, sep=""))
+# Generate po data to match format of simulation script. 
+Y_po <- matrix(rep(data_pack$counts, data_reps), nrow=data_reps, ncol=sites, byrow=T)
+r_po_data <- list(Y=Y_po)
 ```
 
 ```{r process-covar}
-# Need to use crs for grid with units meters but then transform to the crs of raster, so we also us the pp data in crs in meters
-# TODO: Consider transforming raster (nn for categorical;bilinear for continuous)
-subgrid <- create_pp_grid(state_bound, crs(crop_lc_rast))
-stopifnot(st_crs(subgrid)==st_crs(crop_lc_rast))
-
-p <- ggplot() + 
-  geom_spatvector(data=subgrid, color=alpha("#B6B6B6", 0.5)) +
-  #geom_spatvector(data=subgrid, aes(fill=counts), color=alpha("#B6B6B6", 0.5)) +
-  geom_sf(data=state_po, color=alpha("#FFC81C",0.5), size=0.5)+
-  scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7) +
-  theme_minimal()+
-  ggtitle("2.5km by 2.5km grid over Tennessee")
-print(p)
-#fig_name="data/ebird/state_grid.png"
-#ggsave(fig_name, plot=p, dpi=300, width=15, height=8, units="cm", bg="white", device="png", type="cairo")
-
-pp_counts <- aggregate_point_counts(subgrid, state_po_prj)
-pp_counts[which(pp_counts>1)]
-hist(pp_counts[which(pp_counts>1)])
-subgrid$counts <- pp_counts
-
-# We can plot the subgrid (either as sfc or sf) with spatvector
-# make_grid produces sfc but st_sf turns this to sf, to which 
-# we can add attributes such as point counts
-p <- ggplot() + 
-  geom_spatvector(data=subgrid, aes(fill=counts), color=alpha("#B6B6B6", 0.5)) +
-  scale_fill_viridis_c(begin=0.2, end=1, option="magma",alpha=0.7) +
-  theme_minimal()+
-  ggtitle("Brown-headed Nuthatch aggregated intensity in Tennessee")
-print(p)
-
-# Next calculate covariate aggregation based on the grid.
-evi_buff <- exact_extract(crop_evi_rast, subgrid, "mean", progress=T)
-plot(evi_buff)
-# TODO: Add ebird covariates from the buuffer: number_observers and duration_minutes
-agg_covars <- generate_gridded_covariates(subgrid, crop_lc_rast, crop_evi_rast, crop_elev_rast, state_po_prj)
-agg_covars$lc_frac
-subgrid$evi <- agg_covars$evi_agg
-subgrid$elev <- agg_covars$elev_agg
-subgrid_covars <- bind_cols(subgrid, agg_covars$lc_frac)
-
-p <- ggplot() + 
-  geom_spatvector(data=subgrid_covars, aes(fill=counts), color=alpha("#B6B6B6", 0.5)) +
-  scale_fill_viridis_c(begin=0.2, end=1, option="magma",alpha=0.7) +
-  theme_minimal()+
-  ggtitle("Brown-headed Nuthatch aggregated intensity in Tennessee")
-print(p)
-
-# rasterized version of site evi 
-evi_rast <- terra::rasterize(subgrid_covars, crop_evi_rast, field="evi")
-#evi_rast[is.na(evi_rast)] <- 0
-plot(evi_rast)
-
-# rasterized version of site elev 
-elev_site_rast <- terra::rasterize(subgrid_covars, crop_evi_rast, field="elev")
-elev_site_rast[is.na(elev_site_rast)] <- 0
-plot(elev_site_rast)
-
-p <- ggplot() + 
-#  geom_sf(data = prj_state, color=alpha("black",0.5), fill='transparent', linewidth=0.7) + 
-  geom_spatraster(data=evi_rast) +
-  scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7, na.value="white") +
-  theme_minimal()+
-  ggtitle("Nuthatch EVI in Tennessee at Nuthatch sites")
-print(p)
-
-p <- ggplot() + 
-  geom_sf(data = prj_state, color=alpha("black",0.5), fill='transparent', linewidth=0.7) + 
-  geom_spatraster(data=elev_site_rast) +
-  scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7, na.value="white") +
-  theme_minimal()+
-  ggtitle("Elevation in Tennessee at Nuthatch sites")
-print(p)
-
-colnames(subgrid_covars)
-covar_names <- c(colnames(subgrid_covars)[5:(length(colnames(subgrid_covars))-1)])
-covar_names
-length(covar_names)
-# List of all covar labels
-covar_labels <- c("shrubs", "herbaceous_vegetation", "agriculture", "urban", "bare/sparse", "water", "wetland", "closed_forest_evergreen_needle", 
-                  "close_forest_decid_broad", "closed_forest_mixed", "closed_forest_unknown", "open_forest_evergreen_needle", 
-                  "open_forest_decid_broad leaf", "open_forest_unknown")
-covar_labels
-names(covar_names) <- covar_labels
-covar_names
-
-# Take a look at all the fractional covariates by plotting rasterized versions of them, which is faster
-for(i in 1:length(covar_names[1:length(covar_names)])){
-  covar <- covar_names[i]
-  covar_name <- covar_labels[i]
-  covar_rast <- terra::rasterize(vect(subgrid_covars), crop_evi_rast, field=covar)
-  p <- ggplot() + 
-    geom_spatraster(data=covar_rast) +
-    scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.8, na.value="white") +
-    #geom_sf(data = prj_state, color=alpha("black",0.4), fill='transparent', linewidth=0.7) + 
-    theme_minimal()+
-    ggtitle(paste(covar, "; ", covar_name, " in Tennessee at Nuthatch sites", sep=""))
-  print(p)
-  #fig_name <- paste("data/ebird/", covar, "_covar_tenn.png", sep="")
-  #ggsave(fig_name, plot=p, dpi=300, width=15, height=8, units="cm", bg="white", device="png", type="cairo")
-}
-
 # And just for later use, make a plot with a mark on a specific site
 p <- ggplot() + 
-  geom_spatraster(data=elev_site_rast) +
+  geom_spatraster(data=rast_surface) +
   geom_sf(data = subgrid_covars[c(500, 600, 700),], color=alpha("red",1), fill="orange") + 
   scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7, na.value="white") +
   theme_minimal()+
@@ -226,7 +75,7 @@ bigger_size <- 5/(length(5)) + 1.5
 smaller_size <- 1/(length(5)) + 1
 site_centroids <- st_centroid(st_geometry(subgrid_covars))
 p <- ggplot() + 
-  geom_spatraster(data=elev_site_rast) +
+  geom_spatraster(data=rast_surface) +
   geom_sf(data = site_centroids[c(1,2,3)], color=alpha("white",1), size=bigger_size) + 
   geom_sf(data = site_centroids[c(100, 200, 300)], color=alpha("hotpink",1), size=smaller_size) + 
   geom_sf(data = site_centroids[400], color=alpha("black",1), size=0.5) + 
@@ -241,138 +90,36 @@ to make some assumptions about the parameters.
 We will draw values $Y$ from the prior predictive distirbution $p(Y|D, \theta)$. To generate from the ppd, we can do a variety of things. We can either fit a SO model
 to the data and use these estimates to generate the PA data. Or we can fit the Presence-only model, and sample from the posterior of this, for each repetition of the PA data. 
 
-```{r data-setup}
-# Prepare data for feeding into stan models
-link <- "cloglog"
-data_reps <- 20
-covar_df <- st_drop_geometry(subgrid_covars)
-colnames(covar_df)
-#intensity_covars <- covar_df[c("evi", "elev", "frac_111", )]
-intensity_covars <- covar_df[c("evi", "elev", "frac_111", "frac_115", "frac_124")]
-bias_covars <- covar_df[c("frac_50")]#"duration_minutes", "number_observers",  "effort_distance_km", "time_observations_started", 
-k_param_intn <- length(colnames(intensity_covars)) 
-k_param_bias <- length(colnames(bias_covars)) 
-dim(as.matrix(covar_df))
-p_detection <- 0.2
-n_surveys <- 5
-sites <- nrow(covar_df)
-sites
-sum(covar_df$counts)
-```
-
 ```{r fit-ppd}
-model_path <- "nuthatch_poisson_process.stan"
-model_string <- nuthatch_poisson_process
-write(model_string, model_path)
-data_site_occ = list(N=sites, X=intensity_covars, y=covar_df$counts, Z=bias_covars, k_i=k_param_intn, k_b=k_param_bias)
-model <- cmdstan_model(model_path) 
-fit <- model$sample(data=data_site_occ, seed=13, chains=3, iter_sampling=2000, iter_warmup=500) 
-```
-Take a look at the fit.
-```{r pp-fit}
-fit$summary()
-all_params <- c("alpha", "gamma", "beta[1]", "beta[2]", "beta[3]", "beta[4]", "beta[5]", "delta[1]")
-#all_params <- c("alpha", "gamma", "beta[1]", "beta[2]", "beta[3]", "delta[1]")
-#intensity_params <- c("alpha", "beta[1]", "beta[2]", "beta[3]")
-intensity_params <- c("alpha", "beta[1]", "beta[2]", "beta[3]", "beta[4]", "beta[5]")
-params_intercept <- c("alpha", "gamma")
-posterior <- fit$draws(all_params)
-
-color_scheme_set("mix-blue-pink")
-p_trace <- mcmc_trace(posterior,
-                      facet_args = list(nrow = 2, labeller = label_parsed))
-print(p_trace + facet_text(size = 15))
-
-plot_title <- ggtitle(paste("Posterior distributions, with means and 90% interval"))
-mcmc_areas(posterior,  prob = 0.8, point_est="mean", pars=c("beta[1]")) + plot_title
-mcmc_areas(posterior,  prob = 0.8, point_est="mean", pars=c("beta[2]")) + plot_title
-mcmc_areas(posterior,  prob = 0.8, point_est="mean", pars=c("beta[3]")) + plot_title
-mcmc_areas(posterior,  prob = 0.8, point_est="mean", pars=c("beta[4]")) + plot_title
-mcmc_areas(posterior,  prob = 0.8, point_est="mean", pars=c("beta[5]")) + plot_title
-
-plot_title <- ggtitle(paste("Posterior distributions of detection probability, mean and 90% interval"))
-p_post <- mcmc_areas(posterior,  prob = 0.8, point_est="mean", pars = params_intercept) + plot_title
-print(p_post)
-
-plot_title <- ggtitle(paste("Posterior distributions of detection probability, mean and 90% interval"))
-p_post <- mcmc_areas(posterior,  prob = 0.9, point_est="mean", pars = c("delta[1]")) + plot_title
-print(p_post)
-
-mcmc_intervals(fit$draws(), pars=all_params)
-mcmc_hist(fit$draws(), pars = all_params)
-mcmc_pairs(fit$draws(), pars=all_params)
-mcmc_scatter(fit$draws(), pars=c('alpha', 'gamma'))
-mcmc_scatter(fit$draws(), pars=c('beta[1]', 'beta[2]'))
-mcmc_scatter(fit$draws(), pars=c('beta[2]', 'beta[3]'))
-mcmc_scatter(fit$draws(), pars=c('beta[1]', 'beta[3]'))
-mcmc_scatter(fit$draws(), pars=c('beta[1]', 'beta[4]'))
-mcmc_scatter(fit$draws(), pars=c('beta[1]', 'beta[5]'))
-
-# Examine the ppd for y
-generated_yrep <- fit$draws("y_rep", format="matrix")
-dim(generated_yrep)
-yrep_means <- colMeans(generated_yrep)
-# Create new sf for the preds
-subgrid_geo <- st_geometry(subgrid_covars) %>% st_sf()
-subgrid_geo$preds <- yrep_means
-# Then plot the predictions
-pp_pred_rast <- terra::rasterize(vect(subgrid_geo), crop_evi_rast, field="preds")
-p <- ggplot() + 
-    geom_spatraster(data=pp_pred_rast) +
-    scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.8, na.value="white") +
-    #geom_sf(data = prj_state, color=alpha("black",0.4), fill='transparent', linewidth=0.7) + 
-    theme_minimal()+
-    ggtitle("Predicted counts at nuthatch sites")
-print(p)
-```
-
-```{r PA-data}
-# Extract the posterior draws from the stan fit
-pp_posterior <- fit$draws(intensity_params, format="matrix")
-colnames(pp_posterior)
-dim(pp_posterior)
-# Get 1000 samples from the posterior
-p_index <- sample(c(1:1000), size = 1000, replace = T)
-pp_posterior <- pp_posterior[p_index, ]
-dim(pp_posterior)
-
-generate_ebird_pa <- function(data_reps, surface_data, p_0, pp_posterior, n, sites, link){
-  # Generate some random covariate data that will be used to model theta
-  # Add a column of 1s to the auxiliary data
-  a_intercept <- rep(1, nrow(surface_data))
-  surface_data <- cbind(a_intercept, surface_data)
-  occupancy_maps <- matrix(nrow=data_reps, ncol=sites)
-  Y_detection <- matrix(nrow=data_reps, ncol=sites)
-  theta_reps <- matrix(nrow=data_reps, ncol=sites)
-  for (r in 1:data_reps){
-    # Equivalent way to induce correlation
-    #R <- t(chol(corr_matrix)) 
-    #theta <- b_0 + sampling_surface$aux*b_1 + R %*% rnorm(sites)
-    param_vec <- pp_posterior[r,]
-    if (link=="cloglog"){
-      g_theta <- 1 - exp(-exp(as.matrix(surface_data)%*%t(param_vec)))
-    }
-    stopifnot(sites==length(g_theta))
-    site_presence <- rbinom(sites, 1, g_theta)
-    theta_reps[r, ] <- g_theta
-    occupancy_maps[r, ] <- site_presence
-    Y_detection[r, ] <- rbinom(sites, n, p_0*site_presence)
-  } 
-  return(list(occupancy=occupancy_maps, Y=Y_detection, theta=theta_reps))
+if (pp_fit == TRUE){
+  # We fit the PP model to the PO data and use the expectation of this posterior to generate the PA data
+  fit_point_process_ebird(stan_path, exp_dir, sites, area_a, data_reps, intensity_covars, bias_covars, r_po_data, k_param_intn, k_param_bias, pp_diagnostic=T,
+                        subgrid, rast_surface)
 }
+pp_posterior <- read_rds(file.path(save_dir, "pp_posterior_ebird.RDS"))
+print("Intensity fit from point process")
+print(pp_posterior)
+# Get 1000 samples from the posterior if we have access to the matrix of the MCMC draws from the posterior. 
+# Currently the function provides the data rep repeated means of the posterior
+#p_index <- sample(c(1:1000), size = 1000, replace = T)
+#pp_posterior <- pp_posterior[p_index, ]
+#dim(pp_posterior)
+```
+The above posterior will use the expectation for the parameters instead of sampling from the posterior.
 
+Then generate the PA data 
+```{r PA-data}
 # Generate the data by drawing over the posterior of the parameters
-pa_gen <- generate_ebird_pa(data_reps, intensity_covars, p_detection, pp_posterior, n_surveys, sites, link)
-
+pa_gen <- generate_ebird_pa(data_reps, area_a, intensity_covars, p_detection, pp_posterior, n_surveys, sites, link)
 # Create plots of the occupancy and probability maps
 for(d_i in 1:20){
-  occ_map <- st_geometry(subgrid_covars) %>% st_sf()
+  occ_map <- st_geometry(subgrid) %>% st_sf()
   occ_map$occ <- pa_gen$occupancy[d_i,]
   occ_map$prob <- pa_gen$theta[d_i,]
   occ_map$counts <- pa_gen$Y[d_i,]
   
   # Then plot the predictions
-  occ_rast <- terra::rasterize(vect(occ_map), crop_evi_rast, field="occ")
+  occ_rast <- terra::rasterize(vect(occ_map), rast_surface, field="occ")
   p <- ggplot() + 
       geom_spatraster(data=occ_rast) +
       scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.8, na.value="white") +
@@ -381,7 +128,7 @@ for(d_i in 1:20){
       ggtitle("Occupancy maps generated over Prior Predictive Distribtion")
   print(p)
   
-  prob_rast <- terra::rasterize(vect(occ_map), crop_evi_rast, field="prob")
+  prob_rast <- terra::rasterize(vect(occ_map), rast_surface, field="prob")
   p <- ggplot() + 
       geom_spatraster(data=prob_rast) +
       scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.8, na.value="white") +
@@ -390,7 +137,7 @@ for(d_i in 1:20){
       ggtitle("Probability maps generated over Prior Predictive Distribtion")
   print(p)
   
-  count_rast <- terra::rasterize(vect(occ_map), crop_evi_rast, field="counts")
+  count_rast <- terra::rasterize(vect(occ_map), rast_surface, field="counts")
   p <- ggplot() + 
       geom_spatraster(data=count_rast) +
       scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.8, na.value="white") +
@@ -418,7 +165,7 @@ covars_sampled_sites
 selected_counts <- pa_gen$Y[10,site_idx]
 selected_counts
 n_surveys <- rep(n_surveys, m)
-data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, X=covars_sampled_sites, Y=selected_counts, PO=covar_df$counts,
+data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, area_a=area_a, X=covars_sampled_sites, Y=selected_counts, PO=covar_df$counts,
                          X_po=intensity_covars, Z_po=bias_covars, k_i=k_param_intn, k_b=k_param_bias, model_diag=0)
 model_path <- "nuthatch_site_occ.stan"
 model_string <- nuthatch_poisson_process_site_occupancy
