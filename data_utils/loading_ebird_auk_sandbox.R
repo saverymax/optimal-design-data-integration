@@ -144,7 +144,9 @@ se_us_grid[1]
 us_cnts <- st_intersects(se_us_grid, st_geometry(ebird_sf), sparse=F)
 
 
-######## 
+####################### ####################### ####################### 
+####################### ####################### ####################### 
+####################### ####################### ####################### 
 # Processing my own downloaded data: Brown-Headed Nuthatch
 # file name: ebd_bnhnut_smp_relJun-2023
 ebd_nh <- auk_ebd(file.path(base_data_dir, "ebd_bnhnut_smp_relJun-2023/ebd_bnhnut_smp_relJun-2023.txt"))
@@ -154,9 +156,23 @@ ebd_nh %>% auk_date(date = c("2019-01-01", "2019-12-31")) %>%
 auk_filter(ebd_nh_filtered, file = file.path(base_data_dir, "ebd_bnhnut_smp_relJun-2023/nuthatch_filtered_2019.txt"), overwrite=T)
 nuthatch <- read_ebd(file.path(base_data_dir, "ebd_bnhnut_smp_relJun-2023/nuthatch_filtered_2019.txt"))
 
+# Other data:
+ebd_download_dir <- "ebd_US_bnhnut_201901_201912_smp_relJul-2023"
+ebd_nh <- auk_ebd(file.path(base_data_dir, ebd_download_dir, "ebd_US_bnhnut_201901_201912_smp_relJul-2023.txt"),
+                  file_sampling = file.path(base_data_dir, ebd_download_dir, "ebd_US_bnhnut_201901_201912_smp_relJul-2023_sampling.txt"))
+ebd_nh %>% auk_date(date = c("2019-01-01", "2019-12-31")) %>% 
+  auk_complete() -> ebd_nh_filtered
+auk_filter(ebd_nh_filtered, file = file.path(base_data_dir, ebd_download_dir, "nuthatch_filtered_2019.txt"), 
+           file_sampling=file.path(base_data_dir, ebd_download_dir, "nuthatch_filtered_2019_sampling.txt"), overwrite=T) 
+nuthatch <- read_ebd(file.path(base_data_dir, ebd_download_dir, "nuthatch_filtered_2019.txt"))
+
 # Full map of us
 map_proj <- st_crs("ESRI:102003")
 us_map <- ne_countries(country = "united states of america", returnclass = "sf") %>% st_transform(crs=map_proj)
+class(us_map)
+crs(us_map)
+us_vect <- vect(us_map)
+#writeVector(us_vect, "us_filetype.shp")
 # Or load just one state downloaded from https://apps.nationalmap.gov/downloader/
 read_sf(file.path(base_data_dir, "us_states/GOVTUNIT_Tennessee_State_GPKG/GOVTUNIT_Tennessee_State_GPKG.gpkg"))
 state_bound <- read_sf(file.path(base_data_dir, "us_states/GOVTUNIT_Tennessee_State_GPKG/GOVTUNIT_Tennessee_State_GPKG.gpkg")) %>% 
@@ -270,9 +286,6 @@ ggplot() +
 
 state_sf <- st_sf(state_bound)
 class(state_sf)
-state_buff <- terra::buffer(vect(state_sf), width=-1000000)
-state_buff
-plot(state_buff)
 crop_lc_rast <- crop(projected_lc, state_sf)
 plot(crop_lc_rast)
 
@@ -285,5 +298,31 @@ ggplot() +
   theme_minimal()+
   ggtitle("Brown-headed Nuthatch Intensity in Tennessee")
 
+# Can we also load some modis data?
+# This was downloaded from https://appeears.earthdatacloud.nasa.gov/
+# by selecting the landcover type prodcut for 2019.
+# We can see more information about the layers from this download here:
+# https://lpdaac.usgs.gov/products/mcd12q1v061/
+# Different layers can be loaded.
+# Which to use for occupancy modelling?
+#modis_landcover_filename <- file.path(base_data_dir, "modis_landcover_types/MCD12Q1.061_LC_Prop1_Assessment_doy2019001_aid0001.tif")
+modis_landcover_filename <- file.path(base_data_dir, "modis_landcover_types/MCD12Q1.061_LC_Type1_doy2019001_aid0001.tif")
+file.exists(modis_landcover_filename)
+modis_lc_rast <- rast(modis_landcover_filename) 
+#modis_lc_prj <- terra::project(modis_lc_rast, state_bound)
+# Do cropping in the crs of raster
+state_bound_proj <- terra::project(vect(state_bound), modis_lc_rast)
+plot(state_bound_proj)
+crop_lc_rast <- crop(modis_lc_rast, state_bound_proj)
+plot(crop_lc_rast)
+# Project raster back to state
+modis_lc_prj <- terra::project(crop_lc_rast, crs(vect(state_bound)))
+plot(modis_lc_prj)
 
-
+ggplot() + 
+  geom_spatraster(data=modis_lc_prj) +
+  geom_sf(data=state_pp, color=alpha("orange", 0.9))+
+  geom_sf(data = state_bound, color=alpha("white",0.9), fill='transparent') + 
+  scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7) +
+  theme_minimal()+
+  ggtitle("Brown-headed Nuthatch Intensity in Tennessee")

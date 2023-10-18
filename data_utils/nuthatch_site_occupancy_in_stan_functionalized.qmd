@@ -1,0 +1,249 @@
+---
+title: "Site occupancy modelling of Brown-headed Nuthatch Ebird data"
+data: today
+author: Max Savery
+format: pdf
+---
+
+```{r set-up}
+# Load the ebird data in the way it will be used in the sampling procedure, and fit it to a Bayesian model.
+library(sf)
+library(terra)
+library(tidyterra)
+library(sf)
+library(auk)
+library(tidyverse)
+library(lubridate)
+library(exactextractr)
+library(cmdstanr)
+library(bayesplot)
+
+
+select <- dplyr::select
+
+# Set important global variables 
+base_data_dir <- "C:\\Users\\msavery\\OneDrive - UGent\\Documents\\ghent_phd_spatial_doe\\data\\"
+working_dir <- "C:\\Users\\msavery\\OneDrive - UGent\\Documents\\ghent_phd_spatial_doe\\code\\optimal_design_site_occ"
+data_save_dir <- "data/ebird"
+save_dir <- file.path(working_dir, data_save_dir)
+ebd_download_dir <- "ebd_US_bnhnut_201901_201912_smp_relJul-2023"
+lc_path <- "copernicus_landcover/W100N40_PROBAV_LC100_global_v3.0.1_2019-nrt_Discrete-Classification-map_EPSG-4326.tif"
+modis_path <- "modis_landcover_dynamics/MCD12Q2.061_EVI_Area_0_doy2019001_aid0001.tif"
+elev_path <- "elevation_aster/ASTGTM_NC.003_ASTER_GDEM_DEM_doy2000061_aid0001.tif"
+map_prj <- st_crs("ESRI:102003")
+
+# Source modules
+source(file.path(working_dir, "data_utils", "load_ebird_data.R"))
+source(file.path(working_dir, "experimental_design_functions.R"))
+stan_models_path <- file.path(working_dir, "stan_models", "stan_nuthatch_models.R")
+source(stan_models_path)
+
+pp_fit <- FALSE
+```
+
+```{r load-initial-data}
+data_reps <- 10
+data_pack <- read_rds(file.path(save_dir, "data_pack.RDS"))
+# Unpack
+bias_covars <- data_pack$bias_covars
+intensity_covars <- data_pack$intensity_covars
+k_param_intn <- data_pack$k_param_intn
+k_param_bias <- data_pack$k_param_bias
+site_centroids <- data_pack$site_centroids
+subgrid <- data_pack$subgrid
+state_po_prj <- data_pack$state_po_prj
+rast_surface <- rast(rast_surface_path) 
+sites <- nrow(intensity_covars)
+print(paste("Total sites: ", sites, sep=""))
+# Generate po data to match format of simulation script. 
+Y_po <- matrix(rep(data_pack$counts, data_reps), nrow=data_reps, ncol=sites, byrow=T)
+r_po_data <- list(Y=Y_po)
+```
+
+```{r process-covar}
+# And just for later use, make a plot with a mark on a specific site
+p <- ggplot() + 
+  geom_spatraster(data=rast_surface) +
+  geom_sf(data = subgrid_covars[c(500, 600, 700),], color=alpha("red",1), fill="orange") + 
+  scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7, na.value="white") +
+  theme_minimal()+
+  ggtitle("Labeled nuthatch site")
+print(p)
+
+# We can also plot the centroids
+bigger_size <- 5/(length(5)) + 1.5
+smaller_size <- 1/(length(5)) + 1
+site_centroids <- st_centroid(st_geometry(subgrid_covars))
+p <- ggplot() + 
+  geom_spatraster(data=rast_surface) +
+  geom_sf(data = site_centroids[c(1,2,3)], color=alpha("white",1), size=bigger_size) + 
+  geom_sf(data = site_centroids[c(100, 200, 300)], color=alpha("hotpink",1), size=smaller_size) + 
+  geom_sf(data = site_centroids[400], color=alpha("black",1), size=0.5) + 
+  scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7, na.value="white") +
+  theme_minimal()+
+  ggtitle("Labeled nuthatch site")
+print(p)
+```
+Everything looks good which means we can proceed to modelling. First we have to generate Presence-Absence data. To do so, we are going to nee
+to make some assumptions about the parameters.
+
+We will draw values $Y$ from the prior predictive distirbution $p(Y|D, \theta)$. To generate from the ppd, we can do a variety of things. We can either fit a SO model
+to the data and use these estimates to generate the PA data. Or we can fit the Presence-only model, and sample from the posterior of this, for each repetition of the PA data. 
+
+```{r fit-ppd}
+if (pp_fit == TRUE){
+  # We fit the PP model to the PO data and use the expectation of this posterior to generate the PA data
+  fit_point_process_ebird(stan_path, exp_dir, sites, area_a, data_reps, intensity_covars, bias_covars, r_po_data, k_param_intn, k_param_bias, pp_diagnostic=T,
+                        subgrid, rast_surface)
+}
+pp_posterior <- read_rds(file.path(save_dir, "pp_posterior_ebird.RDS"))
+print("Intensity fit from point process")
+print(pp_posterior)
+# Get 1000 samples from the posterior if we have access to the matrix of the MCMC draws from the posterior. 
+# Currently the function provides the data rep repeated means of the posterior
+#p_index <- sample(c(1:1000), size = 1000, replace = T)
+#pp_posterior <- pp_posterior[p_index, ]
+#dim(pp_posterior)
+```
+The above posterior will use the expectation for the parameters instead of sampling from the posterior.
+
+Then generate the PA data 
+```{r PA-data}
+# Generate the data by drawing over the posterior of the parameters
+pa_gen <- generate_ebird_pa(data_reps, area_a, intensity_covars, p_detection, pp_posterior, n_surveys, sites, link)
+# Create plots of the occupancy and probability maps
+for(d_i in 1:20){
+  occ_map <- st_geometry(subgrid) %>% st_sf()
+  occ_map$occ <- pa_gen$occupancy[d_i,]
+  occ_map$prob <- pa_gen$theta[d_i,]
+  occ_map$counts <- pa_gen$Y[d_i,]
+  
+  # Then plot the predictions
+  occ_rast <- terra::rasterize(vect(occ_map), rast_surface, field="occ")
+  p <- ggplot() + 
+      geom_spatraster(data=occ_rast) +
+      scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.8, na.value="white") +
+      #geom_sf(data = prj_state, color=alpha("black",0.4), fill='transparent', linewidth=0.7) + 
+      theme_minimal()+
+      ggtitle("Occupancy maps generated over Prior Predictive Distribtion")
+  print(p)
+  
+  prob_rast <- terra::rasterize(vect(occ_map), rast_surface, field="prob")
+  p <- ggplot() + 
+      geom_spatraster(data=prob_rast) +
+      scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.8, na.value="white") +
+      #geom_sf(data = prj_state, color=alpha("black",0.4), fill='transparent', linewidth=0.7) + 
+      theme_minimal()+
+      ggtitle("Probability maps generated over Prior Predictive Distribtion")
+  print(p)
+  
+  count_rast <- terra::rasterize(vect(occ_map), rast_surface, field="counts")
+  p <- ggplot() + 
+      geom_spatraster(data=count_rast) +
+      scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.8, na.value="white") +
+      #geom_sf(data = prj_state, color=alpha("black",0.4), fill='transparent', linewidth=0.7) + 
+      theme_minimal()+
+      ggtitle("Counts at sites generated over Prior Predictive Distribtion")
+  print(p)
+}
+```
+
+Check out some other resources about occupancy modelling in stan: UBMS, Richard erickson "occupancy modelling in stan"
+
+Using the PO data and generated PA data, we can now fit our site-occupancy model. We randomly sample $m$ sites for the PA likelihood.
+```{r model-fit}
+# We will use the same data as we used to fit the PO model, only now we will also randomly sample a select set of 
+# sites to use as PA data in the SO model. Otherwise the set-up stays the same.
+#site_idx <- sample(which(pa_gen$Y[10,]>0), m, replace=F)
+site_idx <- sample(1:sites, m, replace=F)
+site_idx
+covars_sampled_sites <- intensity_covars[site_idx, ]
+dim(covars_sampled_sites)
+covars_sampled_sites
+# The PA counts are those generated from the PP parameters above.
+# For the sake of illustration we pick 1 dataset
+selected_counts <- pa_gen$Y[10,site_idx]
+selected_counts
+n_surveys <- rep(n_surveys, m)
+data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, area_a=area_a, X=covars_sampled_sites, Y=selected_counts, PO=covar_df$counts,
+                         X_po=intensity_covars, Z_po=bias_covars, k_i=k_param_intn, k_b=k_param_bias, model_diag=0)
+model_path <- "nuthatch_site_occ.stan"
+model_string <- nuthatch_poisson_process_site_occupancy
+write(model_string, model_path)
+model <- cmdstan_model(model_path) 
+fit <- model$sample(data=data_site_occ, seed=13, chains=3, iter_sampling=2000, iter_warmup=500) 
+```
+
+```{r model-inspect}
+#fit$summary()
+posterior <- fit$draws(all_params)
+
+color_scheme_set("mix-blue-pink")
+p_trace <- mcmc_trace(posterior,
+                      facet_args = list(nrow = 2, labeller = label_parsed))
+print(p_trace + facet_text(size = 15))
+
+plot_title <- ggtitle(paste("Posterior distributions, with means and 90% interval"))
+for (aux_param in all_params){
+  mcmc_areas(posterior,  prob = 0.8, point_est="mean", pars=c(aux_param)) + plot_title
+}
+
+plot_title <- ggtitle(paste("Posterior distributions of detection probability, mean and 90% interval"))
+p_post <- mcmc_areas(posterior,  prob = 0.8, point_est="mean", pars = params_intercept) + plot_title
+print(p_post)
+
+mcmc_intervals(fit$draws(), pars=all_params)
+mcmc_hist(fit$draws(), pars = all_params)
+mcmc_pairs(fit$draws(), pars=all_params)
+mcmc_scatter(fit$draws(), pars=c('alpha', 'gamma'))
+mcmc_scatter(fit$draws(), pars=c('beta[1]', 'beta[2]'))
+mcmc_scatter(fit$draws(), pars=c('beta[2]', 'beta[3]'))
+mcmc_scatter(fit$draws(), pars=c('beta[1]', 'beta[4]'))
+mcmc_scatter(fit$draws(), pars=c('beta[1]', 'beta[5]'))
+
+# Examine the ppd for y
+generated_occ <- fit$draws("occ_gen", format="matrix")
+generated_prob <- fit$draws("g_theta_gen", format="matrix")
+dim(generated_occ)
+occ_means <- colMeans(generated_occ)
+get_mode <- function(x) {
+  ux <- unique(x)
+  ux[which.max(tabulate(match(x, ux)))]
+}
+occ_mode <- apply(generated_occ, MARGIN=2, FUN="get_mode")
+length(occ_mode)
+length(occ_means)
+prob_means <- colMeans(generated_prob)
+# Create new sf for the preds
+subgrid_geo <- st_geometry(subgrid_covars) %>% st_sf()
+subgrid_geo$preds <- occ_means
+subgrid_geo$occ_mode <- occ_mode
+subgrid_geo$prob_pred <-  prob_means
+# Then plot the predictions
+occ_pred_rast <- terra::rasterize(vect(subgrid_geo), crop_evi_rast, field="preds")
+p <- ggplot() + 
+    geom_spatraster(data=occ_pred_rast) +
+    scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.8, na.value="white") +
+    #geom_sf(data = prj_state, color=alpha("black",0.4), fill='transparent', linewidth=0.7) + 
+    theme_minimal()+
+    ggtitle("Predicted occupancy at nuthatch sites")
+print(p)
+occ_mode_rast <- terra::rasterize(vect(subgrid_geo), crop_evi_rast, field="occ_mode")
+p <- ggplot() + 
+    geom_spatraster(data=occ_mode_rast) +
+    scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.8, na.value="white") +
+    #geom_sf(data = prj_state, color=alpha("black",0.4), fill='transparent', linewidth=0.7) + 
+    theme_minimal()+
+    ggtitle("Predicted occupancy mode at nuthatch sites")
+print(p)
+# Oops if we have probability less than 0.5 mode is always 0.
+prob_pred_rast <- terra::rasterize(vect(subgrid_geo), crop_evi_rast, field="prob_pred")
+p <- ggplot() + 
+    geom_spatraster(data=prob_pred_rast) +
+    scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.8, na.value="white") +
+    #geom_sf(data = prj_state, color=alpha("black",0.4), fill='transparent', linewidth=0.7) + 
+    theme_minimal()+
+    ggtitle("Generated occupancy probability at nuthatch sites")
+print(p)
+```
+That summarizes the work needed to generate PA data using the prior predictive distribution from a PP when we have real data.

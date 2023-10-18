@@ -5,6 +5,11 @@ generate_coords <- function(grid, counts){
   # Function to generate coordinates for each observation based on the 
   # count generated from the poisson variable.
   pos_count <- sum(counts)
+  if(pos_count == 0){
+    cont_cords <- data.frame(matrix(ncol = 2, nrow = 0))
+    names(cont_cords) <- c("x", "y")
+    return(cont_cords)
+  }
   cont_coords <- matrix(nrow=pos_count, ncol=2)
   x_coords <- c()
   y_coords <- c()

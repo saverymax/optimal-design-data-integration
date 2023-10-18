@@ -1,4 +1,8 @@
 stan_models/*.exe
+*.exe
+*.pdf
+*.stan
+*.png
 experimental_runs*/*
 experimental_scripts/oe*
 optimal_design_site_occ_files/

@@ -5,13 +5,21 @@
 #   which the population can be considered closed. The auk function filter_repeat_visits() is designed to extract subsets 
 #   of eBird data that meet these criteria.
 library(auk)
-library(raster)
+library(terra)
+library(tidyterra)
 library(tidyverse)
 library(rnaturalearth)
 library(sf)
 library(lubridate)
 library(dggridR)
 library(unmarked)
+library(exactextractr)
+library(cartography)
+library(raster)
+
+select <- dplyr::select
+map <- purrr::map
+projection <- raster::projection
 
 
 base_data_dir <- "C:\\Users\\msavery\\OneDrive - UGent\\Documents\\ghent_phd_spatial_doe\\data\\"
@@ -56,13 +64,15 @@ ebird_filtered <- filter(ebird_habitat,
                          number_observers <= 5,
                          year == max(year))
 ebird_filtered
-View(ebird_filtered)
 
 occ <- filter_repeat_visits(ebird_filtered, 
                             min_obs = 2, max_obs = 10,
                             annual_closure = TRUE,
                             date_var = "observation_date",
                             site_vars = c("locality_id", "observer_id"))
+
+occ
+occ$pland_13_urban
 
 occ_wide <- format_unmarked_occu(occ, 
                                  site_id = "site", 
@@ -81,6 +91,7 @@ occ_wide <- format_unmarked_occu(occ,
                                               "pland_04_deciduous_broadleaf", 
                                               "pland_05_mixed_forest"))
 occ_wide
+occ_wide$time_observations_started.1
 
 dggs <- dgconstruct(spacing = 5)
 # get hexagonal cell id for each site
@@ -94,32 +105,6 @@ point_counts <- occ_wide_cell %>% group_by(cell) %>% summarise(count=n())
 point_counts
 dim(point_counts)
 colnames(point_counts)
-
-# Working to make a grid
-dgcellstogrid(point_counts)
-
-ggplot() +
-  geom_polygon(data=occ_wide_cell,  aes(x=longitude, y=latitude, group=group), fill=NA, color="black")   +
-  scale_fill_gradient(low="blue", high="red")+
-  geom_sf(data=hgrids[[1]], fill=NA, color="#1B9E77")+
-  geom_sf(data=hgrids[[2]], fill=NA, color="#D95F02")+
-  geom_sf(data=hgrids[[3]], fill=NA, color="#7570B3")+
-  # coord_sf(crs="+proj=ortho +lat_0=0 +lon_0=90")+
-  xlab('')+ylab('')+
-  theme(axis.ticks.x=element_blank())+
-  theme(axis.ticks.y=element_blank())+
-  theme(axis.text.x=element_blank())+
-  theme(axis.text.y=element_blank())
-
-ggplot() +
-  geom_polygon(data=occ_wide_cell,  aes(x=longitude, y=latitude))   +
-  scale_fill_gradient(low="blue", high="red")+
-  geom_sf(data=hgrids[[1]], fill=NA, color="#1B9E77")+
-  xlab('')+ylab('')+
-  theme(axis.ticks.x=element_blank())+
-  theme(axis.ticks.y=element_blank())+
-  theme(axis.text.x=element_blank())+
-  theme(axis.text.y=element_blank())
 
 
 # sample one site per grid cell
@@ -160,8 +145,3 @@ pred_occ <- bind_cols(pred_surface,
   select(latitude, longitude, occ_prob, occ_se)
 pred_occ
 
-##############################
-# Now start working on occupancy with my own data.
-# I need to get the covariate data (2019 ideally) and the SO data in the same year (make sure there is nuthatch data for the year)
-# Also need to work with single season.
-# Where is that species_observed variable
