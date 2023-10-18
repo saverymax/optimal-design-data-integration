@@ -59,14 +59,14 @@ stopifnot(exp_args$p_logging==F)
 select <- dplyr::select
 sort <- base::sort
 
-# Set important global variables 
-base_data_dir <- "C:\\Users\\msavery\\OneDrive - UGent\\Documents\\ghent_phd_spatial_doe\\data\\"
-ebd_download_dir <- "ebd_US_bnhnut_201901_201912_smp_relJul-2023"
-lc_path <- "copernicus_landcover/W100N40_PROBAV_LC100_global_v3.0.1_2019-nrt_Discrete-Classification-map_EPSG-4326.tif"
-modis_path <- "modis_landcover_dynamics/MCD12Q2.061_EVI_Area_0_doy2019001_aid0001.tif"
-elev_path <- "elevation_aster/ASTGTM_NC.003_ASTER_GDEM_DEM_doy2000061_aid0001.tif"
-map_path <- "us_states/GOVTUNIT_Tennessee_State_GPKG/GOVTUNIT_Tennessee_State_GPKG.gpkg"
-data_save_dir <- file.path(".", "data/ebird")
+# Set important global variables if we're just running within Rstudio. hacky :)
+#base_data_dir <- "C:\\Users\\msavery\\OneDrive - UGent\\Documents\\ghent_phd_spatial_doe\\data\\"
+#ebd_download_dir <- "ebd_US_bnhnut_201901_201912_smp_relJul-2023"
+#lc_path <- "copernicus_landcover/W100N40_PROBAV_LC100_global_v3.0.1_2019-nrt_Discrete-Classification-map_EPSG-4326.tif"
+#modis_path <- "modis_landcover_dynamics/MCD12Q2.061_EVI_Area_0_doy2019001_aid0001.tif"
+#elev_path <- "elevation_aster/ASTGTM_NC.003_ASTER_GDEM_DEM_doy2000061_aid0001.tif"
+#map_path <- "us_states/GOVTUNIT_Tennessee_State_GPKG/GOVTUNIT_Tennessee_State_GPKG.gpkg"
+#data_save_dir <- file.path(".", "data/ebird")
 
 # Source modules
 source(file.path(exp_args$working_dir, "data_utils", "load_ebird_data.R"))
