@@ -29,20 +29,20 @@ parser <- OptionParser()
 parser <- add_option(parser, "--working_dir", type="character", default=".", help="Path to the directory containing code to source for the main script")
 parser <- add_option(parser, "--base_data_dir", type="character", default="./data", help="Path to the directory containing covariate data")
 parser <- add_option(parser, "--ebird_data_dir", type="character", default="ebird", help="Name of directory containing processed ebird data, within basedir")
-parser <- add_option(parser, "--data_save_dir", type="character", default="data", help="Directory to in which preporcessed covariate data is saved")
-parser <- add_option(parser, "--map_file", type="character", help="Nmae of file containing processed US geopackage fil")
+parser <- add_option(parser, "--data_save_dir", type="character", default="data/ebird", help="Directory to in which preporcessed covariate data is saved")
+parser <- add_option(parser, "--map_file", type="character", help="Name of file containing processed US geopackage fil")
 parser <- add_option(parser, "--landcover_file", type="character", help="Name of landcover tif")
 parser <- add_option(parser, "--modis_file", type="character", help="Name of modis EVI tif")
 parser <- add_option(parser, "--elevation_file", type="character", help="Name of elevation tif")
 parser <- add_option(parser, "--exp_name", type="character", default="oe_run", help="Name of current experiment, which is used for dir to save output")
-parser <- add_option(parser, "--data_reps", type="integer", default=4, help="Number of dataset reps for criterion estimation")
 parser <- add_option(parser, "--m", type="integer", default=5, help="Number of sites to survey")
 parser <- add_option(parser, "--max_visits", type="integer", default=5, help="Maximum number of time to visit each site")
 parser <- add_option(parser, "--min_visits", type="integer", default=1, help="Minimum number of time to visit each site")
 parser <- add_option(parser, "--vary_visits", action="store_true", default=F, help="Allow varying survey effort between sites")
 parser <- add_option(parser, "--model_selection", type="integer", default=1, help="Occupancy model to use. For application, currently using only 1 model")
-parser <- add_option(parser, "--random_starts", type="integer", default=3, help="Number of random starts to run the exchange")
-parser <- add_option(parser, "--exch_iter", type="integer", default=3, 
+parser <- add_option(parser, "--data_reps", type="integer", default=1, help="number of dataset reps for criterion estimation")
+parser <- add_option(parser, "--random_starts", type="integer", default=1, help="Number of random starts to run the exchange")
+parser <- add_option(parser, "--exch_iter", type="integer", default=2, 
                      help="Number of iterations of exchange before ending optimization. Recommended is 20 but default is set low for test runs.")
 parser <- add_option(parser, "--mcmc_iter", type="integer", default=1000, help="Number of MCMC iterations in Stan")
 parser <- add_option(parser, "--p_logging", action="store_true", default=F, help="Boolean for logging information about posterior estimates")
@@ -60,12 +60,13 @@ select <- dplyr::select
 sort <- base::sort
 
 # Set important global variables 
-#base_data_dir <- "C:\\Users\\msavery\\OneDrive - UGent\\Documents\\ghent_phd_spatial_doe\\data\\"
-#ebd_download_dir <- "ebd_US_bnhnut_201901_201912_smp_relJul-2023"
-#lc_path <- "copernicus_landcover/W100N40_PROBAV_LC100_global_v3.0.1_2019-nrt_Discrete-Classification-map_EPSG-4326.tif"
-#modis_path <- "modis_landcover_dynamics/MCD12Q2.061_EVI_Area_0_doy2019001_aid0001.tif"
-#elev_path <- "elevation_aster/ASTGTM_NC.003_ASTER_GDEM_DEM_doy2000061_aid0001.tif"
-#map_path <- "us_states/GOVTUNIT_Tennessee_State_GPKG/GOVTUNIT_Tennessee_State_GPKG.gpkg"
+base_data_dir <- "C:\\Users\\msavery\\OneDrive - UGent\\Documents\\ghent_phd_spatial_doe\\data\\"
+ebd_download_dir <- "ebd_US_bnhnut_201901_201912_smp_relJul-2023"
+lc_path <- "copernicus_landcover/W100N40_PROBAV_LC100_global_v3.0.1_2019-nrt_Discrete-Classification-map_EPSG-4326.tif"
+modis_path <- "modis_landcover_dynamics/MCD12Q2.061_EVI_Area_0_doy2019001_aid0001.tif"
+elev_path <- "elevation_aster/ASTGTM_NC.003_ASTER_GDEM_DEM_doy2000061_aid0001.tif"
+map_path <- "us_states/GOVTUNIT_Tennessee_State_GPKG/GOVTUNIT_Tennessee_State_GPKG.gpkg"
+data_save_dir <- file.path(".", "data/ebird")
 
 # Source modules
 source(file.path(exp_args$working_dir, "data_utils", "load_ebird_data.R"))
@@ -159,8 +160,9 @@ print(paste("Current visit options:", paste(visits, collapse=" ")))
 # Need matrix of size: matrix(nrow=nrow(surface), ncol=l). In the simulate we computed distances between 
 # cells. st_distance allows us to do the same here, between grid cells
 l <- 4
-nearest_neighbors <- get_neighbors_sf_grid(subgrid, l)
-dim(nearest_neighbors)
+nearest_neighbors <- get_neighbors_sf_grid(site_centroids, l)
+print("Dim of NNs")
+print(dim(nearest_neighbors))
 
 # Have to use subgrid_covars for this since it still has geometry and not intensity_/bias_covars
 # Create plots of the occupancy and probability maps
@@ -298,7 +300,7 @@ for (r_start in 1:random_starts){
   # Use the evi as the background for these plots
   p <- plot_sites_ebird(site_centroids, rast_surface, site_idx, title)
   fig_name <- file.path(fig_dir, paste("initial_design_", r_start, ".png", sep=""))
-  ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm")
+  ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm", bg='white', device="png", type="cairo")
   
   while ((convergence_cond==FALSE) & (exchange_iter<=exp_args$exch_iter)){
     exchange_iter <- exchange_iter + 1
@@ -311,6 +313,8 @@ for (r_start in 1:random_starts){
       current_site <- site_idx[s]
       print(paste("current site: ", current_site, sep=""))
       neighbor_set <- nearest_neighbors[current_site,]
+      print("neighbor set")
+      print(neighbor_set)
       # Set the current sites to the best from iteration over sites neighbors
       current_visits <- possible_visits
       # We first iterate through the neighbors of each site, and compute V for each exchange. 
@@ -319,9 +323,12 @@ for (r_start in 1:random_starts){
         n_count <- 0
         current_visits[s] <- visit
         for(nn in neighbor_set){
-          # Handle duplicates in sites because the visit optimization is not compatible with 
+          print("current neighbor")
+          print(nn)
+          # Handle duplicates in sites (if two nearly adjacent sites have the same neighbor) 
+          # because the visit optimization is not compatible with 
           # the same site occurring multiple times in site_idx
-          # Check that the neighbor isn't in the main set of sites
+          # Check that the neighbor isn't in the main set of sites. This is the only case that should trigger the if statement
           if (nn %in% site_idx){
             print("skipping site")
             print(site_idx)
@@ -368,10 +375,8 @@ for (r_start in 1:random_starts){
           print(site_idx)
           print("best neighbor idx")
           print(best_neighbor_idx)
-          print("neighbors")
+          print("temp neighbor idx")
           print(neighbor_idx)
-          print("current neighbor")
-          print(nn)
           #print("current data selction after visits altered")
           #print(r_survey_data$Y[,neighbor_idx])
           if (exp_args$v_parallel==T){
@@ -394,10 +399,16 @@ for (r_start in 1:random_starts){
           if (new_v_est < current_v_est){
              current_v_est <- new_v_est
              title <- paste("New optimal spatial design: v=", round(new_v_est, 10), sep="")
-             # Plot the new best site compared to the previous selection, but need to reverse arguments to function
-             # Use current_visits as optimal visits.
+             # Plot the new best site compared to the previous selection, but need to reverse arguments to function, so
+             # use current_visits as optimal visits.
+             print(possible_visits)
+             print(current_visits)
+             print(best_neighbor_idx)
+             print(neighbor_idx)
+             print(current_site)
              p <- plot_sites_vs_best_ebird(site_centroids, rast_surface, current_site, best_neighbor_idx, neighbor_idx, possible_visits, current_visits, title)
              # Then set new best indices
+             # best_neighbor and possible_visits will hold the optimal for the local round of iteration
              best_neighbor_idx <- neighbor_idx
              possible_visits <- current_visits
              print("New optimal row ids")
@@ -415,7 +426,7 @@ for (r_start in 1:random_starts){
           }
           fig_name <- file.path(fig_dir, paste("site_locs_rand-start-", r_start, "_ex-iter_", 
                             exchange_iter, "_site-iter-", s, "_effort_", visit, "_nn-iter", n_count,".png", sep=""))
-          ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm")
+          ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm", bg="white", device="png", type="cairo")
           # Then go to the next neighbor or site
         }
       }
@@ -486,7 +497,7 @@ for(rs in 1:random_starts){
   title <- paste("PO data and Optimal sites from random init ", rs, "\n with V(D)=", best_v[rs], sep="")
   p <- plot_po_optimal_sites_ebird(site_centroids, rast_surface, state_po_prj, r_po_data, best_site_mat[rs,], optimal_visit_mat[rs,], title)
   fig_name <- file.path(fig_dir, paste("optimal_sites_random_start-", rs, ".png", sep=""))
-  ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm")
+  ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm", bg="white", device="png", type="cairo")
 }
 
 print("V list")

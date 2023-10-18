@@ -264,15 +264,16 @@ get_neighbors <- function(surface, l){
   return(nearest_neighbors)
 }
 
-get_neighbors_sf_grid <- function(grid, l){
+get_neighbors_sf_grid <- function(centroids, l){
   # st_distances gives us the nearest distance from one feature to another
-  # So if two polygons are touching, distance will be 0 (ie, not calculated between centroids)
-  distances <- st_distance(grid, subgrid)
-  nearest_neighbors <- matrix(nrow=nrow(grid), ncol=l)
-  for (row in 1:nrow(grid)){
+  # So if two polygons are touching, distance will be 0 
+  # So don't use the polygons, use the centroids of the polygons.
+  distances <- st_distance(centroids, centroids)
+  nearest_neighbors <- matrix(nrow=length(centroids), ncol=l)
+  for (row in 1:length(centroids)){
     # This gives us the closest neighboring rows
     min_points <- order(distances[row, ])[2:(l+1)]
-    stopifnot(!(1%in%min_points))
+    stopifnot(!(row%in%min_points))
     stopifnot(length(min_points)==l)
     # Take column names, which gives us a character vector annoyingly
     nearest_neighbors[row,] <- min_points 
@@ -464,7 +465,7 @@ plot_po_optimal_sites <- function(sampling_surface, r_po_data, best_select_idx, 
 plot_sites_ebird <- function(site_centroids, rast_surface, site_idx, title){
   p <- ggplot() + 
     geom_spatraster(data=rast_surface) +
-    geom_sf(data = site_centroids[site_idx], color=alpha("orange",1)) + 
+    geom_sf(data = site_centroids[site_idx], color=alpha("white",1)) + 
     scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7, na.value="white") +
     theme_minimal()+
     ggtitle(title) +
@@ -480,9 +481,9 @@ plot_sites_vs_best_ebird <- function(site_centroids, rast_surface, current_site,
   # Site centroids are 1 dimensional
   p <- ggplot() + 
     geom_spatraster(data=rast_surface) +
-    geom_sf(data = site_centroids[c(1,2,3)], color=alpha("white",1), size=prev_size) + 
-    geom_sf(data = site_centroids[c(100, 200, 300)], color=alpha("hotpink",1), size=best_size) + 
-    geom_sf(data = site_centroids[400], color=alpha("black",1), size=0.5) +
+    geom_sf(data = site_centroids[select_idx], color=alpha("white",1), size=prev_size) + 
+    geom_sf(data = site_centroids[best_select_idx], color=alpha("hotpink",1), size=best_size) + 
+    geom_sf(data = site_centroids[current_site], color=alpha("black",1), size=0.5) +
     scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7, na.value="grey") +
     theme_minimal()+
     ggtitle(title) +
@@ -495,7 +496,7 @@ plot_po_optimal_sites_ebird <- function(site_centroids, rast_surface, po_data, b
   p <- ggplot() + 
     geom_spatraster(data=rast_surface) +
     geom_sf(data=po_data, color=alpha("orange",0.5), size=0.5)+
-    geom_sf(data = site_centroids[best_select_idx], color=alpha("white",1), size=best_size) + 
+    geom_sf(data = site_centroids[best_select_idx], color=alpha("hotpink",1), size=best_size) + 
     scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7, na.value="grey") +
     theme_minimal()+
     ggtitle(title) +

@@ -225,7 +225,7 @@ main_data_handling_oe <- function(map_prj, map_path, base_data_dir, ebd_download
   writeRaster(evi_rast, rast_surface_path, overwrite=T) 
   # Save evi as the rast surface
   data_pack <- list(counts=covar_df$counts, intensity_covars=intensity_covars, bias_covars=bias_covars, k_param_intn=k_param_intn, k_param_bias=k_param_bias,
-              site_centroids=site_centroids, subgrid=subgrid, state_po_prj=state_po_prj, rast_surface=evi_rast)
+              site_centroids=site_centroids, subgrid=subgrid, state_po_prj=state_po_prj, state_bound=prj_state, rast_surface=evi_rast)
   saveRDS(data_pack, file.path(exp_dir, "data_pack.RDS"))
 }
 
