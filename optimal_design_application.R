@@ -302,7 +302,7 @@ for (r_start in 1:random_starts){
   fig_name <- file.path(fig_dir, paste("initial_design_", r_start, ".png", sep=""))
   ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm", bg='white', device="png", type="cairo")
   
-  while ((convergence_cond==FALSE) & (exchange_iter<=exp_args$exch_iter)){
+  while ((convergence_cond==FALSE) & (exchange_iter<exp_args$exch_iter)){
     exchange_iter <- exchange_iter + 1
     print(paste("New exchange iteration: ", exchange_iter))
     # Data structure for each score estimate
@@ -495,7 +495,7 @@ ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm")
 # Plot best sites
 for(rs in 1:random_starts){
   title <- paste("PO data and Optimal sites from random init ", rs, "\n with V(D)=", best_v[rs], sep="")
-  p <- plot_po_optimal_sites_ebird(site_centroids, rast_surface, state_po_prj, r_po_data, best_site_mat[rs,], optimal_visit_mat[rs,], title)
+  p <- plot_po_optimal_sites_ebird(site_centroids, rast_surface, state_po_prj, best_site_mat[rs,], optimal_visit_mat[rs,], title)
   fig_name <- file.path(fig_dir, paste("optimal_sites_random_start-", rs, ".png", sep=""))
   ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm", bg="white", device="png", type="cairo")
 }
