@@ -36,7 +36,7 @@ echo "#!/bin/bash
 #PBS -l mem=100gb
 
 module load CmdStanR
-Rscript $WORKDIR/optimal_design_site_occ.R --working_dir=$WORKDIR --exp_name=$exp_name --data_reps=$(($cores*2)) --m=5 --min_visits=1 --max_visits=$n --vary_visits --model_selection=$m --random_starts=3 --exch_iter=20 --mcmc_iter=1000 --use_sim_po --intensity_func=\"$intensity\" --bias_func=\"$bias\" --v_parallel --cores=$cores --alpha=$alpha --beta=$beta --gamma=$g --delta=$d --p=$p" --aux_cor=0.8 > $exp_name.sh
+Rscript $WORKDIR/optimal_design_site_occ.R --working_dir=$WORKDIR --exp_name=$exp_name --data_reps=$(($cores*2)) --m=5 --min_visits=1 --max_visits=$n --vary_visits --model_selection=$m --random_starts=3 --exch_iter=20 --mcmc_iter=1000 --use_sim_po --intensity_func=\"$intensity\" --bias_func=\"$bias\" --v_parallel --cores=$cores --alpha=$alpha --beta=$beta --gamma=$g --delta=$d --p=$p --aux_cor=0.8" > $exp_name.sh
 echo "qsub $exp_name.sh" >> run_initial_model_comparison.sh
 done
 done
