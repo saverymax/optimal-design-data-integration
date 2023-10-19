@@ -36,7 +36,7 @@ parser <- add_option(parser, "--m", type="integer", default=5, help="Number of s
 parser <- add_option(parser, "--max_visits", type="integer", default=5, help="Maximum number of time to visit each site")
 parser <- add_option(parser, "--min_visits", type="integer", default=1, help="Minimum number of time to visit each site")
 parser <- add_option(parser, "--vary_visits", action="store_true", default=F, help="Allow varying survey effort between sites")
-parser <- add_option(parser, "--model_selection", type="integer", default=1, help="Occupancy model to use. For application, currently using only 1 model")
+parser <- add_option(parser, "--model_selection", type="integer", default=1, help="Occupancy model to use: (1) with or (2) without PO data")
 parser <- add_option(parser, "--data_reps", type="integer", default=1, help="number of dataset reps for criterion estimation")
 parser <- add_option(parser, "--random_starts", type="integer", default=1, help="Number of random starts to run the exchange")
 parser <- add_option(parser, "--exch_iter", type="integer", default=2, 
@@ -209,7 +209,8 @@ for(d_i in 1:d_examine){
 # uses different link function but is otherwise the same as model 1. Model has constant
 # intensity, which doesn't make that much sense to use in this case.
 model_strings <- list(
-	"nuthatch_site_occ"=nuthatch_poisson_process_site_occupancy
+	"nuthatch_site_occ"=nuthatch_poisson_process_site_occupancy,
+	"nuthatch_site_occ_no_po"=nuthatch_site_occ_no_po
 )
 model_selection <- exp_args$model_selection
 model_name <- names(model_strings)[model_selection]
@@ -221,7 +222,13 @@ model <- cmdstan_model(model_path)
 # These are the parameters to report
 # Only the PO prior model needs gamma and delta. 
 # If I look at models with and without PO data then I will need to add more options
-params <- c("alpha", "gamma", "beta[1]", "beta[2]", "beta[3]", "beta[4]", "beta[5]", "delta[1]")
+if (model_selection==1){
+  params <- c("alpha", "gamma", "beta[1]", "beta[2]", "beta[3]", "beta[4]", "beta[5]", "delta[1]")
+}else if (model_selection==2){
+  params <- c("alpha", "beta[1]", "beta[2]", "beta[3]", "beta[4]", "beta[5]")
+}else{
+  stop("No additional models implemented")
+}
 print(paste("Using params", paste(params, collapse=" ")))
 generated_vars <- c('g_theta_gen')
 

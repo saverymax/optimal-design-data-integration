@@ -391,6 +391,7 @@ fit_point_process_ebird <- function(stan_path, exp_dir, sites, area_a, intensity
   model_path <- "nuthatch_poisson_process.stan"
   model_string <- nuthatch_poisson_process
   write(model_string, model_path)
+  # Use first rep of po data since it's repeated.
   data_site_occ = list(N=sites, X=intensity_covars, y=r_po_data$Y[1,], Z=bias_covars, k_i=k_i, k_b=k_b, area_a=area_a)
   model <- cmdstan_model(model_path) 
   print("Fitting Point Process model to PO data")

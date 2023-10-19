@@ -145,6 +145,9 @@ estimate_v_nuthatch <- function(model, n_surveys, data_reps, m, sites, area_a, i
     if (model_selection==1){
       data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, area_a=area_a, X=select_sites, Y=selected_data, PO=selected_po,
                            X_po=intensity_covars, Z_po=bias_covars, k_i=k_i, k_b=k_b, model_diag=0)
+    }else if (model_selection==2){
+      data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, area_a=area_a, X=select_sites, Y=selected_data,
+                           X_po=intensity_covars, k_i=k_i)
     }else{
       stop("No other models implemented")
     }
@@ -227,6 +230,9 @@ estimate_v_parallel_nuthatch <- function(combined_df, model, n_surveys, m, sites
   if (model_selection==1){
     data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, area_a=area_a, X=select_sites, Y=selected_data, PO=PO_data,
                          X_po=intensity_covars, Z_po=bias_covars, k_i=k_i, k_b=k_b, model_diag=0)
+  }else if (model_selection==2){
+    data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, area_a=area_a, X=select_sites, Y=selected_data,
+                         X_po=intensity_covars, k_i=k_i)
   }else{
     stop("No other models implemented")
   }

@@ -51,11 +51,9 @@ nuthatch_site_occ_no_po <- '
       int<lower = 1> n_pa_sites;
       int<lower = 1> n_po_sites;
       int<lower=0> k_i;
-      int<lower=0, upper=1> model_diag;
       array[n_pa_sites] int Y;
       array[n_pa_sites] int n_surveys;
       matrix[n_pa_sites, k_i] X;
-      array[n_po_sites] int PO;
       matrix[n_po_sites, k_i] X_po; // predictor matrix for intensity
     }
     parameters{

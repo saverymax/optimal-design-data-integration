@@ -108,7 +108,7 @@ r_po_data <- list(Y=Y_po)
 
 stan_path <- file.path(exp_args$working_dir, "stan_models")
 # Cell size is in meters but let's work with our parameters in kilometer scale
-# But for now set area to 1
+# We can also set area to 1 for convenience
 area_a <- (cell_size/1000)^2
 #area_a <- 1
 if (exp_args$pp_fit == TRUE){
