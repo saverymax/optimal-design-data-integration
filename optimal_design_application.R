@@ -17,9 +17,6 @@ library(openxlsx)
 library(sf)
 library(terra)
 library(tidyterra)
-library(auk)
-library(lubridate)
-library(exactextractr)
 
 set.seed(13)
 
