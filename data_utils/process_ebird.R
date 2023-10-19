@@ -6,6 +6,17 @@
 # We will also have functions to fit/save the PP posterior 
 # to the ebird data and create the dataframe of the covariates 
 # for the optimal design
+
+# Example usage:
+#"C:/PROGRA~1/R/R-42~1.2/bin/x64/Rscript.exe" data_utils/process_ebird.R 
+#  --working_dir=. 
+#  --base_data_dir="C:/Users/msavery/OneDrive - UGent/Documents/ghent_phd_spatial_doe/data/" 
+#  --ebird_data_dir="ebd_US_bnhnut_201901_201912_smp_relJul-2023" 
+#  --map_file="us_states/GOVTUNIT_Tennessee_State_GPKG/GOVTUNIT_Tennessee_State_GPKG.gpkg" 
+#  --landcover_file="copernicus_landcover/W100N40_PROBAV_LC100_global_v3.0.1_2019-nrt_Discrete-Classification-map_EPSG-4326.tif" 
+#  --modis_file="modis_landcover_dynamics/MCD12Q2.061_EVI_Area_0_doy2019001_aid0001.tif" 
+#  --elevation_file="elevation_aster/ASTGTM_NC.003_ASTER_GDEM_DEM_doy2000061_aid0001.tif" 
+#  --save_dir="data/ebird" --pp_fit --pp_diagnostic
 ################################################
 
 library(tidyverse)
