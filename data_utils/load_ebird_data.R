@@ -383,7 +383,7 @@ generate_ebird_pa <- function(data_reps, area_a, surface_data, p_0, pp_posterior
   return(list(occupancy=occupancy_maps, Y=Y_detection, theta=theta_reps))
 }
 
-fit_point_process_ebird <- function(stan_path, exp_dir, sites, area_a, data_reps, intensity_covars, bias_covars, r_po_data, k_i, k_b, pp_diagnostic,
+fit_point_process_ebird <- function(stan_path, exp_dir, sites, area_a, intensity_covars, bias_covars, r_po_data, k_i, k_b, pp_diagnostic,
                                     subgrid, rast_surface){
   # Fit the point process model to the PO data
   stan_models_path <- file.path(stan_path, "stan_nuthatch_models.R")
@@ -454,9 +454,8 @@ fit_point_process_ebird <- function(stan_path, exp_dir, sites, area_a, data_reps
   
   # Take expectation from the PP params
   pp_posterior <- fit$draws(intensity_params, format="matrix")
-  pp_posterior <- matrix(rep(colMeans(pp_posterior), data_reps), nrow=data_reps, byrow = T)
   print("Estimates for intensity (not bias) from pp model")
-  print(pp_posterior)
+  print(colMeans(pp_posterior))
   saveRDS(pp_posterior, file.path(exp_dir, "pp_posterior_ebird.RDS"))
 }
   

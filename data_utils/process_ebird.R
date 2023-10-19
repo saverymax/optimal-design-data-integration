@@ -98,12 +98,15 @@ r_po_data <- list(Y=Y_po)
 stan_path <- file.path(exp_args$working_dir, "stan_models")
 # Cell size is in meters but let's work with our parameters in kilometer scale
 # But for now set area to 1
-#area_a <- (cell_size/1000)^2
-area_a <- 1
+area_a <- (cell_size/1000)^2
+#area_a <- 1
 if (exp_args$pp_fit == TRUE){
-  fit_point_process_ebird(stan_path, save_dir, sites, area_a, data_reps, intensity_covars, bias_covars, r_po_data, k_param_intn, k_param_bias, pp_diagnostic,
+  fit_point_process_ebird(stan_path, save_dir, sites, area_a, intensity_covars, bias_covars, r_po_data, k_param_intn, k_param_bias, pp_diagnostic,
                           subgrid, rast_surface)
   # Check the posterior
+  # The function should save the matrix of MCMC draws, so we can later sample from them or take the means.
   pp_posterior <- read_rds(file.path(save_dir, "pp_posterior_ebird.RDS"))
+  print(colMeans(pp_posterior))
+  pp_posterior <- matrix(rep(colMeans(pp_posterior), data_reps), nrow=data_reps, byrow = T)
   print(pp_posterior)
 }

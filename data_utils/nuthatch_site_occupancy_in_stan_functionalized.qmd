@@ -97,6 +97,7 @@ if (pp_fit == TRUE){
 }
 pp_posterior <- read_rds(file.path(save_dir, "pp_posterior_ebird.RDS"))
 print("Intensity fit from point process")
+pp_posterior <- matrix(rep(colMeans(pp_posterior), data_reps), nrow=data_reps, byrow = T)
 print(pp_posterior)
 # Get 1000 samples from the posterior if we have access to the matrix of the MCMC draws from the posterior. 
 # Currently the function provides the data rep repeated means of the posterior
