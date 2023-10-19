@@ -45,6 +45,54 @@ nuthatch_poisson_process <- '
     }
 '
 
+nuthatch_site_occ_no_po <- '
+    data{
+      real<lower = 0> area_a;
+      int<lower = 1> n_pa_sites;
+      int<lower = 1> n_po_sites;
+      int<lower=0> k_i;
+      int<lower=0, upper=1> model_diag;
+      array[n_pa_sites] int Y;
+      array[n_pa_sites] int n_surveys;
+      matrix[n_pa_sites, k_i] X;
+      array[n_po_sites] int PO;
+      matrix[n_po_sites, k_i] X_po; // predictor matrix for intensity
+    }
+    parameters{
+      real alpha;           // intercepts
+      vector[k_i] beta;       // vector of params for intensity
+      real<lower = 0, upper = 1> p;
+    }
+    model{
+      // priors
+      target += normal_lpdf(alpha |   0,10);
+      target += normal_lpdf(beta | 0,10);
+      vector[n_pa_sites] g_theta;
+      g_theta = 1 - exp(-exp(alpha + X*beta + log(area_a)));
+      for (i in 1:n_pa_sites) {
+        if (Y[i] > 0){
+          target += log(g_theta[i]*choose(n_surveys[i], Y[i])*(p^Y[i])*(1-p)^(n_surveys[i]-Y[i]));
+        }
+        else{
+          // Compute mixture of no detection and no occupancy
+          target += log(g_theta[i]*(1-p)^(n_surveys[i]) + (1 - g_theta[i]));
+        }
+      }
+    }
+    generated quantities{
+      // Required generated quantities
+      // We can generate over all sites, instead of just those being used for PA
+      vector[n_po_sites] g_theta_gen;
+      array[n_po_sites] int occ_gen; 
+      // Note that we do not include gamma here because the 
+      // probability of occupancy is just P(N(C_i)>0) = G(alpha + beta X)
+      g_theta_gen = 1 - exp(-exp(alpha + X_po*beta + log(area_a)));
+      // We dont need to generate the occupancy if we take gtheta
+      // since we take the mean of the occupancy anyway which is the mean of gtheta
+      occ_gen = bernoulli_rng(g_theta_gen);
+    }
+'
+
 nuthatch_poisson_process_site_occupancy <- '
     data{
       real<lower = 0> area_a;
