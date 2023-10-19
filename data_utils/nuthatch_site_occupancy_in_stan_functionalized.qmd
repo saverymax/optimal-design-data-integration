@@ -30,6 +30,7 @@ ebd_download_dir <- "ebd_US_bnhnut_201901_201912_smp_relJul-2023"
 lc_path <- "copernicus_landcover/W100N40_PROBAV_LC100_global_v3.0.1_2019-nrt_Discrete-Classification-map_EPSG-4326.tif"
 modis_path <- "modis_landcover_dynamics/MCD12Q2.061_EVI_Area_0_doy2019001_aid0001.tif"
 elev_path <- "elevation_aster/ASTGTM_NC.003_ASTER_GDEM_DEM_doy2000061_aid0001.tif"
+rast_surface_path <- file.path(save_dir, "rast_surface.tif")
 
 # Source modules
 source(file.path(working_dir, "data_utils", "load_ebird_data.R"))
@@ -42,6 +43,7 @@ pp_fit <- FALSE
 
 ```{r load-initial-data}
 data_reps <- 10
+m <- 5
 data_pack <- read_rds(file.path(save_dir, "data_pack.RDS"))
 # Unpack
 bias_covars <- data_pack$bias_covars
@@ -63,7 +65,7 @@ r_po_data <- list(Y=Y_po)
 # And just for later use, make a plot with a mark on a specific site
 p <- ggplot() + 
   geom_spatraster(data=rast_surface) +
-  geom_sf(data = subgrid_covars[c(500, 600, 700),], color=alpha("red",1), fill="orange") + 
+  geom_sf(data = site_centroids[c(500, 600, 700)], color=alpha("red",1), fill="orange") + 
   scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7, na.value="white") +
   theme_minimal()+
   ggtitle("Labeled nuthatch site")
@@ -72,10 +74,9 @@ print(p)
 # We can also plot the centroids
 bigger_size <- 5/(length(5)) + 1.5
 smaller_size <- 1/(length(5)) + 1
-site_centroids <- st_centroid(st_geometry(subgrid_covars))
 p <- ggplot() + 
   geom_spatraster(data=rast_surface) +
-  geom_sf(data = site_centroids[c(1,2,3)], color=alpha("white",1), size=bigger_size) + 
+  geom_sf(data = site_centroids[c(10,20,30)], color=alpha("white",1), size=bigger_size) + 
   geom_sf(data = site_centroids[c(100, 200, 300)], color=alpha("hotpink",1), size=smaller_size) + 
   geom_sf(data = site_centroids[400], color=alpha("black",1), size=0.5) + 
   scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7, na.value="white") +
@@ -92,7 +93,7 @@ to the data and use these estimates to generate the PA data. Or we can fit the P
 ```{r fit-ppd}
 if (pp_fit == TRUE){
   # We fit the PP model to the PO data and use the expectation of this posterior to generate the PA data
-  fit_point_process_ebird(stan_path, exp_dir, sites, area_a, data_reps, intensity_covars, bias_covars, r_po_data, k_param_intn, k_param_bias, pp_diagnostic=T,
+  fit_point_process_ebird(stan_path, exp_dir, sites, area_a, intensity_covars, bias_covars, r_po_data, k_param_intn, k_param_bias, pp_diagnostic=T,
                         subgrid, rast_surface)
 }
 pp_posterior <- read_rds(file.path(save_dir, "pp_posterior_ebird.RDS"))
@@ -110,9 +111,13 @@ The above posterior will use the expectation for the parameters instead of sampl
 Then generate the PA data 
 ```{r PA-data}
 # Generate the data by drawing over the posterior of the parameters
+area_a <- (10000/1000)^2
+link <- "cloglog"
+n_surveys <- 5
+p_detection <- 0.2
 pa_gen <- generate_ebird_pa(data_reps, area_a, intensity_covars, p_detection, pp_posterior, n_surveys, sites, link)
 # Create plots of the occupancy and probability maps
-for(d_i in 1:20){
+for(d_i in 1:data_reps){
   occ_map <- st_geometry(subgrid) %>% st_sf()
   occ_map$occ <- pa_gen$occupancy[d_i,]
   occ_map$prob <- pa_gen$theta[d_i,]
@@ -164,8 +169,9 @@ covars_sampled_sites
 # For the sake of illustration we pick 1 dataset
 selected_counts <- pa_gen$Y[10,site_idx]
 selected_counts
-n_surveys <- rep(n_surveys, m)
-data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, area_a=area_a, X=covars_sampled_sites, Y=selected_counts, PO=covar_df$counts,
+n_survey_vec <- rep(n_surveys, m)
+n_survey_vec
+data_site_occ = list(n_surveys=n_survey_vec, n_pa_sites=m, n_po_sites=sites, area_a=area_a, X=covars_sampled_sites, Y=selected_counts, PO=data_pack$counts,
                          X_po=intensity_covars, Z_po=bias_covars, k_i=k_param_intn, k_b=k_param_bias, model_diag=0)
 model_path <- "nuthatch_site_occ.stan"
 model_string <- nuthatch_poisson_process_site_occupancy
@@ -176,6 +182,11 @@ fit <- model$sample(data=data_site_occ, seed=13, chains=3, iter_sampling=2000, i
 
 ```{r model-inspect}
 #fit$summary()
+all_params <- c("alpha", "gamma", "beta[1]", "beta[2]", "beta[3]", "beta[4]", "beta[5]", "delta[1]")
+  #all_params <- c("alpha", "gamma", "beta[1]", "beta[2]", "beta[3]", "delta[1]")
+  #intensity_params <- c("alpha", "beta[1]", "beta[2]", "beta[3]")
+  intensity_params <- c("alpha", "beta[1]", "beta[2]", "beta[3]", "beta[4]", "beta[5]")
+  params_intercept <- c("alpha", "gamma")
 posterior <- fit$draws(all_params)
 
 color_scheme_set("mix-blue-pink")
@@ -215,12 +226,12 @@ length(occ_mode)
 length(occ_means)
 prob_means <- colMeans(generated_prob)
 # Create new sf for the preds
-subgrid_geo <- st_geometry(subgrid_covars) %>% st_sf()
+subgrid_geo <- st_geometry(subgrid) %>% st_sf()
 subgrid_geo$preds <- occ_means
 subgrid_geo$occ_mode <- occ_mode
 subgrid_geo$prob_pred <-  prob_means
 # Then plot the predictions
-occ_pred_rast <- terra::rasterize(vect(subgrid_geo), crop_evi_rast, field="preds")
+occ_pred_rast <- terra::rasterize(vect(subgrid_geo), rast_surface, field="preds")
 p <- ggplot() + 
     geom_spatraster(data=occ_pred_rast) +
     scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.8, na.value="white") +
@@ -228,7 +239,7 @@ p <- ggplot() +
     theme_minimal()+
     ggtitle("Predicted occupancy at nuthatch sites")
 print(p)
-occ_mode_rast <- terra::rasterize(vect(subgrid_geo), crop_evi_rast, field="occ_mode")
+occ_mode_rast <- terra::rasterize(vect(subgrid_geo), rast_surface, field="occ_mode")
 p <- ggplot() + 
     geom_spatraster(data=occ_mode_rast) +
     scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.8, na.value="white") +
@@ -237,7 +248,7 @@ p <- ggplot() +
     ggtitle("Predicted occupancy mode at nuthatch sites")
 print(p)
 # Oops if we have probability less than 0.5 mode is always 0.
-prob_pred_rast <- terra::rasterize(vect(subgrid_geo), crop_evi_rast, field="prob_pred")
+prob_pred_rast <- terra::rasterize(vect(subgrid_geo), rast_surface, field="prob_pred")
 p <- ggplot() + 
     geom_spatraster(data=prob_pred_rast) +
     scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.8, na.value="white") +
