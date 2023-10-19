@@ -56,14 +56,14 @@ stopifnot(exp_args$p_logging==F)
 select <- dplyr::select
 sort <- base::sort
 
-# Set important global variables 
-base_data_dir <- "C:\\Users\\msavery\\OneDrive - UGent\\Documents\\ghent_phd_spatial_doe\\data\\"
-ebd_download_dir <- "ebd_US_bnhnut_201901_201912_smp_relJul-2023"
-lc_path <- "copernicus_landcover/W100N40_PROBAV_LC100_global_v3.0.1_2019-nrt_Discrete-Classification-map_EPSG-4326.tif"
-modis_path <- "modis_landcover_dynamics/MCD12Q2.061_EVI_Area_0_doy2019001_aid0001.tif"
-elev_path <- "elevation_aster/ASTGTM_NC.003_ASTER_GDEM_DEM_doy2000061_aid0001.tif"
-map_path <- "us_states/GOVTUNIT_Tennessee_State_GPKG/GOVTUNIT_Tennessee_State_GPKG.gpkg"
-data_save_dir <- file.path(".", "data/ebird")
+# Set important global variables if we're just running within Rstudio. hacky :)
+#base_data_dir <- "C:\\Users\\msavery\\OneDrive - UGent\\Documents\\ghent_phd_spatial_doe\\data\\"
+#ebd_download_dir <- "ebd_US_bnhnut_201901_201912_smp_relJul-2023"
+#lc_path <- "copernicus_landcover/W100N40_PROBAV_LC100_global_v3.0.1_2019-nrt_Discrete-Classification-map_EPSG-4326.tif"
+#modis_path <- "modis_landcover_dynamics/MCD12Q2.061_EVI_Area_0_doy2019001_aid0001.tif"
+#elev_path <- "elevation_aster/ASTGTM_NC.003_ASTER_GDEM_DEM_doy2000061_aid0001.tif"
+#map_path <- "us_states/GOVTUNIT_Tennessee_State_GPKG/GOVTUNIT_Tennessee_State_GPKG.gpkg"
+#data_save_dir <- file.path(".", "data/ebird")
 
 # Source modules
 source(file.path(exp_args$working_dir, "data_utils", "load_ebird_data.R"))
@@ -117,9 +117,9 @@ r_po_data <- list(Y=Y_po)
 
 stan_path <- file.path(exp_args$working_dir, "stan_models")
 # Cell size is in meters but let's work with our parameters in kilometer scale
-#area_a <- (cell_size/1000)^2
+area_a <- (cell_size/1000)^2
 # Set to one for practical purposes
-area_a <- 1
+#area_a <- 1
 # The point process model can be fit here or in the process_ebird script. To run it here, provide the fit_pp flag.
 # This will save a new rds file which can be loaded below
 if (exp_args$pp_fit == TRUE){
@@ -128,6 +128,7 @@ if (exp_args$pp_fit == TRUE){
                         subgrid, rast_surface)
 }
 pp_posterior <- read_rds(file.path(data_save_dir, "pp_posterior_ebird.RDS"))
+pp_posterior <- matrix(rep(colMeans(pp_posterior), data_reps), nrow=data_reps, byrow = T)
 print("Intensity fit from point process")
 print(pp_posterior)
 # There is a question of whether to use draws from the posterior or just the expectation. This will have to be resolved
@@ -163,12 +164,13 @@ print(dim(nearest_neighbors))
 
 # Have to use subgrid_covars for this since it still has geometry and not intensity_/bias_covars
 # Create plots of the occupancy and probability maps
+# Plot the data for n=5 so that when vary_visits=T we can observe counts above 1.
 d_examine <- ifelse(data_reps<3, data_reps, 3)
 for(d_i in 1:d_examine){
   occ_map <- st_geometry(subgrid) %>% st_sf()
-  occ_map$occ <- r_survey_data_n1$occupancy[d_i,]
-  occ_map$prob <- r_survey_data_n1$theta[d_i,]
-  occ_map$counts <- r_survey_data_n1$Y[d_i,]
+  occ_map$occ <- r_survey_data_n5$occupancy[d_i,]
+  occ_map$prob <- r_survey_data_n5$theta[d_i,]
+  occ_map$counts <- r_survey_data_n5$Y[d_i,]
   
   # Then plot the predictions
   occ_rast <- terra::rasterize(vect(occ_map), rast_surface, field="occ")
