@@ -4,7 +4,7 @@
 #############################################################
 
 
-inital_auk_processing <- function(base_data_dir, ebd_download_dir){
+initial_auk_processing <- function(base_data_dir, ebd_download_dir){
   # Function to generate and save csv as "nuthatch_filtered_for_occ.csv"
   # and "nuthatch_filtered_po_2019.txt"
   
@@ -15,11 +15,11 @@ inital_auk_processing <- function(base_data_dir, ebd_download_dir){
   auk_filter(ebd_nh_filtered, file = file.path(base_data_dir, ebd_download_dir, "nuthatch_filtered_po_2019.txt"), 
              file_sampling=file.path(base_data_dir, ebd_download_dir, "nuthatch_filtered_2019_sampling.txt"), overwrite=T) 
   nuthatch_obs <- read_ebd(file.path(base_data_dir, ebd_download_dir, "nuthatch_filtered_po_2019.txt"))
-  # TODO: Make plots only using the PO data and not the merged sampling + PO data
   nuthatch_sampling <- read_sampling(file.path(base_data_dir, ebd_download_dir, "nuthatch_filtered_2019_sampling.txt"))
   nuthatch_zf <- auk_zerofill(nuthatch_obs, nuthatch_sampling, collapse = TRUE)
   # Some 4 million rows
-  head(nuthatch_zf)
+  print("PA dataset size")
+  print(head(nuthatch_zf))
   time_to_decimal <- function(x) {
     x <- hms(x, quiet = TRUE)
     hour(x) + minute(x) / 60 + second(x) / 3600

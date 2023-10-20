@@ -97,7 +97,6 @@ cell_size <- exp_args$cell_size
 
 # That set the intial experimental environment up. Now we can focus on loading our covariates and data
 # This involves a lot of data processing which we pack intothe main_data_handling function
-# TODO: Include preprocessing file for creating the file "nuthatch_filtered_for_occ.csv"
 # It is necessary to run the process_ebird script first to generate the rds file. See documentation about data generation.
 rast_surface_path <- file.path(data_save_dir, "rast_surface.tif")
 data_pack <- read_rds(file.path(data_save_dir, "data_pack.RDS"))
