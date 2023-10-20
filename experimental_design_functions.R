@@ -220,30 +220,38 @@ estimate_v_parallel <- function(combined_df, model, n_surveys, m, sites, samplin
 
 estimate_v_parallel_nuthatch <- function(combined_df, model, n_surveys, m, sites, area_a, intensity_covars, bias_covars, 
                                          select_idx, select_sites, generated_vars, k_i, k_b, model_selection, mcmc_iter){
-  # For each rth dataset get the m randomly chosen sites for the occupancy data, Y surveys, and PO.
-  selected_occ <- combined_df[select_idx]
-  selected_data <- combined_df[sites+select_idx]
-  PO_data <- combined_df[(2*sites+1):length(combined_df)] 
-  # Here I use the same X covariate for the presence-only data as used for the survey data. The difference is that
-  # the survey data here is a subset (select_sites) of the sites, whereas the presence only data 
-  # needs covariates for the whole grid to approximate the expected count in the entire region.
-  if (model_selection==1){
-    data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, area_a=area_a, X=select_sites, Y=selected_data, PO=PO_data,
-                         X_po=intensity_covars, Z_po=bias_covars, k_i=k_i, k_b=k_b, model_diag=0)
-  }else if (model_selection==2){
-    data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, area_a=area_a, X=select_sites, Y=selected_data,
-                         X_po=intensity_covars, k_i=k_i)
-  }else{
-    stop("No other models implemented")
-  }
-  # refresh=0 turns off messages except errors from stan
-  # quiet function silences stan output 
-  fit <- model$sample(data=data_site_occ, seed=13, chains=1, 
-                      iter_sampling=mcmc_iter, iter_warmup=100, refresh=0, show_messages=F)
-  
-  gen_occupancy <- fit$summary(variables=generated_vars[1])$mean[select_idx]
-  v_est <- design_criteria(criteria="brier", sim_occ=gen_occupancy, obs_occ=selected_occ)
-  return(v_est)
+  tryCatch({
+    # For each rth dataset get the m randomly chosen sites for the occupancy data, Y surveys, and PO.
+    selected_occ <- combined_df[select_idx]
+    selected_data <- combined_df[sites+select_idx]
+    PO_data <- combined_df[(2*sites+1):length(combined_df)] 
+    # Here I use the same X covariate for the presence-only data as used for the survey data. The difference is that
+    # the survey data here is a subset (select_sites) of the sites, whereas the presence only data 
+    # needs covariates for the whole grid to approximate the expected count in the entire region.
+    if (model_selection==1){
+      data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, area_a=area_a, X=select_sites, Y=selected_data, PO=PO_data,
+                           X_po=intensity_covars, Z_po=bias_covars, k_i=k_i, k_b=k_b, model_diag=0)
+    }else if (model_selection==2){
+      data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, area_a=area_a, X=select_sites, Y=selected_data,
+                           X_po=intensity_covars, k_i=k_i)
+    }else{
+      stop("No other models implemented")
+    }
+    # refresh=0 turns off messages except errors from stan
+    # quiet function silences stan output 
+    fit <- "temp"
+    v_est <- "temp"
+    gen_occupancy <- "temp"
+    fit <- model$sample(data=data_site_occ, seed=13, chains=1, 
+                        iter_sampling=mcmc_iter, iter_warmup=100, refresh=0, show_messages=F)
+    
+    gen_occupancy <- fit$summary(variables=generated_vars[1])$mean[select_idx]
+    v_est <- design_criteria(criteria="brier", sim_occ=gen_occupancy, obs_occ=selected_occ)
+    return(v_est)
+  }, error=function(e){
+    return(list("Issue computing V, returning_current_vars", selected_occ, selected_data, PO_data, 
+                 model_selection, select_sites, fit, v_est, gen_occupancy))
+  })
 }
 
 distance_func <- function(x, center_coord){
