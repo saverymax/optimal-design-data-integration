@@ -249,7 +249,7 @@ estimate_v_parallel_nuthatch <- function(combined_df, model, n_surveys, m, sites
     v_est <- design_criteria(criteria="brier", sim_occ=gen_occupancy, obs_occ=selected_occ)
     return(v_est)
   }, error=function(e){
-    return(list("Issue computing V, returning_current_vars", selected_occ, selected_data, PO_data, 
+    return(list("Issue computing V, returning_current_vars", n_surveys, selected_occ, selected_data, PO_data, 
                  model_selection, select_sites, fit, v_est, gen_occupancy))
   })
 }

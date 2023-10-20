@@ -283,6 +283,10 @@ for (r_start in 1:random_starts){
     estimate_vec <- parApply(clust, combined_df, 1, FUN=estimate_v_parallel_nuthatch, model, possible_visits, m, sites, area_a, 
                              intensity_covars, bias_covars, site_idx, select_sites, generated_vars, k_param_intn, k_param_bias, 
                              model_selection, exp_args$mcmc_iter)
+    if (class(estimate_vec)!="numeric"){
+      print("Error in parallel computation")
+      stop(print(estimate_vec))
+    }
     # Compatible format with non-parallel v
     estimate_mat <- matrix(estimate_vec, nrow=data_reps, ncol=1)
   }
