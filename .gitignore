@@ -8,6 +8,7 @@ experimental_scripts/oe*
 optimal_design_site_occ_files/
 job_output*/*
 .Rproj.user
+.RData
 *Rplots.pdf
 .Rhistory
 _build
