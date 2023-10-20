@@ -31,7 +31,7 @@ parser <- add_option(parser, "--map_file", type="character", help="Name of file 
 parser <- add_option(parser, "--landcover_file", type="character", help="Name of landcover tif")
 parser <- add_option(parser, "--modis_file", type="character", help="Name of modis EVI tif")
 parser <- add_option(parser, "--elevation_file", type="character", help="Name of elevation tif")
-parser <- add_option(parser, "--exp_name", type="character", default="oe_run", help="Name of current experiment, which is used for dir to save output")
+parser <- add_option(parser, "--exp_name", type="character", default="oe_application", help="Name of current experiment, which is used for dir to save output")
 parser <- add_option(parser, "--m", type="integer", default=5, help="Number of sites to survey")
 parser <- add_option(parser, "--max_visits", type="integer", default=5, help="Maximum number of time to visit each site")
 parser <- add_option(parser, "--min_visits", type="integer", default=1, help="Minimum number of time to visit each site")
@@ -228,7 +228,7 @@ if (model_selection==1){
 }else{
   stop("No additional models implemented")
 }
-print(paste("Using params", paste(params, collapse=" ")))
+print(paste("Using params", paste(params, collapse=" "), "in model", model_selection))
 generated_vars <- c('g_theta_gen')
 
 # The reich paper repeats the entire exchange algorithm procedure 10 times,
@@ -301,7 +301,7 @@ for (r_start in 1:random_starts){
   print(site_idx)
   print("Initial design score")
   print(new_v_est)
-  title <- paste("Inital spatial design: v=", round(new_v_est, 10), sep="")
+  title <- paste("Inital spatial design ", r_start, ": v=", round(new_v_est, 10), sep="")
   # Use the evi as the background for these plots
   p <- plot_sites_ebird(site_centroids, rast_surface, site_idx, title)
   fig_name <- file.path(fig_dir, paste("initial_design_", r_start, ".png", sep=""))
@@ -464,6 +464,20 @@ for (r_start in 1:random_starts){
     cur_time <- Sys.time()
     run_time <- cur_time - start_time
     print(paste("Current run time is", run_time))
+    
+    # Write running results for current start after each exchange
+    v_df <- data.frame(x=1:length(v_vec), v=v_vec)
+    fig_name <- file.path(fig_dir, paste("running_exchange_convergence_random_start-", r_start, ".png", sep=""))
+    p <- ggplot(data=v_df, aes(x=x, y=v)) +
+      geom_line() +
+      theme_bw()
+    ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm")
+    
+    # Plot best sites
+    title <- paste("PO data and Optimal sites from random init ", r_start, "\n with V(D)=", current_v_est, sep="")
+    p <- plot_po_optimal_sites_ebird(site_centroids, rast_surface, state_po_prj, best_iter_idx, optimal_visits, title)
+    fig_name <- file.path(fig_dir, paste("running_optimal_sites_random_start-", r_start, ".png", sep=""))
+    ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm", bg="white", device="png", type="cairo")
   }
   
   v_list[[r_start]] <- v_vec
@@ -490,7 +504,7 @@ for(i in 1:random_starts){
 }
 
 v_df <- data.frame(x=x_concat, v=v_concat, r=rep_labels)
-fig_name <- file.path(fig_dir, "exchange_convergence.png")
+fig_name <- file.path(fig_dir, "final_exchange_convergence.png")
 p <- ggplot(data=v_df, aes(x=x, y=v, colour=r)) +
   geom_line() +
   theme_bw()
