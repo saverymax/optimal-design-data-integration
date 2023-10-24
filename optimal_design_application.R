@@ -47,7 +47,7 @@ parser <- add_option(parser, "--pp_fit", action="store_true", default=F, help="B
 parser <- add_option(parser, "--pp_diagnostic", action="store_true", default=F, help="Boolean for printing diagnostics for point process model")
 parser <- add_option(parser, "--v_parallel", action="store_true", default=F, help="Boolean for parallel computation of V criterion")
 parser <- add_option(parser, "--cores", type="integer", default=4, help="Number of cores to use for parallel processing")
-parser <- add_option(parser, "--p", type="double", default=0.7, help="Probability of detection")
+parser <- add_option(parser, "--p", type="double", default=0.2, help="Probability of detection")
 parser <- add_option(parser, "--cell_size", type="integer", default=10000, help="Size of one side of cell in point process grid")
 
 exp_args <- parse_args(parser)
@@ -103,6 +103,12 @@ data_pack <- read_rds(file.path(data_save_dir, "data_pack.RDS"))
 # Unpack
 bias_covars <- data_pack$bias_covars
 intensity_covars <- data_pack$intensity_covars
+# Standardize covars
+standardize <- function(x){ 
+  z <- (x - mean(x)) / sd(x) 
+  return( z)
+}
+intensity_covars <- apply(intensity_covars, 2, standardize)
 k_param_intn <- data_pack$k_param_intn
 k_param_bias <- data_pack$k_param_bias
 site_centroids <- data_pack$site_centroids
@@ -260,6 +266,8 @@ for (r_start in 1:random_starts){
   # These sites will have n_i = n, the others will have n_i = 0
   # Only sites with n_i=n will contribute to likelihood for the site-occupancy model.
   site_idx <- sample(1:sites, m, replace=F)
+  print("Initial row ids")
+  print(site_idx)
   # Initialize for exchange algorithm
   # I don't need best_neighbor_idx but it allows me to not modify the 
   # the vector that is looped over during the exchange. Even though this concurrent looping should be ok, as the sites are independently 
@@ -301,8 +309,6 @@ for (r_start in 1:random_starts){
   print(new_v_est)
   v_vec <- c(v_vec, new_v_est)
   current_v_est <- new_v_est
-  print("Initial row ids")
-  print(site_idx)
   print("Initial design score")
   print(new_v_est)
   title <- paste("Inital spatial design ", r_start, ": v=", round(new_v_est, 10), sep="")

@@ -94,6 +94,12 @@ data_pack <- read_rds(file.path(save_dir, "data_pack.RDS"))
 # Unpack
 bias_covars <- data_pack$bias_covars
 intensity_covars <- data_pack$intensity_covars
+# Standardize covars
+standardize <- function(x){ 
+  z <- (x - mean(x)) / sd(x) 
+  return( z)
+}
+intensity_covars <- apply(intensity_covars, 2, standardize)
 k_param_intn <- data_pack$k_param_intn
 k_param_bias <- data_pack$k_param_bias
 site_centroids <- data_pack$site_centroids
