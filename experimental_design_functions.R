@@ -134,9 +134,13 @@ estimate_v_nuthatch <- function(model, n_surveys, data_reps, m, sites, area_a, i
   
   estimate_mat <- matrix(nrow=data_reps, ncol=1)
   for (r in 1:data_reps){
+    print("rth dataset:")
+    print(r)
     # For each rth dataset get the m randomly chosen sites
     selected_data <- r_survey_data$Y[r, select_idx]
     selected_occ <- r_survey_data$occupancy[r, select_idx]
+    print(selected_data)
+    print(selected_occ)
     # We use all po data for given r
     selected_po <- r_po_data$Y[r,]
     # Here I use the same X covariate for the presence-only data as used for the survey data. The difference is that

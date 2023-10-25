@@ -5,6 +5,10 @@ author: Max Savery
 format: pdf
 ---
 
+This report is the more modular version of "nuthatch_site_occupancy_in_stan". The documentation regarding the processing and data collection can be found there and in "ebird_nuthatch_occupancy.rmd" as there the processing steps are directly in the script.
+
+However, this report matches the processing used in the optimal design experiments and is used as a way to verify the data generation and stan modelling once the processing steps were made modular.
+
 ```{r set-up}
 # Load the ebird data in the way it will be used in the sampling procedure, and fit it to a Bayesian model.
 library(sf)
@@ -48,6 +52,12 @@ data_pack <- read_rds(file.path(save_dir, "data_pack.RDS"))
 # Unpack
 bias_covars <- data_pack$bias_covars
 intensity_covars <- data_pack$intensity_covars
+# Standardize covars
+standardize <- function(x){ 
+  z <- (x - mean(x)) / sd(x) 
+  return( z)
+}
+intensity_covars <- apply(intensity_covars, 2, standardize)
 k_param_intn <- data_pack$k_param_intn
 k_param_bias <- data_pack$k_param_bias
 site_centroids <- data_pack$site_centroids
@@ -168,7 +178,6 @@ covars_sampled_sites
 # The PA counts are those generated from the PP parameters above.
 # For the sake of illustration we pick 1 dataset
 selected_counts <- pa_gen$Y[10,site_idx]
-selected_counts
 n_survey_vec <- rep(n_surveys, m)
 n_survey_vec
 data_site_occ = list(n_surveys=n_survey_vec, n_pa_sites=m, n_po_sites=sites, area_a=area_a, X=covars_sampled_sites, Y=selected_counts, PO=data_pack$counts,
@@ -256,5 +265,21 @@ p <- ggplot() +
     theme_minimal()+
     ggtitle("Generated occupancy probability at nuthatch sites")
 print(p)
+```
+Let's take a more detailed look at the sampler diagnostics, since we are having some issues with the initialization and BFMI.
+
+I want to try to replicate the E-BFMI error seen earlier: "Warning: 1 of 1 chains had an E-BFMI less than 0.2."
+```{r extra-diag}
+nuts_fit <- nuts_params(fit)
+lp_fit <- log_posterior(fit)
+head(nuts_fit)
+mcmc_parcoord(posterior, pars = all_params, np = nuts_fit)
+mcmc_parcoord_data(posterior, pars=all_params, np=nuts_fit)
+
+mcmc_nuts_divergence(nuts_fit, lp_fit)
+mcmc_nuts_treedepth(nuts_fit, lp_fit)
+mcmc_nuts_acceptance(nuts_fit, lp_fit)
+mcmc_nuts_energy(nuts_fit)
+mcmc_acf(posterior, pars=all_params, lags = 10)
 ```
 That summarizes the work needed to generate PA data using the prior predictive distribution from a PP when we have real data.
