@@ -417,7 +417,7 @@ generate_data_so <- function(data_reps, surface_data, corr_matrix, p_0, alpha, b
   Y_detection <- matrix(nrow=data_reps, ncol=sites)
   theta_reps <- matrix(nrow=data_reps, ncol=sites)
   for (r in 1:data_reps){
-    # Equivalent way to induce correlation
+    # Equivalent way to induce correlation  
     #R <- t(chol(corr_matrix)) 
     #theta <- b_0 + sampling_surface$aux*b_1 + R %*% rnorm(sites)
     if (link=="cloglog"){

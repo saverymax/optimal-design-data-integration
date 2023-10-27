@@ -45,6 +45,52 @@ nuthatch_poisson_process <- '
     }
 '
 
+nuthatch_poisson_process_gamma_constant <- '
+    data{
+      real<lower = 0> area_a;
+      real gamma;
+      int<lower = 1> N;
+      int<lower=0> k_i; // number of predictors for intensity
+      int<lower=0> k_b; // number of predictors for bias
+      matrix[N, k_i] X; // predictor matrix for intensity
+      matrix[N, k_b] Z; // predictor matrix for bias
+      array[N] int y;
+    }
+    parameters{
+      real alpha;
+      vector[k_i] beta;       // vector of params for intensity
+      vector[k_b] delta;      // vector of params for bias
+    }
+    model{
+      //priors
+      target += normal_lpdf(alpha | 0,10);
+      target += normal_lpdf(beta | 0,10);
+      target += normal_lpdf(delta | 0,10);
+
+      // likelihood
+      // log parameterization so we dont have to exponentiate coefs before passing into poisson distribution
+      // https://mc-stan.org/docs/functions-reference/poisson-distribution-log-parameterization.html
+      target += poisson_log_lpmf(y |  log(area_a) + (alpha + X * beta + gamma + Z * delta));
+    }
+    generated quantities{
+      //vector[N] lambda_rep;
+      //vector[N] lambda_rep_log;
+      //vector[N] b_rep;
+      //vector[N] lambda_bias;
+      array[N] int y_rep;
+      //lambda_rep = exp(alpha + beta * X);
+      //lambda_rep_log = alpha + beta * X;
+      ////.*abs(alpha + beta * X);
+      //b_rep = exp(gamma + delta * Z);
+      ////.*abs(gamma + delta * Z);
+      //// Thin the process
+      ////lambda_bias = lambda_rep .* b_rep;
+      //lambda_bias = exp(alpha + beta * X + gamma + delta * Z);
+      //// User guide has some examples of log poisson generation and poisson PPCs
+      y_rep = poisson_log_rng(log(area_a) + alpha + X * beta + gamma + Z * delta);
+    }
+'
+
 nuthatch_site_occ_no_po <- '
     data{
       real<lower = 0> area_a;

@@ -384,26 +384,49 @@ generate_ebird_pa <- function(data_reps, area_a, surface_data, p_0, pp_posterior
 }
 
 fit_point_process_ebird <- function(stan_path, exp_dir, sites, area_a, intensity_covars, bias_covars, r_po_data, k_i, k_b, pp_diagnostic,
-                                    subgrid, rast_surface){
+                                    subgrid, rast_surface, gamma_integration){
   # Fit the point process model to the PO data
   stan_models_path <- file.path(stan_path, "stan_nuthatch_models.R")
-  source(stan_models_path)
   model_path <- "nuthatch_poisson_process.stan"
-  model_string <- nuthatch_poisson_process
-  write(model_string, model_path)
-  # Use first rep of po data since it's repeated.
-  data_site_occ = list(N=sites, X=intensity_covars, y=r_po_data$Y[1,], Z=bias_covars, k_i=k_i, k_b=k_b, area_a=area_a)
-  model <- cmdstan_model(model_path) 
-  print("Fitting Point Process model to PO data")
-  fit <- model$sample(data=data_site_occ, seed=13, chains=3, iter_sampling=2000, iter_warmup=500) 
-  print(fit$summary())
-  all_params <- c("alpha", "gamma", "beta[1]", "beta[2]", "beta[3]", "beta[4]", "beta[5]", "delta[1]")
-  #all_params <- c("alpha", "gamma", "beta[1]", "beta[2]", "beta[3]", "delta[1]")
-  #intensity_params <- c("alpha", "beta[1]", "beta[2]", "beta[3]")
   intensity_params <- c("alpha", "beta[1]", "beta[2]", "beta[3]", "beta[4]", "beta[5]")
-  params_intercept <- c("alpha", "gamma")
-  
+  source(stan_models_path)
+  if (gamma_integration == TRUE){
+    model_string <- nuthatch_poisson_process_gamma_constant
+    write(model_string, model_path)
+    model <- cmdstan_model(model_path) 
+    gamma_reps <- 100
+    gamma_sample <- runif(gamma_reps, -1, 1)
+    pp_posterior <- matrix(nrow=gamma_reps, ncol=length(intensity_params))
+    all_params <- c("alpha", "beta[1]", "beta[2]", "beta[3]", "beta[4]", "beta[5]", "delta[1]")
+    params_intercept <- c("alpha")
+    for (i in 1:gamma_reps){
+      print(paste("Iteration: ", i, sep=""))
+      data_site_occ = list(gamma=gamma_sample[i], N=sites, X=intensity_covars, y=r_po_data$Y[1,], Z=bias_covars, k_i=k_i, k_b=k_b, area_a=area_a)
+      fit <- model$sample(data=data_site_occ, seed=13, chains=3, iter_sampling=2000, iter_warmup=500) 
+      fit_means <- fit$summary(intensity_params)$mean
+      pp_posterior[i,] <- fit_means
+    }
+  }else{
+    model_string <- nuthatch_poisson_process
+    write(model_string, model_path)
+    data_site_occ = list(N=sites, X=intensity_covars, y=r_po_data$Y[1,], Z=bias_covars, k_i=k_i, k_b=k_b, area_a=area_a)
+    # Use first rep of po data since it's repeated.
+    model <- cmdstan_model(model_path) 
+    print("Fitting Point Process model to PO data")
+    fit <- model$sample(data=data_site_occ, seed=13, chains=3, iter_sampling=2000, iter_warmup=500) 
+    print(fit$summary())
+    
+    all_params <- c("alpha", "gamma", "beta[1]", "beta[2]", "beta[3]", "beta[4]", "beta[5]", "delta[1]")
+    #all_params <- c("alpha", "gamma", "beta[1]", "beta[2]", "beta[3]", "delta[1]")
+    #intensity_params <- c("alpha", "beta[1]", "beta[2]", "beta[3]")
+    params_intercept <- c("alpha", "gamma")
+    
+    # Get posterior samples in matrix form
+    pp_posterior <- fit$draws(intensity_params, format="matrix")
+  }
+    
   if (exp_args$pp_diagnostic == T){
+    # Behvaior is a little different depending on if gamma_integration or not
     posterior <- fit$draws(all_params)
     color_scheme_set("mix-blue-pink")
     p_trace <- mcmc_trace(posterior,
@@ -428,7 +451,6 @@ fit_point_process_ebird <- function(stan_path, exp_dir, sites, area_a, intensity
     print(mcmc_intervals(fit$draws(), pars=all_params))
     print(mcmc_hist(fit$draws(), pars = all_params))
     print(mcmc_pairs(fit$draws(), pars=all_params))
-    print(mcmc_scatter(fit$draws(), pars=c('alpha', 'gamma')))
     print(mcmc_scatter(fit$draws(), pars=c('beta[1]', 'beta[2]')))
     print(mcmc_scatter(fit$draws(), pars=c('beta[2]', 'beta[3]')))
     print(mcmc_scatter(fit$draws(), pars=c('beta[1]', 'beta[3]')))
@@ -437,6 +459,7 @@ fit_point_process_ebird <- function(stan_path, exp_dir, sites, area_a, intensity
   }
     
   # Examine the ppd for y
+  # If gamma integration, then this will be the final iteration
   generated_yrep <- fit$draws("y_rep", format="matrix")
   yrep_means <- colMeans(generated_yrep)
   # Create new sf for the preds
@@ -453,8 +476,6 @@ fit_point_process_ebird <- function(stan_path, exp_dir, sites, area_a, intensity
   fig_name=file.path(exp_dir, "pp_predictions.png")
   ggsave(fig_name, plot=p, dpi=300, width=15, height=8, units="cm", bg="white", device="png", type="cairo")
   
-  # Take expectation from the PP params
-  pp_posterior <- fit$draws(intensity_params, format="matrix")
   print("Estimates for intensity (not bias) from pp model")
   print(colMeans(pp_posterior))
   saveRDS(pp_posterior, file.path(exp_dir, "pp_posterior_ebird.RDS"))
