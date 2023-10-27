@@ -52,8 +52,10 @@ parser <- add_option(parser, "--elevation_file", type="character", help="Name of
 parser <- add_option(parser, "--data_reps", type="integer", default=4, help="Number of dataset reps for criterion estimation")
 parser <- add_option(parser, "--cell_size", type="integer", default=10000, help="Size of one side of cell in point process grid")
 parser <- add_option(parser, "--auk_process", action="store_true", default=F, help="Boolean for running the initial auk filtering steps to generate smallers csv's")
-parser <- add_option(parser, "--pp_fit", action="store_true", default=T, help="Boolean to fit the Point Process posterior after data saving steps")
-parser <- add_option(parser, "--pp_diagnostic", action="store_true", default=T, help="Boolean for printing diagnostics for point process model")
+parser <- add_option(parser, "--data_pack", action="store_true", default=F, help="Boolean for generating the data pack if not already generated")
+parser <- add_option(parser, "--pp_fit", action="store_true", default=F, help="Boolean to fit the Point Process posterior after data saving steps")
+parser <- add_option(parser, "--pp_diagnostic", action="store_true", default=F, help="Boolean for printing diagnostics for point process model")
+parser <- add_option(parser, "--gamma_integration", action="store_true", default=F, help="Boolean for integrating over gamma in the PP")
 
 exp_args <- parse_args(parser)
 print(exp_args)
@@ -65,7 +67,6 @@ source(file.path(exp_args$working_dir, "presence_only_functions.R"))
 stan_models_path <- file.path(exp_args$working_dir, "stan_models", "stan_nuthatch_models.R")
 source(stan_models_path)
 # Set data paths
-exp_name <- exp_args$exp_name
 save_dir <- file.path(exp_args$working_dir, exp_args$save_dir)
 base_data_dir <- file.path(exp_args$base_data_dir)
 ebd_download_dir <- file.path(exp_args$ebird_data_dir)
@@ -79,6 +80,7 @@ dir.create(save_dir)
 # Most of the parameters from the simulation code we don't need. Some we keep, such as m and the prob of detection
 data_reps <- exp_args$data_reps
 cell_size <- exp_args$cell_size
+gamma_integration <- exp_args$gamma_integration
 
 # This will save the PO data and PA data to the specified dirs in hardcoded file names.
 if (exp_args$auk_process==TRUE){
@@ -88,18 +90,21 @@ if (exp_args$auk_process==TRUE){
 rast_surface_path <- file.path(save_dir, "rast_surface.tif")
 # Hardcode this for now
 map_prj <- st_crs("ESRI:102003")
-main_data_handling_oe(map_prj, map_path, base_data_dir, ebd_download_dir, save_dir, lc_path, modis_path, elev_path, rast_surface_path, cell_size)
+if (exp_args$data_pack==TRUE){
+  main_data_handling_oe(map_prj, map_path, base_data_dir, ebd_download_dir, save_dir, lc_path, modis_path, elev_path, rast_surface_path, cell_size)
+}
 # Then read in the data and fit the PP model if specified
 data_pack <- read_rds(file.path(save_dir, "data_pack.RDS"))
 # Unpack
 bias_covars <- data_pack$bias_covars
-intensity_covars <- data_pack$intensity_covars
+intensity_covars_unstd <- data_pack$intensity_covars
 # Standardize covars
 standardize <- function(x){ 
   z <- (x - mean(x)) / sd(x) 
   return( z)
 }
-intensity_covars <- apply(intensity_covars, 2, standardize)
+intensity_covars <- apply(intensity_covars_unstd, 2, standardize)
+#intensity_covars <- data_pack$intensity_covars
 k_param_intn <- data_pack$k_param_intn
 k_param_bias <- data_pack$k_param_bias
 site_centroids <- data_pack$site_centroids
@@ -119,11 +124,70 @@ area_a <- (cell_size/1000)^2
 #area_a <- 1
 if (exp_args$pp_fit == TRUE){
   fit_point_process_ebird(stan_path, save_dir, sites, area_a, intensity_covars, bias_covars, r_po_data, k_param_intn, k_param_bias, pp_diagnostic,
-                          subgrid, rast_surface)
-  # Check the posterior
-  # The function should save the matrix of MCMC draws, so we can later sample from them or take the means.
-  pp_posterior <- read_rds(file.path(save_dir, "pp_posterior_ebird.RDS"))
-  print(colMeans(pp_posterior))
-  pp_posterior <- matrix(rep(colMeans(pp_posterior), data_reps), nrow=data_reps, byrow = T)
-  print(pp_posterior)
+                          subgrid, rast_surface, gamma_integration)
 }
+# This assumes somehow the file already exists. If we run this script for the first time, we must set pp_fit=TRUE 
+# Check the posterior
+# The function should save the matrix of MCMC draws, so we can later sample from them or take the means.
+pp_posterior <- read_rds(file.path(save_dir, "pp_posterior_ebird.RDS"))
+print(pp_posterior)
+pp_posterior <- matrix(rep(colMeans(pp_posterior), data_reps), nrow=data_reps, byrow = T)
+print(pp_posterior)
+# do We need to back-transform the coefficients for prediction?
+# Use the original coefficients
+#posterior_means <- colMeans(pp_posterior)
+#posterior_means
+#covar_means <- colMeans(intensity_covars_unstd)
+#covar_std <- apply(intensity_covars_unstd, 2, sd)
+#unstd_means <- (posterior_means[2:length(posterior_means)] * covar_std) + covar_means
+#posterior_unstd_means <- c(posterior_means[1], unstd_means)
+#posterior_unstd_means
+#pp_posterior <- matrix(rep(posterior_unstd_means, data_reps), nrow=data_reps, byrow = T)
+#pp_posterior
+
+# Also check the data that gets generated using this posterior
+visits <- 5
+link_func <- "cloglog"
+p_0 <- 0.2
+print("Creating datasets for fixed survey effort across sites")
+r_survey_data_n5 <- generate_ebird_pa(data_reps, area_a, intensity_covars, p_0, pp_posterior, visits, sites, link=link_func)
+
+d_examine <- ifelse(data_reps<3, data_reps, 3)
+for(d_i in 1:d_examine){
+  occ_map <- st_geometry(subgrid) %>% st_sf()
+  occ_map$occ <- r_survey_data_n5$occupancy[d_i,]
+  occ_map$prob <- r_survey_data_n5$theta[d_i,]
+  occ_map$counts <- r_survey_data_n5$Y[d_i,]
+  
+  # Then plot the predictions
+  occ_rast <- terra::rasterize(vect(occ_map), rast_surface, field="occ")
+  p <- ggplot() + 
+    geom_spatraster(data=occ_rast) +
+    scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.8, na.value="white") +
+    #geom_sf(data = prj_state, color=alpha("black",0.4), fill='transparent', linewidth=0.7) + 
+    theme_minimal()+
+    ggtitle("Occupancy maps generated over Prior Predictive Distribtion")
+  fig_name=file.path(save_dir, paste("gen_pa_occ", d_i, ".png", sep=""))
+  ggsave(fig_name, plot=p, dpi=300, width=15, height=8, units="cm", bg="white", device="png", type="cairo")
+  
+  prob_rast <- terra::rasterize(vect(occ_map), rast_surface, field="prob")
+  p <- ggplot() + 
+    geom_spatraster(data=prob_rast) +
+    scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.8, na.value="white") +
+    #geom_sf(data = prj_state, color=alpha("black",0.4), fill='transparent', linewidth=0.7) + 
+    theme_minimal()+
+    ggtitle("Probability maps generated over Prior Predictive Distribtion")
+  fig_name=file.path(save_dir, paste("gen_pa_prob", d_i, ".png", sep=""))
+  ggsave(fig_name, plot=p, dpi=300, width=15, height=8, units="cm", bg="white", device="png", type="cairo")
+  
+  count_rast <- terra::rasterize(vect(occ_map), rast_surface, field="counts")
+  p <- ggplot() + 
+    geom_spatraster(data=count_rast) +
+    scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.8, na.value="white") +
+    #geom_sf(data = prj_state, color=alpha("black",0.4), fill='transparent', linewidth=0.7) + 
+    theme_minimal()+
+    ggtitle("Counts at sites generated over Prior Predictive Distribtion")
+  fig_name=file.path(save_dir, paste("gen_pa_y", d_i, ".png", sep=""))
+  ggsave(fig_name, plot=p, dpi=300, width=15, height=8, units="cm", bg="white", device="png", type="cairo")
+}
+

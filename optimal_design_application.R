@@ -43,8 +43,6 @@ parser <- add_option(parser, "--exch_iter", type="integer", default=2,
                      help="Number of iterations of exchange before ending optimization. Recommended is 20 but default is set low for test runs.")
 parser <- add_option(parser, "--mcmc_iter", type="integer", default=1000, help="Number of MCMC iterations in Stan")
 parser <- add_option(parser, "--p_logging", action="store_true", default=F, help="Boolean for logging information about posterior estimates")
-parser <- add_option(parser, "--pp_fit", action="store_true", default=F, help="Boolean to fit the Point Process posterior after data saving steps")
-parser <- add_option(parser, "--pp_diagnostic", action="store_true", default=F, help="Boolean for printing diagnostics for point process model")
 parser <- add_option(parser, "--v_parallel", action="store_true", default=F, help="Boolean for parallel computation of V criterion")
 parser <- add_option(parser, "--cores", type="integer", default=4, help="Number of cores to use for parallel processing")
 parser <- add_option(parser, "--p", type="double", default=0.2, help="Probability of detection")
@@ -125,17 +123,15 @@ stan_path <- file.path(exp_args$working_dir, "stan_models")
 area_a <- (cell_size/1000)^2
 # Set to one for practical purposes
 #area_a <- 1
-# The point process model can be fit here or in the process_ebird script. To run it here, provide the fit_pp flag.
-# This will save a new rds file which can be loaded below
-if (exp_args$pp_fit == TRUE){
-  # We fit the PP model to the PO data and use the expectation of this posterior to generate the PA data
-  fit_point_process_ebird(stan_path, exp_dir, sites, area_a, data_reps, intensity_covars, bias_covars, r_po_data, k_param_intn, k_param_bias, pp_diagnostic,
-                        subgrid, rast_surface)
+# The point process model needs to be fit in the process_ebird script.Please see documentation regarding that before using the optimal design code 
+if(!file.exists(file.path(data_save_dir, "pp_posterior_ebird.RDS"))){
+  stop("Please run process_ebird.R with the relevant CLI arguments before running the optimal design! See the documentation for more details")
+}else{
+  pp_posterior <- read_rds(file.path(data_save_dir, "pp_posterior_ebird.RDS"))
+  pp_posterior <- matrix(rep(colMeans(pp_posterior), data_reps), nrow=data_reps, byrow = T)
+  print("Intensity fit from point process")
+  print(pp_posterior)
 }
-pp_posterior <- read_rds(file.path(data_save_dir, "pp_posterior_ebird.RDS"))
-pp_posterior <- matrix(rep(colMeans(pp_posterior), data_reps), nrow=data_reps, byrow = T)
-print("Intensity fit from point process")
-print(pp_posterior)
 # There is a question of whether to use draws from the posterior or just the expectation. This will have to be resolved
 # later when discussing Bayesian optimal  design
 

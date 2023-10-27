@@ -152,7 +152,6 @@ Next, let's prepare the covariate data. This comes in the form of raster data, p
 To download the PROBA-V satellite data, go to https://land.copernicus.eu/global/products/lc and use the world viewer. Select the appropriate section/s 
 of the globe for your use-case. On this case, we simply need one section that appropriately covers Tennessee. Information regarding the product itself can be found in the documentation: https://land.copernicus.eu/global/sites/cgls.vito.be/files/products/CGLOPS1_PUM_LC100m-V3_I3.4.pdf. Important for this analysis are the classifications of each landcover type.
 
-TODO: Include picture of this from the PDF.
 ```{r lc-process}
 landcover_filename <- file.path(base_data_dir, "copernicus_landcover/W100N40_PROBAV_LC100_global_v3.0.1_2019-nrt_Discrete-Classification-map_EPSG-4326.tif")
 file.exists(landcover_filename)
