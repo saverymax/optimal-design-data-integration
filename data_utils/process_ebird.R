@@ -130,20 +130,11 @@ if (exp_args$pp_fit == TRUE){
 # Check the posterior
 # The function should save the matrix of MCMC draws, so we can later sample from them or take the means.
 pp_posterior <- read_rds(file.path(save_dir, "pp_posterior_ebird.RDS"))
+print("Loaded raw posterior. If gamma_integration is/was true, then this will be mean of posterior from each draw of gample, not the posterior samples themselves")
 print(pp_posterior)
 pp_posterior <- matrix(rep(colMeans(pp_posterior), data_reps), nrow=data_reps, byrow = T)
+print("Replicated means over data reps")
 print(pp_posterior)
-# do We need to back-transform the coefficients for prediction?
-# Use the original coefficients
-#posterior_means <- colMeans(pp_posterior)
-#posterior_means
-#covar_means <- colMeans(intensity_covars_unstd)
-#covar_std <- apply(intensity_covars_unstd, 2, sd)
-#unstd_means <- (posterior_means[2:length(posterior_means)] * covar_std) + covar_means
-#posterior_unstd_means <- c(posterior_means[1], unstd_means)
-#posterior_unstd_means
-#pp_posterior <- matrix(rep(posterior_unstd_means, data_reps), nrow=data_reps, byrow = T)
-#pp_posterior
 
 # Also check the data that gets generated using this posterior
 visits <- 5
