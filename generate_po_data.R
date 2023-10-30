@@ -68,8 +68,6 @@ r_po_data <- generate_ppp_data_r(sampling_surface, params, sites, data_reps, cor
 
 r_po_data$params <- list(alpha=alpha, beta=beta, gamma=gamma, delta=delta)
 
-print(r_po_data)
-
 # Save the PO data sets
 param_setting <- paste(exp_args$exp_name, "_", "ints-", exp_args$intensity_func ,"_a=", alpha, "_b=", beta, "_g=", gamma, "_d=", delta, sep="")
 p <- ggplot(sampling_surface, aes(x, y, fill=r_po_data$lambda[data_reps,])) + 
