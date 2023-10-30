@@ -54,4 +54,11 @@ Rscript generate_po_data.R --working_dir=. --exp_name=po_gen --alpha=-2 --beta=0
 
 The bash script will run the R script with all parameter combinations that we use in the experiments.
 
-Then, we can run the optimal design using a particular PO simulated dataset.
+Then, we can run the optimal design using a particular PO simulated dataset. This is admittedly a bit difficult since we have to specify the same parameter sets that are used to generate the PO data in the design script, where these same parameters (alpha and beta) will be used to generate the PA data. For example given that we have ```--alpha=-2 --beta=0.5 --gamma=1 --delta=0.25``` above, in the design we need to run the script with
+```
+Rscript optimal-design-data-integration/optimal_design_site_occ.R --working_dir=. --exp_name=oe_model-4_m-5_n-10_r-96_intns-donut_a--2_b-0.5_g-1_d-0.25_p-0.2 --data_reps=96 --m=5 --min_visits=1 --max_visits=10 --vary_visits --model_selection=4 --random_starts=3 --exch_iter=20 --mcmc_iter=1000 --use_sim_po --po_data_file=po_gen_ints-donut_a=-2_b=0.5_g=1_d=0.25.Rds --intensity_func="donut" --bias_func="exponential" --v_parallel --cores=48 --alpha=-2 --beta=0.5 --gamma=1 --delta=0.25 --p=0.2 --aux_cor=0.8
+```
+for example. We also need to make sure we use the --use_sim_po flag with the correct dataset for the specified parameters:
+```
+--po_data_file=po_gen_ints-donut_a=-2_b=0.5_g=1_d=0.25.Rds
+```
