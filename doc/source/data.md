@@ -45,3 +45,13 @@ Another option is to use the Copernicus data viewer: See https://land.copernicus
 
 We can also access 
 ## Simulated data
+
+To run the simulated data experiments, we have to first run the script generate_po_data.R script. The bash script generate_po_datasets.sh contains the command to do so. The reason that we have to run this script is to create the PO datasets that will be used throughout the optimal design. But the same parameters that create the PO data must also be used to create the PA data. We pregenerate the PO data so that any experiment that particular combination of parameters can just load the correct dataset. To generate the PO dataset, we can run
+
+```
+Rscript generate_po_data.R --working_dir=. --exp_name=po_gen --alpha=-2 --beta=0.5 --gamma=1 --delta=0.25 --intensity_func="donut" --bias_fun="exponential" --data_reps=96
+```
+
+The bash script will run the R script with all parameter combinations that we use in the experiments.
+
+Then, we can run the optimal design using a particular PO simulated dataset.
