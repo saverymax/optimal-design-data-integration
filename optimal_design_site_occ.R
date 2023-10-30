@@ -147,8 +147,6 @@ if (exp_args$use_sim_po==T){
   stopifnot(r_po_data$params$gamma==gamma)
   stopifnot(r_po_data$params$delta==delta)
 }else{
-  # Load data from actual PO survey
-  # Will need to replicate this by the number of data reps.
   stop("No real data source implemented in this script")
 }
   
