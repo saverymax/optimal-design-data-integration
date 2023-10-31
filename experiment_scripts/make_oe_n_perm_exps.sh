@@ -6,7 +6,7 @@ beta="0.5"
 gamma="1"
 #gamma="-2 -1 -0.5 1"
 #delta="0.25"
-delta="-0.25 0.25 2"
+delta="0.25 2"
 #detection_p="0.2 0.7"
 detection_p="0.2"
 n_surveys="5 10"
@@ -31,12 +31,12 @@ echo "#!/bin/bash
 #PBS -o /data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/job_output/
 #PBS -e /data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/job_output/
 #PBS -N $exp_name
-#PBS -l walltime=02:00:00
+#PBS -l walltime=10:00:00
 #PBS -l nodes=1:ppn=$cores
 #PBS -l mem=100gb
 
 module load CmdStanR
-Rscript $WORKDIR/optimal_design_site_occ.R --working_dir=$WORKDIR --exp_name=$exp_name --data_reps=$(($cores*2)) --m=5 --min_visits=1 --max_visits=$n --vary_visits --model_selection=$m --random_starts=3 --exch_iter=20 --mcmc_iter=1000 --use_sim_po --intensity_func=\"$intensity\" --bias_func=\"$bias\" --v_parallel --cores=$cores --alpha=$alpha --beta=$beta --gamma=$g --delta=$d --p=$p --aux_cor=0.8" > $exp_name.sh
+Rscript $WORKDIR/optimal_design_site_occ.R --working_dir=$WORKDIR --exp_name=$exp_name --data_reps=$(($cores*2)) --m=5 --min_visits=1 --max_visits=$n --vary_visits --model_selection=$m --random_starts=10 --exch_iter=40 --mcmc_iter=1000 --use_sim_po --po_data_file="po_gen_ints-${intensity}_a=${alpha}_b=${beta}_g=${g}_d=${d}.Rds" --intensity_func=\"$intensity\" --bias_func=\"$bias\" --v_parallel --cores=$cores --alpha=$alpha --beta=$beta --gamma=$g --delta=$d --p=$p --aux_cor=0.8" > $exp_name.sh
 echo "qsub $exp_name.sh" >> run_initial_model_comparison.sh
 done
 done

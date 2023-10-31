@@ -147,8 +147,6 @@ if (exp_args$use_sim_po==T){
   stopifnot(r_po_data$params$gamma==gamma)
   stopifnot(r_po_data$params$delta==delta)
 }else{
-  # Load data from actual PO survey
-  # Will need to replicate this by the number of data reps.
   stop("No real data source implemented in this script")
 }
   
@@ -451,7 +449,7 @@ for (r_start in 1:random_starts){
           if (exp_args$v_parallel==T){
             combined_df <- cbind(r_survey_data$occupancy, r_survey_data$Y, r_po_data$Y)
             estimate_vec <- parApply(clust, combined_df, 1, FUN=estimate_v_parallel, model, current_visits, m, sites, sampling_surface, 
-                                         neighbor_idx, select_sites, params, generated_vars, model_selection, exp_args$mcmc_iter)
+                                         neighbor_idx, select_sites, generated_vars, model_selection, exp_args$mcmc_iter)
             # Compatible format with non-parallel v
             estimate_mat <- matrix(estimate_vec, nrow=data_reps, ncol=1)
           }
