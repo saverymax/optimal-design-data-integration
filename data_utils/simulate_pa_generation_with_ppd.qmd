@@ -73,13 +73,13 @@ TODO: EDIT: The above isn't that clear.
 
 Therefore, we would like to explore how the effect of sampling bias (mispecification of the PP model) can effect the PA generation. To do so, we will conduct the following experiments:
 
-Assume a known distribution for $\theta$, p(\theta). We can then generate PA data in two ways:
+Assume a known distribution for $\theta$, $p(\theta)$. We can then generate PA data in two ways:
   1. Generate PA $p(y|D)$ data by repeatedly drawing from this distribution and simulating from the conditional of y. Here we also generate PO data
     by simulating from the draws of $\theta$ as the parameters induce both PO and PA processes.
 $$
 \begin{aligned}
 p(\theta) \sim N(\mu, \sigma)\\
-PO \sim Poisson(\lambda(\theta))
+PO \sim Poisson(\lambda(\theta))\\
 PA \sim Binomial(n, G(\theta))\\
 \end{aligned}
 $$
@@ -88,7 +88,7 @@ $$
 $$
 \begin{aligned}
 p(\theta) \sim N(\mu, \sigma)\\
-PO \sim Poisson(\lambda(\theta))
+PO \sim Poisson(\lambda(\theta))\\
 \theta = NHPP(PO; \theta)\\
 PA \sim Binomial(n, G(\theta))
 \end{aligned}
