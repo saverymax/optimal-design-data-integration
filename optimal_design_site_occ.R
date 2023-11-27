@@ -140,14 +140,18 @@ if (exp_args$use_sim_po==T){
   print(r_po_data)
   Y_positive_indices <- which(r_po_data$Y>0)
   # This is the data at which there are counts > 0
-  print("Data wiath counts > 0")
+  print("Data with counts > 0")
   print(r_po_data$Y[Y_positive_indices])
+  # Subset based on datareps in this script
+  # The PO data has been pregenerated with 96 reps, tho
+  # we can regenerate
+  r_po_data$Y <- r_po_data$Y[1:data_reps, ]
   stopifnot(r_po_data$params$alpha==alpha)
   stopifnot(r_po_data$params$beta==beta)
   stopifnot(r_po_data$params$gamma==gamma)
   stopifnot(r_po_data$params$delta==delta)
 }else{
-  stop("No real data source implemented in this script")
+  stop("No other data source implemented in this script")
 }
   
   
@@ -325,7 +329,11 @@ for (r_start in 1:random_starts){
   # from the sampling surface, which includes the auxiliary information.
   # These sites will have n_i = n, the others will have n_i = 0
   # Only sites with n_i=n will contribute to likelihood for the site-occupancy model.
-  site_idx <- sample(1:sites, m, replace=F)
+  if (r_start == 1){
+    site_idx <- c()
+  }else{
+    site_idx <- sample(1:sites, m, replace=F)
+  }
   # Initialize for exchange algorithm
   # I don't need best_neighbor_idx but it allows me to not modify the 
   # the vector that is looped over during the exchange. Even though this concurrent looping should be ok, as the sites are independently 
