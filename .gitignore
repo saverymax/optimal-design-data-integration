@@ -3,6 +3,7 @@ stan_models/*.exe
 *.pdf
 *.stan
 experimental_runs*/*
+data/ebird/*.png
 experimental_scripts/oe*
 optimal_design_site_occ_files/
 job_output*/*
