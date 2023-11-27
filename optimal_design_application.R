@@ -145,13 +145,13 @@ link_func <- "cloglog"
 if (exp_args$vary_visits == TRUE){
   visits <- c(exp_args$min_visits, exp_args$max_visits)
   print("Creating datasets for varying survey effort between sites")
-  r_survey_data_n1  <- generate_ebird_pa(data_reps, area_a, intensity_covars, p_0, pp_posterior, visits[1], sites, link=link_func)
-  r_survey_data_n5  <- generate_ebird_pa(data_reps, area_a, intensity_covars, p_0, pp_posterior, visits[2], sites, link=link_func)
+  r_survey_data_n1 <- generate_ebird_pa(data_reps, area_a, intensity_covars, p_0, pp_posterior, visits[1], sites, link=link_func)
+  r_survey_data_n5 <- generate_ebird_pa(data_reps, area_a, intensity_covars, p_0, pp_posterior, visits[2], sites, link=link_func)
 } else{
   visits <- c(exp_args$max_visits)
   print("Creating datasets for fixed survey effort across sites")
-  r_survey_data_n1  <- generate_ebird_pa(data_reps, area_a, intensity_covars, p_0, pp_posterior, visits[1], sites, link=link_func)
-  r_survey_data_n5  <- generate_ebird_pa(data_reps, area_a, intensity_covars, p_0, pp_posterior, visits[1], sites, link=link_func)
+  r_survey_data_n1 <- generate_ebird_pa(data_reps, area_a, intensity_covars, p_0, pp_posterior, visits[1], sites, link=link_func)
+  r_survey_data_n5 <- generate_ebird_pa(data_reps, area_a, intensity_covars, p_0, pp_posterior, visits[1], sites, link=link_func)
 }
 print(paste("Current visit options:", paste(visits, collapse=" ")))
 
