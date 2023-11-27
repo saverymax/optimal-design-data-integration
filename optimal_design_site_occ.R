@@ -37,6 +37,7 @@ parser <- add_option(parser, "--mcmc_iter", type="integer", default=1000, help="
 parser <- add_option(parser, "--intensity_func", type="character", default="donut", help="Intensity function for sampling surface")
 parser <- add_option(parser, "--bias_func", type="character", default="exponential", help="Bias function for sampling surface")
 parser <- add_option(parser, "--p_logging", action="store_true", default=F, help="Boolean for logging information about posterior estimates")
+parser <- add_option(parser, "--debug_stan", action="store_true", default=F, help="Boolean for turning on messages from stan model in nonparallel V")
 parser <- add_option(parser, "--v_parallel", action="store_true", default=F, help="Boolean for parallel computation of V criterion")
 parser <- add_option(parser, "--cores", type="integer", default=4, help="Number of cores to use for parallel processing")
 parser <- add_option(parser, "--alpha", type="double", default=-2, help="Intercept for intensity")
@@ -137,7 +138,6 @@ print(paste("Current visit options:", paste(visits, collapse=" ")))
 if (exp_args$use_sim_po==T){
   r_po_data <- readRDS(file=file.path(exp_args$working_dir, 
                             "data", "sim_data", exp_args$po_data_file))
-  print(r_po_data)
   Y_positive_indices <- which(r_po_data$Y>0)
   # This is the data at which there are counts > 0
   print("Data with counts > 0")
@@ -154,8 +154,6 @@ if (exp_args$use_sim_po==T){
   stop("No other data source implemented in this script")
 }
   
-  
-
 # For the coordinate exchange algorithm, we will need to precompute the nearest neighbors.
 # I take a naive approach here of choosing the top l neighbors
 l <- 4
@@ -330,7 +328,7 @@ for (r_start in 1:random_starts){
   # These sites will have n_i = n, the others will have n_i = 0
   # Only sites with n_i=n will contribute to likelihood for the site-occupancy model.
   if (r_start == 1){
-    site_idx <- c()
+    site_idx <- c(29, 30, 29, 40, 49)
   }else{
     site_idx <- sample(1:sites, m, replace=F)
   }
@@ -351,6 +349,10 @@ for (r_start in 1:random_starts){
   v_vec <- c()
   # Compute v for initial design
   # Not comparing sampling effort here
+  print(select_sites)
+  print("site idx")
+  print(site_idx)
+  print(r_survey_data_n5)
   if (exp_args$v_parallel==T){
     combined_df <- cbind(r_survey_data_n5$occupancy, r_survey_data_n5$Y, r_po_data$Y)
     estimate_vec <- parApply(clust, combined_df, 1, FUN=estimate_v_parallel, model, possible_visits, m, sites, sampling_surface, 
@@ -361,7 +363,7 @@ for (r_start in 1:random_starts){
   else{
     estimate_mat <- estimate_v(model, possible_visits, data_reps, m, sites, sampling_surface, 
                                site_idx, select_sites, r_survey_data_n5, r_po_data,
-                               p_logging, params, generated_vars, model_selection, exp_args$mcmc_iter)
+                               p_logging, params, generated_vars, model_selection, exp_args$mcmc_iter, exp_args$debug_stan)
   }
   # Once the posterior is computed on each of R datasets, find the average score:
   new_v_est <- sum(estimate_mat) / data_reps
@@ -464,7 +466,7 @@ for (r_start in 1:random_starts){
           else{
             estimate_mat <- estimate_v(model, current_visits, data_reps, m, sites, sampling_surface, 
                                        neighbor_idx, select_sites, r_survey_data, r_po_data,
-                                       p_logging, params, generated_vars, model_selection, exp_args$mcmc_iter)
+                                       p_logging, params, generated_vars, model_selection, exp_args$mcmc_iter, exp_args$debug_stan)
           }
           # Once the posterior is computed on each of R datasets, find the average score:
           new_v_est <- sum(estimate_mat) / data_reps
