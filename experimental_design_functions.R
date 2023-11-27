@@ -41,7 +41,7 @@ design_criteria <- function(criteria, sim_occ, obs_occ){
 
 estimate_v <- function(model, n_surveys, data_reps, m, sites, sampling_surface, 
                        select_idx, select_sites, r_survey_data, r_po_data,
-                       p_logging, params, generated_vars, model_selection, mcmc_iter){
+                       p_logging, params, generated_vars, model_selection, mcmc_iter, debug_stan){
   
   estimate_mat <- matrix(nrow=data_reps, ncol=1)
   for (r in 1:data_reps){
@@ -69,12 +69,17 @@ estimate_v <- function(model, n_surveys, data_reps, m, sites, sampling_surface,
     else{
       stop("Other models implementation needs to be checked")
     }
+    # For debugging quiet_model can be turned off
     # refresh=0 turns off messages except errors from stan
     # quiet function silences stan output 
-    fit <- quiet(model$sample(data=data_site_occ, seed=13, chains=1, 
-                              iter_sampling=mcmc_iter, iter_warmup=100, refresh=0, show_messages=F))
-    #fit <- model$sample(data=data_site_occ, seed=13, chains=1, 
-    #                          iter_sampling=mcmc_iter, iter_warmup=100)
+    if (debug_stan==F){
+      fit <- quiet(model$sample(data=data_site_occ, seed=13, chains=1, 
+                                iter_sampling=mcmc_iter, iter_warmup=100, refresh=0, show_messages=F))
+    }
+    else{
+      fit <- model$sample(data=data_site_occ, seed=13, chains=1, 
+                                iter_sampling=mcmc_iter, iter_warmup=100)
+    }
     if (p_logging==T){
       print("Logging posterior")
       posterior <- fit$draws()
