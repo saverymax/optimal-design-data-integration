@@ -353,7 +353,6 @@ for (r_start in 1:random_starts){
   print(select_sites)
   print("site idx")
   print(site_idx)
-  print(r_survey_data_n5)
   if (exp_args$v_parallel==T){
     combined_df <- cbind(r_survey_data_n5$occupancy, r_survey_data_n5$Y, r_po_data$Y)
     estimate_vec <- parApply(clust, combined_df, 1, FUN=estimate_v_parallel, model, possible_visits, m, sites, sampling_surface, 
