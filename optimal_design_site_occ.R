@@ -328,6 +328,7 @@ for (r_start in 1:random_starts){
   # These sites will have n_i = n, the others will have n_i = 0
   # Only sites with n_i=n will contribute to likelihood for the site-occupancy model.
   if (r_start == 1){
+    # Hardcode start where we start by sampling near biased area.
     site_idx <- c(29, 30, 29, 40, 49)
   }else{
     site_idx <- sample(1:sites, m, replace=F)
