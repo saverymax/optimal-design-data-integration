@@ -160,22 +160,24 @@ l <- 4
 nearest_neighbors <- get_neighbors(sampling_surface, l)
 dim(nearest_neighbors)
 nearest_neighbors
+fig_text_size <- 7
+fig_title_size <- 10
 
 # Use the final generation iteration to look at the presence-absence and presence-only data
 p <- ggplot(sampling_surface, aes(x, y, fill=aux_x)) + 
   geom_tile() +
-  scale_fill_viridis(discrete=FALSE, name="X") +
-  ggtitle("Initial sampling surface, X covariate") +
-  theme(text=element_text(size=5), legend.key.size = unit(0.25, 'cm')) +
+  scale_fill_viridis(discrete=FALSE, name="") +
+  labs(title="Intensity covariate", x="", y="") + 
+  theme(text=element_text(size=fig_text_size), axis.title = element_text(size = fig_title_size), legend.key.size = unit(0.25, 'cm')) +
   coord_fixed()
 fig_name <- file.path(fig_dir, paste("sampling_surface_aux_x.png", sep=""))
 save_basic_plots(fig_name, p)
 
 p <- ggplot(sampling_surface, aes(x, y, fill=aux_z)) + 
   geom_tile() +
-  scale_fill_viridis(discrete=FALSE, name="Z") +
-  ggtitle("Initial sampling surface, Z covariate") +
-  theme(text=element_text(size=5), legend.key.size = unit(0.25, 'cm')) +
+  scale_fill_viridis(discrete=FALSE, name="") +
+  labs(title="Bias covariate", x="", y="") + 
+  theme(text=element_text(size=fig_text_size), axis.title = element_text(size = fig_title_size), legend.key.size = unit(0.25, 'cm')) +
   coord_fixed()
 fig_name <- file.path(fig_dir, paste("sampling_surface_aux_z.png", sep=""))
 save_basic_plots(fig_name, p)
@@ -184,8 +186,8 @@ save_basic_plots(fig_name, p)
 p <- ggplot(sampling_surface, aes(x, y, fill=r_survey_data_n1$Y[data_reps,])) + 
   geom_tile() +
   scale_fill_viridis(discrete=FALSE, name="Counts") +
-  ggtitle("Generated counts per site, sampling effort=1") +
-  theme(text=element_text(size=5), legend.key.size = unit(0.25, 'cm')) +
+  labs(title="Generated counts per site,\nsampling effort=1", x="", y="") + 
+  theme(text=element_text(size=fig_text_size), axis.title = element_text(size = fig_title_size), legend.key.size = unit(0.25, 'cm')) +
   coord_fixed()
 fig_name <- file.path(fig_dir, paste("counts-per-site_n1.png", sep=""))
 save_basic_plots(fig_name, p)
@@ -193,8 +195,8 @@ save_basic_plots(fig_name, p)
 p <- ggplot(sampling_surface, aes(x, y, fill=r_survey_data_n1$occupancy[data_reps,])) + 
   geom_tile() +
   scale_fill_viridis(discrete=FALSE, name="Occupancy") +
-  ggtitle("Generated occupancy per site, sampling effort=1") +
-  theme(text=element_text(size=5), legend.key.size = unit(0.25, 'cm')) +
+  labs(title="Generated occupancy persite,\nsampling effort=1", x="", y="") + 
+  theme(text=element_text(size=fig_text_size), axis.title = element_text(size = fig_title_size), legend.key.size = unit(0.25, 'cm')) +
   coord_fixed()
 fig_name <- file.path(fig_dir, paste("occ-site_n1.png", sep=""))
 save_basic_plots(fig_name, p)
@@ -202,8 +204,8 @@ save_basic_plots(fig_name, p)
 p <- ggplot(sampling_surface, aes(x, y, fill=r_survey_data_n1$theta[data_reps,])) + 
   geom_tile() +
   scale_fill_viridis(discrete=FALSE, name="Theta") +
-  ggtitle("generated occupancy probability per site, sampling effort=1") +
-  theme(text=element_text(size=5), legend.key.size = unit(0.25, 'cm')) +
+  labs(title="generated occupancy probability\nper site, sampling effort=1", x="", y="") + 
+  theme(text=element_text(size=fig_text_size), axis.title = element_text(size = fig_title_size), legend.key.size = unit(0.25, 'cm')) +
   coord_fixed()
 fig_name <- file.path(fig_dir, paste("occ-p-site_n1.png", sep=""))
 save_basic_plots(fig_name, p)
@@ -211,8 +213,8 @@ save_basic_plots(fig_name, p)
 p <- ggplot(sampling_surface, aes(x, y, fill=r_survey_data_n5$Y[data_reps,])) + 
   geom_tile() +
   scale_fill_viridis(discrete=FALSE, name="Counts") +
-  ggtitle("Generated counts per site, sampling effort=5") +
-  theme(text=element_text(size=5), legend.key.size = unit(0.25, 'cm')) +
+  labs(title="Generated counts per site,\nsampling effort=5", x="", y="") + 
+  theme(text=element_text(size=fig_text_size), axis.title = element_text(size = fig_title_size), legend.key.size = unit(0.25, 'cm')) +
   coord_fixed()
 fig_name <- file.path(fig_dir, paste("counts-per-site_n5.png", sep=""))
 save_basic_plots(fig_name, p)
@@ -220,8 +222,8 @@ save_basic_plots(fig_name, p)
 p <- ggplot(sampling_surface, aes(x, y, fill=r_survey_data_n5$occupancy[data_reps,])) + 
   geom_tile() +
   scale_fill_viridis(discrete=FALSE, name="Occupancy") +
-  ggtitle("Generated occupancy per site, sampling effort=5") +
-  theme(text=element_text(size=5), legend.key.size = unit(0.25, 'cm')) +
+  labs(title="Generated occupancy per site,\nsampling effort=5", x="", y="") + 
+  theme(text=element_text(size=fig_text_size), axis.title = element_text(size = fig_title_size), legend.key.size = unit(0.25, 'cm')) +
   coord_fixed()
 fig_name <- file.path(fig_dir, paste("occ-site_n5.png", sep=""))
 save_basic_plots(fig_name, p)
@@ -229,8 +231,8 @@ save_basic_plots(fig_name, p)
 p <- ggplot(sampling_surface, aes(x, y, fill=r_survey_data_n5$theta[data_reps,])) + 
   geom_tile() +
   scale_fill_viridis(discrete=FALSE, name="Theta") +
-  ggtitle("generated occupancy probability per site, sampling effort=5") +
-  theme(text=element_text(size=5), legend.key.size = unit(0.25, 'cm')) +
+  labs(title="generated occupancy probability\nper site, sampling effort=5", x="", y="") + 
+  theme(text=element_text(size=fig_text_size), axis.title = element_text(size = fig_title_size), legend.key.size = unit(0.25, 'cm')) +
   coord_fixed()
 fig_name <- file.path(fig_dir, paste("occ-p-site_n5.png", sep=""))
 save_basic_plots(fig_name, p)
@@ -239,8 +241,8 @@ save_basic_plots(fig_name, p)
 p <- ggplot(sampling_surface, aes(x, y, fill=r_po_data$lambda[data_reps,])) + 
   geom_tile() +
   scale_fill_viridis(discrete=FALSE, name="Lambda") +
-  ggtitle("Generated intensity per site") +
-  theme(text=element_text(size=5), legend.key.size = unit(0.25, 'cm')) +
+  labs(title="Generated intensity per site", x="", y="") + 
+  theme(text=element_text(size=fig_text_size), axis.title = element_text(size = fig_title_size), legend.key.size = unit(0.25, 'cm')) +
   coord_fixed()
 fig_name <- file.path(fig_dir, paste("intensity-site.png", sep=""))
 save_basic_plots(fig_name, p)
@@ -248,8 +250,8 @@ save_basic_plots(fig_name, p)
 p <- ggplot(sampling_surface, aes(x, y, fill=r_po_data$bias[data_reps,])) + 
   geom_tile() +
   scale_fill_viridis(discrete=FALSE, "Bias") +
-  ggtitle("Generated bias per site") +
-  theme(text=element_text(size=5), legend.key.size = unit(0.25, 'cm')) +
+  labs(title="Generated bias per site", x="", y="") + 
+  theme(text=element_text(size=fig_text_size), axis.title = element_text(size = fig_title_size), legend.key.size = unit(0.25, 'cm')) +
   coord_fixed()
 fig_name <- file.path(fig_dir, paste("bias-site.png", sep=""))
 save_basic_plots(fig_name, p)
@@ -258,12 +260,12 @@ thinned_intensity <- r_po_data$lambda[data_reps,]*r_po_data$bias[data_reps,]
 p <- ggplot() +
   geom_tile(sampling_surface, mapping=aes(x, y, fill=thinned_intensity, width=1, height=1), alpha=.6) + 
   scale_fill_viridis(discrete=FALSE, name="L*b") +
-  ggtitle("Generated PP thinning per site, \nincluding observed PO individuals") +
+  labs(title="Generated PP thinning per site, \nincluding observed PO individuals", x="", y="") + 
   geom_point(data=r_po_data$Y_coords, mapping=aes(x=x, y=y), size=2, col="white") +
   theme(panel.grid.minor = element_line(colour="white")) +
   scale_y_continuous(breaks = seq(0, 20, 1)) +
   scale_x_continuous(breaks = seq(0, 20, 1)) +
-  theme(text=element_text(size=5), legend.key.size = unit(0.25, 'cm')) +
+  theme(text=element_text(size=fig_text_size), axis.title = element_text(size = fig_title_size), legend.key.size = unit(0.25, 'cm')) +
   coord_fixed()
 fig_name <- file.path(fig_dir, paste("po-thinning-per-site.png", sep=""))
 save_basic_plots(fig_name, p)
