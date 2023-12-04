@@ -444,7 +444,7 @@ for (r_start in 1:random_starts){
           r_survey_data$Y[, visit_idx] <- r_survey_data_n1$Y[, visit_idx]
           stopifnot(all(r_survey_data$Y[, visit_idx]<=exp_args$min_visits))
           # Check that we're selecting right sites
-          if (exp_args$vary_visits==F & visit==exp_args$min_visits){
+          if (exp_args$vary_visits==T & visit==exp_args$min_visits){
             stopifnot(nn%in%visit_idx)
           }
           # Don't really need theta as it's only for data generation purposes
