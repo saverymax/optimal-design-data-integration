@@ -380,7 +380,7 @@ for (r_start in 1:random_starts){
   print("Initial design score")
   print(new_v_est)
   title <- paste("Inital spatial design: v=", round(new_v_est, 10), sep="")
-  p <- plot_sites(sampling_surface, site_idx, title)
+  p <- plot_sites(sampling_surface, site_idx, title, fig_text_size)
   fig_name <- file.path(fig_dir, paste("initial_design_", r_start, ".png", sep=""))
   ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm")
   
@@ -479,7 +479,7 @@ for (r_start in 1:random_starts){
              title <- paste("New optimal spatial design: v=", round(new_v_est, 10), sep="")
              # Plot the new best site compared to the previous selection, but need to reverse arguments to function
              # Use current_visits as optimal visits.
-             p <- plot_sites_vs_best(sampling_surface, current_site, best_neighbor_idx, neighbor_idx, possible_visits, current_visits, title)
+             p <- plot_sites_vs_best(sampling_surface, current_site, best_neighbor_idx, neighbor_idx, possible_visits, current_visits, title, fig_text_size)
              # Then set new best indices
              best_neighbor_idx <- neighbor_idx
              possible_visits <- current_visits
@@ -496,7 +496,7 @@ for (r_start in 1:random_starts){
             title <- paste("Non-optimal spatial design: v=", round(new_v_est, 10), 
                            "\nvs current optimal design: v=", round(current_v_est, 10), sep="")
             #print("No change in optimal design")
-            p <- plot_sites_vs_best(sampling_surface, current_site, neighbor_idx, best_neighbor_idx, current_visits, possible_visits, title)
+            p <- plot_sites_vs_best(sampling_surface, current_site, neighbor_idx, best_neighbor_idx, current_visits, possible_visits, title, fig_text_size)
           }
           fig_name <- file.path(fig_dir, paste("site_locs_rand-start-", r_start, "_ex-iter_", 
                             exchange_iter, "_site-iter-", s, "_effort_", visit, "_nn-iter", n_count,".png", sep=""))
@@ -569,8 +569,7 @@ ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm")
 # Plot best sites
 for(rs in 1:random_starts){
   title <- paste("PO data and Optimal sites from random init ", rs, "\n with V(D)=", best_v[rs], sep="")
-  #p <- plot_sites(sampling_surface, best_site_mat[rs, ], title) 
-  p <- plot_po_optimal_sites(sampling_surface, r_po_data, best_site_mat[rs,], optimal_visit_mat[rs,], title)
+  p <- plot_po_optimal_sites(sampling_surface, r_po_data, best_site_mat[rs,], optimal_visit_mat[rs,], title, fig_text_size)
   fig_name <- file.path(fig_dir, paste("optimal_sites_random_start-", rs, ".png", sep=""))
   ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm")
 }

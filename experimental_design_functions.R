@@ -443,18 +443,18 @@ save_basic_plots <- function(fig_name, p){
   ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm")
 }
 
-plot_sites <- function(sampling_surface, select_idx, title){
+plot_sites <- function(sampling_surface, select_idx, title, fig_text_size){
   p <- ggplot(sampling_surface, aes(x, y, fill=aux_x)) + 
     geom_tile() +
     geom_point(data=sampling_surface[select_idx,], aes(x=x, y=y), colour = "white", size = 1.5) +
     scale_fill_viridis(discrete=FALSE) +
-    ggtitle(title) + 
-    theme(text=element_text(size=5), legend.key.size = unit(0.25, 'cm')) +
+    labs(title=title, x="", y="") + 
+    theme(text=element_text(size=fig_text_size), axis.title = element_text(size = 5), legend.key.size = unit(0.25, 'cm')) +
     coord_fixed() 
   return(p)
 }
 
-plot_sites_vs_best <- function(sampling_surface, current_site, select_idx, best_select_idx, prev_visits, optimal_visits, title){
+plot_sites_vs_best <- function(sampling_surface, current_site, select_idx, best_select_idx, prev_visits, optimal_visits, title, fig_text_size){
   # Plot current set of sites compared to the best sites. 
   # Best will always be pink
   prev_size <- prev_visits/(length(prev_visits)) + 1.5
@@ -465,21 +465,21 @@ plot_sites_vs_best <- function(sampling_surface, current_site, select_idx, best_
     geom_point(data=sampling_surface[best_select_idx,], aes(x=x, y=y), colour = "hotpink1", size = best_size, alpha=1) +
     geom_point(data=sampling_surface[current_site,], aes(x=x, y=y), colour = "black", size = 0.5) +
     scale_fill_viridis(discrete=FALSE) +
-    ggtitle(title) + 
-    theme(text=element_text(size=5), legend.key.size = unit(0.25, 'cm')) +
+    labs(title=title, x="", y="") + 
+    theme(text=element_text(size=fig_text_size), axis.title = element_text(size = 5), legend.key.size = unit(0.25, 'cm')) +
     coord_fixed() 
   return(p)
 }
 
-plot_po_optimal_sites <- function(sampling_surface, r_po_data, best_select_idx, optimal_visits, title){
+plot_po_optimal_sites <- function(sampling_surface, r_po_data, best_select_idx, optimal_visits, title, fig_text_size){
   best_size <- optimal_visits/(length(optimal_visits)) + 1
   p <- ggplot() +
     geom_tile(sampling_surface, mapping=aes(x, y, fill=aux_x)) + 
     geom_point(data=r_po_data$Y_coords, mapping=aes(x=x, y=y), size=2, colour="orange") +
     geom_point(data=sampling_surface[best_select_idx,], aes(x=x, y=y), colour = "white", size = best_size) +
     scale_fill_viridis(discrete=FALSE, name="aux_x") +
-    ggtitle(title) +
-    theme(text=element_text(size=5), legend.key.size = unit(0.25, 'cm')) +
+    labs(title=title, x="", y="") + 
+    theme(text=element_text(size=5), axis.title = element_text(size = 5), legend.key.size = unit(0.25, 'cm')) +
     coord_fixed() 
   return(p)
 }
