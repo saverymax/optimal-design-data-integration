@@ -351,12 +351,17 @@ for (r_start in 1:random_starts){
           neighbor_idx <- exchange_coordinates_deterministic(best_neighbor_idx, s, nn)
           select_sites <- intensity_covars[neighbor_idx,] 
           # Then set the survey effort for current id set
-          # This code chunk will "double index" if the current site s already has been selected 
+          # The below code chunk will "double index" if the current site s already has been selected 
           # to have 1 visit, but that is ok since we just need the data at nn to correspond to 1 visit.
           # For example if possible_visits == c(1,5,5) and then we are the neighbor of the 1st site 
           # so that current_visits == c(1, 5,5) we will select that index==1 neighbor here 
           # If visits is fixed between sites this vector will always be of 0 length.
-          visit_idx <- c(neighbor_idx[which(current_visits==exp_args$min_visits)])
+          if(exp_args$vary_visits==F){
+	    visit_idx <- c()
+	  }
+	  else{
+            visit_idx <- c(neighbor_idx[which(current_visits==exp_args$min_visits)])
+	  }
           print("current s and site")
           print(s)
           print(current_site)
@@ -375,10 +380,6 @@ for (r_start in 1:random_starts){
           # Check that we're selecting right sites
           if (visit==exp_args$min_visits){
             stopifnot(nn%in%visit_idx)
-          }
-          # Check that vector is empty if not varying visits
-          if(exp_args$vary_visits==F){
-            stopifnot(length(visit_idx)==0)
           }
           # Don't really need theta as it's only for data generation purposes
           r_survey_data$theta[, visit_idx] <- r_survey_data_n1$theta[, visit_idx]
