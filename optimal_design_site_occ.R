@@ -422,7 +422,6 @@ for (r_start in 1:random_starts){
           # For example if possible_visits == c(1,5,5) and then we are the neighbor of the 1st site 
           # so that current_visits == c(1, 5,5) we will select that index==1 neighbor here 
           # If visits is fixed between sites this vector will always be of 0 length.
-          visit_idx <- c(neighbor_idx[which(current_visits==exp_args$min_visits)])
 	  if(exp_args$vary_visits==F){
 	    visit_idx <- c()
 	  }
