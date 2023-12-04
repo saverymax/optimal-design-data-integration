@@ -1,0 +1,16 @@
+qsub exp_2/oe_model-1_m-5_n-2_v-none_a--2_b-0.5_g-1_d-0.25_p-0.2.sh
+qsub exp_2/oe_model-1_m-5_n-2_v-vary_a--2_b-0.5_g-1_d-0.25_p-0.2.sh
+qsub exp_2/oe_model-1_m-5_n-5_v-none_a--2_b-0.5_g-1_d-0.25_p-0.2.sh
+qsub exp_2/oe_model-1_m-5_n-5_v-vary_a--2_b-0.5_g-1_d-0.25_p-0.2.sh
+qsub exp_2/oe_model-1_m-5_n-2_v-none_a--2_b-0.5_g-1_d-2_p-0.2.sh
+qsub exp_2/oe_model-1_m-5_n-2_v-vary_a--2_b-0.5_g-1_d-2_p-0.2.sh
+qsub exp_2/oe_model-1_m-5_n-5_v-none_a--2_b-0.5_g-1_d-2_p-0.2.sh
+qsub exp_2/oe_model-1_m-5_n-5_v-vary_a--2_b-0.5_g-1_d-2_p-0.2.sh
+qsub exp_2/oe_model-3_m-5_n-2_v-none_a--2_b-0.5_g-1_d-0.25_p-0.2.sh
+qsub exp_2/oe_model-3_m-5_n-2_v-vary_a--2_b-0.5_g-1_d-0.25_p-0.2.sh
+qsub exp_2/oe_model-3_m-5_n-5_v-none_a--2_b-0.5_g-1_d-0.25_p-0.2.sh
+qsub exp_2/oe_model-3_m-5_n-5_v-vary_a--2_b-0.5_g-1_d-0.25_p-0.2.sh
+qsub exp_2/oe_model-3_m-5_n-2_v-none_a--2_b-0.5_g-1_d-2_p-0.2.sh
+qsub exp_2/oe_model-3_m-5_n-2_v-vary_a--2_b-0.5_g-1_d-2_p-0.2.sh
+qsub exp_2/oe_model-3_m-5_n-5_v-none_a--2_b-0.5_g-1_d-2_p-0.2.sh
+qsub exp_2/oe_model-3_m-5_n-5_v-vary_a--2_b-0.5_g-1_d-2_p-0.2.sh
