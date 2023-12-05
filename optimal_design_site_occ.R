@@ -331,7 +331,7 @@ for (r_start in 1:random_starts){
   # Only sites with n_i=n will contribute to likelihood for the site-occupancy model.
   if (r_start == 1){
     # Hardcode start where we start by sampling near biased area.
-    site_idx <- c(29, 30, 29, 40, 49)
+    site_idx <- c(28, 29, 30, 39, 40)
   }else{
     site_idx <- sample(1:sites, m, replace=F)
   }
@@ -380,7 +380,7 @@ for (r_start in 1:random_starts){
   print("Initial design score")
   print(new_v_est)
   title <- paste("Inital spatial design: v=", round(new_v_est, 10), sep="")
-  p <- plot_sites(sampling_surface, site_idx, title, fig_text_size)
+  p <- plot_sites(sampling_surface, r_po_data, site_idx, title, fig_text_size)
   fig_name <- file.path(fig_dir, paste("initial_design_", r_start, ".png", sep=""))
   ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm")
   

@@ -443,9 +443,10 @@ save_basic_plots <- function(fig_name, p){
   ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm")
 }
 
-plot_sites <- function(sampling_surface, select_idx, title, fig_text_size){
+plot_sites <- function(sampling_surface, r_po_data, select_idx, title, fig_text_size){
   p <- ggplot(sampling_surface, aes(x, y, fill=aux_x)) + 
     geom_tile() +
+    geom_point(data=r_po_data$Y_coords, mapping=aes(x=x, y=y), size=2, colour="orange") +
     geom_point(data=sampling_surface[select_idx,], aes(x=x, y=y), colour = "white", size = 1.5) +
     scale_fill_viridis(discrete=FALSE) +
     labs(title=title, x="", y="") + 
