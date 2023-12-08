@@ -379,7 +379,7 @@ for (r_start in 1:random_starts){
   print(sampling_surface[site_idx,1:2])
   print("Initial design score")
   print(new_v_est)
-  title <- paste("Inital spatial design: v=", round(new_v_est, 10), sep="")
+  title <- paste("Inital spatial design ", r_start, ": v=", round(new_v_est, 10), sep="")
   p <- plot_sites(sampling_surface, r_po_data, site_idx, title, fig_text_size)
   fig_name <- file.path(fig_dir, paste("initial_design_", r_start, ".png", sep=""))
   ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm")
