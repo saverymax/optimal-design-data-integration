@@ -331,7 +331,11 @@ for (r_start in 1:random_starts){
   # Only sites with n_i=n will contribute to likelihood for the site-occupancy model.
   if (r_start == 1){
     # Hardcode start where we start by sampling near biased area.
-    site_idx <- c(28, 29, 30, 39, 40)
+    if(m > 10){
+	stop("More than 10 sites is currently not compatible with initial configuration")
+    }
+    site_idx <- c(28, 29, 30, 39, 40, 27, 37, 38, 48, 49)
+    site_idx <- site_idx[1:m]
   }else{
     site_idx <- sample(1:sites, m, replace=F)
   }
