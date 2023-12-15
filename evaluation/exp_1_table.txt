@@ -41,8 +41,8 @@ NULL
 [1] "model-1_n-1"
 [1] "current params of interest"
 [1] "g--0.5_d-0.25"
-[1] "Incorrect file selected: stan"
-[1] "Available files: figures" "Available files: stan"   
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_1/oe_model-1_m-5_n-1_r-96_intns-donut_a--2_b-0.5_g--0.5_d-0.25_p-0.2/results.xlsx"
 [1] "oe_model-1_m-5_n-1_r-96_intns-donut_a--2_b-0.5_g--0.5_d-2_p-0.2"
 [[1]]
  [1] "oe"          "model-1"     "m-5"         "n-1"         "r-96"       
@@ -53,8 +53,8 @@ NULL
 [1] "model-1_n-1"
 [1] "current params of interest"
 [1] "g--0.5_d-2"
-[1] "Incorrect file selected: stan"
-[1] "Available files: figures" "Available files: stan"   
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_1/oe_model-1_m-5_n-1_r-96_intns-donut_a--2_b-0.5_g--0.5_d-2_p-0.2/results.xlsx"
 [1] "oe_model-1_m-5_n-1_r-96_intns-donut_a--2_b-0.5_g-1_d-0.25_p-0.2"
 [[1]]
  [1] "oe"          "model-1"     "m-5"         "n-1"         "r-96"       
@@ -65,8 +65,8 @@ NULL
 [1] "model-1_n-1"
 [1] "current params of interest"
 [1] "g-1_d-0.25"
-[1] "Incorrect file selected: stan"
-[1] "Available files: figures" "Available files: stan"   
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_1/oe_model-1_m-5_n-1_r-96_intns-donut_a--2_b-0.5_g-1_d-0.25_p-0.2/results.xlsx"
 [1] "oe_model-1_m-5_n-1_r-96_intns-donut_a--2_b-0.5_g-1_d-2_p-0.2"
 [[1]]
  [1] "oe"          "model-1"     "m-5"         "n-1"         "r-96"       
@@ -137,8 +137,8 @@ NULL
 [1] "model-3_n-1"
 [1] "current params of interest"
 [1] "g--0.5_d-0.25"
-[1] "Incorrect file selected: stan"
-[1] "Available files: figures" "Available files: stan"   
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_1/oe_model-3_m-5_n-1_r-96_intns-donut_a--2_b-0.5_g--0.5_d-0.25_p-0.2/results.xlsx"
 [1] "oe_model-3_m-5_n-1_r-96_intns-donut_a--2_b-0.5_g--0.5_d-2_p-0.2"
 [[1]]
  [1] "oe"          "model-3"     "m-5"         "n-1"         "r-96"       
@@ -149,8 +149,8 @@ NULL
 [1] "model-3_n-1"
 [1] "current params of interest"
 [1] "g--0.5_d-2"
-[1] "Incorrect file selected: stan"
-[1] "Available files: figures" "Available files: stan"   
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_1/oe_model-3_m-5_n-1_r-96_intns-donut_a--2_b-0.5_g--0.5_d-2_p-0.2/results.xlsx"
 [1] "oe_model-3_m-5_n-1_r-96_intns-donut_a--2_b-0.5_g-1_d-0.25_p-0.2"
 [[1]]
  [1] "oe"          "model-3"     "m-5"         "n-1"         "r-96"       
@@ -161,8 +161,8 @@ NULL
 [1] "model-3_n-1"
 [1] "current params of interest"
 [1] "g-1_d-0.25"
-[1] "Incorrect file selected: stan"
-[1] "Available files: figures" "Available files: stan"   
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_1/oe_model-3_m-5_n-1_r-96_intns-donut_a--2_b-0.5_g-1_d-0.25_p-0.2/results.xlsx"
 [1] "oe_model-3_m-5_n-1_r-96_intns-donut_a--2_b-0.5_g-1_d-2_p-0.2"
 [[1]]
  [1] "oe"          "model-3"     "m-5"         "n-1"         "r-96"       
@@ -173,8 +173,8 @@ NULL
 [1] "model-3_n-1"
 [1] "current params of interest"
 [1] "g-1_d-2"
-[1] "Incorrect file selected: stan"
-[1] "Available files: figures" "Available files: stan"   
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_1/oe_model-3_m-5_n-1_r-96_intns-donut_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
 [1] "oe_model-3_m-5_n-5_r-96_intns-donut_a--2_b-0.5_g--0.5_d-0.25_p-0.2"
 [[1]]
  [1] "oe"          "model-3"     "m-5"         "n-5"         "r-96"       
@@ -225,13 +225,13 @@ NULL
 [1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_1/oe_model-3_m-5_n-5_r-96_intns-donut_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
 [1] "result list"
 $`model-1_n-1`
-[1]        NA        NA        NA 0.0946131
+[1] 0.07897366 0.07897366 0.07897366 0.07897366
 
 $`model-1_n-5`
 [1] 0.05431554 0.05431554 0.05431554 0.05431554
 
 $`model-3_n-1`
-[1] NA NA NA NA
+[1] 0.05570559 0.04995172 0.05743251 0.05609895
 
 $`model-3_n-5`
 [1] 0.04726522 0.04562473 0.05362075 0.04711004
@@ -251,14 +251,14 @@ $`model-3_n-5`
 
 [1] 4 4
            [,1]       [,2]       [,3]       [,4]
-[1,]         NA         NA         NA 0.09461310
+[1,] 0.07897366 0.07897366 0.07897366 0.07897366
 [2,] 0.05431554 0.05431554 0.05431554 0.05431554
-[3,]         NA         NA         NA         NA
+[3,] 0.05570559 0.04995172 0.05743251 0.05609895
 [4,] 0.04726522 0.04562473 0.05362075 0.04711004
             g--0.5_d-0.25 g--0.5_d-2 g-1_d-0.25    g-1_d-2
-model-1_n-1            NA         NA         NA 0.09461310
+model-1_n-1    0.07897366 0.07897366 0.07897366 0.07897366
 model-1_n-5    0.05431554 0.05431554 0.05431554 0.05431554
-model-3_n-1            NA         NA         NA         NA
+model-3_n-1    0.05570559 0.04995172 0.05743251 0.05609895
 model-3_n-5    0.04726522 0.04562473 0.05362075 0.04711004
 \begin{table}[H]
 
@@ -268,9 +268,9 @@ model-3_n-5    0.04726522 0.04562473 0.05362075 0.04711004
 \toprule
   & g--0.5\_d-0.25 & g--0.5\_d-2 & g-1\_d-0.25 & g-1\_d-2\\
 \midrule
-model-1\_n-1 & NA & NA & NA & 0.0946\\
+model-1\_n-1 & 0.0790 & 0.0790 & 0.0790 & 0.0790\\
 model-1\_n-5 & 0.0543 & 0.0543 & 0.0543 & 0.0543\\
-model-3\_n-1 & NA & NA & NA & NA\\
+model-3\_n-1 & 0.0557 & 0.0500 & 0.0574 & 0.0561\\
 model-3\_n-5 & 0.0473 & 0.0456 & 0.0536 & 0.0471\\
 \bottomrule
 \end{tabular}
