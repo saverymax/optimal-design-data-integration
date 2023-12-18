@@ -3,6 +3,7 @@ library(ggplot2)
 library(openxlsx)
 library(kableExtra)
 library(stringr)
+library(reshape2)
 
 
 #exp_dir <- "C:/Users/msavery/OneDrive - UGent/Documents/ghent_phd_spatial_doe/data/globus_hpc_collection"
@@ -100,36 +101,28 @@ print(kbl(v_df, booktabs = T, escape=T, caption=caption, label=label,
         kable_styling(latex_options = c("HOLD_position")) )
 
 # For this we can also make a figure as effort increases
-#v_df
-#var_df
-#v_df$run <- rownames(v_df)
-#var_df$run <- rownames(var_df)
-#m1_1 <- v_df$`g-1_d-0.25`[1:6]
-#m2_1 <- v_df$`g-1_d-0.25`[7:12]
-#m1_2 <- v_df$`g-1_d-2`[1:6]
-#m2_2 <- v_df$`g-1_d-2`[7:12]
-#var_m1_1 <- var_df$`g-1_d-0.25`[1:6]
-#var_m2_1 <- var_df$`g-1_d-0.25`[7:12]
-#var_m1_2 <- var_df$`g-1_d-2`[1:6]
-#var_m2_2 <- var_df$`g-1_d-2`[7:12]
-#fig_df <- data.frame(m1_g1_d25=m1_1, m2_g1_d25=m2_1, m1_g1_d2=m1_2, m2_g1_d2=m2_2)
-#var_fig_df <- data.frame(var_m1_g1_d25=var_m1_1, var_m2_g1_d25=var_m2_1, var_m1_g1_d2=var_m1_2, var_m2_g1_d2=var_m2_2)
-#fig_df$index <- rownames(fig_df)
-#var_fig_df$index <- rownames(var_fig_df)
-#fig_df <- pivot_longer(fig_df, cols=1:4, names_to="run", values_to="avg_v")
-#var_fig_df <- pivot_longer(var_fig_df, cols=1:4, names_to="run", values_to="var")
-#fig_df$x <- rep(c(2,3,4,5,7,10), each=4)
-#sqrt(var_fig_df$var)
-#fig_df$se <- sqrt(var_fig_df$var)/sqrt(10)
-#
-## Generally will be run from evaluation directory
-#fig_name <- file.path(".", "exp_4_comparison.png")
-#p <- ggplot(data=fig_df, aes(x=x, y=avg_v, colour=run)) +
-#  geom_line(linewidth=1) +
-#  #geom_errorbar(aes(ymin=avg_v-se, ymax=avg_v+se)) +
-#  labs(title="", x="Max visits", y="U(d)") + 
-#  theme(text=element_text(size=7), axis.title = element_text(size = 7), legend.key.size = unit(0.25, 'cm')) +
-#  scale_color_discrete(name = "Run", type=c("#c356ea","#ffc100", "#71aef2", "#f7adce"), labels = c("SO, d=0.25", "SO, d=2", "SO+PO, d=0.25", "SO+PO, d=2")) +
-#  theme_bw()
-#print(p)
-#ggsave(fig_name, plot=p, dpi=300, width=10, height=7, units="cm")
+v_df
+var_df
+# Move m=10 to end
+v_df <- v_df %>% relocate('sites-10_d-2', .after='sites-5_d-2')
+v_df
+var_df <- var_df %>% relocate('sites-10_d-2', .after='sites-5_d-2')
+v_df$run <- rownames(v_df)
+var_df$run <- rownames(var_df)
+fig_df <- melt(v_df, id='run')
+fig_df
+fig_df$x <- rep(c(2,3,4,5,7,10), each=4)
+fig_df
+fig_df$x <- rep(1:5, each=4)
+
+# Generally will be run from evaluation directory
+fig_name <- file.path(".", "exp_4_comparison.png")
+p <- ggplot(data=fig_df, aes(x=x, y=value, colour=run)) +
+  geom_line(linewidth=1) +
+  #geom_errorbar(aes(ymin=avg_v-se, ymax=avg_v+se)) +
+  labs(title="", x="Max visits", y="U(d)") + 
+  theme(text=element_text(size=7), axis.title = element_text(size = 7), legend.key.size = unit(0.25, 'cm')) +
+  scale_color_discrete(name = "Run", type=c("#c356ea","#ffc100", "#71aef2", "#f7adce"), labels = c("SO, n=2", "SO, n=5", "SO+PO, n=2", "SO+PO, n=5")) +
+  theme_bw()
+print(p)
+ggsave(fig_name, plot=p, dpi=300, width=10, height=7, units="cm")
