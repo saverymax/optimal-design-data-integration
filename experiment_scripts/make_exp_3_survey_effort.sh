@@ -13,7 +13,7 @@ gamma="1"
 delta="0.25 2"
 #detection_p="0.2 0.7"
 detection_p="0.2"
-n_surveys="2 5 7 10"
+n_surveys="2 3 4 5 7 10"
 # Might be nice to write job output to the experimental run dir but it's nice to leave that dir created by the R script
 # so as to seperate the HPC and local run capabilities.
 WORKDIR=$VSC_DATA/projects/optimal_design_presence_only/optimal-design-data-integration
@@ -35,7 +35,7 @@ echo "#!/bin/bash
 #PBS -o /data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/job_output/
 #PBS -e /data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/job_output/
 #PBS -N $exp_name
-#PBS -l walltime=3:00:00
+#PBS -l walltime=6:00:00
 #PBS -l nodes=1:ppn=$cores
 #PBS -l mem=100gb
 
