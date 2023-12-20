@@ -47,7 +47,8 @@ estimate_v <- function(model, n_surveys, data_reps, m, sites, sampling_surface,
   for (r in 1:data_reps){
     # For each rth dataset get the m randomly chosen sites
     selected_data <- r_survey_data$Y[r, select_idx]
-    selected_occ <- r_survey_data$occupancy[r, select_idx]
+    #selected_occ <- r_survey_data$occupancy[r, select_idx]
+    occ <- r_survey_data$occupancy[r, ]
     # We use all po data for given r
     selected_po <- r_po_data$Y[r,]
     # Here I use the same X covariate for the presence-only data as used for the survey data. The difference is that
@@ -125,13 +126,54 @@ estimate_v <- function(model, n_surveys, data_reps, m, sites, sampling_surface,
     # Average estimate after R iterations through the datasets.
     # Need to select_idx the sites since it generates for all of them.
     # The 2 index is the ppd for Z
-    gen_occupancy <- fit$summary(variables=generated_vars[2])$mean[select_idx]
+    gen_occupancy <- fit$summary(variables=generated_vars[2])$mean
+    print("brier comp")
+    print(gen_occupancy)
+    print(occ)
+    brier <- sum((occ - gen_occupancy)^2) / sites
     # Take the mean of the generated quantity for the posterior estimate
-    estimate_mat[r,1] <- design_criteria(criteria="brier", sim_occ=gen_occupancy, obs_occ=selected_occ)
+    estimate_mat[r,1] <- design_criteria(criteria="brier", sim_occ=gen_occupancy, obs_occ=occ)
   }
   return(estimate_mat)
 }
+  
 
+estimate_v_parallel <- function(combined_df, model, n_surveys, m, sites, sampling_surface, 
+                       select_idx, select_sites, generated_vars, model_selection, mcmc_iter){
+  
+  # For each rth dataset get the m randomly chosen sites for the occupancy data, Y surveys, and PO.
+  #selected_occ <- combined_df[select_idx]
+  occ <- combined_df[1:sites]
+  selected_data <- combined_df[sites+select_idx]
+  PO_data <- combined_df[(2*sites+1):length(combined_df)] 
+  # Here I use the same X covariate for the presence-only data as used for the survey data. The difference is that
+  # the survey data here is a subset (select_sites) of the sites, whereas the presence only data 
+  # needs covariates for the whole grid to approximate the expected count in the entire region.
+  if (model_selection==3){
+    data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, X=select_sites$aux_x, Y=selected_data, PO=PO_data, 
+                         X_po=sampling_surface$aux_x, Z_po=sampling_surface$aux_z, model_diag=0)
+  }
+  else if(model_selection==1){
+    data_site_occ = list(n_surveys=n_surveys, n_sites=m, total_sites=sites, X=select_sites$aux_x, X_all=sampling_surface$aux_x, Y=selected_data)
+  }
+  else if(model_selection==4){
+    data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, total_sites=sites, Y=selected_data)
+  }
+  else if(model_selection==5){
+    data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, Y=selected_data, PO=PO_data)
+  }
+  else{
+    stop("Other models implementation needs to be checked")
+  }
+  # refresh=0 turns off messages except errors from stan
+  # quiet function silences stan output 
+  fit <- model$sample(data=data_site_occ, seed=13, chains=1, 
+                            iter_sampling=mcmc_iter, iter_warmup=100, refresh=0, show_messages=F)
+  
+  gen_occupancy <- fit$summary(variables=generated_vars[2])$mean
+  v_est <- design_criteria(criteria="brier", sim_occ=gen_occupancy, obs_occ=occ)
+  return(v_est)
+}
 
 estimate_v_nuthatch <- function(model, n_surveys, data_reps, m, sites, area_a, intensity_covars, bias_covars, 
                                 select_idx, select_sites, r_survey_data, r_po_data,
@@ -143,7 +185,8 @@ estimate_v_nuthatch <- function(model, n_surveys, data_reps, m, sites, area_a, i
     print(r)
     # For each rth dataset get the m randomly chosen sites
     selected_data <- r_survey_data$Y[r, select_idx]
-    selected_occ <- r_survey_data$occupancy[r, select_idx]
+    #selected_occ <- r_survey_data$occupancy[r, select_idx]
+    occ <- r_survey_data$occupancy[r, ]
     print(selected_data)
     print(selected_occ)
     # We use all po data for given r
@@ -177,7 +220,7 @@ estimate_v_nuthatch <- function(model, n_surveys, data_reps, m, sites, area_a, i
       plot_title <- ggtitle(paste("Posterior distributions, with means and 90% interval"))
       p_post <- mcmc_areas(posterior,  prob = 0.9, point_est="mean", regex_pars = params) + plot_title
       print(p_post)
-     
+      
       # Check issues with divergences
       color_scheme_set("darkgray")
       nuts_fit <- nuts_params(fit)
@@ -185,46 +228,9 @@ estimate_v_nuthatch <- function(model, n_surveys, data_reps, m, sites, area_a, i
                                  np_style=parcoord_style_np(div_alpha=1, div_size=.5))
       print(diverge_p)
     }
-    gen_occupancy <- fit$summary(variables=generated_vars[1])$mean[select_idx]
-    estimate_mat[r,1] <- design_criteria(criteria="brier", sim_occ=gen_occupancy, obs_occ=selected_occ)
+    gen_occupancy <- fit$summary(variables=generated_vars[1])$mean
+    estimate_mat[r,1] <- design_criteria(criteria="brier", sim_occ=gen_occupancy, obs_occ=occ)
   }
-}
-  
-
-estimate_v_parallel <- function(combined_df, model, n_surveys, m, sites, sampling_surface, 
-                       select_idx, select_sites, generated_vars, model_selection, mcmc_iter){
-  
-  # For each rth dataset get the m randomly chosen sites for the occupancy data, Y surveys, and PO.
-  selected_occ <- combined_df[select_idx]
-  selected_data <- combined_df[sites+select_idx]
-  PO_data <- combined_df[(2*sites+1):length(combined_df)] 
-  # Here I use the same X covariate for the presence-only data as used for the survey data. The difference is that
-  # the survey data here is a subset (select_sites) of the sites, whereas the presence only data 
-  # needs covariates for the whole grid to approximate the expected count in the entire region.
-  if (model_selection==3){
-    data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, X=select_sites$aux_x, Y=selected_data, PO=PO_data, 
-                         X_po=sampling_surface$aux_x, Z_po=sampling_surface$aux_z, model_diag=0)
-  }
-  else if(model_selection==1){
-    data_site_occ = list(n_surveys=n_surveys, n_sites=m, total_sites=sites, X=select_sites$aux_x, X_all=sampling_surface$aux_x, Y=selected_data)
-  }
-  else if(model_selection==4){
-    data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, total_sites=sites, Y=selected_data)
-  }
-  else if(model_selection==5){
-    data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, Y=selected_data, PO=PO_data)
-  }
-  else{
-    stop("Other models implementation needs to be checked")
-  }
-  # refresh=0 turns off messages except errors from stan
-  # quiet function silences stan output 
-  fit <- model$sample(data=data_site_occ, seed=13, chains=1, 
-                            iter_sampling=mcmc_iter, iter_warmup=100, refresh=0, show_messages=F)
-  
-  gen_occupancy <- fit$summary(variables=generated_vars[2])$mean[select_idx]
-  v_est <- design_criteria(criteria="brier", sim_occ=gen_occupancy, obs_occ=selected_occ)
-  return(v_est)
 }
 
 estimate_v_parallel_nuthatch <- function(combined_df, model, n_surveys, m, sites, area_a, intensity_covars, bias_covars, 
