@@ -125,7 +125,7 @@ sqrt(var_fig_df$var)
 fig_df$se <- sqrt(var_fig_df$var)/sqrt(10)
 
 # Generally will be run from evaluation directory
-fig_name <- file.path(".", "exp_4_comparison.png")
+fig_name <- file.path(".", "exp_3_comparison.png")
 p <- ggplot(data=fig_df, aes(x=x, y=avg_v, colour=run)) +
   geom_line(linewidth=1) +
   #geom_errorbar(aes(ymin=avg_v-se, ymax=avg_v+se)) +

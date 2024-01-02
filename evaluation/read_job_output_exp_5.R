@@ -9,7 +9,7 @@ library(reshape2)
 #exp_dir <- "C:/Users/msavery/OneDrive - UGent/Documents/ghent_phd_spatial_doe/data/globus_hpc_collection"
 exp_dir <- "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs"
 
-exp_name <- "exp_4"
+exp_name <- "exp_5"
 result_dir <- file.path(exp_dir, exp_name)
 print(result_dir)
 # Look at all files corresponding to this set of experiments
@@ -19,11 +19,14 @@ print(file_list)
 n_f <- length(file_list)
 print("number of files")
 print(n_f)
-exp_col <- c("model-1_n-2", "model-1_n-5", "model-3_n-2", "model-3_n-5")
+exp_col <- c("model-1_effort-n-2", "model-1_effort-n-5", "model-3_effort-n-2", "model-3_effort-n-5", "model-4_effort-n-2", "model-4_effort-n-5", "model-5_effort-n-2", "model-5_effort-n-5")
 exp_list <- vector("list", length=length(exp_col))
 var_list <- vector("list", length=length(exp_col))
+visit_counts <- vector("list", length=length(exp_col))
 perm_list <- vector("list", length=length(exp_col))
 names(exp_list) <- exp_col
+names(visit_counts) <- exp_col
+names(var_list) <- exp_col
 names(perm_list) <- exp_col
 print("inital list to save results")
 print(exp_list)
@@ -34,10 +37,10 @@ for (i in 1:length(file_list)){
   file_name <- list.files(dir_path)[2]
   params <- str_split(f, "_")
   print(params)
-  compare_name <- paste(params[[1]][2], params[[1]][4], sep="_")
+  compare_name <- paste(params[[1]][2], params[[1]][5], sep="_")
   print("Name to identify run")
   print(compare_name)
-  param_perm <- paste(params[[1]][3], params[[1]][8], sep="_")
+  param_perm <- paste(params[[1]][3], params[[1]][9], sep="_")
   print("current params of interest")
   print(param_perm)
   # Make this list so as to have the permutation names for each subset
@@ -47,6 +50,7 @@ for (i in 1:length(file_list)){
     print(paste("Available files:", list.files(dir_path)))
     exp_list[[compare_name]] <- c(exp_list[[compare_name]], NA)
     var_list[[compare_name]] <- c(var_list[[compare_name]], NA)
+    visit_counts[[compare_name]] <- c(visit_counts[[compare_name]], NA)
   } 
   else{
     #if (substr(file_name, 1, 1) == "r"){
@@ -64,6 +68,14 @@ for (i in 1:length(file_list)){
     # Split strings, get params, and then organize table somehow
     exp_list[[compare_name]] <- c(exp_list[[compare_name]], results$v)
     var_list[[compare_name]] <- c(var_list[[compare_name]], results$v_var)
+    visit_results <- read.xlsx(file_path, sheet="best_sites")
+    print(visit_results)
+    # random starts is fixed at 10
+    n_visits <- visit_results[1:nrow(visit_results), 11:20]
+    print("subset of visit xlsx")
+    print(n_visits)
+    avg_visits <- sum(n_visits) / (nrow(visit_results)*10)
+    visit_counts[[compare_name]] <- c(visit_counts[[compare_name]], avg_visits)
   }
 }
 
@@ -73,25 +85,33 @@ print("variance")
 print(var_list)
 print("Params per model. Make sure each model has params ordered in the same way")
 print(perm_list)
+print("average visits")
+print(visit_counts)
 for (i in 1:length(exp_col)){
   stopifnot(identical(perm_list[[1]], perm_list[[i]]))
 }
 v_mat <- matrix(nrow=length(exp_col), ncol=n_f/length(exp_col))
 var_mat <- matrix(nrow=length(exp_col), ncol=n_f/length(exp_col))
+visit_mat <- matrix(nrow=length(exp_col), ncol=n_f/length(exp_col))
 print(dim(v_mat))
+print(dim(visit_mat))
 for (i in 1:length(exp_col)){
   v_mat[i,] <- exp_list[[exp_col[i]]]
   var_mat[i,] <- var_list[[exp_col[i]]]
-  #v_mat[,i] <- exp_list[[exp_col[i]]]
+  visit_mat[i,] <- visit_counts[[exp_col[i]]]
 }
 print(v_mat)
 print(var_mat)
+print(visit_mat)
 v_df <- as.data.frame(v_mat)
 var_df <- as.data.frame(var_mat)
+visit_df <- as.data.frame(visit_mat)
 rownames(v_df) <- exp_col
 rownames(var_df) <- exp_col
+rownames(visit_df) <- exp_col
 colnames(v_df) <- perm_list[[1]]
 colnames(var_df) <- perm_list[[1]]
+colnames(visit_df) <- perm_list[[1]]
 print(v_df)
 print(var_df)
 caption <- paste("Comparison of models, sampling effort, and parameter permutations")
@@ -100,28 +120,35 @@ print(kbl(v_df, booktabs = T, escape=T, caption=caption, label=label,
           align=c('lcccc'), digits=4, format="latex") %>% 
         kable_styling(latex_options = c("HOLD_position")) )
 
-# For this we can also make a figure as effort increases
-v_df
-var_df
-# Move m=10 to end
-v_df <- v_df %>% relocate('sites-10_d-2', .after='sites-5_d-2')
-v_df
-var_df <- var_df %>% relocate('sites-10_d-2', .after='sites-5_d-2')
-v_df$run <- rownames(v_df)
-var_df$run <- rownames(var_df)
-fig_df <- melt(v_df, id='run')
-fig_df
-fig_df$x <- rep(c(2,3,4,5,10), each=4)
-fig_df
+print(kbl(visit_df, booktabs = T, escape=T, caption=caption, label=label, 
+          align=c('lcccc'), digits=4, format="latex") %>% 
+        kable_styling(latex_options = c("HOLD_position")) )
 
-# Generally will be run from evaluation directory
-fig_name <- file.path(".", "exp_4_comparison.png")
-p <- ggplot(data=fig_df, aes(x=x, y=value, colour=run)) +
-  geom_line(linewidth=1) +
-  #geom_errorbar(aes(ymin=avg_v-se, ymax=avg_v+se)) +
-  labs(title="", x="Max visits", y="U(d)") + 
-  theme(text=element_text(size=7), axis.title = element_text(size = 7), legend.key.size = unit(0.25, 'cm')) +
-  scale_color_discrete(name = "Run", type=c("#c356ea","#ffc100", "#71aef2", "#f7adce"), labels = c("SO, n=2", "SO, n=5", "SO+PO, n=2", "SO+PO, n=5")) +
-  theme_bw()
-print(p)
-ggsave(fig_name, plot=p, dpi=300, width=10, height=7, units="cm")
+
+
+# For this we can also make a figure as effort increases
+#v_df
+#var_df
+## Move m=10 to end
+#v_df <- v_df %>% relocate('sites-10_d-2', .after='sites-5_d-2')
+#v_df
+#var_df <- var_df %>% relocate('sites-10_d-2', .after='sites-5_d-2')
+#v_df$run <- rownames(v_df)
+#var_df$run <- rownames(var_df)
+#fig_df <- melt(v_df, id='run')
+#fig_df
+#fig_df$x <- rep(c(2,3,4,5,7,10), each=4)
+#fig_df
+#fig_df$x <- rep(1:5, each=4)
+#
+## Generally will be run from evaluation directory
+#fig_name <- file.path(".", "exp_4_comparison.png")
+#p <- ggplot(data=fig_df, aes(x=x, y=value, colour=run)) +
+#  geom_line(linewidth=1) +
+#  #geom_errorbar(aes(ymin=avg_v-se, ymax=avg_v+se)) +
+#  labs(title="", x="Max visits", y="U(d)") + 
+#  theme(text=element_text(size=7), axis.title = element_text(size = 7), legend.key.size = unit(0.25, 'cm')) +
+#  scale_color_discrete(name = "Run", type=c("#c356ea","#ffc100", "#71aef2", "#f7adce"), labels = c("SO, n=2", "SO, n=5", "SO+PO, n=2", "SO+PO, n=5")) +
+#  theme_bw()
+#print(p)
+#ggsave(fig_name, plot=p, dpi=300, width=10, height=7, units="cm")

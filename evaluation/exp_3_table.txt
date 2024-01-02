@@ -172,99 +172,56 @@ NULL
 [1] "current params of interest"
 [1] "g-1_d-2"
 [1] "reading file:"
-[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_3/oe_model-1_sample_effort-n-5_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
-[1] "oe_model-1_sample_effort-n-7_a--2_b-0.5_g-1_d-0.25_p-0.2"
-[[1]]
-[1] "oe"         "model-1"    "sample"     "effort-n-7" "a--2"      
-[6] "b-0.5"      "g-1"        "d-0.25"     "p-0.2"     
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_3/oe_model-1_sample_effort-n-5_[?2004h[?1049h[22;0;0t[?1h=[?2004h[?12h[?12l[27m[23m[29m[m[H[2J[?25l[1;1Hlibrartidyverslslxe[1m[37m[41m)[m
+[35mlibrary[m[35m([mggplot2[35m)[m
+[35mlibrary[m[35m([mopenxlsx[35m)[m
+[35mlibrary[m[35m([mkableExtra[35m)[m
+[35mlibrary[m[35m([mstringr[35m)[m
 
-[1] "Name to identify run"
-[1] "model-1_effort-n-7"
-[1] "current params of interest"
-[1] "g-1_d-0.25"
-[1] "reading file:"
-[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_3/oe_model-1_sample_effort-n-7_a--2_b-0.5_g-1_d-0.25_p-0.2/results.xlsx"
-[1] "oe_model-1_sample_effort-n-7_a--2_b-0.5_g-1_d-2_p-0.2"
-[[1]]
-[1] "oe"         "model-1"    "sample"     "effort-n-7" "a--2"      
-[6] "b-0.5"      "g-1"        "d-2"        "p-0.2"     
 
-[1] "Name to identify run"
-[1] "model-1_effort-n-7"
-[1] "current params of interest"
-[1] "g-1_d-2"
-[1] "reading file:"
-[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_3/oe_model-1_sample_effort-n-7_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
-[1] "oe_model-3_sample_effort-n-10_a--2_b-0.5_g-1_d-0.25_p-0.2"
-[[1]]
-[1] "oe"          "model-3"     "sample"      "effort-n-10" "a--2"       
-[6] "b-0.5"       "g-1"         "d-0.25"      "p-0.2"      
+[36m#exp_dir <- "C:/Users/msavery/OneDrive - UGent/Documents/ghent_phd_spatial_doe/data/globus_hpc_collection"[m
+exp_dir [33m<-[m [33m"/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs"[m
 
-[1] "Name to identify run"
-[1] "model-3_effort-n-10"
-[1] "current params of interest"
-[1] "g-1_d-0.25"
-[1] "reading file:"
-[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_3/oe_model-3_sample_effort-n-10_a--2_b-0.5_g-1_d-0.25_p-0.2/results.xlsx"
-[1] "oe_model-3_sample_effort-n-10_a--2_b-0.5_g-1_d-2_p-0.2"
-[[1]]
-[1] "oe"          "model-3"     "sample"      "effort-n-10" "a--2"       
-[6] "b-0.5"       "g-1"         "d-2"         "p-0.2"      
-
-[1] "Name to identify run"
-[1] "model-3_effort-n-10"
-[1] "current params of interest"
-[1] "g-1_d-2"
-[1] "reading file:"
-[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_3/oe_model-3_sample_effort-n-10_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
-[1] "oe_model-3_sample_effort-n-2_a--2_b-0.5_g-1_d-0.25_p-0.2"
-[[1]]
-[1] "oe"         "model-3"    "sample"     "effort-n-2" "a--2"      
-[6] "b-0.5"      "g-1"        "d-0.25"     "p-0.2"     
-
-[1] "Name to identify run"
-[1] "model-3_effort-n-2"
-[1] "current params of interest"
-[1] "g-1_d-0.25"
-[1] "reading file:"
-[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_3/oe_model-3_sample_effort-n-2_a--2_b-0.5_g-1_d-0.25_p-0.2/results.xlsx"
-[1] "oe_model-3_sample_effort-n-2_a--2_b-0.5_g-1_d-2_p-0.2"
-[[1]]
-[1] "oe"         "model-3"    "sample"     "effort-n-2" "a--2"      
-[6] "b-0.5"      "g-1"        "d-2"        "p-0.2"     
-
-[1] "Name to identify run"
-[1] "model-3_effort-n-2"
-[1] "current params of interest"
-[1] "g-1_d-2"
-[1] "reading file:"
-[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_3/oe_model-3_sample_effort-n-2_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
-[1] "oe_model-3_sample_effort-n-3_a--2_b-0.5_g-1_d-0.25_p-0.2"
-[[1]]
-[1] "oe"         "model-3"    "sample"     "effort-n-3" "a--2"      
-[6] "b-0.5"      "g-1"        "d-0.25"     "p-0.2"     
-
-[1] "Name to identify run"
-[1] "model-3_effort-n-3"
-[1] "current params of interest"
-[1] "g-1_d-0.25"
-[1] "reading file:"
-[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_3/oe_model-3_sample_effort-n-3_a--2_b-0.5_g-1_d-0.25_p-0.2/results.xlsx"
-[1] "oe_model-3_sample_effort-n-3_a--2_b-0.5_g-1_d-2_p-0.2"
-[[1]]
-[1] "oe"         "model-3"    "sample"     "effort-n-3" "a--2"      
-[6] "b-0.5"      "g-1"        "d-2"        "p-0.2"     
-
-[1] "Name to identify run"
-[1] "model-3_effort-n-3"
-[1] "current params of interest"
-[1] "g-1_d-2"
-[1] "reading file:"
-[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_3/oe_model-3_sample_effort-n-3_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
-[1] "oe_model-3_sample_effort-n-4_a--2_b-0.5_g-1_d-0.25_p-0.2"
-[[1]]
-[1] "oe"         "model-3"    "sample"     "effort-n-4" "a--2"      
-[6] "b-0.5"      "g-1"        "d-0.25"     "p-0.2"     
+exp_name [33m<-[m [33m"exp_3"[m
+result_dir [33m<-[m [36mfile.path[m[35m([mexp_dir[35m,[m exp_name[35m)[m
+[36mprint[m[35m([mresult_dir[35m)[m
+[36m# Look at all files corresponding to this set of experiments[m
+file_list [33m<-[m [36mlist.files[m[35m([mresult_dir[35m)[m
+[36mprint[m[35m([m[33m"available runs"[m[35m)[m
+[36mprint[m[35m([mfile_list[35m)[m
+n_f [33m<-[m [36mlength[m[35m([mfile_list[35m)[m
+[36mprint[m[35m([m[33m"number of files"[m[35m)[m
+[36mprint[m[35m([mn_f[35m)[m
+exp_col [33m<-[m [36mc[m[35m([m[33m"model-1_effort-n-2"[m[35m,[m [33m"model-1_effort-n-3"[m[35m,[m [33m"model-1_effort-n-4"[m[35m,[m [33m"model-1_effort-n-5"[m[35m,[m [33m"model-1_effort-n-7"[m[35m,[m [33m"model-1_effort-n-10"[m[35m,[m [33m"model-3_effort-n-2"[m[35m,[m [33m"model-3_effort-n-3"[m[35m,,[m[22;1H [33m"model-3_effort-n-4"[m[35m,[m [33m"model-3_effort-n-5"[m[35m,[m [33m"model-3_effort-n-7"[m[35m,[m [33m"model-3_effort-n-10"[m[35m)[m
+[36m#exp_col <- c("model-1_n-5", "model-1_n-10", "model-3_n-5", "model-3_n-10", "model-4_n-5", "model-4_n-10", "model-5_n-5", "model-5_n-10")[m
+exp_list [33m<-[m [32mvector[m[35m([m[33m"list"[m[35m,[m length[33m=[m[36mlength[m[35m([mexp_col[35m))[m
+var_list [33m<-[m [32mvector[m[35m([m[33m"list"[m[35m,[m length[33m=[m[36mlength[m[35m([mexp_col[35m))[m
+perm_list [33m<-[m [32mvector[m[35m([m[33m"list"[m[35m,[m length[33m=[m[36mlength[m[35m([mexp_col[35m))[m
+[36mnames[m[35m([mexp_list[35m)[m [33m<-[m exp_col
+[36mnames[m[35m([mperm_list[35m)[m [33m<-[m exp_col
+[36mprint[m[35m([m[33m"inital list to save results"[m[35m)[m
+[36mprint[m[35m([mexp_list[35m)[m
+[33mfor[m [35m([mi [33min[m [33m1[m[35m:[m[36mlength[m[35m([mfile_list[35m)){[m
+  f [33m<-[m file_list[35m[[mi[35m][m
+  [36mprint[m[35m([mf[35m)[m
+  dir_path [33m<-[m [36mfile.path[m[35m([mresult_dir[35m,[m f[35m)[m
+  file_name [33m<-[m [36mlist.files[m[35m([mdir_path[35m)[[m[33m2[m[35m][m
+  params [33m<-[m [36mstr_split[m[35m([mf[35m,[m [33m"_"[m[35m)[m
+  [36mprint[m[35m([mparams[35m)[m
+  compare_name [33m<-[m [36mpaste[m[35m([mparams[35m[[[m[33m1[m[35m]][[m[33m2[m[35m],[m params[35m[[[m[33m1[m[35m]][[m[33m4[m[35m],[m sep[33m=[m[33m"_"[m[35m)[m
+  [36mprint[m[35m([m[33m"Name to identify run"[m[35m)[m
+  [36mprint[m[35m([mcompare_name[35m)[m
+  param_perm [33m<-[m [36mpaste[m[35m([mparams[35m[[[m[33m1[m[35m]][[m[33m7[m[35m],[m params[35m[[[m[33m1[m[35m]][[m[33m8[m[35m],[m sep[33m=[m[33m"_"[m[35m)[m
+  [36mprint[m[35m([m[33m"current params of interest"[m[35m)[m
+  [36mprint[m[35m([mparam_perm[35m)[m
+  [36m# Make this list so as to have the permutation names for each subset[m
+  perm_list[35m[[[mcompare_name[35m]][m [33m<-[m [36mc[m[35m([mperm_list[35m[[[mcompare_name[35m]],[m param_perm[35m)[m
+  [33mif[m [35m([m[36msubstr[m[35m([mfile_name[35m,[m [36mstr_length[m[35m([mfile_name[35m)[m[33m-[m[33m3[m[35m,[m [36mstr_length[m[35m([mfile_name[35m))[m[33m!=[m [33m"xlsx"[m[35m){[m
+    [36mprint[m[35m([m[36mpaste[m[35m([m[33m"Incorrect file selected:"[m[35m,[m file_name[35m))[m
+    [36mprint[m[35m([m[36mpaste[m[35m([m[33m"Available files:"[m[35m,[m [36mlist.files[m[35m([mdir_path[35m)))[m[49;172H1,17[10CTop[1;17H[?25h[49;1H[?2004l[?1l>[?1049l[23;0;0tVim: Caught deadly signal HUP
+Vim: preserving files...
+Vim: Finished.
+[49;1H.25"     "p-0.2"     
 
 [1] "Name to identify run"
 [1] "model-3_effort-n-4"
@@ -329,40 +286,113 @@ NULL
 [1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_3/oe_model-3_sample_effort-n-7_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
 [1] "result list"
 $`model-1_effort-n-2`
-[1] 0.05897702 0.05897702
+[1] 0.124547 0.124547
 
 $`model-1_effort-n-3`
-[1] 0.04663801 0.04663801
+[1] 0.1248497 0.1248497
 
 $`model-1_effort-n-4`
-[1] 0.04449567 0.04449567
+[1] 0.1221975 0.1221975
 
 $`model-1_effort-n-5`
-[1] 0.04104916 0.04104916
+[1] 0.1211943 0.1211943
 
 $`model-1_effort-n-7`
-[1] 0.04610294 0.04610294
+[1] 0.1217928 0.1217928
 
 $`model-1_effort-n-10`
-[1] 0.04238786 0.04238786
+[1] 0.1190552 0.1190552
 
 $`model-3_effort-n-2`
-[1] 0.03809017 0.04263932
+[1] 0.09920663 0.10263492
 
 $`model-3_effort-n-3`
-[1] 0.02808362 0.03134755
+[1] 0.1029877 0.1018080
 
 $`model-3_effort-n-4`
-[1] 0.02421614 0.02729822
+[1] 0.1018537 0.1024049
 
 $`model-3_effort-n-5`
-[1] 0.03039429 0.02680181
+[1] 0.1021600 0.1035632
 
 $`model-3_effort-n-7`
-[1] 0.02650583 0.02883645
+[1] 0.1051853 0.1082128
 
 $`model-3_effort-n-10`
-[1] 0.02689241 0.02672134
+[1] 0.1149935 0.1116235
+
+[1] "variance"
+[[1]]
+NULL
+
+[[2]]
+NULL
+
+[[3]]
+NULL
+
+[[4]]
+NULL
+
+[[5]]
+NULL
+
+[[6]]
+NULL
+
+[[7]]
+NULL
+
+[[8]]
+NULL
+
+[[9]]
+NULL
+
+[[10]]
+NULL
+
+[[11]]
+NULL
+
+[[12]]
+NULL
+
+$`model-1_effort-n-10`
+[1] 3.067607e-05 3.067607e-05
+
+$`model-1_effort-n-2`
+[1] 3.888688e-05 3.888688e-05
+
+$`model-1_effort-n-3`
+[1] 3.485085e-05 3.485085e-05
+
+$`model-1_effort-n-4`
+[1] 4.630771e-05 4.630771e-05
+
+$`model-1_effort-n-5`
+[1] 4.023008e-05 4.023008e-05
+
+$`model-1_effort-n-7`
+[1] 2.757738e-05 2.757738e-05
+
+$`model-3_effort-n-10`
+[1] 1.343054e-04 7.541359e-05
+
+$`model-3_effort-n-2`
+[1] 1.240900e-05 1.963182e-05
+
+$`model-3_effort-n-3`
+[1] 7.444422e-05 1.299943e-05
+
+$`model-3_effort-n-4`
+[1] 3.737240e-05 4.572707e-05
+
+$`model-3_effort-n-5`
+[1] 2.110716e-05 1.233950e-05
+
+$`model-3_effort-n-7`
+[1] 3.754700e-05 4.764802e-05
 
 [1] "Params per model. Make sure each model has params ordered in the same way"
 $`model-1_effort-n-2`
@@ -402,32 +432,58 @@ $`model-3_effort-n-10`
 [1] "g-1_d-0.25" "g-1_d-2"   
 
 [1] 12  2
-            [,1]       [,2]
- [1,] 0.05897702 0.05897702
- [2,] 0.04663801 0.04663801
- [3,] 0.04449567 0.04449567
- [4,] 0.04104916 0.04104916
- [5,] 0.04610294 0.04610294
- [6,] 0.04238786 0.04238786
- [7,] 0.03809017 0.04263932
- [8,] 0.02808362 0.03134755
- [9,] 0.02421614 0.02729822
-[10,] 0.03039429 0.02680181
-[11,] 0.02650583 0.02883645
-[12,] 0.02689241 0.02672134
-                    g-1_d-0.25    g-1_d-2
-model-1_effort-n-2  0.05897702 0.05897702
-model-1_effort-n-3  0.04663801 0.04663801
-model-1_effort-n-4  0.04449567 0.04449567
-model-1_effort-n-5  0.04104916 0.04104916
-model-1_effort-n-7  0.04610294 0.04610294
-model-1_effort-n-10 0.04238786 0.04238786
-model-3_effort-n-2  0.03809017 0.04263932
-model-3_effort-n-3  0.02808362 0.03134755
-model-3_effort-n-4  0.02421614 0.02729822
-model-3_effort-n-5  0.03039429 0.02680181
-model-3_effort-n-7  0.02650583 0.02883645
-model-3_effort-n-10 0.02689241 0.02672134
+            [,1]      [,2]
+ [1,] 0.12454698 0.1245470
+ [2,] 0.12484975 0.1248497
+ [3,] 0.12219749 0.1221975
+ [4,] 0.12119434 0.1211943
+ [5,] 0.12179280 0.1217928
+ [6,] 0.11905517 0.1190552
+ [7,] 0.09920663 0.1026349
+ [8,] 0.10298772 0.1018080
+ [9,] 0.10185372 0.1024049
+[10,] 0.10216001 0.1035632
+[11,] 0.10518534 0.1082128
+[12,] 0.11499348 0.1116235
+              [,1]         [,2]
+ [1,] 3.888688e-05 3.888688e-05
+ [2,] 3.485085e-05 3.485085e-05
+ [3,] 4.630771e-05 4.630771e-05
+ [4,] 4.023008e-05 4.023008e-05
+ [5,] 2.757738e-05 2.757738e-05
+ [6,] 3.067607e-05 3.067607e-05
+ [7,] 1.240900e-05 1.963182e-05
+ [8,] 7.444422e-05 1.299943e-05
+ [9,] 3.737240e-05 4.572707e-05
+[10,] 2.110716e-05 1.233950e-05
+[11,] 3.754700e-05 4.764802e-05
+[12,] 1.343054e-04 7.541359e-05
+                    g-1_d-0.25   g-1_d-2
+model-1_effort-n-2  0.12454698 0.1245470
+model-1_effort-n-3  0.12484975 0.1248497
+model-1_effort-n-4  0.12219749 0.1221975
+model-1_effort-n-5  0.12119434 0.1211943
+model-1_effort-n-7  0.12179280 0.1217928
+model-1_effort-n-10 0.11905517 0.1190552
+model-3_effort-n-2  0.09920663 0.1026349
+model-3_effort-n-3  0.10298772 0.1018080
+model-3_effort-n-4  0.10185372 0.1024049
+model-3_effort-n-5  0.10216001 0.1035632
+model-3_effort-n-7  0.10518534 0.1082128
+model-3_effort-n-10 0.11499348 0.1116235
+                      g-1_d-0.25      g-1_d-2
+model-1_effort-n-2  3.888688e-05 3.888688e-05
+model-1_effort-n-3  3.485085e-05 3.485085e-05
+model-1_effort-n-4  4.630771e-05 4.630771e-05
+model-1_effort-n-5  4.023008e-05 4.023008e-05
+model-1_effort-n-7  2.757738e-05 2.757738e-05
+model-1_effort-n-10 3.067607e-05 3.067607e-05
+model-3_effort-n-2  1.240900e-05 1.963182e-05
+model-3_effort-n-3  7.444422e-05 1.299943e-05
+model-3_effort-n-4  3.737240e-05 4.572707e-05
+model-3_effort-n-5  2.110716e-05 1.233950e-05
+model-3_effort-n-7  3.754700e-05 4.764802e-05
+model-3_effort-n-10 1.343054e-04 7.541359e-05
 \begin{table}[H]
 
 \caption{\label{tab:survey_eval}Comparison of models, sampling effort, and parameter permutations}
@@ -436,20 +492,50 @@ model-3_effort-n-10 0.02689241 0.02672134
 \toprule
   & g-1\_d-0.25 & g-1\_d-2\\
 \midrule
-model-1\_effort-n-2 & 0.0590 & 0.0590\\
-model-1\_effort-n-3 & 0.0466 & 0.0466\\
-model-1\_effort-n-4 & 0.0445 & 0.0445\\
-model-1\_effort-n-5 & 0.0410 & 0.0410\\
-model-1\_effort-n-7 & 0.0461 & 0.0461\\
+model-1\_effort-n-2 & 0.1245 & 0.1245\\
+model-1\_effort-n-3 & 0.1248 & 0.1248\\
+model-1\_effort-n-4 & 0.1222 & 0.1222\\
+model-1\_effort-n-5 & 0.1212 & 0.1212\\
+model-1\_effort-n-7 & 0.1218 & 0.1218\\
 \addlinespace
-model-1\_effort-n-10 & 0.0424 & 0.0424\\
-model-3\_effort-n-2 & 0.0381 & 0.0426\\
-model-3\_effort-n-3 & 0.0281 & 0.0313\\
-model-3\_effort-n-4 & 0.0242 & 0.0273\\
-model-3\_effort-n-5 & 0.0304 & 0.0268\\
+model-1\_effort-n-10 & 0.1191 & 0.1191\\
+model-3\_effort-n-2 & 0.0992 & 0.1026\\
+model-3\_effort-n-3 & 0.1030 & 0.1018\\
+model-3\_effort-n-4 & 0.1019 & 0.1024\\
+model-3\_effort-n-5 & 0.1022 & 0.1036\\
 \addlinespace
-model-3\_effort-n-7 & 0.0265 & 0.0288\\
-model-3\_effort-n-10 & 0.0269 & 0.0267\\
+model-3\_effort-n-7 & 0.1052 & 0.1082\\
+model-3\_effort-n-10 & 0.1150 & 0.1116\\
 \bottomrule
 \end{tabular}
 \end{table}
+                    g-1_d-0.25   g-1_d-2
+model-1_effort-n-2  0.12454698 0.1245470
+model-1_effort-n-3  0.12484975 0.1248497
+model-1_effort-n-4  0.12219749 0.1221975
+model-1_effort-n-5  0.12119434 0.1211943
+model-1_effort-n-7  0.12179280 0.1217928
+model-1_effort-n-10 0.11905517 0.1190552
+model-3_effort-n-2  0.09920663 0.1026349
+model-3_effort-n-3  0.10298772 0.1018080
+model-3_effort-n-4  0.10185372 0.1024049
+model-3_effort-n-5  0.10216001 0.1035632
+model-3_effort-n-7  0.10518534 0.1082128
+model-3_effort-n-10 0.11499348 0.1116235
+                      g-1_d-0.25      g-1_d-2
+model-1_effort-n-2  3.888688e-05 3.888688e-05
+model-1_effort-n-3  3.485085e-05 3.485085e-05
+model-1_effort-n-4  4.630771e-05 4.630771e-05
+model-1_effort-n-5  4.023008e-05 4.023008e-05
+model-1_effort-n-7  2.757738e-05 2.757738e-05
+model-1_effort-n-10 3.067607e-05 3.067607e-05
+model-3_effort-n-2  1.240900e-05 1.963182e-05
+model-3_effort-n-3  7.444422e-05 1.299943e-05
+model-3_effort-n-4  3.737240e-05 4.572707e-05
+model-3_effort-n-5  2.110716e-05 1.233950e-05
+model-3_effort-n-7  3.754700e-05 4.764802e-05
+model-3_effort-n-10 1.343054e-04 7.541359e-05
+ [1] 0.006235935 0.003522641 0.006235935 0.004430780 0.005903461 0.008628106
+ [7] 0.005903461 0.003605472 0.006804977 0.006113297 0.006804977 0.006762180
+[13] 0.006342719 0.004594253 0.006342719 0.003512763 0.005251417 0.006127560
+[19] 0.005251417 0.006902754 0.005538598 0.011589019 0.005538598 0.008684100
