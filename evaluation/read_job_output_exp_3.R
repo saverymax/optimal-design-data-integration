@@ -128,7 +128,7 @@ fig_df$se <- sqrt(var_fig_df$var)/sqrt(10)
 fig_name <- file.path(".", "exp_3_comparison.png")
 p <- ggplot(data=fig_df, aes(x=x, y=avg_v, colour=run)) +
   geom_line(linewidth=1) +
-  scale_x_discrete(labels=c(2,3,4,5,7,10)) +
+  scale_x_discrete(labels=c("2","3","4","5","7","10")) +
   #geom_errorbar(aes(ymin=avg_v-se, ymax=avg_v+se)) +
   labs(title="", x="Max visits", y="U(d)") + 
   theme(text=element_text(size=7), axis.title = element_text(size = 7), legend.key.size = unit(0.25, 'cm')) +
