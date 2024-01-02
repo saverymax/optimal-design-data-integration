@@ -384,7 +384,7 @@ get_sampling_surface_donut <- function(k){
   # This gives a gaussain function that peaks a certain distance (7) away from the centroid
   r <- apply(sampling_grid, 1, distance_func, center_coord=center_coord)
   # Then create x covariate
-  x <- exp(-10*((r-7)/2)^2)
+  x <- exp(-10*((r-7)/5)^2)
   # This gives us the data for the auxiliary surveys x_i in the paper, which will be the 
   # covariates used in the paper X_i^T = [1, X_i1]
   x_1 <- qnorm(0.98*x + .01)
