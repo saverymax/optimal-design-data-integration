@@ -52,7 +52,7 @@ To run the simulated data experiments, we have to first run the script generate_
 Rscript generate_po_data.R --working_dir=. --exp_name=po_gen --alpha=-2 --beta=0.5 --gamma=1 --delta=0.25 --intensity_func="donut" --bias_fun="exponential" --data_reps=96
 ```
 
-The bash script will run the R script with all parameter combinations that we use in the experiments.
+The bash script in the experiment_scripts directory will run the R script with all parameter combinations that we use in the experiments.
 
 Then, we can run the optimal design using a particular PO simulated dataset. This is admittedly a bit difficult since we have to specify the same parameter sets that are used to generate the PO data in the design script, where these same parameters (alpha and beta) will be used to generate the PA data. For example given that we have ```--alpha=-2 --beta=0.5 --gamma=1 --delta=0.25``` above, in the design we need to run the script with
 ```
