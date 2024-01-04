@@ -1,0 +1,16 @@
+qsub exp_1_peak/oe_model-1_m-5_n-1_r-96_intns-donut_a--2_b-2_g--0.5_d-0.25_p-0.2.sh
+qsub exp_1_peak/oe_model-1_m-5_n-5_r-96_intns-donut_a--2_b-2_g--0.5_d-0.25_p-0.2.sh
+qsub exp_1_peak/oe_model-1_m-5_n-1_r-96_intns-donut_a--2_b-2_g--0.5_d-2_p-0.2.sh
+qsub exp_1_peak/oe_model-1_m-5_n-5_r-96_intns-donut_a--2_b-2_g--0.5_d-2_p-0.2.sh
+qsub exp_1_peak/oe_model-1_m-5_n-1_r-96_intns-donut_a--2_b-2_g-1_d-0.25_p-0.2.sh
+qsub exp_1_peak/oe_model-1_m-5_n-5_r-96_intns-donut_a--2_b-2_g-1_d-0.25_p-0.2.sh
+qsub exp_1_peak/oe_model-1_m-5_n-1_r-96_intns-donut_a--2_b-2_g-1_d-2_p-0.2.sh
+qsub exp_1_peak/oe_model-1_m-5_n-5_r-96_intns-donut_a--2_b-2_g-1_d-2_p-0.2.sh
+qsub exp_1_peak/oe_model-3_m-5_n-1_r-96_intns-donut_a--2_b-2_g--0.5_d-0.25_p-0.2.sh
+qsub exp_1_peak/oe_model-3_m-5_n-5_r-96_intns-donut_a--2_b-2_g--0.5_d-0.25_p-0.2.sh
+qsub exp_1_peak/oe_model-3_m-5_n-1_r-96_intns-donut_a--2_b-2_g--0.5_d-2_p-0.2.sh
+qsub exp_1_peak/oe_model-3_m-5_n-5_r-96_intns-donut_a--2_b-2_g--0.5_d-2_p-0.2.sh
+qsub exp_1_peak/oe_model-3_m-5_n-1_r-96_intns-donut_a--2_b-2_g-1_d-0.25_p-0.2.sh
+qsub exp_1_peak/oe_model-3_m-5_n-5_r-96_intns-donut_a--2_b-2_g-1_d-0.25_p-0.2.sh
+qsub exp_1_peak/oe_model-3_m-5_n-1_r-96_intns-donut_a--2_b-2_g-1_d-2_p-0.2.sh
+qsub exp_1_peak/oe_model-3_m-5_n-5_r-96_intns-donut_a--2_b-2_g-1_d-2_p-0.2.sh

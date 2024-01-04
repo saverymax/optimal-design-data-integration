@@ -1,0 +1,2189 @@
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5_peak"
+[1] "available runs"
+ [1] "oe_model-1_sites-m-2_sample_effort-n-2_a--2_b-0.5_g-1_d-0.25_p-0.2"
+ [2] "oe_model-1_sites-m-2_sample_effort-n-2_a--2_b-0.5_g-1_d-2_p-0.2"   
+ [3] "oe_model-1_sites-m-2_sample_effort-n-2_a--2_b-1_g-1_d-0.25_p-0.2"  
+ [4] "oe_model-1_sites-m-2_sample_effort-n-2_a--2_b-1_g-1_d-2_p-0.2"     
+ [5] "oe_model-1_sites-m-2_sample_effort-n-2_a--2_b-2_g-1_d-0.25_p-0.2"  
+ [6] "oe_model-1_sites-m-2_sample_effort-n-2_a--2_b-2_g-1_d-2_p-0.2"     
+ [7] "oe_model-1_sites-m-5_sample_effort-n-2_a--2_b-0.5_g-1_d-0.25_p-0.2"
+ [8] "oe_model-1_sites-m-5_sample_effort-n-2_a--2_b-0.5_g-1_d-2_p-0.2"   
+ [9] "oe_model-1_sites-m-5_sample_effort-n-2_a--2_b-1_g-1_d-0.25_p-0.2"  
+[10] "oe_model-1_sites-m-5_sample_effort-n-2_a--2_b-1_g-1_d-2_p-0.2"     
+[11] "oe_model-1_sites-m-5_sample_effort-n-2_a--2_b-2_g-1_d-0.25_p-0.2"  
+[12] "oe_model-1_sites-m-5_sample_effort-n-2_a--2_b-2_g-1_d-2_p-0.2"     
+[13] "oe_model-3_sites-m-2_sample_effort-n-2_a--2_b-0.5_g-1_d-0.25_p-0.2"
+[14] "oe_model-3_sites-m-2_sample_effort-n-2_a--2_b-0.5_g-1_d-2_p-0.2"   
+[15] "oe_model-3_sites-m-2_sample_effort-n-2_a--2_b-1_g-1_d-0.25_p-0.2"  
+[16] "oe_model-3_sites-m-2_sample_effort-n-2_a--2_b-1_g-1_d-2_p-0.2"     
+[17] "oe_model-3_sites-m-2_sample_effort-n-2_a--2_b-2_g-1_d-0.25_p-0.2"  
+[18] "oe_model-3_sites-m-2_sample_effort-n-2_a--2_b-2_g-1_d-2_p-0.2"     
+[19] "oe_model-3_sites-m-5_sample_effort-n-2_a--2_b-0.5_g-1_d-0.25_p-0.2"
+[20] "oe_model-3_sites-m-5_sample_effort-n-2_a--2_b-0.5_g-1_d-2_p-0.2"   
+[21] "oe_model-3_sites-m-5_sample_effort-n-2_a--2_b-1_g-1_d-0.25_p-0.2"  
+[22] "oe_model-3_sites-m-5_sample_effort-n-2_a--2_b-1_g-1_d-2_p-0.2"     
+[23] "oe_model-3_sites-m-5_sample_effort-n-2_a--2_b-2_g-1_d-0.25_p-0.2"  
+[24] "oe_model-3_sites-m-5_sample_effort-n-2_a--2_b-2_g-1_d-2_p-0.2"     
+[25] "oe_model-4_sites-m-2_sample_effort-n-2_a--2_b-0.5_g-1_d-0.25_p-0.2"
+[26] "oe_model-4_sites-m-2_sample_effort-n-2_a--2_b-0.5_g-1_d-2_p-0.2"   
+[27] "oe_model-4_sites-m-2_sample_effort-n-2_a--2_b-1_g-1_d-0.25_p-0.2"  
+[28] "oe_model-4_sites-m-2_sample_effort-n-2_a--2_b-1_g-1_d-2_p-0.2"     
+[29] "oe_model-4_sites-m-2_sample_effort-n-2_a--2_b-2_g-1_d-0.25_p-0.2"  
+[30] "oe_model-4_sites-m-2_sample_effort-n-2_a--2_b-2_g-1_d-2_p-0.2"     
+[31] "oe_model-4_sites-m-5_sample_effort-n-2_a--2_b-0.5_g-1_d-0.25_p-0.2"
+[32] "oe_model-4_sites-m-5_sample_effort-n-2_a--2_b-0.5_g-1_d-2_p-0.2"   
+[33] "oe_model-4_sites-m-5_sample_effort-n-2_a--2_b-1_g-1_d-0.25_p-0.2"  
+[34] "oe_model-4_sites-m-5_sample_effort-n-2_a--2_b-1_g-1_d-2_p-0.2"     
+[35] "oe_model-4_sites-m-5_sample_effort-n-2_a--2_b-2_g-1_d-0.25_p-0.2"  
+[36] "oe_model-4_sites-m-5_sample_effort-n-2_a--2_b-2_g-1_d-2_p-0.2"     
+[37] "oe_model-5_sites-m-2_sample_effort-n-2_a--2_b-0.5_g-1_d-0.25_p-0.2"
+[38] "oe_model-5_sites-m-2_sample_effort-n-2_a--2_b-0.5_g-1_d-2_p-0.2"   
+[39] "oe_model-5_sites-m-2_sample_effort-n-2_a--2_b-1_g-1_d-0.25_p-0.2"  
+[40] "oe_model-5_sites-m-2_sample_effort-n-2_a--2_b-1_g-1_d-2_p-0.2"     
+[41] "oe_model-5_sites-m-2_sample_effort-n-2_a--2_b-2_g-1_d-0.25_p-0.2"  
+[42] "oe_model-5_sites-m-2_sample_effort-n-2_a--2_b-2_g-1_d-2_p-0.2"     
+[43] "oe_model-5_sites-m-5_sample_effort-n-2_a--2_b-0.5_g-1_d-0.25_p-0.2"
+[44] "oe_model-5_sites-m-5_sample_effort-n-2_a--2_b-0.5_g-1_d-2_p-0.2"   
+[45] "oe_model-5_sites-m-5_sample_effort-n-2_a--2_b-1_g-1_d-0.25_p-0.2"  
+[46] "oe_model-5_sites-m-5_sample_effort-n-2_a--2_b-1_g-1_d-2_p-0.2"     
+[47] "oe_model-5_sites-m-5_sample_effort-n-2_a--2_b-2_g-1_d-0.25_p-0.2"  
+[48] "oe_model-5_sites-m-5_sample_effort-n-2_a--2_b-2_g-1_d-2_p-0.2"     
+[1] "number of files"
+[1] 48
+[1] "inital list to save results"
+$`model-1_b-0.5`
+NULL
+
+$`model-1_b-1`
+NULL
+
+$`model-1_b-2`
+NULL
+
+$`model-3_b-0.5`
+NULL
+
+$`model-3_b-1`
+NULL
+
+$`model-3_b-2`
+NULL
+
+$`model-4_b-0.5`
+NULL
+
+$`model-4_b-1`
+NULL
+
+$`model-4_b-2`
+NULL
+
+$`model-5_b-0.5`
+NULL
+
+$`model-5_b-1`
+NULL
+
+$`model-5_b-2`
+NULL
+
+[1] "oe_model-1_sites-m-2_sample_effort-n-2_a--2_b-0.5_g-1_d-0.25_p-0.2"
+[[1]]
+ [1] "oe"         "model-1"    "sites-m-2"  "sample"     "effort-n-2"
+ [6] "a--2"       "b-0.5"      "g-1"        "d-0.25"     "p-0.2"     
+
+[1] "Name to identify run"
+[1] "model-1_b-0.5"
+[1] "current params of interest"
+[1] "sites-m-2_d-0.25"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5_peak/oe_model-1_sites-m-2_sample_effort-n-2_a--2_b-0.5_g-1_d-0.25_p-0.2/results.xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           8          33          70          18          48          15
+2          20          89         100          48          38          74
+  rand-start7 rand-start8 rand-start9 rand-start10 rand-start1 rand-start2
+1          18          26          25           35           2           2
+2          48           6          65           85           2           2
+  rand-start3 rand-start4 rand-start5 rand-start6 rand-start7 rand-start8
+1           2           2           2           2           2           2
+2           2           2           2           1           2           2
+  rand-start9 rand-start10
+1           2            2
+2           2            2
+[1] "subset of visit xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           2           2           2           2           2           2
+2           2           2           2           2           2           1
+  rand-start7 rand-start8 rand-start9 rand-start10
+1           2           2           2            2
+2           2           2           2            2
+[1] "oe_model-1_sites-m-2_sample_effort-n-2_a--2_b-0.5_g-1_d-2_p-0.2"
+[[1]]
+ [1] "oe"         "model-1"    "sites-m-2"  "sample"     "effort-n-2"
+ [6] "a--2"       "b-0.5"      "g-1"        "d-2"        "p-0.2"     
+
+[1] "Name to identify run"
+[1] "model-1_b-0.5"
+[1] "current params of interest"
+[1] "sites-m-2_d-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5_peak/oe_model-1_sites-m-2_sample_effort-n-2_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           8          33          70          18          48          15
+2          20          89         100          48          38          74
+  rand-start7 rand-start8 rand-start9 rand-start10 rand-start1 rand-start2
+1          18          26          25           35           2           2
+2          48           6          65           85           2           2
+  rand-start3 rand-start4 rand-start5 rand-start6 rand-start7 rand-start8
+1           2           2           2           2           2           2
+2           2           2           2           1           2           2
+  rand-start9 rand-start10
+1           2            2
+2           2            2
+[1] "subset of visit xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           2           2           2           2           2           2
+2           2           2           2           2           2           1
+  rand-start7 rand-start8 rand-start9 rand-start10
+1           2           2           2            2
+2           2           2           2            2
+[1] "oe_model-1_sites-m-2_sample_effort-n-2_a--2_b-1_g-1_d-0.25_p-0.2"
+[[1]]
+ [1] "oe"         "model-1"    "sites-m-2"  "sample"     "effort-n-2"
+ [6] "a--2"       "b-1"        "g-1"        "d-0.25"     "p-0.2"     
+
+[1] "Name to identify run"
+[1] "model-1_b-1"
+[1] "current params of interest"
+[1] "sites-m-2_d-0.25"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5_peak/oe_model-1_sites-m-2_sample_effort-n-2_a--2_b-1_g-1_d-0.25_p-0.2/results.xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1          18          74          43          25          18          17
+2          19          71          75          96          57          40
+  rand-start7 rand-start8 rand-start9 rand-start10 rand-start1 rand-start2
+1          23           5          68           81           2           2
+2          50          12          18           75           2           2
+  rand-start3 rand-start4 rand-start5 rand-start6 rand-start7 rand-start8
+1           1           1           2           2           2           2
+2           2           2           2           2           2           2
+  rand-start9 rand-start10
+1           2            1
+2           2            2
+[1] "subset of visit xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           2           2           1           1           2           2
+2           2           2           2           2           2           2
+  rand-start7 rand-start8 rand-start9 rand-start10
+1           2           2           2            1
+2           2           2           2            2
+[1] "oe_model-1_sites-m-2_sample_effort-n-2_a--2_b-1_g-1_d-2_p-0.2"
+[[1]]
+ [1] "oe"         "model-1"    "sites-m-2"  "sample"     "effort-n-2"
+ [6] "a--2"       "b-1"        "g-1"        "d-2"        "p-0.2"     
+
+[1] "Name to identify run"
+[1] "model-1_b-1"
+[1] "current params of interest"
+[1] "sites-m-2_d-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5_peak/oe_model-1_sites-m-2_sample_effort-n-2_a--2_b-1_g-1_d-2_p-0.2/results.xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1          18          74          43          25          18          17
+2          19          71          75          96          57          40
+  rand-start7 rand-start8 rand-start9 rand-start10 rand-start1 rand-start2
+1          23           5          68           81           2           2
+2          50          12          18           75           2           2
+  rand-start3 rand-start4 rand-start5 rand-start6 rand-start7 rand-start8
+1           1           1           2           2           2           2
+2           2           2           2           2           2           2
+  rand-start9 rand-start10
+1           2            1
+2           2            2
+[1] "subset of visit xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           2           2           1           1           2           2
+2           2           2           2           2           2           2
+  rand-start7 rand-start8 rand-start9 rand-start10
+1           2           2           2            1
+2           2           2           2            2
+[1] "oe_model-1_sites-m-2_sample_effort-n-2_a--2_b-2_g-1_d-0.25_p-0.2"
+[[1]]
+ [1] "oe"         "model-1"    "sites-m-2"  "sample"     "effort-n-2"
+ [6] "a--2"       "b-2"        "g-1"        "d-0.25"     "p-0.2"     
+
+[1] "Name to identify run"
+[1] "model-1_b-2"
+[1] "current params of interest"
+[1] "sites-m-2_d-0.25"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5_peak/oe_model-1_sites-m-2_sample_effort-n-2_a--2_b-2_g-1_d-0.25_p-0.2/results.xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1          18          67          35          40          50          72
+2          19          66          85          71          99          43
+  rand-start7 rand-start8 rand-start9 rand-start10 rand-start1 rand-start2
+1          89          86          23           77           2           2
+2          40          25           2            7           2           2
+  rand-start3 rand-start4 rand-start5 rand-start6 rand-start7 rand-start8
+1           2           2           2           2           2           2
+2           2           2           2           2           2           2
+  rand-start9 rand-start10
+1           2            2
+2           2            2
+[1] "subset of visit xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           2           2           2           2           2           2
+2           2           2           2           2           2           2
+  rand-start7 rand-start8 rand-start9 rand-start10
+1           2           2           2            2
+2           2           2           2            2
+[1] "oe_model-1_sites-m-2_sample_effort-n-2_a--2_b-2_g-1_d-2_p-0.2"
+[[1]]
+ [1] "oe"         "model-1"    "sites-m-2"  "sample"     "effort-n-2"
+ [6] "a--2"       "b-2"        "g-1"        "d-2"        "p-0.2"     
+
+[1] "Name to identify run"
+[1] "model-1_b-2"
+[1] "current params of interest"
+[1] "sites-m-2_d-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5_peak/oe_model-1_sites-m-2_sample_effort-n-2_a--2_b-2_g-1_d-2_p-0.2/results.xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1          18          67          35          40          50          72
+2          19          66          85          71          99          43
+  rand-start7 rand-start8 rand-start9 rand-start10 rand-start1 rand-start2
+1          89          86          23           77           2           2
+2          40          25           2            7           2           2
+  rand-start3 rand-start4 rand-start5 rand-start6 rand-start7 rand-start8
+1           2           2           2           2           2           2
+2           2           2           2           2           2           2
+  rand-start9 rand-start10
+1           2            2
+2           2            2
+[1] "subset of visit xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           2           2           2           2           2           2
+2           2           2           2           2           2           2
+  rand-start7 rand-start8 rand-start9 rand-start10
+1           2           2           2            2
+2           2           2           2            2
+[1] "oe_model-1_sites-m-5_sample_effort-n-2_a--2_b-0.5_g-1_d-0.25_p-0.2"
+[[1]]
+ [1] "oe"         "model-1"    "sites-m-5"  "sample"     "effort-n-2"
+ [6] "a--2"       "b-0.5"      "g-1"        "d-0.25"     "p-0.2"     
+
+[1] "Name to identify run"
+[1] "model-1_b-0.5"
+[1] "current params of interest"
+[1] "sites-m-5_d-0.25"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5_peak/oe_model-1_sites-m-5_sample_effort-n-2_a--2_b-0.5_g-1_d-0.25_p-0.2/results.xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1          18          33          48           8          66          60
+2          38          89          70          28          35          18
+3          20          60          19          33          76          78
+4          49          77          15           6          89           6
+5          50          28          64          35          22          12
+  rand-start7 rand-start8 rand-start9 rand-start10 rand-start1 rand-start2
+1          18          46          48           49           2           2
+2          54          15          72           96           1           2
+3          50          50          12            6           2           1
+4          56          12           2           77           1           2
+5          64          64          86           72           1           1
+  rand-start3 rand-start4 rand-start5 rand-start6 rand-start7 rand-start8
+1           2           2           2           1           2           1
+2           2           1           2           1           2           2
+3           1           2           1           1           2           2
+4           2           2           2           2           2           2
+5           1           2           1           2           2           1
+  rand-start9 rand-start10
+1           2            1
+2           1            1
+3           2            2
+4           1            2
+5           1            2
+[1] "subset of visit xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           2           2           2           2           2           1
+2           1           2           2           1           2           1
+3           2           1           1           2           1           1
+4           1           2           2           2           2           2
+5           1           1           1           2           1           2
+  rand-start7 rand-start8 rand-start9 rand-start10
+1           2           1           2            1
+2           2           2           1            1
+3           2           2           2            2
+4           2           2           1            2
+5           2           1           1            2
+[1] "oe_model-1_sites-m-5_sample_effort-n-2_a--2_b-0.5_g-1_d-2_p-0.2"
+[[1]]
+ [1] "oe"         "model-1"    "sites-m-5"  "sample"     "effort-n-2"
+ [6] "a--2"       "b-0.5"      "g-1"        "d-2"        "p-0.2"     
+
+[1] "Name to identify run"
+[1] "model-1_b-0.5"
+[1] "current params of interest"
+[1] "sites-m-5_d-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5_peak/oe_model-1_sites-m-5_sample_effort-n-2_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1          18          33          48           8          66          60
+2          38          89          70          28          35          18
+3          20          60          19          33          76          78
+4          49          77          15           6          89           6
+5          50          28          64          35          22          12
+  rand-start7 rand-start8 rand-start9 rand-start10 rand-start1 rand-start2
+1          18          46          48           49           2           2
+2          54          15          72           96           1           2
+3          50          50          12            6           2           1
+4          56          12           2           77           1           2
+5          64          64          86           72           1           1
+  rand-start3 rand-start4 rand-start5 rand-start6 rand-start7 rand-start8
+1           2           2           2           1           2           1
+2           2           1           2           1           2           2
+3           1           2           1           1           2           2
+4           2           2           2           2           2           2
+5           1           2           1           2           2           1
+  rand-start9 rand-start10
+1           2            1
+2           1            1
+3           2            2
+4           1            2
+5           1            2
+[1] "subset of visit xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           2           2           2           2           2           1
+2           1           2           2           1           2           1
+3           2           1           1           2           1           1
+4           1           2           2           2           2           2
+5           1           1           1           2           1           2
+  rand-start7 rand-start8 rand-start9 rand-start10
+1           2           1           2            1
+2           2           2           1            1
+3           2           2           2            2
+4           2           2           1            2
+5           2           1           1            2
+[1] "oe_model-1_sites-m-5_sample_effort-n-2_a--2_b-1_g-1_d-0.25_p-0.2"
+[[1]]
+ [1] "oe"         "model-1"    "sites-m-5"  "sample"     "effort-n-2"
+ [6] "a--2"       "b-1"        "g-1"        "d-0.25"     "p-0.2"     
+
+[1] "Name to identify run"
+[1] "model-1_b-1"
+[1] "current params of interest"
+[1] "sites-m-5_d-0.25"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5_peak/oe_model-1_sites-m-5_sample_effort-n-2_a--2_b-1_g-1_d-0.25_p-0.2/results.xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1          18          75          96          41          19          18
+2          10          82          17          40          94          25
+3          20          43          47          26          74          98
+4          49          86          27          12          90          43
+5          50          27          49          46          61          44
+  rand-start7 rand-start8 rand-start9 rand-start10 rand-start1 rand-start2
+1           4          71          86           68           2           2
+2          75          62           9           90           2           1
+3          77          81          68           27           2           2
+4          28          74          34           56           1           2
+5          98          41          87           58           1           2
+  rand-start3 rand-start4 rand-start5 rand-start6 rand-start7 rand-start8
+1           2           2           2           2           2           2
+2           2           2           1           1           1           1
+3           1           2           2           2           2           2
+4           1           2           2           2           2           2
+5           2           1           2           2           2           2
+  rand-start9 rand-start10
+1           2            2
+2           2            2
+3           2            2
+4           2            2
+5           2            2
+[1] "subset of visit xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           2           2           2           2           2           2
+2           2           1           2           2           1           1
+3           2           2           1           2           2           2
+4           1           2           1           2           2           2
+5           1           2           2           1           2           2
+  rand-start7 rand-start8 rand-start9 rand-start10
+1           2           2           2            2
+2           1           1           2            2
+3           2           2           2            2
+4           2           2           2            2
+5           2           2           2            2
+[1] "oe_model-1_sites-m-5_sample_effort-n-2_a--2_b-1_g-1_d-2_p-0.2"
+[[1]]
+ [1] "oe"         "model-1"    "sites-m-5"  "sample"     "effort-n-2"
+ [6] "a--2"       "b-1"        "g-1"        "d-2"        "p-0.2"     
+
+[1] "Name to identify run"
+[1] "model-1_b-1"
+[1] "current params of interest"
+[1] "sites-m-5_d-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5_peak/oe_model-1_sites-m-5_sample_effort-n-2_a--2_b-1_g-1_d-2_p-0.2/results.xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1          18          75          96          41          19          18
+2          10          82          17          40          94          25
+3          20          43          47          26          74          98
+4          49          86          27          12          90          43
+5          50          27          49          46          61          44
+  rand-start7 rand-start8 rand-start9 rand-start10 rand-start1 rand-start2
+1           4          71          86           68           2           2
+2          75          62           9           90           2           1
+3          77          81          68           27           2           2
+4          28          74          34           56           1           2
+5          98          41          87           58           1           2
+  rand-start3 rand-start4 rand-start5 rand-start6 rand-start7 rand-start8
+1           2           2           2           2           2           2
+2           2           2           1           1           1           1
+3           1           2           2           2           2           2
+4           1           2           2           2           2           2
+5           2           1           2           2           2           2
+  rand-start9 rand-start10
+1           2            2
+2           2            2
+3           2            2
+4           2            2
+5           2            2
+[1] "subset of visit xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           2           2           2           2           2           2
+2           2           1           2           2           1           1
+3           2           2           1           2           2           2
+4           1           2           1           2           2           2
+5           1           2           2           1           2           2
+  rand-start7 rand-start8 rand-start9 rand-start10
+1           2           2           2            2
+2           1           1           2            2
+3           2           2           2            2
+4           2           2           2            2
+5           2           2           2            2
+[1] "oe_model-1_sites-m-5_sample_effort-n-2_a--2_b-2_g-1_d-0.25_p-0.2"
+[[1]]
+ [1] "oe"         "model-1"    "sites-m-5"  "sample"     "effort-n-2"
+ [6] "a--2"       "b-2"        "g-1"        "d-0.25"     "p-0.2"     
+
+[1] "Name to identify run"
+[1] "model-1_b-2"
+[1] "current params of interest"
+[1] "sites-m-5_d-0.25"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5_peak/oe_model-1_sites-m-5_sample_effort-n-2_a--2_b-2_g-1_d-0.25_p-0.2/results.xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1          19          57          81          39          87          68
+2          39          76          38          86           6          84
+3          20          35          71          25          19          15
+4          49          75          43          12          18           3
+5          40          39          89           2          66          59
+  rand-start7 rand-start8 rand-start9 rand-start10 rand-start1 rand-start2
+1          82          75          77           18           1           2
+2          33          40          89           51           1           2
+3          42          84          16           77           2           1
+4          84          11          41           65           2           2
+5          56          96          43           33           2           2
+  rand-start3 rand-start4 rand-start5 rand-start6 rand-start7 rand-start8
+1           2           1           2           2           2           2
+2           1           1           2           2           2           2
+3           2           2           1           2           2           2
+4           2           2           1           2           2           2
+5           2           2           2           2           2           2
+  rand-start9 rand-start10
+1           2            1
+2           2            2
+3           1            2
+4           2            2
+5           2            2
+[1] "subset of visit xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           1           2           2           1           2           2
+2           1           2           1           1           2           2
+3           2           1           2           2           1           2
+4           2           2           2           2           1           2
+5           2           2           2           2           2           2
+  rand-start7 rand-start8 rand-start9 rand-start10
+1           2           2           2            1
+2           2           2           2            2
+3           2           2           1            2
+4           2           2           2            2
+5           2           2           2            2
+[1] "oe_model-1_sites-m-5_sample_effort-n-2_a--2_b-2_g-1_d-2_p-0.2"
+[[1]]
+ [1] "oe"         "model-1"    "sites-m-5"  "sample"     "effort-n-2"
+ [6] "a--2"       "b-2"        "g-1"        "d-2"        "p-0.2"     
+
+[1] "Name to identify run"
+[1] "model-1_b-2"
+[1] "current params of interest"
+[1] "sites-m-5_d-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5_peak/oe_model-1_sites-m-5_sample_effort-n-2_a--2_b-2_g-1_d-2_p-0.2/results.xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1          19          57          81          39          87          68
+2          39          76          38          86           6          84
+3          20          35          71          25          19          15
+4          49          75          43          12          18           3
+5          40          39          89           2          66          59
+  rand-start7 rand-start8 rand-start9 rand-start10 rand-start1 rand-start2
+1          82          75          77           18           1           2
+2          33          40          89           51           1           2
+3          42          84          16           77           2           1
+4          84          11          41           65           2           2
+5          56          96          43           33           2           2
+  rand-start3 rand-start4 rand-start5 rand-start6 rand-start7 rand-start8
+1           2           1           2           2           2           2
+2           1           1           2           2           2           2
+3           2           2           1           2           2           2
+4           2           2           1           2           2           2
+5           2           2           2           2           2           2
+  rand-start9 rand-start10
+1           2            1
+2           2            2
+3           1            2
+4           2            2
+5           2            2
+[1] "subset of visit xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           1           2           2           1           2           2
+2           1           2           1           1           2           2
+3           2           1           2           2           1           2
+4           2           2           2           2           1           2
+5           2           2           2           2           2           2
+  rand-start7 rand-start8 rand-start9 rand-start10
+1           2           2           2            1
+2           2           2           2            2
+3           2           2           1            2
+4           2           2           2            2
+5           2           2           2            2
+[1] "oe_model-3_sites-m-2_sample_effort-n-2_a--2_b-0.5_g-1_d-0.25_p-0.2"
+[[1]]
+ [1] "oe"         "model-3"    "sites-m-2"  "sample"     "effort-n-2"
+ [6] "a--2"       "b-0.5"      "g-1"        "d-0.25"     "p-0.2"     
+
+[1] "Name to identify run"
+[1] "model-3_b-0.5"
+[1] "current params of interest"
+[1] "sites-m-2_d-0.25"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5_peak/oe_model-3_sites-m-2_sample_effort-n-2_a--2_b-0.5_g-1_d-0.25_p-0.2/results.xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1          27          33          70          18          48          15
+2          40          77         100          57          39          65
+  rand-start7 rand-start8 rand-start9 rand-start10 rand-start1 rand-start2
+1           8          14          35           34           2           2
+2          48          15          66           94           1           2
+  rand-start3 rand-start4 rand-start5 rand-start6 rand-start7 rand-start8
+1           2           1           2           2           2           1
+2           2           1           1           1           2           2
+  rand-start9 rand-start10
+1           2            2
+2           2            1
+[1] "subset of visit xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           2           2           2           1           2           2
+2           1           2           2           1           1           1
+  rand-start7 rand-start8 rand-start9 rand-start10
+1           2           1           2            2
+2           2           2           2            1
+[1] "oe_model-3_sites-m-2_sample_effort-n-2_a--2_b-0.5_g-1_d-2_p-0.2"
+[[1]]
+ [1] "oe"         "model-3"    "sites-m-2"  "sample"     "effort-n-2"
+ [6] "a--2"       "b-0.5"      "g-1"        "d-2"        "p-0.2"     
+
+[1] "Name to identify run"
+[1] "model-3_b-0.5"
+[1] "current params of interest"
+[1] "sites-m-2_d-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5_peak/oe_model-3_sites-m-2_sample_effort-n-2_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           8          33          60           8          50          15
+2          39          78         100          48          39          74
+  rand-start7 rand-start8 rand-start9 rand-start10 rand-start1 rand-start2
+1           8          43          33           35           2           2
+2          48          15          67           96           1           1
+  rand-start3 rand-start4 rand-start5 rand-start6 rand-start7 rand-start8
+1           1           2           2           2           2           1
+2           2           2           1           1           2           2
+  rand-start9 rand-start10
+1           2            2
+2           1            1
+[1] "subset of visit xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           2           2           1           2           2           2
+2           1           1           2           2           1           1
+  rand-start7 rand-start8 rand-start9 rand-start10
+1           2           1           2            2
+2           2           2           1            1
+[1] "oe_model-3_sites-m-2_sample_effort-n-2_a--2_b-1_g-1_d-0.25_p-0.2"
+[[1]]
+ [1] "oe"         "model-3"    "sites-m-2"  "sample"     "effort-n-2"
+ [6] "a--2"       "b-1"        "g-1"        "d-0.25"     "p-0.2"     
+
+[1] "Name to identify run"
+[1] "model-3_b-1"
+[1] "current params of interest"
+[1] "sites-m-2_d-0.25"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5_peak/oe_model-3_sites-m-2_sample_effort-n-2_a--2_b-1_g-1_d-0.25_p-0.2/results.xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1          27          85          42          26           7          19
+2          19          62          77          85          56          40
+  rand-start7 rand-start8 rand-start9 rand-start10 rand-start1 rand-start2
+1          43          26          49           92           2           2
+2          40          23          19           75           2           1
+  rand-start3 rand-start4 rand-start5 rand-start6 rand-start7 rand-start8
+1           1           2           2           2           2           2
+2           2           2           1           2           2           2
+  rand-start9 rand-start10
+1           2            2
+2           2            1
+[1] "subset of visit xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           2           2           1           2           2           2
+2           2           1           2           2           1           2
+  rand-start7 rand-start8 rand-start9 rand-start10
+1           2           2           2            2
+2           2           2           2            1
+[1] "oe_model-3_sites-m-2_sample_effort-n-2_a--2_b-1_g-1_d-2_p-0.2"
+[[1]]
+ [1] "oe"         "model-3"    "sites-m-2"  "sample"     "effort-n-2"
+ [6] "a--2"       "b-1"        "g-1"        "d-2"        "p-0.2"     
+
+[1] "Name to identify run"
+[1] "model-3_b-1"
+[1] "current params of interest"
+[1] "sites-m-2_d-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5_peak/oe_model-3_sites-m-2_sample_effort-n-2_a--2_b-1_g-1_d-2_p-0.2/results.xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1          27          74          52          34          16          17
+2          17          61          76          96          58          49
+  rand-start7 rand-start8 rand-start9 rand-start10 rand-start1 rand-start2
+1          34           6          48           92           2           2
+2          18          12          19           74           2           2
+  rand-start3 rand-start4 rand-start5 rand-start6 rand-start7 rand-start8
+1           2           2           2           1           2           1
+2           2           2           2           1           2           2
+  rand-start9 rand-start10
+1           2            2
+2           2            2
+[1] "subset of visit xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           2           2           2           2           2           1
+2           2           2           2           2           2           1
+  rand-start7 rand-start8 rand-start9 rand-start10
+1           2           1           2            2
+2           2           2           2            2
+[1] "oe_model-3_sites-m-2_sample_effort-n-2_a--2_b-2_g-1_d-0.25_p-0.2"
+[[1]]
+ [1] "oe"         "model-3"    "sites-m-2"  "sample"     "effort-n-2"
+ [6] "a--2"       "b-2"        "g-1"        "d-0.25"     "p-0.2"     
+
+[1] "Name to identify run"
+[1] "model-3_b-2"
+[1] "current params of interest"
+[1] "sites-m-2_d-0.25"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5_peak/oe_model-3_sites-m-2_sample_effort-n-2_a--2_b-2_g-1_d-0.25_p-0.2/results.xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1          27          58          35          40          49          92
+2          19          67          84          62          99          65
+  rand-start7 rand-start8 rand-start9 rand-start10 rand-start1 rand-start2
+1          79          86          12           96           2           1
+2          40          25           2           16           1           2
+  rand-start3 rand-start4 rand-start5 rand-start6 rand-start7 rand-start8
+1           2           2           1           2           1           2
+2           2           1           2           1           2           2
+  rand-start9 rand-start10
+1           2            2
+2           2            1
+[1] "subset of visit xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           2           1           2           2           1           2
+2           1           2           2           1           2           1
+  rand-start7 rand-start8 rand-start9 rand-start10
+1           1           2           2            2
+2           2           2           2            1
+[1] "oe_model-3_sites-m-2_sample_effort-n-2_a--2_b-2_g-1_d-2_p-0.2"
+[[1]]
+ [1] "oe"         "model-3"    "sites-m-2"  "sample"     "effort-n-2"
+ [6] "a--2"       "b-2"        "g-1"        "d-2"        "p-0.2"     
+
+[1] "Name to identify run"
+[1] "model-3_b-2"
+[1] "current params of interest"
+[1] "sites-m-2_d-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5_peak/oe_model-3_sites-m-2_sample_effort-n-2_a--2_b-2_g-1_d-2_p-0.2/results.xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1          27          65          35          49          40          71
+2          18          86          85          71          99          43
+  rand-start7 rand-start8 rand-start9 rand-start10 rand-start1 rand-start2
+1          89          95          13           87           2           2
+2          40          25           2            7           2           2
+  rand-start3 rand-start4 rand-start5 rand-start6 rand-start7 rand-start8
+1           2           2           2           2           2           2
+2           2           2           2           2           2           2
+  rand-start9 rand-start10
+1           1            2
+2           2            2
+[1] "subset of visit xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           2           2           2           2           2           2
+2           2           2           2           2           2           2
+  rand-start7 rand-start8 rand-start9 rand-start10
+1           2           2           1            2
+2           2           2           2            2
+[1] "oe_model-3_sites-m-5_sample_effort-n-2_a--2_b-0.5_g-1_d-0.25_p-0.2"
+[[1]]
+ [1] "oe"         "model-3"    "sites-m-5"  "sample"     "effort-n-2"
+ [6] "a--2"       "b-0.5"      "g-1"        "d-0.25"     "p-0.2"     
+
+[1] "Name to identify run"
+[1] "model-3_b-0.5"
+[1] "current params of interest"
+[1] "sites-m-5_d-0.25"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5_peak/oe_model-3_sites-m-5_sample_effort-n-2_a--2_b-0.5_g-1_d-0.25_p-0.2/results.xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           8          43          48           8          57          49
+2          18          89          49          49          33           8
+3          10          80          18          14          96          78
+4          48          78          14           6          89          14
+5          50          18          75          33           2          22
+  rand-start7 rand-start8 rand-start9 rand-start10 rand-start1 rand-start2
+1           8          15          66           49           2           1
+2          65          33          82           78           2           2
+3          49          39          12           15           2           1
+4          57          12           2           67           2           1
+5          62          43          77           82           2           1
+  rand-start3 rand-start4 rand-start5 rand-start6 rand-start7 rand-start8
+1           2           2           1           1           2           2
+2           1           1           2           2           1           2
+3           1           1           1           1           1           1
+4           1           1           2           1           1           2
+5           1           2           1           1           1           1
+  rand-start9 rand-start10
+1           2            1
+2           1            1
+3           2            2
+4           1            1
+5           2            1
+[1] "subset of visit xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           2           1           2           2           1           1
+2           2           2           1           1           2           2
+3           2           1           1           1           1           1
+4           2           1           1           1           2           1
+5           2           1           1           2           1           1
+  rand-start7 rand-start8 rand-start9 rand-start10
+1           2           2           2            1
+2           1           2           1            1
+3           1           1           2            2
+4           1           2           1            1
+5           1           1           2            1
+[1] "oe_model-3_sites-m-5_sample_effort-n-2_a--2_b-0.5_g-1_d-2_p-0.2"
+[[1]]
+ [1] "oe"         "model-3"    "sites-m-5"  "sample"     "effort-n-2"
+ [6] "a--2"       "b-0.5"      "g-1"        "d-2"        "p-0.2"     
+
+[1] "Name to identify run"
+[1] "model-3_b-0.5"
+[1] "current params of interest"
+[1] "sites-m-5_d-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5_peak/oe_model-3_sites-m-5_sample_effort-n-2_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1          18          43          48           8          67          49
+2          20          89          57          49          33          18
+3           8          70          39          14          96          77
+4          49          86          15           5          89           6
+5          50           8          75          35          43          12
+  rand-start7 rand-start8 rand-start9 rand-start10 rand-start1 rand-start2
+1           8          34          65           49           1           1
+2          64          14          72           75           2           2
+3          40          50          12           15           2           2
+4          49          12           2           67           1           1
+5          75          33          76           62           2           2
+  rand-start3 rand-start4 rand-start5 rand-start6 rand-start7 rand-start8
+1           2           2           1           1           2           2
+2           1           1           2           1           1           1
+3           1           1           1           2           1           2
+4           2           1           2           2           1           2
+5           1           2           1           2           1           2
+  rand-start9 rand-start10
+1           1            1
+2           2            1
+3           2            2
+4           1            1
+5           1            1
+[1] "subset of visit xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           1           1           2           2           1           1
+2           2           2           1           1           2           1
+3           2           2           1           1           1           2
+4           1           1           2           1           2           2
+5           2           2           1           2           1           2
+  rand-start7 rand-start8 rand-start9 rand-start10
+1           2           2           1            1
+2           1           1           2            1
+3           1           2           2            2
+4           1           2           1            1
+5           1           2           1            1
+[1] "oe_model-3_sites-m-5_sample_effort-n-2_a--2_b-1_g-1_d-0.25_p-0.2"
+[[1]]
+ [1] "oe"         "model-3"    "sites-m-5"  "sample"     "effort-n-2"
+ [6] "a--2"       "b-1"        "g-1"        "d-0.25"     "p-0.2"     
+
+[1] "Name to identify run"
+[1] "model-3_b-1"
+[1] "current params of interest"
+[1] "sites-m-5_d-0.25"
+[1] "Incorrect file selected: stan"
+[1] "Available files: figures" "Available files: stan"   
+[1] "oe_model-3_sites-m-5_sample_effort-n-2_a--2_b-1_g-1_d-2_p-0.2"
+[[1]]
+ [1] "oe"         "model-3"    "sites-m-5"  "sample"     "effort-n-2"
+ [6] "a--2"       "b-1"        "g-1"        "d-2"        "p-0.2"     
+
+[1] "Name to identify run"
+[1] "model-3_b-1"
+[1] "current params of interest"
+[1] "sites-m-5_d-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5_peak/oe_model-3_sites-m-5_sample_effort-n-2_a--2_b-1_g-1_d-2_p-0.2/results.xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1          18          85          94          43          10          19
+2          19          61           7          39          91          25
+3           9          23          67          15          85          98
+4          49          75          38          13          70          52
+5          50          15          49          48          82          23
+  rand-start7 rand-start8 rand-start9 rand-start10 rand-start1 rand-start2
+1           5          75          86           70           2           2
+2          85          62          19           90           1           2
+3          67          92          58           27           1           2
+4          47          85          23           58           2           2
+5          98          23          87           59           1           1
+  rand-start3 rand-start4 rand-start5 rand-start6 rand-start7 rand-start8
+1           1           2           2           2           2           2
+2           2           1           2           1           2           1
+3           2           1           2           2           2           2
+4           1           1           1           2           1           2
+5           1           2           1           2           2           2
+  rand-start9 rand-start10
+1           2            2
+2           1            2
+3           2            2
+4           1            2
+5           2            2
+[1] "subset of visit xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           2           2           1           2           2           2
+2           1           2           2           1           2           1
+3           1           2           2           1           2           2
+4           2           2           1           1           1           2
+5           1           1           1           2           1           2
+  rand-start7 rand-start8 rand-start9 rand-start10
+1           2           2           2            2
+2           2           1           1            2
+3           2           2           2            2
+4           1           2           1            2
+5           2           2           2            2
+[1] "oe_model-3_sites-m-5_sample_effort-n-2_a--2_b-2_g-1_d-0.25_p-0.2"
+[[1]]
+ [1] "oe"         "model-3"    "sites-m-5"  "sample"     "effort-n-2"
+ [6] "a--2"       "b-2"        "g-1"        "d-0.25"     "p-0.2"     
+
+[1] "Name to identify run"
+[1] "model-3_b-2"
+[1] "current params of interest"
+[1] "sites-m-5_d-0.25"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5_peak/oe_model-3_sites-m-5_sample_effort-n-2_a--2_b-2_g-1_d-0.25_p-0.2/results.xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1          17          58          71          40          77          79
+2          19          77          40          85           6          75
+3          20          34          91          25          18          23
+4          38          96          43          12          17           3
+5          40          48          89           2          76          49
+  rand-start7 rand-start8 rand-start9 rand-start10 rand-start1 rand-start2
+1          71          76          87            7           1           2
+2          32          49          89           62           2           2
+3          43          84          16           77           2           1
+4          85          11          41           75           1           2
+5          47          96          43           32           2           2
+  rand-start3 rand-start4 rand-start5 rand-start6 rand-start7 rand-start8
+1           2           2           1           1           1           1
+2           1           1           2           1           1           2
+3           1           2           2           1           1           2
+4           2           2           1           2           2           2
+5           2           2           2           1           2           2
+  rand-start9 rand-start10
+1           2            2
+2           2            2
+3           2            2
+4           2            2
+5           2            1
+[1] "subset of visit xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           1           2           2           2           1           1
+2           2           2           1           1           2           1
+3           2           1           1           2           2           1
+4           1           2           2           2           1           2
+5           2           2           2           2           2           1
+  rand-start7 rand-start8 rand-start9 rand-start10
+1           1           1           2            2
+2           1           2           2            2
+3           1           2           2            2
+4           2           2           2            2
+5           2           2           2            1
+[1] "oe_model-3_sites-m-5_sample_effort-n-2_a--2_b-2_g-1_d-2_p-0.2"
+[[1]]
+ [1] "oe"         "model-3"    "sites-m-5"  "sample"     "effort-n-2"
+ [6] "a--2"       "b-2"        "g-1"        "d-2"        "p-0.2"     
+
+[1] "Name to identify run"
+[1] "model-3_b-2"
+[1] "current params of interest"
+[1] "sites-m-5_d-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5_peak/oe_model-3_sites-m-5_sample_effort-n-2_a--2_b-2_g-1_d-2_p-0.2/results.xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1          18          57          72          50          87          78
+2          19          79          49          85           7          74
+3          20          34          82          15          39          14
+4          49          85          34          12          26           3
+5          40          38          89           2          66          59
+  rand-start7 rand-start8 rand-start9 rand-start10 rand-start1 rand-start2
+1          72          85          97           18           2           2
+2          25          48          89           41           2           1
+3          24          84          16           77           1           2
+4          95          11          41           65           2           2
+5          56          97          43           33           2           1
+  rand-start3 rand-start4 rand-start5 rand-start6 rand-start7 rand-start8
+1           2           2           2           2           2           2
+2           2           2           2           2           2           2
+3           2           1           2           2           1           2
+4           2           2           1           2           1           2
+5           2           2           1           2           2           1
+  rand-start9 rand-start10
+1           1            1
+2           2            1
+3           2            2
+4           2            2
+5           2            2
+[1] "subset of visit xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           2           2           2           2           2           2
+2           2           1           2           2           2           2
+3           1           2           2           1           2           2
+4           2           2           2           2           1           2
+5           2           1           2           2           1           2
+  rand-start7 rand-start8 rand-start9 rand-start10
+1           2           2           1            1
+2           2           2           2            1
+3           1           2           2            2
+4           1           2           2            2
+5           2           1           2            2
+[1] "oe_model-4_sites-m-2_sample_effort-n-2_a--2_b-0.5_g-1_d-0.25_p-0.2"
+[[1]]
+ [1] "oe"         "model-4"    "sites-m-2"  "sample"     "effort-n-2"
+ [6] "a--2"       "b-0.5"      "g-1"        "d-0.25"     "p-0.2"     
+
+[1] "Name to identify run"
+[1] "model-4_b-0.5"
+[1] "current params of interest"
+[1] "sites-m-2_d-0.25"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5_peak/oe_model-4_sites-m-2_sample_effort-n-2_a--2_b-0.5_g-1_d-0.25_p-0.2/results.xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           8          43          80          18          48          14
+2          40          77         100          48          40          66
+  rand-start7 rand-start8 rand-start9 rand-start10 rand-start1 rand-start2
+1          18          14          14           14           2           1
+2          48           6          66           66           1           2
+  rand-start3 rand-start4 rand-start5 rand-start6 rand-start7 rand-start8
+1           1           1           2           1           1           1
+2           2           2           1           2           2           2
+  rand-start9 rand-start10
+1           1            1
+2           2            2
+[1] "subset of visit xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           2           1           1           1           2           1
+2           1           2           2           2           1           2
+  rand-start7 rand-start8 rand-start9 rand-start10
+1           1           1           1            1
+2           2           2           2            2
+[1] "oe_model-4_sites-m-2_sample_effort-n-2_a--2_b-0.5_g-1_d-2_p-0.2"
+[[1]]
+ [1] "oe"         "model-4"    "sites-m-2"  "sample"     "effort-n-2"
+ [6] "a--2"       "b-0.5"      "g-1"        "d-2"        "p-0.2"     
+
+[1] "Name to identify run"
+[1] "model-4_b-0.5"
+[1] "current params of interest"
+[1] "sites-m-2_d-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5_peak/oe_model-4_sites-m-2_sample_effort-n-2_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           8          43          80          18          48          14
+2          40          77         100          48          40          66
+  rand-start7 rand-start8 rand-start9 rand-start10 rand-start1 rand-start2
+1          18          14          14           14           2           1
+2          48           6          66           66           1           2
+  rand-start3 rand-start4 rand-start5 rand-start6 rand-start7 rand-start8
+1           1           1           2           1           1           1
+2           2           2           1           2           2           2
+  rand-start9 rand-start10
+1           1            1
+2           2            2
+[1] "subset of visit xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           2           1           1           1           2           1
+2           1           2           2           2           1           2
+  rand-start7 rand-start8 rand-start9 rand-start10
+1           1           1           1            1
+2           2           2           2            2
+[1] "oe_model-4_sites-m-2_sample_effort-n-2_a--2_b-1_g-1_d-0.25_p-0.2"
+[[1]]
+ [1] "oe"         "model-4"    "sites-m-2"  "sample"     "effort-n-2"
+ [6] "a--2"       "b-1"        "g-1"        "d-0.25"     "p-0.2"     
+
+[1] "Name to identify run"
+[1] "model-4_b-1"
+[1] "current params of interest"
+[1] "sites-m-2_d-0.25"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5_peak/oe_model-4_sites-m-2_sample_effort-n-2_a--2_b-1_g-1_d-0.25_p-0.2/results.xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1          18          94          13          15           8           8
+2          39          61          76          85          56          40
+  rand-start7 rand-start8 rand-start9 rand-start10 rand-start1 rand-start2
+1          43          15          48           82           2           1
+2           8          12          39           74           1           2
+  rand-start3 rand-start4 rand-start5 rand-start6 rand-start7 rand-start8
+1           1           1           1           1           2           1
+2           2           2           2           2           1           2
+  rand-start9 rand-start10
+1           2            1
+2           1            2
+[1] "subset of visit xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           2           1           1           1           1           1
+2           1           2           2           2           2           2
+  rand-start7 rand-start8 rand-start9 rand-start10
+1           2           1           2            1
+2           1           2           1            2
+[1] "oe_model-4_sites-m-2_sample_effort-n-2_a--2_b-1_g-1_d-2_p-0.2"
+[[1]]
+ [1] "oe"         "model-4"    "sites-m-2"  "sample"     "effort-n-2"
+ [6] "a--2"       "b-1"        "g-1"        "d-2"        "p-0.2"     
+
+[1] "Name to identify run"
+[1] "model-4_b-1"
+[1] "current params of interest"
+[1] "sites-m-2_d-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5_peak/oe_model-4_sites-m-2_sample_effort-n-2_a--2_b-1_g-1_d-2_p-0.2/results.xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1          18          94          13          15           8           8
+2          39          61          76          85          56          40
+  rand-start7 rand-start8 rand-start9 rand-start10 rand-start1 rand-start2
+1          43          15          48           82           2           1
+2           8          12          39           74           1           2
+  rand-start3 rand-start4 rand-start5 rand-start6 rand-start7 rand-start8
+1           1           1           1           1           2           1
+2           2           2           2           2           1           2
+  rand-start9 rand-start10
+1           2            1
+2           1            2
+[1] "subset of visit xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           2           1           1           1           1           1
+2           1           2           2           2           2           2
+  rand-start7 rand-start8 rand-start9 rand-start10
+1           2           1           2            1
+2           1           2           1            2
+[1] "oe_model-4_sites-m-2_sample_effort-n-2_a--2_b-2_g-1_d-0.25_p-0.2"
+[[1]]
+ [1] "oe"         "model-4"    "sites-m-2"  "sample"     "effort-n-2"
+ [6] "a--2"       "b-2"        "g-1"        "d-0.25"     "p-0.2"     
+
+[1] "Name to identify run"
+[1] "model-4_b-2"
+[1] "current params of interest"
+[1] "sites-m-2_d-0.25"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5_peak/oe_model-4_sites-m-2_sample_effort-n-2_a--2_b-2_g-1_d-0.25_p-0.2/results.xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1          18          66          56          38          38          81
+2           9          77          85          71          99          52
+  rand-start7 rand-start8 rand-start9 rand-start10 rand-start1 rand-start2
+1          79          95           1           97           2           1
+2          40          25           2            7           1           2
+  rand-start3 rand-start4 rand-start5 rand-start6 rand-start7 rand-start8
+1           1           1           1           2           1           1
+2           2           2           2           1           2           2
+  rand-start9 rand-start10
+1           1            1
+2           2            2
+[1] "subset of visit xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           2           1           1           1           1           2
+2           1           2           2           2           2           1
+  rand-start7 rand-start8 rand-start9 rand-start10
+1           1           1           1            1
+2           2           2           2            2
+[1] "oe_model-4_sites-m-2_sample_effort-n-2_a--2_b-2_g-1_d-2_p-0.2"
+[[1]]
+ [1] "oe"         "model-4"    "sites-m-2"  "sample"     "effort-n-2"
+ [6] "a--2"       "b-2"        "g-1"        "d-2"        "p-0.2"     
+
+[1] "Name to identify run"
+[1] "model-4_b-2"
+[1] "current params of interest"
+[1] "sites-m-2_d-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5_peak/oe_model-4_sites-m-2_sample_effort-n-2_a--2_b-2_g-1_d-2_p-0.2/results.xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1          18          66          56          38          38          81
+2           9          77          85          71          99          52
+  rand-start7 rand-start8 rand-start9 rand-start10 rand-start1 rand-start2
+1          79          95           1           97           2           1
+2          40          25           2            7           1           2
+  rand-start3 rand-start4 rand-start5 rand-start6 rand-start7 rand-start8
+1           1           1           1           2           1           1
+2           2           2           2           1           2           2
+  rand-start9 rand-start10
+1           1            1
+2           2            2
+[1] "subset of visit xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           2           1           1           1           1           2
+2           1           2           2           2           2           1
+  rand-start7 rand-start8 rand-start9 rand-start10
+1           1           1           1            1
+2           2           2           2            2
+[1] "oe_model-4_sites-m-5_sample_effort-n-2_a--2_b-0.5_g-1_d-0.25_p-0.2"
+[[1]]
+ [1] "oe"         "model-4"    "sites-m-5"  "sample"     "effort-n-2"
+ [6] "a--2"       "b-0.5"      "g-1"        "d-0.25"     "p-0.2"     
+
+[1] "Name to identify run"
+[1] "model-4_b-0.5"
+[1] "current params of interest"
+[1] "sites-m-5_d-0.25"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5_peak/oe_model-4_sites-m-5_sample_effort-n-2_a--2_b-0.5_g-1_d-0.25_p-0.2/results.xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           8          33          48          18          66          49
+2          18          77          57          48          33           8
+3          10          70          50          33          94          79
+4          49          78          15           6          78           6
+5          50          18          65          15           2          12
+  rand-start7 rand-start8 rand-start9 rand-start10 rand-start1 rand-start2
+1           8          15          66           49           2           2
+2          52          33          52           66           1           2
+3          40          50          11           15           2           2
+4          66           2           2           56           1           1
+5          61          43          77           72           2           1
+  rand-start3 rand-start4 rand-start5 rand-start6 rand-start7 rand-start8
+1           2           1           2           1           2           2
+2           1           2           2           2           1           2
+3           2           2           1           2           1           2
+4           2           2           1           2           2           1
+5           1           2           2           2           2           1
+  rand-start9 rand-start10
+1           2            1
+2           1            2
+3           1            2
+4           2            2
+5           2            2
+[1] "subset of visit xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           2           2           2           1           2           1
+2           1           2           1           2           2           2
+3           2           2           2           2           1           2
+4           1           1           2           2           1           2
+5           2           1           1           2           2           2
+  rand-start7 rand-start8 rand-start9 rand-start10
+1           2           2           2            1
+2           1           2           1            2
+3           1           2           1            2
+4           2           1           2            2
+5           2           1           2            2
+[1] "oe_model-4_sites-m-5_sample_effort-n-2_a--2_b-0.5_g-1_d-2_p-0.2"
+[[1]]
+ [1] "oe"         "model-4"    "sites-m-5"  "sample"     "effort-n-2"
+ [6] "a--2"       "b-0.5"      "g-1"        "d-2"        "p-0.2"     
+
+[1] "Name to identify run"
+[1] "model-4_b-0.5"
+[1] "current params of interest"
+[1] "sites-m-5_d-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5_peak/oe_model-4_sites-m-5_sample_effort-n-2_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           8          33          48          18          66          49
+2          18          77          57          48          33           8
+3          10          70          50          33          94          79
+4          49          78          15           6          78           6
+5          50          18          65          15           2          12
+  rand-start7 rand-start8 rand-start9 rand-start10 rand-start1 rand-start2
+1           8          15          66           49           2           2
+2          52          33          52           66           1           2
+3          40          50          11           15           2           2
+4          66           2           2           56           1           1
+5          61          43          77           72           2           1
+  rand-start3 rand-start4 rand-start5 rand-start6 rand-start7 rand-start8
+1           2           1           2           1           2           2
+2           1           2           2           2           1           2
+3           2           2           1           2           1           2
+4           2           2           1           2           2           1
+5           1           2           2           2           2           1
+  rand-start9 rand-start10
+1           2            1
+2           1            2
+3           1            2
+4           2            2
+5           2            2
+[1] "subset of visit xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           2           2           2           1           2           1
+2           1           2           1           2           2           2
+3           2           2           2           2           1           2
+4           1           1           2           2           1           2
+5           2           1           1           2           2           2
+  rand-start7 rand-start8 rand-start9 rand-start10
+1           2           2           2            1
+2           1           2           1            2
+3           1           2           1            2
+4           2           1           2            2
+5           2           1           2            2
+[1] "oe_model-4_sites-m-5_sample_effort-n-2_a--2_b-1_g-1_d-0.25_p-0.2"
+[[1]]
+ [1] "oe"         "model-4"    "sites-m-5"  "sample"     "effort-n-2"
+ [6] "a--2"       "b-1"        "g-1"        "d-0.25"     "p-0.2"     
+
+[1] "Name to identify run"
+[1] "model-4_b-1"
+[1] "current params of interest"
+[1] "sites-m-5_d-0.25"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5_peak/oe_model-4_sites-m-5_sample_effort-n-2_a--2_b-1_g-1_d-0.25_p-0.2/results.xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1          18          94          85          43          19          19
+2          19          61          15          40          92          26
+3           8          23          47           6          74          98
+4          39          76          18           3          90          43
+5          40          15          40          47          72          23
+  rand-start7 rand-start8 rand-start9 rand-start10 rand-start1 rand-start2
+1           4          72          96           68           2           1
+2          65          91           9          100           2           2
+3          77          81          68            8           1           2
+4          39          94          23           58           1           2
+5          98          22          87           59           2           1
+  rand-start3 rand-start4 rand-start5 rand-start6 rand-start7 rand-start8
+1           2           2           1           1           2           2
+2           1           2           2           2           1           2
+3           1           2           2           2           2           2
+4           2           1           2           2           1           1
+5           2           1           2           2           2           1
+  rand-start9 rand-start10
+1           1            2
+2           2            1
+3           2            1
+4           2            2
+5           2            2
+[1] "subset of visit xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           2           1           2           2           1           1
+2           2           2           1           2           2           2
+3           1           2           1           2           2           2
+4           1           2           2           1           2           2
+5           2           1           2           1           2           2
+  rand-start7 rand-start8 rand-start9 rand-start10
+1           2           2           1            2
+2           1           2           2            1
+3           2           2           2            1
+4           1           1           2            2
+5           2           1           2            2
+[1] "oe_model-4_sites-m-5_sample_effort-n-2_a--2_b-1_g-1_d-2_p-0.2"
+[[1]]
+ [1] "oe"         "model-4"    "sites-m-5"  "sample"     "effort-n-2"
+ [6] "a--2"       "b-1"        "g-1"        "d-2"        "p-0.2"     
+
+[1] "Name to identify run"
+[1] "model-4_b-1"
+[1] "current params of interest"
+[1] "sites-m-5_d-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5_peak/oe_model-4_sites-m-5_sample_effort-n-2_a--2_b-1_g-1_d-2_p-0.2/results.xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1          18          94          85          43          19          19
+2          19          61          15          40          92          26
+3           8          23          47           6          74          98
+4          39          76          18           3          90          43
+5          40          15          40          47          72          23
+  rand-start7 rand-start8 rand-start9 rand-start10 rand-start1 rand-start2
+1           4          72          96           68           2           1
+2          65          91           9          100           2           2
+3          77          81          68            8           1           2
+4          39          94          23           58           1           2
+5          98          22          87           59           2           1
+  rand-start3 rand-start4 rand-start5 rand-start6 rand-start7 rand-start8
+1           2           2           1           1           2           2
+2           1           2           2           2           1           2
+3           1           2           2           2           2           2
+4           2           1           2           2           1           1
+5           2           1           2           2           2           1
+  rand-start9 rand-start10
+1           1            2
+2           2            1
+3           2            1
+4           2            2
+5           2            2
+[1] "subset of visit xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           2           1           2           2           1           1
+2           2           2           1           2           2           2
+3           1           2           1           2           2           2
+4           1           2           2           1           2           2
+5           2           1           2           1           2           2
+  rand-start7 rand-start8 rand-start9 rand-start10
+1           2           2           1            2
+2           1           2           2            1
+3           2           2           2            1
+4           1           1           2            2
+5           2           1           2            2
+[1] "oe_model-4_sites-m-5_sample_effort-n-2_a--2_b-2_g-1_d-0.25_p-0.2"
+[[1]]
+ [1] "oe"         "model-4"    "sites-m-5"  "sample"     "effort-n-2"
+ [6] "a--2"       "b-2"        "g-1"        "d-0.25"     "p-0.2"     
+
+[1] "Name to identify run"
+[1] "model-4_b-2"
+[1] "current params of interest"
+[1] "sites-m-5_d-0.25"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5_peak/oe_model-4_sites-m-5_sample_effort-n-2_a--2_b-2_g-1_d-0.25_p-0.2/results.xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1          18          67          71          40          87          68
+2           9          76          60          97          17          65
+3          20          56          81          26          19          14
+4          38          85          52          12          38           3
+5          40          40          89           2          66          60
+  rand-start7 rand-start8 rand-start9 rand-start10 rand-start1 rand-start2
+1          81          76          87            8           2           2
+2          32          40          79           32           1           1
+3          24          84           5           76           2           1
+4          85          11          41           65           1           2
+5          47          97          43           33           2           2
+  rand-start3 rand-start4 rand-start5 rand-start6 rand-start7 rand-start8
+1           2           2           2           1           2           1
+2           1           1           1           2           1           2
+3           2           1           2           2           1           2
+4           1           2           1           2           2           2
+5           2           2           2           1           2           1
+  rand-start9 rand-start10
+1           2            2
+2           1            1
+3           1            1
+4           2            2
+5           2            2
+[1] "subset of visit xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           2           2           2           2           2           1
+2           1           1           1           1           1           2
+3           2           1           2           1           2           2
+4           1           2           1           2           1           2
+5           2           2           2           2           2           1
+  rand-start7 rand-start8 rand-start9 rand-start10
+1           2           1           2            2
+2           1           2           1            1
+3           1           2           1            1
+4           2           2           2            2
+5           2           1           2            2
+[1] "oe_model-4_sites-m-5_sample_effort-n-2_a--2_b-2_g-1_d-2_p-0.2"
+[[1]]
+ [1] "oe"         "model-4"    "sites-m-5"  "sample"     "effort-n-2"
+ [6] "a--2"       "b-2"        "g-1"        "d-2"        "p-0.2"     
+
+[1] "Name to identify run"
+[1] "model-4_b-2"
+[1] "current params of interest"
+[1] "sites-m-5_d-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5_peak/oe_model-4_sites-m-5_sample_effort-n-2_a--2_b-2_g-1_d-2_p-0.2/results.xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1          18          67          71          40          87          68
+2           9          76          60          97          17          65
+3          20          56          81          26          19          14
+4          38          85          52          12          38           3
+5          40          40          89           2          66          60
+  rand-start7 rand-start8 rand-start9 rand-start10 rand-start1 rand-start2
+1          81          76          87            8           2           2
+2          32          40          79           32           1           1
+3          24          84           5           76           2           1
+4          85          11          41           65           1           2
+5          47          97          43           33           2           2
+  rand-start3 rand-start4 rand-start5 rand-start6 rand-start7 rand-start8
+1           2           2           2           1           2           1
+2           1           1           1           2           1           2
+3           2           1           2           2           1           2
+4           1           2           1           2           2           2
+5           2           2           2           1           2           1
+  rand-start9 rand-start10
+1           2            2
+2           1            1
+3           1            1
+4           2            2
+5           2            2
+[1] "subset of visit xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           2           2           2           2           2           1
+2           1           1           1           1           1           2
+3           2           1           2           1           2           2
+4           1           2           1           2           1           2
+5           2           2           2           2           2           1
+  rand-start7 rand-start8 rand-start9 rand-start10
+1           2           1           2            2
+2           1           2           1            1
+3           1           2           1            1
+4           2           2           2            2
+5           2           1           2            2
+[1] "oe_model-5_sites-m-2_sample_effort-n-2_a--2_b-0.5_g-1_d-0.25_p-0.2"
+[[1]]
+ [1] "oe"         "model-5"    "sites-m-2"  "sample"     "effort-n-2"
+ [6] "a--2"       "b-0.5"      "g-1"        "d-0.25"     "p-0.2"     
+
+[1] "Name to identify run"
+[1] "model-5_b-0.5"
+[1] "current params of interest"
+[1] "sites-m-2_d-0.25"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5_peak/oe_model-5_sites-m-2_sample_effort-n-2_a--2_b-0.5_g-1_d-0.25_p-0.2/results.xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1          27          52          68          39          69          46
+2          39          78          80          69          39          63
+  rand-start7 rand-start8 rand-start9 rand-start10 rand-start1 rand-start2
+1          19          24          35           45           1           1
+2          39           5          55           93           1           1
+  rand-start3 rand-start4 rand-start5 rand-start6 rand-start7 rand-start8
+1           2           1           1           2           1           2
+2           2           1           1           2           1           2
+  rand-start9 rand-start10
+1           2            1
+2           2            1
+[1] "subset of visit xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           1           1           2           1           1           2
+2           1           1           2           1           1           2
+  rand-start7 rand-start8 rand-start9 rand-start10
+1           1           2           2            1
+2           1           2           2            1
+[1] "oe_model-5_sites-m-2_sample_effort-n-2_a--2_b-0.5_g-1_d-2_p-0.2"
+[[1]]
+ [1] "oe"         "model-5"    "sites-m-2"  "sample"     "effort-n-2"
+ [6] "a--2"       "b-0.5"      "g-1"        "d-2"        "p-0.2"     
+
+[1] "Name to identify run"
+[1] "model-5_b-0.5"
+[1] "current params of interest"
+[1] "sites-m-2_d-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5_peak/oe_model-5_sites-m-2_sample_effort-n-2_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1          27          32          69          27          49          15
+2          39          76          99          69          39          65
+  rand-start7 rand-start8 rand-start9 rand-start10 rand-start1 rand-start2
+1          19           4          45           45           1           1
+2          39          15          65           95           1           1
+  rand-start3 rand-start4 rand-start5 rand-start6 rand-start7 rand-start8
+1           1           1           1           1           1           1
+2           1           1           1           1           1           1
+  rand-start9 rand-start10
+1           1            1
+2           1            1
+[1] "subset of visit xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           1           1           1           1           1           1
+2           1           1           1           1           1           1
+  rand-start7 rand-start8 rand-start9 rand-start10
+1           1           1           1            1
+2           1           1           1            1
+[1] "oe_model-5_sites-m-2_sample_effort-n-2_a--2_b-1_g-1_d-0.25_p-0.2"
+[[1]]
+ [1] "oe"         "model-5"    "sites-m-2"  "sample"     "effort-n-2"
+ [6] "a--2"       "b-1"        "g-1"        "d-0.25"     "p-0.2"     
+
+[1] "Name to identify run"
+[1] "model-5_b-1"
+[1] "current params of interest"
+[1] "sites-m-2_d-0.25"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5_peak/oe_model-5_sites-m-2_sample_effort-n-2_a--2_b-1_g-1_d-0.25_p-0.2/results.xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1          28          83          32          15          17          28
+2          29          71          76          83          36          38
+  rand-start7 rand-start8 rand-start9 rand-start10 rand-start1 rand-start2
+1          36          15          36           83           2           1
+2          28           3          28           84           2           1
+  rand-start3 rand-start4 rand-start5 rand-start6 rand-start7 rand-start8
+1           2           1           2           1           1           1
+2           2           1           1           1           1           1
+  rand-start9 rand-start10
+1           1            1
+2           1            1
+[1] "subset of visit xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           2           1           2           1           2           1
+2           2           1           2           1           1           1
+  rand-start7 rand-start8 rand-start9 rand-start10
+1           1           1           1            1
+2           1           1           1            1
+[1] "oe_model-5_sites-m-2_sample_effort-n-2_a--2_b-1_g-1_d-2_p-0.2"
+[[1]]
+ [1] "oe"         "model-5"    "sites-m-2"  "sample"     "effort-n-2"
+ [6] "a--2"       "b-1"        "g-1"        "d-2"        "p-0.2"     
+
+[1] "Name to identify run"
+[1] "model-5_b-1"
+[1] "current params of interest"
+[1] "sites-m-2_d-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5_peak/oe_model-5_sites-m-2_sample_effort-n-2_a--2_b-1_g-1_d-2_p-0.2/results.xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1          38          83          22          15          15          28
+2          28          71          65          83          36          29
+  rand-start7 rand-start8 rand-start9 rand-start10 rand-start1 rand-start2
+1          53          15          36           83           1           1
+2          28           3          28           84           1           1
+  rand-start3 rand-start4 rand-start5 rand-start6 rand-start7 rand-start8
+1           1           1           1           1           1           1
+2           1           1           1           1           1           1
+  rand-start9 rand-start10
+1           1            1
+2           1            1
+[1] "subset of visit xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           1           1           1           1           1           1
+2           1           1           1           1           1           1
+  rand-start7 rand-start8 rand-start9 rand-start10
+1           1           1           1            1
+2           1           1           1            1
+[1] "oe_model-5_sites-m-2_sample_effort-n-2_a--2_b-2_g-1_d-0.25_p-0.2"
+[[1]]
+ [1] "oe"         "model-5"    "sites-m-2"  "sample"     "effort-n-2"
+ [6] "a--2"       "b-2"        "g-1"        "d-0.25"     "p-0.2"     
+
+[1] "Name to identify run"
+[1] "model-5_b-2"
+[1] "current params of interest"
+[1] "sites-m-2_d-0.25"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5_peak/oe_model-5_sites-m-2_sample_effort-n-2_a--2_b-2_g-1_d-0.25_p-0.2/results.xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1          18          66          34          38          38          81
+2           9          77          85          71          99          34
+  rand-start7 rand-start8 rand-start9 rand-start10 rand-start1 rand-start2
+1          79          95          12           97           2           1
+2          40          25           2            7           1           2
+  rand-start3 rand-start4 rand-start5 rand-start6 rand-start7 rand-start8
+1           1           1           1           2           1           1
+2           2           2           2           1           2           2
+  rand-start9 rand-start10
+1           1            1
+2           2            2
+[1] "subset of visit xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           2           1           1           1           1           2
+2           1           2           2           2           2           1
+  rand-start7 rand-start8 rand-start9 rand-start10
+1           1           1           1            1
+2           2           2           2            2
+[1] "oe_model-5_sites-m-2_sample_effort-n-2_a--2_b-2_g-1_d-2_p-0.2"
+[[1]]
+ [1] "oe"         "model-5"    "sites-m-2"  "sample"     "effort-n-2"
+ [6] "a--2"       "b-2"        "g-1"        "d-2"        "p-0.2"     
+
+[1] "Name to identify run"
+[1] "model-5_b-2"
+[1] "current params of interest"
+[1] "sites-m-2_d-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5_peak/oe_model-5_sites-m-2_sample_effort-n-2_a--2_b-2_g-1_d-2_p-0.2/results.xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1          18          67          34          40          40          81
+2          19          77          85          71          99          43
+  rand-start7 rand-start8 rand-start9 rand-start10 rand-start1 rand-start2
+1          89          96          12           87           2           2
+2          40          25           2            7           2           2
+  rand-start3 rand-start4 rand-start5 rand-start6 rand-start7 rand-start8
+1           2           2           2           2           2           2
+2           2           2           2           2           2           2
+  rand-start9 rand-start10
+1           2            2
+2           2            2
+[1] "subset of visit xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           2           2           2           2           2           2
+2           2           2           2           2           2           2
+  rand-start7 rand-start8 rand-start9 rand-start10
+1           2           2           2            2
+2           2           2           2            2
+[1] "oe_model-5_sites-m-5_sample_effort-n-2_a--2_b-0.5_g-1_d-0.25_p-0.2"
+[[1]]
+ [1] "oe"         "model-5"    "sites-m-5"  "sample"     "effort-n-2"
+ [6] "a--2"       "b-0.5"      "g-1"        "d-0.25"     "p-0.2"     
+
+[1] "Name to identify run"
+[1] "model-5_b-0.5"
+[1] "current params of interest"
+[1] "sites-m-5_d-0.25"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5_peak/oe_model-5_sites-m-5_sample_effort-n-2_a--2_b-0.5_g-1_d-0.25_p-0.2/results.xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1          27          43          69          19          65          69
+2          19          76          49          39          55          19
+3          40          39          39          15          95          78
+4          49          99          15          16          99          15
+5          39          27          65          65          21           2
+  rand-start7 rand-start8 rand-start9 rand-start10 rand-start1 rand-start2
+1          27          27          65           69           1           1
+2          65          15          81           65           1           1
+3          39          39          21           15           1           1
+4          76          21           2           76           1           1
+5          52          43          76           52           1           1
+  rand-start3 rand-start4 rand-start5 rand-start6 rand-start7 rand-start8
+1           1           1           1           1           1           1
+2           1           1           1           1           1           1
+3           1           1           1           1           1           1
+4           1           1           1           1           1           1
+5           1           1           1           1           1           1
+  rand-start9 rand-start10
+1           1            1
+2           1            1
+3           1            1
+4           1            1
+5           1            1
+[1] "subset of visit xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           1           1           1           1           1           1
+2           1           1           1           1           1           1
+3           1           1           1           1           1           1
+4           1           1           1           1           1           1
+5           1           1           1           1           1           1
+  rand-start7 rand-start8 rand-start9 rand-start10
+1           1           1           1            1
+2           1           1           1            1
+3           1           1           1            1
+4           1           1           1            1
+5           1           1           1            1
+[1] "oe_model-5_sites-m-5_sample_effort-n-2_a--2_b-0.5_g-1_d-2_p-0.2"
+[[1]]
+ [1] "oe"         "model-5"    "sites-m-5"  "sample"     "effort-n-2"
+ [6] "a--2"       "b-0.5"      "g-1"        "d-2"        "p-0.2"     
+
+[1] "Name to identify run"
+[1] "model-5_b-0.5"
+[1] "current params of interest"
+[1] "sites-m-5_d-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5_peak/oe_model-5_sites-m-5_sample_effort-n-2_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1          27          32          78          19          65          69
+2          19          76          69          39          45          19
+3          40          69          39          23          95          78
+4          49          99          15          15          99          15
+5          39          27          65          45          21           2
+  rand-start7 rand-start8 rand-start9 rand-start10 rand-start1 rand-start2
+1          27          27          69           69           1           1
+2          65          15          81           65           1           1
+3          39          39          21           15           1           1
+4          69          21           2           78           1           1
+5          52          65          76           52           1           1
+  rand-start3 rand-start4 rand-start5 rand-start6 rand-start7 rand-start8
+1           1           1           1           1           1           1
+2           1           1           1           1           1           1
+3           1           2           1           1           1           1
+4           1           1           1           1           1           1
+5           1           1           1           1           1           1
+  rand-start9 rand-start10
+1           1            1
+2           1            1
+3           1            1
+4           1            1
+5           1            1
+[1] "subset of visit xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           1           1           1           1           1           1
+2           1           1           1           1           1           1
+3           1           1           1           2           1           1
+4           1           1           1           1           1           1
+5           1           1           1           1           1           1
+  rand-start7 rand-start8 rand-start9 rand-start10
+1           1           1           1            1
+2           1           1           1            1
+3           1           1           1            1
+4           1           1           1            1
+5           1           1           1            1
+[1] "oe_model-5_sites-m-5_sample_effort-n-2_a--2_b-1_g-1_d-0.25_p-0.2"
+[[1]]
+ [1] "oe"         "model-5"    "sites-m-5"  "sample"     "effort-n-2"
+ [6] "a--2"       "b-1"        "g-1"        "d-0.25"     "p-0.2"     
+
+[1] "Name to identify run"
+[1] "model-5_b-1"
+[1] "current params of interest"
+[1] "sites-m-5_d-0.25"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5_peak/oe_model-5_sites-m-5_sample_effort-n-2_a--2_b-1_g-1_d-0.25_p-0.2/results.xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1          38          83          83          63          28          28
+2          28          71          17          28          83          36
+3          29          22          36          15          84          98
+4          59          65          28          13         100          63
+5          30          15          38          36          82          22
+  rand-start7 rand-start8 rand-start9 rand-start10 rand-start1 rand-start2
+1          15          83          83           70           1           1
+2          83          82           8           80           1           1
+3          36          93          36           28           1           1
+4          28          94          22           36           1           1
+5          98          32          87           59           2           1
+  rand-start3 rand-start4 rand-start5 rand-start6 rand-start7 rand-start8
+1           1           1           1           1           1           1
+2           2           1           1           1           1           2
+3           1           1           1           2           1           2
+4           1           1           1           1           1           2
+5           1           1           2           1           2           2
+  rand-start9 rand-start10
+1           1            1
+2           1            1
+3           1            1
+4           1            1
+5           2            1
+[1] "subset of visit xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           1           1           1           1           1           1
+2           1           1           2           1           1           1
+3           1           1           1           1           1           2
+4           1           1           1           1           1           1
+5           2           1           1           1           2           1
+  rand-start7 rand-start8 rand-start9 rand-start10
+1           1           1           1            1
+2           1           2           1            1
+3           1           2           1            1
+4           1           2           1            1
+5           2           2           2            1
+[1] "oe_model-5_sites-m-5_sample_effort-n-2_a--2_b-1_g-1_d-2_p-0.2"
+[[1]]
+ [1] "oe"         "model-5"    "sites-m-5"  "sample"     "effort-n-2"
+ [6] "a--2"       "b-1"        "g-1"        "d-2"        "p-0.2"     
+
+[1] "Name to identify run"
+[1] "model-5_b-1"
+[1] "current params of interest"
+[1] "sites-m-5_d-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5_peak/oe_model-5_sites-m-5_sample_effort-n-2_a--2_b-1_g-1_d-2_p-0.2/results.xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1          38          83          83          53          28          19
+2          28          61           8           8          83          36
+3          19          32          56           6          74          98
+4          39          76          18          14          80          44
+5          40          36          39          48          72          32
+  rand-start7 rand-start8 rand-start9 rand-start10 rand-start1 rand-start2
+1          15          83          97           70           1           1
+2          83          82           8           80           1           2
+3          77          92          69            8           2           2
+4          39          85          32           58           2           2
+5          98          32          87           69           2           1
+  rand-start3 rand-start4 rand-start5 rand-start6 rand-start7 rand-start8
+1           1           1           1           1           1           1
+2           1           1           1           1           1           1
+3           2           2           2           2           2           2
+4           2           2           2           2           2           2
+5           2           2           2           2           2           2
+  rand-start9 rand-start10
+1           1            1
+2           1            1
+3           2            2
+4           2            2
+5           2            2
+[1] "subset of visit xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           1           1           1           1           1           1
+2           1           2           1           1           1           1
+3           2           2           2           2           2           2
+4           2           2           2           2           2           2
+5           2           1           2           2           2           2
+  rand-start7 rand-start8 rand-start9 rand-start10
+1           1           1           1            1
+2           1           1           1            1
+3           2           2           2            2
+4           2           2           2            2
+5           2           2           2            2
+[1] "oe_model-5_sites-m-5_sample_effort-n-2_a--2_b-2_g-1_d-0.25_p-0.2"
+[[1]]
+ [1] "oe"         "model-5"    "sites-m-5"  "sample"     "effort-n-2"
+ [6] "a--2"       "b-2"        "g-1"        "d-0.25"     "p-0.2"     
+
+[1] "Name to identify run"
+[1] "model-5_b-2"
+[1] "current params of interest"
+[1] "sites-m-5_d-0.25"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5_peak/oe_model-5_sites-m-5_sample_effort-n-2_a--2_b-2_g-1_d-0.25_p-0.2/results.xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1          38          66          91          60          97          68
+2          19          77          40          96           7          65
+3          20          25          92          25          19          14
+4          49          85          43          12          18           3
+5          40          40          89           2          66          59
+  rand-start7 rand-start8 rand-start9 rand-start10 rand-start1 rand-start2
+1          91          76          97            9           1           1
+2          33          40          89           51           2           2
+3          34          84          15           77           2           2
+4          85          11          41           65           2           2
+5          47          96          43           33           2           2
+  rand-start3 rand-start4 rand-start5 rand-start6 rand-start7 rand-start8
+1           1           1           1           1           1           1
+2           2           2           2           2           2           2
+3           2           2           2           2           2           2
+4           2           2           2           2           2           2
+5           2           2           2           2           2           2
+  rand-start9 rand-start10
+1           1            1
+2           2            2
+3           2            2
+4           2            2
+5           2            2
+[1] "subset of visit xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           1           1           1           1           1           1
+2           2           2           2           2           2           2
+3           2           2           2           2           2           2
+4           2           2           2           2           2           2
+5           2           2           2           2           2           2
+  rand-start7 rand-start8 rand-start9 rand-start10
+1           1           1           1            1
+2           2           2           2            2
+3           2           2           2            2
+4           2           2           2            2
+5           2           2           2            2
+[1] "oe_model-5_sites-m-5_sample_effort-n-2_a--2_b-2_g-1_d-2_p-0.2"
+[[1]]
+ [1] "oe"         "model-5"    "sites-m-5"  "sample"     "effort-n-2"
+ [6] "a--2"       "b-2"        "g-1"        "d-2"        "p-0.2"     
+
+[1] "Name to identify run"
+[1] "model-5_b-2"
+[1] "current params of interest"
+[1] "sites-m-5_d-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5_peak/oe_model-5_sites-m-5_sample_effort-n-2_a--2_b-2_g-1_d-2_p-0.2/results.xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1          38          67          71          40          87          78
+2           9          77          40          96           7          64
+3          20          25          81          25          19           4
+4          49          85          64          12          18           3
+5          40          40          79           2          66          59
+  rand-start7 rand-start8 rand-start9 rand-start10 rand-start1 rand-start2
+1          81          86          87            8           1           2
+2          33          40          89           51           1           2
+3          34          84          15           77           2           2
+4          85          11          41           64           2           2
+5          47          96          43           32           2           2
+  rand-start3 rand-start4 rand-start5 rand-start6 rand-start7 rand-start8
+1           2           2           2           2           2           2
+2           2           2           2           1           2           2
+3           2           2           2           1           2           2
+4           1           2           2           2           2           2
+5           1           2           2           2           2           2
+  rand-start9 rand-start10
+1           2            2
+2           2            2
+3           2            2
+4           2            1
+5           2            1
+[1] "subset of visit xlsx"
+  rand-start1 rand-start2 rand-start3 rand-start4 rand-start5 rand-start6
+1           1           2           2           2           2           2
+2           1           2           2           2           2           1
+3           2           2           2           2           2           1
+4           2           2           1           2           2           2
+5           2           2           1           2           2           2
+  rand-start7 rand-start8 rand-start9 rand-start10
+1           2           2           2            2
+2           2           2           2            2
+3           2           2           2            2
+4           2           2           2            1
+5           2           2           2            1
+[1] "result list"
+$`model-1_b-0.5`
+[1] 0.10091590 0.10091590 0.08313486 0.08313486
+
+$`model-1_b-1`
+[1] 0.07142226 0.07142226 0.05313788 0.05313788
+
+$`model-1_b-2`
+[1] 0.05196699 0.05196699 0.03172716 0.03172716
+
+$`model-3_b-0.5`
+[1] 0.06974079 0.06931755 0.06514734 0.06487711
+
+$`model-3_b-1`
+[1] 0.04860352 0.04820149         NA 0.04582704
+
+$`model-3_b-2`
+[1] 0.03497709 0.03945707 0.03142375 0.03523374
+
+$`model-4_b-0.5`
+[1] 0.08923055 0.08923055 0.06983013 0.06983013
+
+$`model-4_b-1`
+[1] 0.08838959 0.08838959 0.06803095 0.06803095
+
+$`model-4_b-2`
+[1] 0.09959457 0.09959457 0.08459215 0.08459215
+
+$`model-5_b-0.5`
+[1] 0.06897286 0.07066323 0.06766025 0.06936124
+
+$`model-5_b-1`
+[1] 0.07014589 0.06735368 0.06879170 0.06722203
+
+$`model-5_b-2`
+[1] 0.13199142 0.09600417 0.13128993 0.09532402
+
+[1] "variance"
+$`model-1_b-0.5`
+[1] 7.803871e-06 7.803871e-06 2.071358e-05 2.071358e-05
+
+$`model-1_b-1`
+[1] 1.193227e-05 1.193227e-05 5.116604e-06 5.116604e-06
+
+$`model-1_b-2`
+[1] 2.141197e-05 2.141197e-05 3.258198e-06 3.258198e-06
+
+$`model-3_b-0.5`
+[1] 6.011744e-06 3.945968e-06 4.496474e-07 8.323952e-07
+
+$`model-3_b-1`
+[1] 3.131974e-07 1.388637e-06           NA 2.300304e-07
+
+$`model-3_b-2`
+[1] 1.313355e-06 5.489093e-06 5.804709e-07 7.701384e-07
+
+$`model-4_b-0.5`
+[1] 9.819172e-09 9.819172e-09 2.721522e-06 2.721522e-06
+
+$`model-4_b-1`
+[1] 1.753101e-08 1.753101e-08 1.651137e-07 1.651137e-07
+
+$`model-4_b-2`
+[1] 1.306683e-08 1.306683e-08 4.197464e-08 4.197464e-08
+
+$`model-5_b-0.5`
+[1] 3.831764e-07 2.283242e-07 2.107262e-07 2.716938e-07
+
+$`model-5_b-1`
+[1] 2.802977e-07 1.077377e-07 3.544870e-07 1.518040e-07
+
+$`model-5_b-2`
+[1] 5.431981e-09 0.000000e+00 2.569811e-09 2.341496e-07
+
+[1] "Params per model. Make sure each model has params ordered in the same way"
+$`model-1_b-0.5`
+[1] "sites-m-2_d-0.25" "sites-m-2_d-2"    "sites-m-5_d-0.25" "sites-m-5_d-2"   
+
+$`model-1_b-1`
+[1] "sites-m-2_d-0.25" "sites-m-2_d-2"    "sites-m-5_d-0.25" "sites-m-5_d-2"   
+
+$`model-1_b-2`
+[1] "sites-m-2_d-0.25" "sites-m-2_d-2"    "sites-m-5_d-0.25" "sites-m-5_d-2"   
+
+$`model-3_b-0.5`
+[1] "sites-m-2_d-0.25" "sites-m-2_d-2"    "sites-m-5_d-0.25" "sites-m-5_d-2"   
+
+$`model-3_b-1`
+[1] "sites-m-2_d-0.25" "sites-m-2_d-2"    "sites-m-5_d-0.25" "sites-m-5_d-2"   
+
+$`model-3_b-2`
+[1] "sites-m-2_d-0.25" "sites-m-2_d-2"    "sites-m-5_d-0.25" "sites-m-5_d-2"   
+
+$`model-4_b-0.5`
+[1] "sites-m-2_d-0.25" "sites-m-2_d-2"    "sites-m-5_d-0.25" "sites-m-5_d-2"   
+
+$`model-4_b-1`
+[1] "sites-m-2_d-0.25" "sites-m-2_d-2"    "sites-m-5_d-0.25" "sites-m-5_d-2"   
+
+$`model-4_b-2`
+[1] "sites-m-2_d-0.25" "sites-m-2_d-2"    "sites-m-5_d-0.25" "sites-m-5_d-2"   
+
+$`model-5_b-0.5`
+[1] "sites-m-2_d-0.25" "sites-m-2_d-2"    "sites-m-5_d-0.25" "sites-m-5_d-2"   
+
+$`model-5_b-1`
+[1] "sites-m-2_d-0.25" "sites-m-2_d-2"    "sites-m-5_d-0.25" "sites-m-5_d-2"   
+
+$`model-5_b-2`
+[1] "sites-m-2_d-0.25" "sites-m-2_d-2"    "sites-m-5_d-0.25" "sites-m-5_d-2"   
+
+[1] "average visits"
+$`model-1_b-0.5`
+[1] 1.95 1.95 1.60 1.60
+
+$`model-1_b-1`
+[1] 1.85 1.85 1.80 1.80
+
+$`model-1_b-2`
+[1] 2.0 2.0 1.8 1.8
+
+$`model-3_b-0.5`
+[1] 1.65 1.60 1.40 1.46
+
+$`model-3_b-1`
+[1] 1.80 1.85   NA 1.66
+
+$`model-3_b-2`
+[1] 1.65 1.95 1.66 1.76
+
+$`model-4_b-0.5`
+[1] 1.50 1.50 1.66 1.66
+
+$`model-4_b-1`
+[1] 1.50 1.50 1.66 1.66
+
+$`model-4_b-2`
+[1] 1.5 1.5 1.6 1.6
+
+$`model-5_b-0.5`
+[1] 1.40 1.00 1.00 1.02
+
+$`model-5_b-1`
+[1] 1.25 1.00 1.20 1.60
+
+$`model-5_b-2`
+[1] 1.50 2.00 1.80 1.84
+
+[1] 12  4
+[1] 12  4
+            [,1]       [,2]       [,3]       [,4]
+ [1,] 0.10091590 0.10091590 0.08313486 0.08313486
+ [2,] 0.07142226 0.07142226 0.05313788 0.05313788
+ [3,] 0.05196699 0.05196699 0.03172716 0.03172716
+ [4,] 0.06974079 0.06931755 0.06514734 0.06487711
+ [5,] 0.04860352 0.04820149         NA 0.04582704
+ [6,] 0.03497709 0.03945707 0.03142375 0.03523374
+ [7,] 0.08923055 0.08923055 0.06983013 0.06983013
+ [8,] 0.08838959 0.08838959 0.06803095 0.06803095
+ [9,] 0.09959457 0.09959457 0.08459215 0.08459215
+[10,] 0.06897286 0.07066323 0.06766025 0.06936124
+[11,] 0.07014589 0.06735368 0.06879170 0.06722203
+[12,] 0.13199142 0.09600417 0.13128993 0.09532402
+              [,1]         [,2]         [,3]         [,4]
+ [1,] 7.803871e-06 7.803871e-06 2.071358e-05 2.071358e-05
+ [2,] 1.193227e-05 1.193227e-05 5.116604e-06 5.116604e-06
+ [3,] 2.141197e-05 2.141197e-05 3.258198e-06 3.258198e-06
+ [4,] 6.011744e-06 3.945968e-06 4.496474e-07 8.323952e-07
+ [5,] 3.131974e-07 1.388637e-06           NA 2.300304e-07
+ [6,] 1.313355e-06 5.489093e-06 5.804709e-07 7.701384e-07
+ [7,] 9.819172e-09 9.819172e-09 2.721522e-06 2.721522e-06
+ [8,] 1.753101e-08 1.753101e-08 1.651137e-07 1.651137e-07
+ [9,] 1.306683e-08 1.306683e-08 4.197464e-08 4.197464e-08
+[10,] 3.831764e-07 2.283242e-07 2.107262e-07 2.716938e-07
+[11,] 2.802977e-07 1.077377e-07 3.544870e-07 1.518040e-07
+[12,] 5.431981e-09 0.000000e+00 2.569811e-09 2.341496e-07
+      [,1] [,2] [,3] [,4]
+ [1,] 1.95 1.95 1.60 1.60
+ [2,] 1.85 1.85 1.80 1.80
+ [3,] 2.00 2.00 1.80 1.80
+ [4,] 1.65 1.60 1.40 1.46
+ [5,] 1.80 1.85   NA 1.66
+ [6,] 1.65 1.95 1.66 1.76
+ [7,] 1.50 1.50 1.66 1.66
+ [8,] 1.50 1.50 1.66 1.66
+ [9,] 1.50 1.50 1.60 1.60
+[10,] 1.40 1.00 1.00 1.02
+[11,] 1.25 1.00 1.20 1.60
+[12,] 1.50 2.00 1.80 1.84
+              sites-m-2_d-0.25 sites-m-2_d-2 sites-m-5_d-0.25 sites-m-5_d-2
+model-1_b-0.5       0.10091590    0.10091590       0.08313486    0.08313486
+model-1_b-1         0.07142226    0.07142226       0.05313788    0.05313788
+model-1_b-2         0.05196699    0.05196699       0.03172716    0.03172716
+model-3_b-0.5       0.06974079    0.06931755       0.06514734    0.06487711
+model-3_b-1         0.04860352    0.04820149               NA    0.04582704
+model-3_b-2         0.03497709    0.03945707       0.03142375    0.03523374
+model-4_b-0.5       0.08923055    0.08923055       0.06983013    0.06983013
+model-4_b-1         0.08838959    0.08838959       0.06803095    0.06803095
+model-4_b-2         0.09959457    0.09959457       0.08459215    0.08459215
+model-5_b-0.5       0.06897286    0.07066323       0.06766025    0.06936124
+model-5_b-1         0.07014589    0.06735368       0.06879170    0.06722203
+model-5_b-2         0.13199142    0.09600417       0.13128993    0.09532402
+              sites-m-2_d-0.25 sites-m-2_d-2 sites-m-5_d-0.25 sites-m-5_d-2
+model-1_b-0.5     7.803871e-06  7.803871e-06     2.071358e-05  2.071358e-05
+model-1_b-1       1.193227e-05  1.193227e-05     5.116604e-06  5.116604e-06
+model-1_b-2       2.141197e-05  2.141197e-05     3.258198e-06  3.258198e-06
+model-3_b-0.5     6.011744e-06  3.945968e-06     4.496474e-07  8.323952e-07
+model-3_b-1       3.131974e-07  1.388637e-06               NA  2.300304e-07
+model-3_b-2       1.313355e-06  5.489093e-06     5.804709e-07  7.701384e-07
+model-4_b-0.5     9.819172e-09  9.819172e-09     2.721522e-06  2.721522e-06
+model-4_b-1       1.753101e-08  1.753101e-08     1.651137e-07  1.651137e-07
+model-4_b-2       1.306683e-08  1.306683e-08     4.197464e-08  4.197464e-08
+model-5_b-0.5     3.831764e-07  2.283242e-07     2.107262e-07  2.716938e-07
+model-5_b-1       2.802977e-07  1.077377e-07     3.544870e-07  1.518040e-07
+model-5_b-2       5.431981e-09  0.000000e+00     2.569811e-09  2.341496e-07
+\begin{table}[H]
+
+\caption{\label{tab:survey_eval}Comparison of models, sampling effort, and parameter permutations}
+\centering
+\begin{tabular}[t]{llccc}
+\toprule
+  & sites-m-2\_d-0.25 & sites-m-2\_d-2 & sites-m-5\_d-0.25 & sites-m-5\_d-2\\
+\midrule
+model-1\_b-0.5 & 0.1009 & 0.1009 & 0.0831 & 0.0831\\
+model-1\_b-1 & 0.0714 & 0.0714 & 0.0531 & 0.0531\\
+model-1\_b-2 & 0.0520 & 0.0520 & 0.0317 & 0.0317\\
+model-3\_b-0.5 & 0.0697 & 0.0693 & 0.0651 & 0.0649\\
+model-3\_b-1 & 0.0486 & 0.0482 & NA & 0.0458\\
+\addlinespace
+model-3\_b-2 & 0.0350 & 0.0395 & 0.0314 & 0.0352\\
+model-4\_b-0.5 & 0.0892 & 0.0892 & 0.0698 & 0.0698\\
+model-4\_b-1 & 0.0884 & 0.0884 & 0.0680 & 0.0680\\
+model-4\_b-2 & 0.0996 & 0.0996 & 0.0846 & 0.0846\\
+model-5\_b-0.5 & 0.0690 & 0.0707 & 0.0677 & 0.0694\\
+\addlinespace
+model-5\_b-1 & 0.0701 & 0.0674 & 0.0688 & 0.0672\\
+model-5\_b-2 & 0.1320 & 0.0960 & 0.1313 & 0.0953\\
+\bottomrule
+\end{tabular}
+\end{table}
+\begin{table}[H]
+
+\caption{\label{tab:survey_eval}Comparison of models, sampling effort, and parameter permutations}
+\centering
+\begin{tabular}[t]{llccc}
+\toprule
+  & sites-m-2\_d-0.25 & sites-m-2\_d-2 & sites-m-5\_d-0.25 & sites-m-5\_d-2\\
+\midrule
+model-1\_b-0.5 & 1.95 & 1.95 & 1.60 & 1.60\\
+model-1\_b-1 & 1.85 & 1.85 & 1.80 & 1.80\\
+model-1\_b-2 & 2.00 & 2.00 & 1.80 & 1.80\\
+model-3\_b-0.5 & 1.65 & 1.60 & 1.40 & 1.46\\
+model-3\_b-1 & 1.80 & 1.85 & NA & 1.66\\
+\addlinespace
+model-3\_b-2 & 1.65 & 1.95 & 1.66 & 1.76\\
+model-4\_b-0.5 & 1.50 & 1.50 & 1.66 & 1.66\\
+model-4\_b-1 & 1.50 & 1.50 & 1.66 & 1.66\\
+model-4\_b-2 & 1.50 & 1.50 & 1.60 & 1.60\\
+model-5\_b-0.5 & 1.40 & 1.00 & 1.00 & 1.02\\
+\addlinespace
+model-5\_b-1 & 1.25 & 1.00 & 1.20 & 1.60\\
+model-5\_b-2 & 1.50 & 2.00 & 1.80 & 1.84\\
+\bottomrule
+\end{tabular}
+\end{table}
