@@ -1,3 +1,6 @@
+exp_dir=application_1
+rm -rf $exp_dir
+mkdir $exp_dir
 rm run_applied_model_comparison.sh
 models="1 2"
 detection_p="0.2"
@@ -23,6 +26,6 @@ echo "#!/bin/bash
 #PBS -l mem=100gb
 
 module load CmdStanR
-Rscript $WORKDIR/optimal_design_application.R --working_dir=$WORKDIR --base_data_dir=$BASE_DATA_DIR --data_save_dir=$save_dir --ebird_data_dir=$ebird_dir --map_file=$map_file --landcover_file=$landcover_file --modis_file=$modis_file --elevation_file=$elev_file --exp_name=$exp_name --data_reps=$(($cores*2)) --m=20 --min_visits=1 --max_visits=$n_surveys --vary_visits --random_starts=10 --model_selection=$model --p=$detection_p --exch_iter=40 --mcmc_iter=1000 --v_parallel --cores=$cores" > $exp_name.sh
-echo "qsub $exp_name.sh" >> run_applied_model_comparison.sh
+Rscript $WORKDIR/optimal_design_application.R --working_dir=$WORKDIR --save_dir=experimental_runs/$exp_dir --base_data_dir=$BASE_DATA_DIR --data_save_dir=$save_dir --ebird_data_dir=$ebird_dir --map_file=$map_file --landcover_file=$landcover_file --modis_file=$modis_file --elevation_file=$elev_file --exp_name=$exp_name --data_reps=$(($cores*2)) --m=20 --min_visits=1 --max_visits=$n_surveys --vary_visits --random_starts=10 --model_selection=$model --p=$detection_p --exch_iter=40 --mcmc_iter=1000 --v_parallel --cores=$cores" > $exp_dir/$exp_name.sh
+echo "qsub $exp_dir/$exp_name.sh" >> run_applied_model_comparison.sh
 done
