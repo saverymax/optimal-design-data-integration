@@ -24,6 +24,7 @@ set.seed(13)
 # Create command line arguments
 parser <- OptionParser()
 parser <- add_option(parser, "--working_dir", type="character", default=".", help="Path to the directory containing code to source for the main script")
+parser <- add_option(parser, "--save_dir", type="character", default=".", help="Path to save experimental results")
 parser <- add_option(parser, "--base_data_dir", type="character", default="./data", help="Path to the directory containing covariate data")
 parser <- add_option(parser, "--ebird_data_dir", type="character", default="ebird", help="Name of directory containing processed ebird data, within basedir")
 parser <- add_option(parser, "--data_save_dir", type="character", default="data/ebird", help="Directory to in which preporcessed covariate data is saved")
@@ -71,7 +72,7 @@ stan_models_path <- file.path(exp_args$working_dir, "stan_models", "stan_nuthatc
 source(stan_models_path)
 # Set data paths
 exp_name <- exp_args$exp_name
-exp_dir <- file.path(exp_args$working_dir, "experimental_runs", exp_name)
+exp_dir <- file.path(exp_args$working_dir, exp_args$save_dir, exp_name)
 base_data_dir <- file.path(exp_args$base_data_dir)
 ebd_download_dir <- file.path(exp_args$ebird_data_dir)
 map_path <- exp_args$map_file
