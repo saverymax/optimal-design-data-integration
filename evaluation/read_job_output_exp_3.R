@@ -37,7 +37,7 @@ for (i in 1:length(file_list)){
   compare_name <- paste(params[[1]][2], params[[1]][4], sep="_")
   print("Name to identify run")
   print(compare_name)
-  param_perm <- paste(params[[1]][7], params[[1]][8], sep="_")
+  param_perm <- paste(params[[1]][6], params[[1]][8], sep="_")
   print("current params of interest")
   print(param_perm)
   # Make this list so as to have the permutation names for each subset

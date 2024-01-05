@@ -2,33 +2,49 @@
 [1] "available runs"
  [1] "oe_model-1_m-5_n-2_v-none_a--2_b-0.5_g-1_d-0.25_p-0.2"
  [2] "oe_model-1_m-5_n-2_v-none_a--2_b-0.5_g-1_d-2_p-0.2"   
- [3] "oe_model-1_m-5_n-2_v-vary_a--2_b-0.5_g-1_d-0.25_p-0.2"
- [4] "oe_model-1_m-5_n-2_v-vary_a--2_b-0.5_g-1_d-2_p-0.2"   
- [5] "oe_model-1_m-5_n-5_v-none_a--2_b-0.5_g-1_d-0.25_p-0.2"
- [6] "oe_model-1_m-5_n-5_v-none_a--2_b-0.5_g-1_d-2_p-0.2"   
- [7] "oe_model-1_m-5_n-5_v-vary_a--2_b-0.5_g-1_d-0.25_p-0.2"
- [8] "oe_model-1_m-5_n-5_v-vary_a--2_b-0.5_g-1_d-2_p-0.2"   
- [9] "oe_model-3_m-5_n-2_v-none_a--2_b-0.5_g-1_d-0.25_p-0.2"
-[10] "oe_model-3_m-5_n-2_v-none_a--2_b-0.5_g-1_d-2_p-0.2"   
-[11] "oe_model-3_m-5_n-2_v-vary_a--2_b-0.5_g-1_d-0.25_p-0.2"
-[12] "oe_model-3_m-5_n-2_v-vary_a--2_b-0.5_g-1_d-2_p-0.2"   
-[13] "oe_model-3_m-5_n-5_v-none_a--2_b-0.5_g-1_d-0.25_p-0.2"
-[14] "oe_model-3_m-5_n-5_v-none_a--2_b-0.5_g-1_d-2_p-0.2"   
-[15] "oe_model-3_m-5_n-5_v-vary_a--2_b-0.5_g-1_d-0.25_p-0.2"
-[16] "oe_model-3_m-5_n-5_v-vary_a--2_b-0.5_g-1_d-2_p-0.2"   
+ [3] "oe_model-1_m-5_n-2_v-none_a--2_b-1_g-1_d-0.25_p-0.2"  
+ [4] "oe_model-1_m-5_n-2_v-none_a--2_b-1_g-1_d-2_p-0.2"     
+ [5] "oe_model-1_m-5_n-2_v-vary_a--2_b-0.5_g-1_d-0.25_p-0.2"
+ [6] "oe_model-1_m-5_n-2_v-vary_a--2_b-0.5_g-1_d-2_p-0.2"   
+ [7] "oe_model-1_m-5_n-2_v-vary_a--2_b-1_g-1_d-0.25_p-0.2"  
+ [8] "oe_model-1_m-5_n-2_v-vary_a--2_b-1_g-1_d-2_p-0.2"     
+ [9] "oe_model-1_m-5_n-3_v-none_a--2_b-0.5_g-1_d-0.25_p-0.2"
+[10] "oe_model-1_m-5_n-3_v-none_a--2_b-0.5_g-1_d-2_p-0.2"   
+[11] "oe_model-1_m-5_n-3_v-none_a--2_b-1_g-1_d-0.25_p-0.2"  
+[12] "oe_model-1_m-5_n-3_v-none_a--2_b-1_g-1_d-2_p-0.2"     
+[13] "oe_model-1_m-5_n-3_v-vary_a--2_b-0.5_g-1_d-0.25_p-0.2"
+[14] "oe_model-1_m-5_n-3_v-vary_a--2_b-0.5_g-1_d-2_p-0.2"   
+[15] "oe_model-1_m-5_n-3_v-vary_a--2_b-1_g-1_d-0.25_p-0.2"  
+[16] "oe_model-1_m-5_n-3_v-vary_a--2_b-1_g-1_d-2_p-0.2"     
+[17] "oe_model-3_m-5_n-2_v-none_a--2_b-0.5_g-1_d-0.25_p-0.2"
+[18] "oe_model-3_m-5_n-2_v-none_a--2_b-0.5_g-1_d-2_p-0.2"   
+[19] "oe_model-3_m-5_n-2_v-none_a--2_b-1_g-1_d-0.25_p-0.2"  
+[20] "oe_model-3_m-5_n-2_v-none_a--2_b-1_g-1_d-2_p-0.2"     
+[21] "oe_model-3_m-5_n-2_v-vary_a--2_b-0.5_g-1_d-0.25_p-0.2"
+[22] "oe_model-3_m-5_n-2_v-vary_a--2_b-0.5_g-1_d-2_p-0.2"   
+[23] "oe_model-3_m-5_n-2_v-vary_a--2_b-1_g-1_d-0.25_p-0.2"  
+[24] "oe_model-3_m-5_n-2_v-vary_a--2_b-1_g-1_d-2_p-0.2"     
+[25] "oe_model-3_m-5_n-3_v-none_a--2_b-0.5_g-1_d-0.25_p-0.2"
+[26] "oe_model-3_m-5_n-3_v-none_a--2_b-0.5_g-1_d-2_p-0.2"   
+[27] "oe_model-3_m-5_n-3_v-none_a--2_b-1_g-1_d-0.25_p-0.2"  
+[28] "oe_model-3_m-5_n-3_v-none_a--2_b-1_g-1_d-2_p-0.2"     
+[29] "oe_model-3_m-5_n-3_v-vary_a--2_b-0.5_g-1_d-0.25_p-0.2"
+[30] "oe_model-3_m-5_n-3_v-vary_a--2_b-0.5_g-1_d-2_p-0.2"   
+[31] "oe_model-3_m-5_n-3_v-vary_a--2_b-1_g-1_d-0.25_p-0.2"  
+[32] "oe_model-3_m-5_n-3_v-vary_a--2_b-1_g-1_d-2_p-0.2"     
 [1] "number of files"
-[1] 16
+[1] 32
 [1] "inital list to save results"
 $`model-1_n-2`
 NULL
 
-$`model-1_n-5`
+$`model-1_n-3`
 NULL
 
 $`model-3_n-2`
 NULL
 
-$`model-3_n-5`
+$`model-3_n-3`
 NULL
 
 [1] "oe_model-1_m-5_n-2_v-none_a--2_b-0.5_g-1_d-0.25_p-0.2"
@@ -39,7 +55,7 @@ NULL
 [1] "Name to identify run"
 [1] "model-1_n-2"
 [1] "current params of interest"
-[1] "v-none_d-0.25"
+[1] "v-none_b-0.5_d-0.25"
 [1] "reading file:"
 [1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_2/oe_model-1_m-5_n-2_v-none_a--2_b-0.5_g-1_d-0.25_p-0.2/results.xlsx"
 [1] "oe_model-1_m-5_n-2_v-none_a--2_b-0.5_g-1_d-2_p-0.2"
@@ -50,9 +66,31 @@ NULL
 [1] "Name to identify run"
 [1] "model-1_n-2"
 [1] "current params of interest"
-[1] "v-none_d-2"
+[1] "v-none_b-0.5_d-2"
 [1] "reading file:"
 [1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_2/oe_model-1_m-5_n-2_v-none_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
+[1] "oe_model-1_m-5_n-2_v-none_a--2_b-1_g-1_d-0.25_p-0.2"
+[[1]]
+ [1] "oe"      "model-1" "m-5"     "n-2"     "v-none"  "a--2"    "b-1"    
+ [8] "g-1"     "d-0.25"  "p-0.2"  
+
+[1] "Name to identify run"
+[1] "model-1_n-2"
+[1] "current params of interest"
+[1] "v-none_b-1_d-0.25"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_2/oe_model-1_m-5_n-2_v-none_a--2_b-1_g-1_d-0.25_p-0.2/results.xlsx"
+[1] "oe_model-1_m-5_n-2_v-none_a--2_b-1_g-1_d-2_p-0.2"
+[[1]]
+ [1] "oe"      "model-1" "m-5"     "n-2"     "v-none"  "a--2"    "b-1"    
+ [8] "g-1"     "d-2"     "p-0.2"  
+
+[1] "Name to identify run"
+[1] "model-1_n-2"
+[1] "current params of interest"
+[1] "v-none_b-1_d-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_2/oe_model-1_m-5_n-2_v-none_a--2_b-1_g-1_d-2_p-0.2/results.xlsx"
 [1] "oe_model-1_m-5_n-2_v-vary_a--2_b-0.5_g-1_d-0.25_p-0.2"
 [[1]]
  [1] "oe"      "model-1" "m-5"     "n-2"     "v-vary"  "a--2"    "b-0.5"  
@@ -61,7 +99,7 @@ NULL
 [1] "Name to identify run"
 [1] "model-1_n-2"
 [1] "current params of interest"
-[1] "v-vary_d-0.25"
+[1] "v-vary_b-0.5_d-0.25"
 [1] "reading file:"
 [1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_2/oe_model-1_m-5_n-2_v-vary_a--2_b-0.5_g-1_d-0.25_p-0.2/results.xlsx"
 [1] "oe_model-1_m-5_n-2_v-vary_a--2_b-0.5_g-1_d-2_p-0.2"
@@ -72,53 +110,119 @@ NULL
 [1] "Name to identify run"
 [1] "model-1_n-2"
 [1] "current params of interest"
-[1] "v-vary_d-2"
+[1] "v-vary_b-0.5_d-2"
 [1] "reading file:"
 [1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_2/oe_model-1_m-5_n-2_v-vary_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
-[1] "oe_model-1_m-5_n-5_v-none_a--2_b-0.5_g-1_d-0.25_p-0.2"
+[1] "oe_model-1_m-5_n-2_v-vary_a--2_b-1_g-1_d-0.25_p-0.2"
 [[1]]
- [1] "oe"      "model-1" "m-5"     "n-5"     "v-none"  "a--2"    "b-0.5"  
+ [1] "oe"      "model-1" "m-5"     "n-2"     "v-vary"  "a--2"    "b-1"    
  [8] "g-1"     "d-0.25"  "p-0.2"  
 
 [1] "Name to identify run"
-[1] "model-1_n-5"
+[1] "model-1_n-2"
 [1] "current params of interest"
-[1] "v-none_d-0.25"
+[1] "v-vary_b-1_d-0.25"
 [1] "reading file:"
-[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_2/oe_model-1_m-5_n-5_v-none_a--2_b-0.5_g-1_d-0.25_p-0.2/results.xlsx"
-[1] "oe_model-1_m-5_n-5_v-none_a--2_b-0.5_g-1_d-2_p-0.2"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_2/oe_model-1_m-5_n-2_v-vary_a--2_b-1_g-1_d-0.25_p-0.2/results.xlsx"
+[1] "oe_model-1_m-5_n-2_v-vary_a--2_b-1_g-1_d-2_p-0.2"
 [[1]]
- [1] "oe"      "model-1" "m-5"     "n-5"     "v-none"  "a--2"    "b-0.5"  
+ [1] "oe"      "model-1" "m-5"     "n-2"     "v-vary"  "a--2"    "b-1"    
  [8] "g-1"     "d-2"     "p-0.2"  
 
 [1] "Name to identify run"
-[1] "model-1_n-5"
+[1] "model-1_n-2"
 [1] "current params of interest"
-[1] "v-none_d-2"
+[1] "v-vary_b-1_d-2"
 [1] "reading file:"
-[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_2/oe_model-1_m-5_n-5_v-none_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
-[1] "oe_model-1_m-5_n-5_v-vary_a--2_b-0.5_g-1_d-0.25_p-0.2"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_2/oe_model-1_m-5_n-2_v-vary_a--2_b-1_g-1_d-2_p-0.2/results.xlsx"
+[1] "oe_model-1_m-5_n-3_v-none_a--2_b-0.5_g-1_d-0.25_p-0.2"
 [[1]]
- [1] "oe"      "model-1" "m-5"     "n-5"     "v-vary"  "a--2"    "b-0.5"  
+ [1] "oe"      "model-1" "m-5"     "n-3"     "v-none"  "a--2"    "b-0.5"  
  [8] "g-1"     "d-0.25"  "p-0.2"  
 
 [1] "Name to identify run"
-[1] "model-1_n-5"
+[1] "model-1_n-3"
 [1] "current params of interest"
-[1] "v-vary_d-0.25"
+[1] "v-none_b-0.5_d-0.25"
 [1] "reading file:"
-[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_2/oe_model-1_m-5_n-5_v-vary_a--2_b-0.5_g-1_d-0.25_p-0.2/results.xlsx"
-[1] "oe_model-1_m-5_n-5_v-vary_a--2_b-0.5_g-1_d-2_p-0.2"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_2/oe_model-1_m-5_n-3_v-none_a--2_b-0.5_g-1_d-0.25_p-0.2/results.xlsx"
+[1] "oe_model-1_m-5_n-3_v-none_a--2_b-0.5_g-1_d-2_p-0.2"
 [[1]]
- [1] "oe"      "model-1" "m-5"     "n-5"     "v-vary"  "a--2"    "b-0.5"  
+ [1] "oe"      "model-1" "m-5"     "n-3"     "v-none"  "a--2"    "b-0.5"  
  [8] "g-1"     "d-2"     "p-0.2"  
 
 [1] "Name to identify run"
-[1] "model-1_n-5"
+[1] "model-1_n-3"
 [1] "current params of interest"
-[1] "v-vary_d-2"
+[1] "v-none_b-0.5_d-2"
 [1] "reading file:"
-[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_2/oe_model-1_m-5_n-5_v-vary_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_2/oe_model-1_m-5_n-3_v-none_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
+[1] "oe_model-1_m-5_n-3_v-none_a--2_b-1_g-1_d-0.25_p-0.2"
+[[1]]
+ [1] "oe"      "model-1" "m-5"     "n-3"     "v-none"  "a--2"    "b-1"    
+ [8] "g-1"     "d-0.25"  "p-0.2"  
+
+[1] "Name to identify run"
+[1] "model-1_n-3"
+[1] "current params of interest"
+[1] "v-none_b-1_d-0.25"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_2/oe_model-1_m-5_n-3_v-none_a--2_b-1_g-1_d-0.25_p-0.2/results.xlsx"
+[1] "oe_model-1_m-5_n-3_v-none_a--2_b-1_g-1_d-2_p-0.2"
+[[1]]
+ [1] "oe"      "model-1" "m-5"     "n-3"     "v-none"  "a--2"    "b-1"    
+ [8] "g-1"     "d-2"     "p-0.2"  
+
+[1] "Name to identify run"
+[1] "model-1_n-3"
+[1] "current params of interest"
+[1] "v-none_b-1_d-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_2/oe_model-1_m-5_n-3_v-none_a--2_b-1_g-1_d-2_p-0.2/results.xlsx"
+[1] "oe_model-1_m-5_n-3_v-vary_a--2_b-0.5_g-1_d-0.25_p-0.2"
+[[1]]
+ [1] "oe"      "model-1" "m-5"     "n-3"     "v-vary"  "a--2"    "b-0.5"  
+ [8] "g-1"     "d-0.25"  "p-0.2"  
+
+[1] "Name to identify run"
+[1] "model-1_n-3"
+[1] "current params of interest"
+[1] "v-vary_b-0.5_d-0.25"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_2/oe_model-1_m-5_n-3_v-vary_a--2_b-0.5_g-1_d-0.25_p-0.2/results.xlsx"
+[1] "oe_model-1_m-5_n-3_v-vary_a--2_b-0.5_g-1_d-2_p-0.2"
+[[1]]
+ [1] "oe"      "model-1" "m-5"     "n-3"     "v-vary"  "a--2"    "b-0.5"  
+ [8] "g-1"     "d-2"     "p-0.2"  
+
+[1] "Name to identify run"
+[1] "model-1_n-3"
+[1] "current params of interest"
+[1] "v-vary_b-0.5_d-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_2/oe_model-1_m-5_n-3_v-vary_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
+[1] "oe_model-1_m-5_n-3_v-vary_a--2_b-1_g-1_d-0.25_p-0.2"
+[[1]]
+ [1] "oe"      "model-1" "m-5"     "n-3"     "v-vary"  "a--2"    "b-1"    
+ [8] "g-1"     "d-0.25"  "p-0.2"  
+
+[1] "Name to identify run"
+[1] "model-1_n-3"
+[1] "current params of interest"
+[1] "v-vary_b-1_d-0.25"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_2/oe_model-1_m-5_n-3_v-vary_a--2_b-1_g-1_d-0.25_p-0.2/results.xlsx"
+[1] "oe_model-1_m-5_n-3_v-vary_a--2_b-1_g-1_d-2_p-0.2"
+[[1]]
+ [1] "oe"      "model-1" "m-5"     "n-3"     "v-vary"  "a--2"    "b-1"    
+ [8] "g-1"     "d-2"     "p-0.2"  
+
+[1] "Name to identify run"
+[1] "model-1_n-3"
+[1] "current params of interest"
+[1] "v-vary_b-1_d-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_2/oe_model-1_m-5_n-3_v-vary_a--2_b-1_g-1_d-2_p-0.2/results.xlsx"
 [1] "oe_model-3_m-5_n-2_v-none_a--2_b-0.5_g-1_d-0.25_p-0.2"
 [[1]]
  [1] "oe"      "model-3" "m-5"     "n-2"     "v-none"  "a--2"    "b-0.5"  
@@ -127,7 +231,7 @@ NULL
 [1] "Name to identify run"
 [1] "model-3_n-2"
 [1] "current params of interest"
-[1] "v-none_d-0.25"
+[1] "v-none_b-0.5_d-0.25"
 [1] "reading file:"
 [1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_2/oe_model-3_m-5_n-2_v-none_a--2_b-0.5_g-1_d-0.25_p-0.2/results.xlsx"
 [1] "oe_model-3_m-5_n-2_v-none_a--2_b-0.5_g-1_d-2_p-0.2"
@@ -138,9 +242,31 @@ NULL
 [1] "Name to identify run"
 [1] "model-3_n-2"
 [1] "current params of interest"
-[1] "v-none_d-2"
+[1] "v-none_b-0.5_d-2"
 [1] "reading file:"
 [1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_2/oe_model-3_m-5_n-2_v-none_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
+[1] "oe_model-3_m-5_n-2_v-none_a--2_b-1_g-1_d-0.25_p-0.2"
+[[1]]
+ [1] "oe"      "model-3" "m-5"     "n-2"     "v-none"  "a--2"    "b-1"    
+ [8] "g-1"     "d-0.25"  "p-0.2"  
+
+[1] "Name to identify run"
+[1] "model-3_n-2"
+[1] "current params of interest"
+[1] "v-none_b-1_d-0.25"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_2/oe_model-3_m-5_n-2_v-none_a--2_b-1_g-1_d-0.25_p-0.2/results.xlsx"
+[1] "oe_model-3_m-5_n-2_v-none_a--2_b-1_g-1_d-2_p-0.2"
+[[1]]
+ [1] "oe"      "model-3" "m-5"     "n-2"     "v-none"  "a--2"    "b-1"    
+ [8] "g-1"     "d-2"     "p-0.2"  
+
+[1] "Name to identify run"
+[1] "model-3_n-2"
+[1] "current params of interest"
+[1] "v-none_b-1_d-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_2/oe_model-3_m-5_n-2_v-none_a--2_b-1_g-1_d-2_p-0.2/results.xlsx"
 [1] "oe_model-3_m-5_n-2_v-vary_a--2_b-0.5_g-1_d-0.25_p-0.2"
 [[1]]
  [1] "oe"      "model-3" "m-5"     "n-2"     "v-vary"  "a--2"    "b-0.5"  
@@ -149,7 +275,7 @@ NULL
 [1] "Name to identify run"
 [1] "model-3_n-2"
 [1] "current params of interest"
-[1] "v-vary_d-0.25"
+[1] "v-vary_b-0.5_d-0.25"
 [1] "reading file:"
 [1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_2/oe_model-3_m-5_n-2_v-vary_a--2_b-0.5_g-1_d-0.25_p-0.2/results.xlsx"
 [1] "oe_model-3_m-5_n-2_v-vary_a--2_b-0.5_g-1_d-2_p-0.2"
@@ -160,102 +286,195 @@ NULL
 [1] "Name to identify run"
 [1] "model-3_n-2"
 [1] "current params of interest"
-[1] "v-vary_d-2"
+[1] "v-vary_b-0.5_d-2"
 [1] "reading file:"
 [1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_2/oe_model-3_m-5_n-2_v-vary_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
-[1] "oe_model-3_m-5_n-5_v-none_a--2_b-0.5_g-1_d-0.25_p-0.2"
+[1] "oe_model-3_m-5_n-2_v-vary_a--2_b-1_g-1_d-0.25_p-0.2"
 [[1]]
- [1] "oe"      "model-3" "m-5"     "n-5"     "v-none"  "a--2"    "b-0.5"  
+ [1] "oe"      "model-3" "m-5"     "n-2"     "v-vary"  "a--2"    "b-1"    
  [8] "g-1"     "d-0.25"  "p-0.2"  
 
 [1] "Name to identify run"
-[1] "model-3_n-5"
+[1] "model-3_n-2"
 [1] "current params of interest"
-[1] "v-none_d-0.25"
+[1] "v-vary_b-1_d-0.25"
 [1] "reading file:"
-[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_2/oe_model-3_m-5_n-5_v-none_a--2_b-0.5_g-1_d-0.25_p-0.2/results.xlsx"
-[1] "oe_model-3_m-5_n-5_v-none_a--2_b-0.5_g-1_d-2_p-0.2"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_2/oe_model-3_m-5_n-2_v-vary_a--2_b-1_g-1_d-0.25_p-0.2/results.xlsx"
+[1] "oe_model-3_m-5_n-2_v-vary_a--2_b-1_g-1_d-2_p-0.2"
 [[1]]
- [1] "oe"      "model-3" "m-5"     "n-5"     "v-none"  "a--2"    "b-0.5"  
+ [1] "oe"      "model-3" "m-5"     "n-2"     "v-vary"  "a--2"    "b-1"    
  [8] "g-1"     "d-2"     "p-0.2"  
 
 [1] "Name to identify run"
-[1] "model-3_n-5"
+[1] "model-3_n-2"
 [1] "current params of interest"
-[1] "v-none_d-2"
+[1] "v-vary_b-1_d-2"
 [1] "reading file:"
-[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_2/oe_model-3_m-5_n-5_v-none_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
-[1] "oe_model-3_m-5_n-5_v-vary_a--2_b-0.5_g-1_d-0.25_p-0.2"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_2/oe_model-3_m-5_n-2_v-vary_a--2_b-1_g-1_d-2_p-0.2/results.xlsx"
+[1] "oe_model-3_m-5_n-3_v-none_a--2_b-0.5_g-1_d-0.25_p-0.2"
 [[1]]
- [1] "oe"      "model-3" "m-5"     "n-5"     "v-vary"  "a--2"    "b-0.5"  
+ [1] "oe"      "model-3" "m-5"     "n-3"     "v-none"  "a--2"    "b-0.5"  
  [8] "g-1"     "d-0.25"  "p-0.2"  
 
 [1] "Name to identify run"
-[1] "model-3_n-5"
+[1] "model-3_n-3"
 [1] "current params of interest"
-[1] "v-vary_d-0.25"
+[1] "v-none_b-0.5_d-0.25"
 [1] "reading file:"
-[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_2/oe_model-3_m-5_n-5_v-vary_a--2_b-0.5_g-1_d-0.25_p-0.2/results.xlsx"
-[1] "oe_model-3_m-5_n-5_v-vary_a--2_b-0.5_g-1_d-2_p-0.2"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_2/oe_model-3_m-5_n-3_v-none_a--2_b-0.5_g-1_d-0.25_p-0.2/results.xlsx"
+[1] "oe_model-3_m-5_n-3_v-none_a--2_b-0.5_g-1_d-2_p-0.2"
 [[1]]
- [1] "oe"      "model-3" "m-5"     "n-5"     "v-vary"  "a--2"    "b-0.5"  
+ [1] "oe"      "model-3" "m-5"     "n-3"     "v-none"  "a--2"    "b-0.5"  
  [8] "g-1"     "d-2"     "p-0.2"  
 
 [1] "Name to identify run"
-[1] "model-3_n-5"
+[1] "model-3_n-3"
 [1] "current params of interest"
-[1] "v-vary_d-2"
+[1] "v-none_b-0.5_d-2"
 [1] "reading file:"
-[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_2/oe_model-3_m-5_n-5_v-vary_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_2/oe_model-3_m-5_n-3_v-none_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
+[1] "oe_model-3_m-5_n-3_v-none_a--2_b-1_g-1_d-0.25_p-0.2"
+[[1]]
+ [1] "oe"      "model-3" "m-5"     "n-3"     "v-none"  "a--2"    "b-1"    
+ [8] "g-1"     "d-0.25"  "p-0.2"  
+
+[1] "Name to identify run"
+[1] "model-3_n-3"
+[1] "current params of interest"
+[1] "v-none_b-1_d-0.25"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_2/oe_model-3_m-5_n-3_v-none_a--2_b-1_g-1_d-0.25_p-0.2/results.xlsx"
+[1] "oe_model-3_m-5_n-3_v-none_a--2_b-1_g-1_d-2_p-0.2"
+[[1]]
+ [1] "oe"      "model-3" "m-5"     "n-3"     "v-none"  "a--2"    "b-1"    
+ [8] "g-1"     "d-2"     "p-0.2"  
+
+[1] "Name to identify run"
+[1] "model-3_n-3"
+[1] "current params of interest"
+[1] "v-none_b-1_d-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_2/oe_model-3_m-5_n-3_v-none_a--2_b-1_g-1_d-2_p-0.2/results.xlsx"
+[1] "oe_model-3_m-5_n-3_v-vary_a--2_b-0.5_g-1_d-0.25_p-0.2"
+[[1]]
+ [1] "oe"      "model-3" "m-5"     "n-3"     "v-vary"  "a--2"    "b-0.5"  
+ [8] "g-1"     "d-0.25"  "p-0.2"  
+
+[1] "Name to identify run"
+[1] "model-3_n-3"
+[1] "current params of interest"
+[1] "v-vary_b-0.5_d-0.25"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_2/oe_model-3_m-5_n-3_v-vary_a--2_b-0.5_g-1_d-0.25_p-0.2/results.xlsx"
+[1] "oe_model-3_m-5_n-3_v-vary_a--2_b-0.5_g-1_d-2_p-0.2"
+[[1]]
+ [1] "oe"      "model-3" "m-5"     "n-3"     "v-vary"  "a--2"    "b-0.5"  
+ [8] "g-1"     "d-2"     "p-0.2"  
+
+[1] "Name to identify run"
+[1] "model-3_n-3"
+[1] "current params of interest"
+[1] "v-vary_b-0.5_d-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_2/oe_model-3_m-5_n-3_v-vary_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
+[1] "oe_model-3_m-5_n-3_v-vary_a--2_b-1_g-1_d-0.25_p-0.2"
+[[1]]
+ [1] "oe"      "model-3" "m-5"     "n-3"     "v-vary"  "a--2"    "b-1"    
+ [8] "g-1"     "d-0.25"  "p-0.2"  
+
+[1] "Name to identify run"
+[1] "model-3_n-3"
+[1] "current params of interest"
+[1] "v-vary_b-1_d-0.25"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_2/oe_model-3_m-5_n-3_v-vary_a--2_b-1_g-1_d-0.25_p-0.2/results.xlsx"
+[1] "oe_model-3_m-5_n-3_v-vary_a--2_b-1_g-1_d-2_p-0.2"
+[[1]]
+ [1] "oe"      "model-3" "m-5"     "n-3"     "v-vary"  "a--2"    "b-1"    
+ [8] "g-1"     "d-2"     "p-0.2"  
+
+[1] "Name to identify run"
+[1] "model-3_n-3"
+[1] "current params of interest"
+[1] "v-vary_b-1_d-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_2/oe_model-3_m-5_n-3_v-vary_a--2_b-1_g-1_d-2_p-0.2/results.xlsx"
 [1] "result list"
 $`model-1_n-2`
-[1] 0.1316432 0.1316432 0.1245470 0.1245470
+[1] 0.08548104 0.13164320 0.05301491 0.05301491 0.08313486 0.08313486 0.05313788
+[8] 0.05313788
 
-$`model-1_n-5`
-[1] 0.1357063 0.1357063 0.1211943 0.1211943
+$`model-1_n-3`
+[1] 0.09659782 0.09659782 0.05053186 0.05053186 0.08822547 0.08822547 0.05179169
+[8] 0.05179169
 
 $`model-3_n-2`
-[1] 0.11277969 0.11352002 0.09920663 0.10263492
+[1] 0.06918364 0.06913323 0.04751916 0.04609562 0.06514734 0.06487711 0.04716854
+[8] 0.04582704
 
-$`model-3_n-5`
-[1] 0.1272661 0.1264886 0.1021600 0.1035632
+$`model-3_n-3`
+[1] 0.07471893 0.07679263 0.04783394 0.04616047 0.06638063 0.06742770 0.04703918
+[8] 0.04554567
 
 [1] "Params per model. Make sure each model has params ordered in the same way"
 $`model-1_n-2`
-[1] "v-none_d-0.25" "v-none_d-2"    "v-vary_d-0.25" "v-vary_d-2"   
+[1] "v-none_b-0.5_d-0.25" "v-none_b-0.5_d-2"    "v-none_b-1_d-0.25"  
+[4] "v-none_b-1_d-2"      "v-vary_b-0.5_d-0.25" "v-vary_b-0.5_d-2"   
+[7] "v-vary_b-1_d-0.25"   "v-vary_b-1_d-2"     
 
-$`model-1_n-5`
-[1] "v-none_d-0.25" "v-none_d-2"    "v-vary_d-0.25" "v-vary_d-2"   
+$`model-1_n-3`
+[1] "v-none_b-0.5_d-0.25" "v-none_b-0.5_d-2"    "v-none_b-1_d-0.25"  
+[4] "v-none_b-1_d-2"      "v-vary_b-0.5_d-0.25" "v-vary_b-0.5_d-2"   
+[7] "v-vary_b-1_d-0.25"   "v-vary_b-1_d-2"     
 
 $`model-3_n-2`
-[1] "v-none_d-0.25" "v-none_d-2"    "v-vary_d-0.25" "v-vary_d-2"   
+[1] "v-none_b-0.5_d-0.25" "v-none_b-0.5_d-2"    "v-none_b-1_d-0.25"  
+[4] "v-none_b-1_d-2"      "v-vary_b-0.5_d-0.25" "v-vary_b-0.5_d-2"   
+[7] "v-vary_b-1_d-0.25"   "v-vary_b-1_d-2"     
 
-$`model-3_n-5`
-[1] "v-none_d-0.25" "v-none_d-2"    "v-vary_d-0.25" "v-vary_d-2"   
+$`model-3_n-3`
+[1] "v-none_b-0.5_d-0.25" "v-none_b-0.5_d-2"    "v-none_b-1_d-0.25"  
+[4] "v-none_b-1_d-2"      "v-vary_b-0.5_d-0.25" "v-vary_b-0.5_d-2"   
+[7] "v-vary_b-1_d-0.25"   "v-vary_b-1_d-2"     
 
-[1] 4 4
-          [,1]      [,2]       [,3]      [,4]
-[1,] 0.1316432 0.1316432 0.12454698 0.1245470
-[2,] 0.1357063 0.1357063 0.12119434 0.1211943
-[3,] 0.1127797 0.1135200 0.09920663 0.1026349
-[4,] 0.1272661 0.1264886 0.10216001 0.1035632
-            v-none_d-0.25 v-none_d-2 v-vary_d-0.25 v-vary_d-2
-model-1_n-2     0.1316432  0.1316432    0.12454698  0.1245470
-model-1_n-5     0.1357063  0.1357063    0.12119434  0.1211943
-model-3_n-2     0.1127797  0.1135200    0.09920663  0.1026349
-model-3_n-5     0.1272661  0.1264886    0.10216001  0.1035632
+[1] 4 8
+           [,1]       [,2]       [,3]       [,4]       [,5]       [,6]
+[1,] 0.08548104 0.13164320 0.05301491 0.05301491 0.08313486 0.08313486
+[2,] 0.09659782 0.09659782 0.05053186 0.05053186 0.08822547 0.08822547
+[3,] 0.06918364 0.06913323 0.04751916 0.04609562 0.06514734 0.06487711
+[4,] 0.07471893 0.07679263 0.04783394 0.04616047 0.06638063 0.06742770
+           [,7]       [,8]
+[1,] 0.05313788 0.05313788
+[2,] 0.05179169 0.05179169
+[3,] 0.04716854 0.04582704
+[4,] 0.04703918 0.04554567
+            v-none_b-0.5_d-0.25 v-none_b-0.5_d-2 v-none_b-1_d-0.25
+model-1_n-2          0.08548104       0.13164320        0.05301491
+model-1_n-3          0.09659782       0.09659782        0.05053186
+model-3_n-2          0.06918364       0.06913323        0.04751916
+model-3_n-3          0.07471893       0.07679263        0.04783394
+            v-none_b-1_d-2 v-vary_b-0.5_d-0.25 v-vary_b-0.5_d-2
+model-1_n-2     0.05301491          0.08313486       0.08313486
+model-1_n-3     0.05053186          0.08822547       0.08822547
+model-3_n-2     0.04609562          0.06514734       0.06487711
+model-3_n-3     0.04616047          0.06638063       0.06742770
+            v-vary_b-1_d-0.25 v-vary_b-1_d-2
+model-1_n-2        0.05313788     0.05313788
+model-1_n-3        0.05179169     0.05179169
+model-3_n-2        0.04716854     0.04582704
+model-3_n-3        0.04703918     0.04554567
 \begin{table}[H]
 
 \caption{\label{tab:survey_eval}Comparison of models, sampling effort, and parameter permutations}
 \centering
-\begin{tabular}[t]{llccc}
+\begin{tabular}[t]{llcccclcc}
 \toprule
-  & v-none\_d-0.25 & v-none\_d-2 & v-vary\_d-0.25 & v-vary\_d-2\\
+  & v-none\_b-0.5\_d-0.25 & v-none\_b-0.5\_d-2 & v-none\_b-1\_d-0.25 & v-none\_b-1\_d-2 & v-vary\_b-0.5\_d-0.25 & v-vary\_b-0.5\_d-2 & v-vary\_b-1\_d-0.25 & v-vary\_b-1\_d-2\\
 \midrule
-model-1\_n-2 & 0.1316 & 0.1316 & 0.1245 & 0.1245\\
-model-1\_n-5 & 0.1357 & 0.1357 & 0.1212 & 0.1212\\
-model-3\_n-2 & 0.1128 & 0.1135 & 0.0992 & 0.1026\\
-model-3\_n-5 & 0.1273 & 0.1265 & 0.1022 & 0.1036\\
+model-1\_n-2 & 0.0855 & 0.1316 & 0.0530 & 0.0530 & 0.0831 & 0.0831 & 0.0531 & 0.0531\\
+model-1\_n-3 & 0.0966 & 0.0966 & 0.0505 & 0.0505 & 0.0882 & 0.0882 & 0.0518 & 0.0518\\
+model-3\_n-2 & 0.0692 & 0.0691 & 0.0475 & 0.0461 & 0.0651 & 0.0649 & 0.0472 & 0.0458\\
+model-3\_n-3 & 0.0747 & 0.0768 & 0.0478 & 0.0462 & 0.0664 & 0.0674 & 0.0470 & 0.0455\\
 \bottomrule
 \end{tabular}
 \end{table}

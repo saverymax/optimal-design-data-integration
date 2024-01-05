@@ -40,7 +40,7 @@ echo "#!/bin/bash
 #PBS -l mem=100gb
 
 module load CmdStanR
-Rscript $WORKDIR/optimal_design_site_occ.R --working_dir=$WORKDIR --exp_name=$exp_name --data_reps=$(($cores*2)) --m=5 --min_visits=1 --max_visits=$n --vary_visits --model_selection=$m --random_starts=10 --exch_iter=40 --mcmc_iter=1000 --use_sim_po --po_data_file="po_gen_ints-${intensity}_a=${alpha}_b=${beta}_g=${g}_d=${d}.Rds" --intensity_func=\"$intensity\" --bias_func=\"$bias\" --v_parallel --cores=$cores --alpha=$alpha --beta=$beta --gamma=$g --delta=$d --p=$p" > $exp_dir/$exp_name.sh
+Rscript $WORKDIR/optimal_design_site_occ.R --working_dir=$WORKDIR --save_dir=experimental_runs/$exp_dir --exp_name=$exp_name --data_reps=$(($cores*2)) --m=5 --min_visits=1 --max_visits=$n --vary_visits --model_selection=$m --random_starts=10 --exch_iter=40 --mcmc_iter=1000 --use_sim_po --po_data_file="po_gen_peak_ints-${intensity}_a=${alpha}_b=${beta}_g=${g}_d=${d}.Rds" --intensity_func=\"$intensity\" --bias_func=\"$bias\" --v_parallel --cores=$cores --alpha=$alpha --beta=$beta --gamma=$g --delta=$d --p=$p" > $exp_dir/$exp_name.sh
 echo "qsub $exp_dir/$exp_name.sh" >> run_$exp_dir.sh
 done
 done
