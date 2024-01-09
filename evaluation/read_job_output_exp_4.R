@@ -37,7 +37,7 @@ for (i in 1:length(file_list)){
   compare_name <- paste(params[[1]][2], params[[1]][4], sep="_")
   print("Name to identify run")
   print(compare_name)
-  param_perm <- paste(params[[1]][3], params[[1]][8], sep="_")
+  param_perm <- paste(params[[1]][3], params[[1]][6], params[[1]][8], sep="_")
   print("current params of interest")
   print(param_perm)
   # Make this list so as to have the permutation names for each subset
@@ -104,16 +104,19 @@ print(kbl(v_df, booktabs = T, escape=T, caption=caption, label=label,
 v_df
 var_df
 # Move m=10 to end
-v_df <- v_df %>% relocate('sites-10_d-2', .after='sites-5_d-2')
+v_df <- v_df %>% relocate('sites-10_b-0.5_d-2', .after='sites-5_b-1_d-2')
 v_df
-var_df <- var_df %>% relocate('sites-10_d-2', .after='sites-5_d-2')
+var_df <- var_df %>% relocate('sites-10_b-1_d-2', .after='sites-10_b-0.5_d-2')
 v_df$run <- rownames(v_df)
 var_df$run <- rownames(var_df)
 fig_df <- melt(v_df, id='run')
-fig_df
-fig_df$x <- rep(c(2,3,4,5,10), each=4)
+fig_df$run <- as.factor(fig_df$run)
+print(fig_df)
+print(levels(fig_df$run))
+fig_df$x <- rep(c(2,3,4,5,10), each=8)
 fig_df
 
+model_labels = c("SO, b=1, n=2", "SO, b=1, n=2", "SO, b=1, n=5", "SO+PO, b=1, n=2", "SO+PO, b=1, n=2", "SO+PO, b=1, n=5", "SO+PO, b=1, n=5")
 # Generally will be run from evaluation directory
 fig_name <- file.path(".", "exp_4_comparison.png")
 p <- ggplot(data=fig_df, aes(x=x, y=value, colour=run)) +
@@ -121,7 +124,8 @@ p <- ggplot(data=fig_df, aes(x=x, y=value, colour=run)) +
   #geom_errorbar(aes(ymin=avg_v-se, ymax=avg_v+se)) +
   labs(title="", x="Max visits", y="U(d)") + 
   theme(text=element_text(size=7), axis.title = element_text(size = 7), legend.key.size = unit(0.25, 'cm')) +
-  scale_color_discrete(name = "Run", type=c("#c356ea","#ffc100", "#71aef2", "#f7adce"), labels = c("SO, n=2", "SO, n=5", "SO+PO, n=2", "SO+PO, n=5")) +
+  scale_color_discrete(name = "Run", type=c("#c356ea","#ffc100", "#71aef2", "#f7adce", "#fa754a","#6CCC64", "#68e2e6", "#ea6ff3"), labels = model_labels) +
+  theme_bw()
   theme_bw()
 print(p)
 ggsave(fig_name, plot=p, dpi=300, width=10, height=7, units="cm")

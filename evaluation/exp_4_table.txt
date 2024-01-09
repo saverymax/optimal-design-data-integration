@@ -1,27 +1,47 @@
 [1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_4"
 [1] "available runs"
  [1] "oe_model-1_sites-10_n-2_a--2_b-0.5_g-1_d-2_p-0.2"
- [2] "oe_model-1_sites-10_n-5_a--2_b-0.5_g-1_d-2_p-0.2"
- [3] "oe_model-1_sites-2_n-2_a--2_b-0.5_g-1_d-2_p-0.2" 
- [4] "oe_model-1_sites-2_n-5_a--2_b-0.5_g-1_d-2_p-0.2" 
- [5] "oe_model-1_sites-3_n-2_a--2_b-0.5_g-1_d-2_p-0.2" 
- [6] "oe_model-1_sites-3_n-5_a--2_b-0.5_g-1_d-2_p-0.2" 
- [7] "oe_model-1_sites-4_n-2_a--2_b-0.5_g-1_d-2_p-0.2" 
- [8] "oe_model-1_sites-4_n-5_a--2_b-0.5_g-1_d-2_p-0.2" 
- [9] "oe_model-1_sites-5_n-2_a--2_b-0.5_g-1_d-2_p-0.2" 
-[10] "oe_model-1_sites-5_n-5_a--2_b-0.5_g-1_d-2_p-0.2" 
-[11] "oe_model-3_sites-10_n-2_a--2_b-0.5_g-1_d-2_p-0.2"
-[12] "oe_model-3_sites-10_n-5_a--2_b-0.5_g-1_d-2_p-0.2"
-[13] "oe_model-3_sites-2_n-2_a--2_b-0.5_g-1_d-2_p-0.2" 
-[14] "oe_model-3_sites-2_n-5_a--2_b-0.5_g-1_d-2_p-0.2" 
-[15] "oe_model-3_sites-3_n-2_a--2_b-0.5_g-1_d-2_p-0.2" 
-[16] "oe_model-3_sites-3_n-5_a--2_b-0.5_g-1_d-2_p-0.2" 
-[17] "oe_model-3_sites-4_n-2_a--2_b-0.5_g-1_d-2_p-0.2" 
-[18] "oe_model-3_sites-4_n-5_a--2_b-0.5_g-1_d-2_p-0.2" 
-[19] "oe_model-3_sites-5_n-2_a--2_b-0.5_g-1_d-2_p-0.2" 
-[20] "oe_model-3_sites-5_n-5_a--2_b-0.5_g-1_d-2_p-0.2" 
+ [2] "oe_model-1_sites-10_n-2_a--2_b-1_g-1_d-2_p-0.2"  
+ [3] "oe_model-1_sites-10_n-5_a--2_b-0.5_g-1_d-2_p-0.2"
+ [4] "oe_model-1_sites-10_n-5_a--2_b-1_g-1_d-2_p-0.2"  
+ [5] "oe_model-1_sites-2_n-2_a--2_b-0.5_g-1_d-2_p-0.2" 
+ [6] "oe_model-1_sites-2_n-2_a--2_b-1_g-1_d-2_p-0.2"   
+ [7] "oe_model-1_sites-2_n-5_a--2_b-0.5_g-1_d-2_p-0.2" 
+ [8] "oe_model-1_sites-2_n-5_a--2_b-1_g-1_d-2_p-0.2"   
+ [9] "oe_model-1_sites-3_n-2_a--2_b-0.5_g-1_d-2_p-0.2" 
+[10] "oe_model-1_sites-3_n-2_a--2_b-1_g-1_d-2_p-0.2"   
+[11] "oe_model-1_sites-3_n-5_a--2_b-0.5_g-1_d-2_p-0.2" 
+[12] "oe_model-1_sites-3_n-5_a--2_b-1_g-1_d-2_p-0.2"   
+[13] "oe_model-1_sites-4_n-2_a--2_b-0.5_g-1_d-2_p-0.2" 
+[14] "oe_model-1_sites-4_n-2_a--2_b-1_g-1_d-2_p-0.2"   
+[15] "oe_model-1_sites-4_n-5_a--2_b-0.5_g-1_d-2_p-0.2" 
+[16] "oe_model-1_sites-4_n-5_a--2_b-1_g-1_d-2_p-0.2"   
+[17] "oe_model-1_sites-5_n-2_a--2_b-0.5_g-1_d-2_p-0.2" 
+[18] "oe_model-1_sites-5_n-2_a--2_b-1_g-1_d-2_p-0.2"   
+[19] "oe_model-1_sites-5_n-5_a--2_b-0.5_g-1_d-2_p-0.2" 
+[20] "oe_model-1_sites-5_n-5_a--2_b-1_g-1_d-2_p-0.2"   
+[21] "oe_model-3_sites-10_n-2_a--2_b-0.5_g-1_d-2_p-0.2"
+[22] "oe_model-3_sites-10_n-2_a--2_b-1_g-1_d-2_p-0.2"  
+[23] "oe_model-3_sites-10_n-5_a--2_b-0.5_g-1_d-2_p-0.2"
+[24] "oe_model-3_sites-10_n-5_a--2_b-1_g-1_d-2_p-0.2"  
+[25] "oe_model-3_sites-2_n-2_a--2_b-0.5_g-1_d-2_p-0.2" 
+[26] "oe_model-3_sites-2_n-2_a--2_b-1_g-1_d-2_p-0.2"   
+[27] "oe_model-3_sites-2_n-5_a--2_b-0.5_g-1_d-2_p-0.2" 
+[28] "oe_model-3_sites-2_n-5_a--2_b-1_g-1_d-2_p-0.2"   
+[29] "oe_model-3_sites-3_n-2_a--2_b-0.5_g-1_d-2_p-0.2" 
+[30] "oe_model-3_sites-3_n-2_a--2_b-1_g-1_d-2_p-0.2"   
+[31] "oe_model-3_sites-3_n-5_a--2_b-0.5_g-1_d-2_p-0.2" 
+[32] "oe_model-3_sites-3_n-5_a--2_b-1_g-1_d-2_p-0.2"   
+[33] "oe_model-3_sites-4_n-2_a--2_b-0.5_g-1_d-2_p-0.2" 
+[34] "oe_model-3_sites-4_n-2_a--2_b-1_g-1_d-2_p-0.2"   
+[35] "oe_model-3_sites-4_n-5_a--2_b-0.5_g-1_d-2_p-0.2" 
+[36] "oe_model-3_sites-4_n-5_a--2_b-1_g-1_d-2_p-0.2"   
+[37] "oe_model-3_sites-5_n-2_a--2_b-0.5_g-1_d-2_p-0.2" 
+[38] "oe_model-3_sites-5_n-2_a--2_b-1_g-1_d-2_p-0.2"   
+[39] "oe_model-3_sites-5_n-5_a--2_b-0.5_g-1_d-2_p-0.2" 
+[40] "oe_model-3_sites-5_n-5_a--2_b-1_g-1_d-2_p-0.2"   
 [1] "number of files"
-[1] 20
+[1] 40
 [1] "inital list to save results"
 $`model-1_n-2`
 NULL
@@ -43,9 +63,20 @@ NULL
 [1] "Name to identify run"
 [1] "model-1_n-2"
 [1] "current params of interest"
-[1] "sites-10_d-2"
+[1] "sites-10_b-0.5_d-2"
 [1] "reading file:"
 [1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_4/oe_model-1_sites-10_n-2_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
+[1] "oe_model-1_sites-10_n-2_a--2_b-1_g-1_d-2_p-0.2"
+[[1]]
+[1] "oe"       "model-1"  "sites-10" "n-2"      "a--2"     "b-1"      "g-1"     
+[8] "d-2"      "p-0.2"   
+
+[1] "Name to identify run"
+[1] "model-1_n-2"
+[1] "current params of interest"
+[1] "sites-10_b-1_d-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_4/oe_model-1_sites-10_n-2_a--2_b-1_g-1_d-2_p-0.2/results.xlsx"
 [1] "oe_model-1_sites-10_n-5_a--2_b-0.5_g-1_d-2_p-0.2"
 [[1]]
 [1] "oe"       "model-1"  "sites-10" "n-5"      "a--2"     "b-0.5"    "g-1"     
@@ -54,9 +85,20 @@ NULL
 [1] "Name to identify run"
 [1] "model-1_n-5"
 [1] "current params of interest"
-[1] "sites-10_d-2"
+[1] "sites-10_b-0.5_d-2"
 [1] "reading file:"
 [1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_4/oe_model-1_sites-10_n-5_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
+[1] "oe_model-1_sites-10_n-5_a--2_b-1_g-1_d-2_p-0.2"
+[[1]]
+[1] "oe"       "model-1"  "sites-10" "n-5"      "a--2"     "b-1"      "g-1"     
+[8] "d-2"      "p-0.2"   
+
+[1] "Name to identify run"
+[1] "model-1_n-5"
+[1] "current params of interest"
+[1] "sites-10_b-1_d-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_4/oe_model-1_sites-10_n-5_a--2_b-1_g-1_d-2_p-0.2/results.xlsx"
 [1] "oe_model-1_sites-2_n-2_a--2_b-0.5_g-1_d-2_p-0.2"
 [[1]]
 [1] "oe"      "model-1" "sites-2" "n-2"     "a--2"    "b-0.5"   "g-1"    
@@ -65,9 +107,20 @@ NULL
 [1] "Name to identify run"
 [1] "model-1_n-2"
 [1] "current params of interest"
-[1] "sites-2_d-2"
+[1] "sites-2_b-0.5_d-2"
 [1] "reading file:"
 [1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_4/oe_model-1_sites-2_n-2_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
+[1] "oe_model-1_sites-2_n-2_a--2_b-1_g-1_d-2_p-0.2"
+[[1]]
+[1] "oe"      "model-1" "sites-2" "n-2"     "a--2"    "b-1"     "g-1"    
+[8] "d-2"     "p-0.2"  
+
+[1] "Name to identify run"
+[1] "model-1_n-2"
+[1] "current params of interest"
+[1] "sites-2_b-1_d-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_4/oe_model-1_sites-2_n-2_a--2_b-1_g-1_d-2_p-0.2/results.xlsx"
 [1] "oe_model-1_sites-2_n-5_a--2_b-0.5_g-1_d-2_p-0.2"
 [[1]]
 [1] "oe"      "model-1" "sites-2" "n-5"     "a--2"    "b-0.5"   "g-1"    
@@ -76,9 +129,20 @@ NULL
 [1] "Name to identify run"
 [1] "model-1_n-5"
 [1] "current params of interest"
-[1] "sites-2_d-2"
+[1] "sites-2_b-0.5_d-2"
+[1] "Incorrect file selected: stan"
+[1] "Available files: figures" "Available files: stan"   
+[1] "oe_model-1_sites-2_n-5_a--2_b-1_g-1_d-2_p-0.2"
+[[1]]
+[1] "oe"      "model-1" "sites-2" "n-5"     "a--2"    "b-1"     "g-1"    
+[8] "d-2"     "p-0.2"  
+
+[1] "Name to identify run"
+[1] "model-1_n-5"
+[1] "current params of interest"
+[1] "sites-2_b-1_d-2"
 [1] "reading file:"
-[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_4/oe_model-1_sites-2_n-5_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_4/oe_model-1_sites-2_n-5_a--2_b-1_g-1_d-2_p-0.2/results.xlsx"
 [1] "oe_model-1_sites-3_n-2_a--2_b-0.5_g-1_d-2_p-0.2"
 [[1]]
 [1] "oe"      "model-1" "sites-3" "n-2"     "a--2"    "b-0.5"   "g-1"    
@@ -87,9 +151,20 @@ NULL
 [1] "Name to identify run"
 [1] "model-1_n-2"
 [1] "current params of interest"
-[1] "sites-3_d-2"
+[1] "sites-3_b-0.5_d-2"
 [1] "reading file:"
 [1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_4/oe_model-1_sites-3_n-2_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
+[1] "oe_model-1_sites-3_n-2_a--2_b-1_g-1_d-2_p-0.2"
+[[1]]
+[1] "oe"      "model-1" "sites-3" "n-2"     "a--2"    "b-1"     "g-1"    
+[8] "d-2"     "p-0.2"  
+
+[1] "Name to identify run"
+[1] "model-1_n-2"
+[1] "current params of interest"
+[1] "sites-3_b-1_d-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_4/oe_model-1_sites-3_n-2_a--2_b-1_g-1_d-2_p-0.2/results.xlsx"
 [1] "oe_model-1_sites-3_n-5_a--2_b-0.5_g-1_d-2_p-0.2"
 [[1]]
 [1] "oe"      "model-1" "sites-3" "n-5"     "a--2"    "b-0.5"   "g-1"    
@@ -98,9 +173,20 @@ NULL
 [1] "Name to identify run"
 [1] "model-1_n-5"
 [1] "current params of interest"
-[1] "sites-3_d-2"
+[1] "sites-3_b-0.5_d-2"
 [1] "reading file:"
 [1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_4/oe_model-1_sites-3_n-5_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
+[1] "oe_model-1_sites-3_n-5_a--2_b-1_g-1_d-2_p-0.2"
+[[1]]
+[1] "oe"      "model-1" "sites-3" "n-5"     "a--2"    "b-1"     "g-1"    
+[8] "d-2"     "p-0.2"  
+
+[1] "Name to identify run"
+[1] "model-1_n-5"
+[1] "current params of interest"
+[1] "sites-3_b-1_d-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_4/oe_model-1_sites-3_n-5_a--2_b-1_g-1_d-2_p-0.2/results.xlsx"
 [1] "oe_model-1_sites-4_n-2_a--2_b-0.5_g-1_d-2_p-0.2"
 [[1]]
 [1] "oe"      "model-1" "sites-4" "n-2"     "a--2"    "b-0.5"   "g-1"    
@@ -109,9 +195,20 @@ NULL
 [1] "Name to identify run"
 [1] "model-1_n-2"
 [1] "current params of interest"
-[1] "sites-4_d-2"
+[1] "sites-4_b-0.5_d-2"
 [1] "reading file:"
 [1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_4/oe_model-1_sites-4_n-2_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
+[1] "oe_model-1_sites-4_n-2_a--2_b-1_g-1_d-2_p-0.2"
+[[1]]
+[1] "oe"      "model-1" "sites-4" "n-2"     "a--2"    "b-1"     "g-1"    
+[8] "d-2"     "p-0.2"  
+
+[1] "Name to identify run"
+[1] "model-1_n-2"
+[1] "current params of interest"
+[1] "sites-4_b-1_d-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_4/oe_model-1_sites-4_n-2_a--2_b-1_g-1_d-2_p-0.2/results.xlsx"
 [1] "oe_model-1_sites-4_n-5_a--2_b-0.5_g-1_d-2_p-0.2"
 [[1]]
 [1] "oe"      "model-1" "sites-4" "n-5"     "a--2"    "b-0.5"   "g-1"    
@@ -120,9 +217,20 @@ NULL
 [1] "Name to identify run"
 [1] "model-1_n-5"
 [1] "current params of interest"
-[1] "sites-4_d-2"
+[1] "sites-4_b-0.5_d-2"
 [1] "reading file:"
 [1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_4/oe_model-1_sites-4_n-5_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
+[1] "oe_model-1_sites-4_n-5_a--2_b-1_g-1_d-2_p-0.2"
+[[1]]
+[1] "oe"      "model-1" "sites-4" "n-5"     "a--2"    "b-1"     "g-1"    
+[8] "d-2"     "p-0.2"  
+
+[1] "Name to identify run"
+[1] "model-1_n-5"
+[1] "current params of interest"
+[1] "sites-4_b-1_d-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_4/oe_model-1_sites-4_n-5_a--2_b-1_g-1_d-2_p-0.2/results.xlsx"
 [1] "oe_model-1_sites-5_n-2_a--2_b-0.5_g-1_d-2_p-0.2"
 [[1]]
 [1] "oe"      "model-1" "sites-5" "n-2"     "a--2"    "b-0.5"   "g-1"    
@@ -131,9 +239,20 @@ NULL
 [1] "Name to identify run"
 [1] "model-1_n-2"
 [1] "current params of interest"
-[1] "sites-5_d-2"
+[1] "sites-5_b-0.5_d-2"
 [1] "reading file:"
 [1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_4/oe_model-1_sites-5_n-2_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
+[1] "oe_model-1_sites-5_n-2_a--2_b-1_g-1_d-2_p-0.2"
+[[1]]
+[1] "oe"      "model-1" "sites-5" "n-2"     "a--2"    "b-1"     "g-1"    
+[8] "d-2"     "p-0.2"  
+
+[1] "Name to identify run"
+[1] "model-1_n-2"
+[1] "current params of interest"
+[1] "sites-5_b-1_d-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_4/oe_model-1_sites-5_n-2_a--2_b-1_g-1_d-2_p-0.2/results.xlsx"
 [1] "oe_model-1_sites-5_n-5_a--2_b-0.5_g-1_d-2_p-0.2"
 [[1]]
 [1] "oe"      "model-1" "sites-5" "n-5"     "a--2"    "b-0.5"   "g-1"    
@@ -142,9 +261,20 @@ NULL
 [1] "Name to identify run"
 [1] "model-1_n-5"
 [1] "current params of interest"
-[1] "sites-5_d-2"
+[1] "sites-5_b-0.5_d-2"
 [1] "reading file:"
 [1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_4/oe_model-1_sites-5_n-5_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
+[1] "oe_model-1_sites-5_n-5_a--2_b-1_g-1_d-2_p-0.2"
+[[1]]
+[1] "oe"      "model-1" "sites-5" "n-5"     "a--2"    "b-1"     "g-1"    
+[8] "d-2"     "p-0.2"  
+
+[1] "Name to identify run"
+[1] "model-1_n-5"
+[1] "current params of interest"
+[1] "sites-5_b-1_d-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_4/oe_model-1_sites-5_n-5_a--2_b-1_g-1_d-2_p-0.2/results.xlsx"
 [1] "oe_model-3_sites-10_n-2_a--2_b-0.5_g-1_d-2_p-0.2"
 [[1]]
 [1] "oe"       "model-3"  "sites-10" "n-2"      "a--2"     "b-0.5"    "g-1"     
@@ -153,9 +283,20 @@ NULL
 [1] "Name to identify run"
 [1] "model-3_n-2"
 [1] "current params of interest"
-[1] "sites-10_d-2"
+[1] "sites-10_b-0.5_d-2"
+[1] "Incorrect file selected: stan"
+[1] "Available files: figures" "Available files: stan"   
+[1] "oe_model-3_sites-10_n-2_a--2_b-1_g-1_d-2_p-0.2"
+[[1]]
+[1] "oe"       "model-3"  "sites-10" "n-2"      "a--2"     "b-1"      "g-1"     
+[8] "d-2"      "p-0.2"   
+
+[1] "Name to identify run"
+[1] "model-3_n-2"
+[1] "current params of interest"
+[1] "sites-10_b-1_d-2"
 [1] "reading file:"
-[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_4/oe_model-3_sites-10_n-2_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_4/oe_model-3_sites-10_n-2_a--2_b-1_g-1_d-2_p-0.2/results.xlsx"
 [1] "oe_model-3_sites-10_n-5_a--2_b-0.5_g-1_d-2_p-0.2"
 [[1]]
 [1] "oe"       "model-3"  "sites-10" "n-5"      "a--2"     "b-0.5"    "g-1"     
@@ -164,9 +305,20 @@ NULL
 [1] "Name to identify run"
 [1] "model-3_n-5"
 [1] "current params of interest"
-[1] "sites-10_d-2"
+[1] "sites-10_b-0.5_d-2"
 [1] "reading file:"
 [1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_4/oe_model-3_sites-10_n-5_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
+[1] "oe_model-3_sites-10_n-5_a--2_b-1_g-1_d-2_p-0.2"
+[[1]]
+[1] "oe"       "model-3"  "sites-10" "n-5"      "a--2"     "b-1"      "g-1"     
+[8] "d-2"      "p-0.2"   
+
+[1] "Name to identify run"
+[1] "model-3_n-5"
+[1] "current params of interest"
+[1] "sites-10_b-1_d-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_4/oe_model-3_sites-10_n-5_a--2_b-1_g-1_d-2_p-0.2/results.xlsx"
 [1] "oe_model-3_sites-2_n-2_a--2_b-0.5_g-1_d-2_p-0.2"
 [[1]]
 [1] "oe"      "model-3" "sites-2" "n-2"     "a--2"    "b-0.5"   "g-1"    
@@ -175,9 +327,20 @@ NULL
 [1] "Name to identify run"
 [1] "model-3_n-2"
 [1] "current params of interest"
-[1] "sites-2_d-2"
+[1] "sites-2_b-0.5_d-2"
 [1] "reading file:"
 [1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_4/oe_model-3_sites-2_n-2_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
+[1] "oe_model-3_sites-2_n-2_a--2_b-1_g-1_d-2_p-0.2"
+[[1]]
+[1] "oe"      "model-3" "sites-2" "n-2"     "a--2"    "b-1"     "g-1"    
+[8] "d-2"     "p-0.2"  
+
+[1] "Name to identify run"
+[1] "model-3_n-2"
+[1] "current params of interest"
+[1] "sites-2_b-1_d-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_4/oe_model-3_sites-2_n-2_a--2_b-1_g-1_d-2_p-0.2/results.xlsx"
 [1] "oe_model-3_sites-2_n-5_a--2_b-0.5_g-1_d-2_p-0.2"
 [[1]]
 [1] "oe"      "model-3" "sites-2" "n-5"     "a--2"    "b-0.5"   "g-1"    
@@ -186,9 +349,20 @@ NULL
 [1] "Name to identify run"
 [1] "model-3_n-5"
 [1] "current params of interest"
-[1] "sites-2_d-2"
+[1] "sites-2_b-0.5_d-2"
 [1] "reading file:"
 [1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_4/oe_model-3_sites-2_n-5_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
+[1] "oe_model-3_sites-2_n-5_a--2_b-1_g-1_d-2_p-0.2"
+[[1]]
+[1] "oe"      "model-3" "sites-2" "n-5"     "a--2"    "b-1"     "g-1"    
+[8] "d-2"     "p-0.2"  
+
+[1] "Name to identify run"
+[1] "model-3_n-5"
+[1] "current params of interest"
+[1] "sites-2_b-1_d-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_4/oe_model-3_sites-2_n-5_a--2_b-1_g-1_d-2_p-0.2/results.xlsx"
 [1] "oe_model-3_sites-3_n-2_a--2_b-0.5_g-1_d-2_p-0.2"
 [[1]]
 [1] "oe"      "model-3" "sites-3" "n-2"     "a--2"    "b-0.5"   "g-1"    
@@ -197,9 +371,20 @@ NULL
 [1] "Name to identify run"
 [1] "model-3_n-2"
 [1] "current params of interest"
-[1] "sites-3_d-2"
+[1] "sites-3_b-0.5_d-2"
 [1] "reading file:"
 [1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_4/oe_model-3_sites-3_n-2_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
+[1] "oe_model-3_sites-3_n-2_a--2_b-1_g-1_d-2_p-0.2"
+[[1]]
+[1] "oe"      "model-3" "sites-3" "n-2"     "a--2"    "b-1"     "g-1"    
+[8] "d-2"     "p-0.2"  
+
+[1] "Name to identify run"
+[1] "model-3_n-2"
+[1] "current params of interest"
+[1] "sites-3_b-1_d-2"
+[1] "Incorrect file selected: stan"
+[1] "Available files: figures" "Available files: stan"   
 [1] "oe_model-3_sites-3_n-5_a--2_b-0.5_g-1_d-2_p-0.2"
 [[1]]
 [1] "oe"      "model-3" "sites-3" "n-5"     "a--2"    "b-0.5"   "g-1"    
@@ -208,9 +393,20 @@ NULL
 [1] "Name to identify run"
 [1] "model-3_n-5"
 [1] "current params of interest"
-[1] "sites-3_d-2"
+[1] "sites-3_b-0.5_d-2"
 [1] "reading file:"
 [1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_4/oe_model-3_sites-3_n-5_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
+[1] "oe_model-3_sites-3_n-5_a--2_b-1_g-1_d-2_p-0.2"
+[[1]]
+[1] "oe"      "model-3" "sites-3" "n-5"     "a--2"    "b-1"     "g-1"    
+[8] "d-2"     "p-0.2"  
+
+[1] "Name to identify run"
+[1] "model-3_n-5"
+[1] "current params of interest"
+[1] "sites-3_b-1_d-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_4/oe_model-3_sites-3_n-5_a--2_b-1_g-1_d-2_p-0.2/results.xlsx"
 [1] "oe_model-3_sites-4_n-2_a--2_b-0.5_g-1_d-2_p-0.2"
 [[1]]
 [1] "oe"      "model-3" "sites-4" "n-2"     "a--2"    "b-0.5"   "g-1"    
@@ -219,9 +415,20 @@ NULL
 [1] "Name to identify run"
 [1] "model-3_n-2"
 [1] "current params of interest"
-[1] "sites-4_d-2"
+[1] "sites-4_b-0.5_d-2"
 [1] "reading file:"
 [1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_4/oe_model-3_sites-4_n-2_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
+[1] "oe_model-3_sites-4_n-2_a--2_b-1_g-1_d-2_p-0.2"
+[[1]]
+[1] "oe"      "model-3" "sites-4" "n-2"     "a--2"    "b-1"     "g-1"    
+[8] "d-2"     "p-0.2"  
+
+[1] "Name to identify run"
+[1] "model-3_n-2"
+[1] "current params of interest"
+[1] "sites-4_b-1_d-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_4/oe_model-3_sites-4_n-2_a--2_b-1_g-1_d-2_p-0.2/results.xlsx"
 [1] "oe_model-3_sites-4_n-5_a--2_b-0.5_g-1_d-2_p-0.2"
 [[1]]
 [1] "oe"      "model-3" "sites-4" "n-5"     "a--2"    "b-0.5"   "g-1"    
@@ -230,9 +437,20 @@ NULL
 [1] "Name to identify run"
 [1] "model-3_n-5"
 [1] "current params of interest"
-[1] "sites-4_d-2"
+[1] "sites-4_b-0.5_d-2"
 [1] "reading file:"
 [1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_4/oe_model-3_sites-4_n-5_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
+[1] "oe_model-3_sites-4_n-5_a--2_b-1_g-1_d-2_p-0.2"
+[[1]]
+[1] "oe"      "model-3" "sites-4" "n-5"     "a--2"    "b-1"     "g-1"    
+[8] "d-2"     "p-0.2"  
+
+[1] "Name to identify run"
+[1] "model-3_n-5"
+[1] "current params of interest"
+[1] "sites-4_b-1_d-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_4/oe_model-3_sites-4_n-5_a--2_b-1_g-1_d-2_p-0.2/results.xlsx"
 [1] "oe_model-3_sites-5_n-2_a--2_b-0.5_g-1_d-2_p-0.2"
 [[1]]
 [1] "oe"      "model-3" "sites-5" "n-2"     "a--2"    "b-0.5"   "g-1"    
@@ -241,9 +459,20 @@ NULL
 [1] "Name to identify run"
 [1] "model-3_n-2"
 [1] "current params of interest"
-[1] "sites-5_d-2"
+[1] "sites-5_b-0.5_d-2"
 [1] "reading file:"
 [1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_4/oe_model-3_sites-5_n-2_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
+[1] "oe_model-3_sites-5_n-2_a--2_b-1_g-1_d-2_p-0.2"
+[[1]]
+[1] "oe"      "model-3" "sites-5" "n-2"     "a--2"    "b-1"     "g-1"    
+[8] "d-2"     "p-0.2"  
+
+[1] "Name to identify run"
+[1] "model-3_n-2"
+[1] "current params of interest"
+[1] "sites-5_b-1_d-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_4/oe_model-3_sites-5_n-2_a--2_b-1_g-1_d-2_p-0.2/results.xlsx"
 [1] "oe_model-3_sites-5_n-5_a--2_b-0.5_g-1_d-2_p-0.2"
 [[1]]
 [1] "oe"      "model-3" "sites-5" "n-5"     "a--2"    "b-0.5"   "g-1"    
@@ -252,21 +481,36 @@ NULL
 [1] "Name to identify run"
 [1] "model-3_n-5"
 [1] "current params of interest"
-[1] "sites-5_d-2"
+[1] "sites-5_b-0.5_d-2"
 [1] "reading file:"
 [1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_4/oe_model-3_sites-5_n-5_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
+[1] "oe_model-3_sites-5_n-5_a--2_b-1_g-1_d-2_p-0.2"
+[[1]]
+[1] "oe"      "model-3" "sites-5" "n-5"     "a--2"    "b-1"     "g-1"    
+[8] "d-2"     "p-0.2"  
+
+[1] "Name to identify run"
+[1] "model-3_n-5"
+[1] "current params of interest"
+[1] "sites-5_b-1_d-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_4/oe_model-3_sites-5_n-5_a--2_b-1_g-1_d-2_p-0.2/results.xlsx"
 [1] "result list"
 $`model-1_n-2`
-[1] 0.1183531 0.1429294 0.1322531 0.1301768 0.1245470
+ [1] 0.07626556 0.04793207 0.10091590 0.07142226 0.09356384 0.06034960
+ [7] 0.08710078 0.05646161 0.08313486 0.05313788
 
 $`model-1_n-5`
-[1] 0.1182662 0.1343828 0.1288060 0.1234835 0.1211943
+ [1] 0.07816880 0.04827429         NA 0.05752562 0.09084449 0.05266673
+ [7] 0.08726160 0.05027164 0.08638991 0.04852345
 
 $`model-3_n-2`
-[1] 0.1050486 0.1072195 0.1031964 0.1036045 0.1026349
+ [1]         NA 0.04499962 0.06931755 0.04820149 0.06712381         NA
+ [7] 0.06525329 0.04573234 0.06487711 0.04582704
 
 $`model-3_n-5`
-[1] 0.1164481 0.1059041 0.1045244 0.1035618 0.1035632
+ [1] 0.06397549 0.04719927 0.07122829 0.04705904 0.06820154 0.04622317
+ [7] 0.06670384 0.04582882 0.06597207 0.04534875
 
 [1] "variance"
 [[1]]
@@ -282,120 +526,661 @@ NULL
 NULL
 
 $`model-1_n-2`
-[1] 8.645647e-05 4.600385e-05 5.992283e-05 7.818044e-05 3.888688e-05
+ [1] 2.472485e-05 1.361243e-06 7.803871e-06 1.193227e-05 4.266703e-05
+ [6] 7.243824e-06 9.773893e-06 1.262173e-05 2.071358e-05 5.116604e-06
 
 $`model-1_n-5`
-[1] 7.063570e-05 3.798219e-05 1.293435e-04 4.791425e-05 4.023008e-05
+ [1] 3.446915e-05 1.137285e-05           NA 7.148348e-06 3.456468e-05
+ [6] 5.072519e-06 3.062974e-05 4.162667e-06 4.015842e-05 2.177565e-06
 
 $`model-3_n-2`
-[1] 4.752124e-05 3.081465e-05 2.168939e-05 2.554770e-05 1.963182e-05
+ [1]           NA 1.416784e-06 3.945968e-06 1.388637e-06 4.079192e-06
+ [6]           NA 9.642465e-07 5.058758e-07 8.323952e-07 2.300304e-07
 
 $`model-3_n-5`
-[1] 1.532867e-04 3.251879e-05 4.945024e-05 5.550565e-05 1.233950e-05
+ [1] 2.009172e-06 6.577104e-06 6.623208e-06 1.101821e-07 6.679267e-06
+ [6] 1.845284e-07 7.009332e-06 2.082176e-07 6.482929e-06 7.172283e-08
 
 [1] "Params per model. Make sure each model has params ordered in the same way"
 $`model-1_n-2`
-[1] "sites-10_d-2" "sites-2_d-2"  "sites-3_d-2"  "sites-4_d-2"  "sites-5_d-2" 
+ [1] "sites-10_b-0.5_d-2" "sites-10_b-1_d-2"   "sites-2_b-0.5_d-2" 
+ [4] "sites-2_b-1_d-2"    "sites-3_b-0.5_d-2"  "sites-3_b-1_d-2"   
+ [7] "sites-4_b-0.5_d-2"  "sites-4_b-1_d-2"    "sites-5_b-0.5_d-2" 
+[10] "sites-5_b-1_d-2"   
 
 $`model-1_n-5`
-[1] "sites-10_d-2" "sites-2_d-2"  "sites-3_d-2"  "sites-4_d-2"  "sites-5_d-2" 
+ [1] "sites-10_b-0.5_d-2" "sites-10_b-1_d-2"   "sites-2_b-0.5_d-2" 
+ [4] "sites-2_b-1_d-2"    "sites-3_b-0.5_d-2"  "sites-3_b-1_d-2"   
+ [7] "sites-4_b-0.5_d-2"  "sites-4_b-1_d-2"    "sites-5_b-0.5_d-2" 
+[10] "sites-5_b-1_d-2"   
 
 $`model-3_n-2`
-[1] "sites-10_d-2" "sites-2_d-2"  "sites-3_d-2"  "sites-4_d-2"  "sites-5_d-2" 
+ [1] "sites-10_b-0.5_d-2" "sites-10_b-1_d-2"   "sites-2_b-0.5_d-2" 
+ [4] "sites-2_b-1_d-2"    "sites-3_b-0.5_d-2"  "sites-3_b-1_d-2"   
+ [7] "sites-4_b-0.5_d-2"  "sites-4_b-1_d-2"    "sites-5_b-0.5_d-2" 
+[10] "sites-5_b-1_d-2"   
 
 $`model-3_n-5`
-[1] "sites-10_d-2" "sites-2_d-2"  "sites-3_d-2"  "sites-4_d-2"  "sites-5_d-2" 
+ [1] "sites-10_b-0.5_d-2" "sites-10_b-1_d-2"   "sites-2_b-0.5_d-2" 
+ [4] "sites-2_b-1_d-2"    "sites-3_b-0.5_d-2"  "sites-3_b-1_d-2"   
+ [7] "sites-4_b-0.5_d-2"  "sites-4_b-1_d-2"    "sites-5_b-0.5_d-2" 
+[10] "sites-5_b-1_d-2"   
 
-[1] 4 5
-          [,1]      [,2]      [,3]      [,4]      [,5]
-[1,] 0.1183531 0.1429294 0.1322531 0.1301768 0.1245470
-[2,] 0.1182662 0.1343828 0.1288060 0.1234835 0.1211943
-[3,] 0.1050486 0.1072195 0.1031964 0.1036045 0.1026349
-[4,] 0.1164481 0.1059041 0.1045244 0.1035618 0.1035632
+[1]  4 10
+           [,1]       [,2]       [,3]       [,4]       [,5]       [,6]
+[1,] 0.07626556 0.04793207 0.10091590 0.07142226 0.09356384 0.06034960
+[2,] 0.07816880 0.04827429         NA 0.05752562 0.09084449 0.05266673
+[3,]         NA 0.04499962 0.06931755 0.04820149 0.06712381         NA
+[4,] 0.06397549 0.04719927 0.07122829 0.04705904 0.06820154 0.04622317
+           [,7]       [,8]       [,9]      [,10]
+[1,] 0.08710078 0.05646161 0.08313486 0.05313788
+[2,] 0.08726160 0.05027164 0.08638991 0.04852345
+[3,] 0.06525329 0.04573234 0.06487711 0.04582704
+[4,] 0.06670384 0.04582882 0.06597207 0.04534875
              [,1]         [,2]         [,3]         [,4]         [,5]
-[1,] 8.645647e-05 4.600385e-05 5.992283e-05 7.818044e-05 3.888688e-05
-[2,] 7.063570e-05 3.798219e-05 1.293435e-04 4.791425e-05 4.023008e-05
-[3,] 4.752124e-05 3.081465e-05 2.168939e-05 2.554770e-05 1.963182e-05
-[4,] 1.532867e-04 3.251879e-05 4.945024e-05 5.550565e-05 1.233950e-05
-            sites-10_d-2 sites-2_d-2 sites-3_d-2 sites-4_d-2 sites-5_d-2
-model-1_n-2    0.1183531   0.1429294   0.1322531   0.1301768   0.1245470
-model-1_n-5    0.1182662   0.1343828   0.1288060   0.1234835   0.1211943
-model-3_n-2    0.1050486   0.1072195   0.1031964   0.1036045   0.1026349
-model-3_n-5    0.1164481   0.1059041   0.1045244   0.1035618   0.1035632
-            sites-10_d-2  sites-2_d-2  sites-3_d-2  sites-4_d-2  sites-5_d-2
-model-1_n-2 8.645647e-05 4.600385e-05 5.992283e-05 7.818044e-05 3.888688e-05
-model-1_n-5 7.063570e-05 3.798219e-05 1.293435e-04 4.791425e-05 4.023008e-05
-model-3_n-2 4.752124e-05 3.081465e-05 2.168939e-05 2.554770e-05 1.963182e-05
-model-3_n-5 1.532867e-04 3.251879e-05 4.945024e-05 5.550565e-05 1.233950e-05
+[1,] 2.472485e-05 1.361243e-06 7.803871e-06 1.193227e-05 4.266703e-05
+[2,] 3.446915e-05 1.137285e-05           NA 7.148348e-06 3.456468e-05
+[3,]           NA 1.416784e-06 3.945968e-06 1.388637e-06 4.079192e-06
+[4,] 2.009172e-06 6.577104e-06 6.623208e-06 1.101821e-07 6.679267e-06
+             [,6]         [,7]         [,8]         [,9]        [,10]
+[1,] 7.243824e-06 9.773893e-06 1.262173e-05 2.071358e-05 5.116604e-06
+[2,] 5.072519e-06 3.062974e-05 4.162667e-06 4.015842e-05 2.177565e-06
+[3,]           NA 9.642465e-07 5.058758e-07 8.323952e-07 2.300304e-07
+[4,] 1.845284e-07 7.009332e-06 2.082176e-07 6.482929e-06 7.172283e-08
+            sites-10_b-0.5_d-2 sites-10_b-1_d-2 sites-2_b-0.5_d-2
+model-1_n-2         0.07626556       0.04793207        0.10091590
+model-1_n-5         0.07816880       0.04827429                NA
+model-3_n-2                 NA       0.04499962        0.06931755
+model-3_n-5         0.06397549       0.04719927        0.07122829
+            sites-2_b-1_d-2 sites-3_b-0.5_d-2 sites-3_b-1_d-2 sites-4_b-0.5_d-2
+model-1_n-2      0.07142226        0.09356384      0.06034960        0.08710078
+model-1_n-5      0.05752562        0.09084449      0.05266673        0.08726160
+model-3_n-2      0.04820149        0.06712381              NA        0.06525329
+model-3_n-5      0.04705904        0.06820154      0.04622317        0.06670384
+            sites-4_b-1_d-2 sites-5_b-0.5_d-2 sites-5_b-1_d-2
+model-1_n-2      0.05646161        0.08313486      0.05313788
+model-1_n-5      0.05027164        0.08638991      0.04852345
+model-3_n-2      0.04573234        0.06487711      0.04582704
+model-3_n-5      0.04582882        0.06597207      0.04534875
+            sites-10_b-0.5_d-2 sites-10_b-1_d-2 sites-2_b-0.5_d-2
+model-1_n-2       2.472485e-05     1.361243e-06      7.803871e-06
+model-1_n-5       3.446915e-05     1.137285e-05                NA
+model-3_n-2                 NA     1.416784e-06      3.945968e-06
+model-3_n-5       2.009172e-06     6.577104e-06      6.623208e-06
+            sites-2_b-1_d-2 sites-3_b-0.5_d-2 sites-3_b-1_d-2 sites-4_b-0.5_d-2
+model-1_n-2    1.193227e-05      4.266703e-05    7.243824e-06      9.773893e-06
+model-1_n-5    7.148348e-06      3.456468e-05    5.072519e-06      3.062974e-05
+model-3_n-2    1.388637e-06      4.079192e-06              NA      9.642465e-07
+model-3_n-5    1.101821e-07      6.679267e-06    1.845284e-07      7.009332e-06
+            sites-4_b-1_d-2 sites-5_b-0.5_d-2 sites-5_b-1_d-2
+model-1_n-2    1.262173e-05      2.071358e-05    5.116604e-06
+model-1_n-5    4.162667e-06      4.015842e-05    2.177565e-06
+model-3_n-2    5.058758e-07      8.323952e-07    2.300304e-07
+model-3_n-5    2.082176e-07      6.482929e-06    7.172283e-08
 \begin{table}[H]
 
 \caption{\label{tab:survey_eval}Comparison of models, sampling effort, and parameter permutations}
 \centering
-\begin{tabular}[t]{llcccc}
+\begin{tabular}[t]{llcccclcccc}
 \toprule
-  & sites-10\_d-2 & sites-2\_d-2 & sites-3\_d-2 & sites-4\_d-2 & sites-5\_d-2\\
+  & sites-10\_b-0.5\_d-2 & sites-10\_b-1\_d-2 & sites-2\_b-0.5\_d-2 & sites-2\_b-1\_d-2 & sites-3\_b-0.5\_d-2 & sites-3\_b-1\_d-2 & sites-4\_b-0.5\_d-2 & sites-4\_b-1\_d-2 & sites-5\_b-0.5\_d-2 & sites-5\_b-1\_d-2\\
 \midrule
-model-1\_n-2 & 0.1184 & 0.1429 & 0.1323 & 0.1302 & 0.1245\\
-model-1\_n-5 & 0.1183 & 0.1344 & 0.1288 & 0.1235 & 0.1212\\
-model-3\_n-2 & 0.1050 & 0.1072 & 0.1032 & 0.1036 & 0.1026\\
-model-3\_n-5 & 0.1164 & 0.1059 & 0.1045 & 0.1036 & 0.1036\\
+model-1\_n-2 & 0.0763 & 0.0479 & 0.1009 & 0.0714 & 0.0936 & 0.0603 & 0.0871 & 0.0565 & 0.0831 & 0.0531\\
+model-1\_n-5 & 0.0782 & 0.0483 & NA & 0.0575 & 0.0908 & 0.0527 & 0.0873 & 0.0503 & 0.0864 & 0.0485\\
+model-3\_n-2 & NA & 0.0450 & 0.0693 & 0.0482 & 0.0671 & NA & 0.0653 & 0.0457 & 0.0649 & 0.0458\\
+model-3\_n-5 & 0.0640 & 0.0472 & 0.0712 & 0.0471 & 0.0682 & 0.0462 & 0.0667 & 0.0458 & 0.0660 & 0.0453\\
 \bottomrule
 \end{tabular}
 \end{table}
-            sites-10_d-2 sites-2_d-2 sites-3_d-2 sites-4_d-2 sites-5_d-2
-model-1_n-2    0.1183531   0.1429294   0.1322531   0.1301768   0.1245470
-model-1_n-5    0.1182662   0.1343828   0.1288060   0.1234835   0.1211943
-model-3_n-2    0.1050486   0.1072195   0.1031964   0.1036045   0.1026349
-model-3_n-5    0.1164481   0.1059041   0.1045244   0.1035618   0.1035632
-            sites-10_d-2  sites-2_d-2  sites-3_d-2  sites-4_d-2  sites-5_d-2
-model-1_n-2 8.645647e-05 4.600385e-05 5.992283e-05 7.818044e-05 3.888688e-05
-model-1_n-5 7.063570e-05 3.798219e-05 1.293435e-04 4.791425e-05 4.023008e-05
-model-3_n-2 4.752124e-05 3.081465e-05 2.168939e-05 2.554770e-05 1.963182e-05
-model-3_n-5 1.532867e-04 3.251879e-05 4.945024e-05 5.550565e-05 1.233950e-05
-            sites-2_d-2 sites-3_d-2 sites-4_d-2 sites-5_d-2 sites-10_d-2
-model-1_n-2   0.1429294   0.1322531   0.1301768   0.1245470    0.1183531
-model-1_n-5   0.1343828   0.1288060   0.1234835   0.1211943    0.1182662
-model-3_n-2   0.1072195   0.1031964   0.1036045   0.1026349    0.1050486
-model-3_n-5   0.1059041   0.1045244   0.1035618   0.1035632    0.1164481
-           run     variable     value
-1  model-1_n-2  sites-2_d-2 0.1429294
-2  model-1_n-5  sites-2_d-2 0.1343828
-3  model-3_n-2  sites-2_d-2 0.1072195
-4  model-3_n-5  sites-2_d-2 0.1059041
-5  model-1_n-2  sites-3_d-2 0.1322531
-6  model-1_n-5  sites-3_d-2 0.1288060
-7  model-3_n-2  sites-3_d-2 0.1031964
-8  model-3_n-5  sites-3_d-2 0.1045244
-9  model-1_n-2  sites-4_d-2 0.1301768
-10 model-1_n-5  sites-4_d-2 0.1234835
-11 model-3_n-2  sites-4_d-2 0.1036045
-12 model-3_n-5  sites-4_d-2 0.1035618
-13 model-1_n-2  sites-5_d-2 0.1245470
-14 model-1_n-5  sites-5_d-2 0.1211943
-15 model-3_n-2  sites-5_d-2 0.1026349
-16 model-3_n-5  sites-5_d-2 0.1035632
-17 model-1_n-2 sites-10_d-2 0.1183531
-18 model-1_n-5 sites-10_d-2 0.1182662
-19 model-3_n-2 sites-10_d-2 0.1050486
-20 model-3_n-5 sites-10_d-2 0.1164481
-           run     variable     value  x
-1  model-1_n-2  sites-2_d-2 0.1429294  2
-2  model-1_n-5  sites-2_d-2 0.1343828  2
-3  model-3_n-2  sites-2_d-2 0.1072195  2
-4  model-3_n-5  sites-2_d-2 0.1059041  2
-5  model-1_n-2  sites-3_d-2 0.1322531  3
-6  model-1_n-5  sites-3_d-2 0.1288060  3
-7  model-3_n-2  sites-3_d-2 0.1031964  3
-8  model-3_n-5  sites-3_d-2 0.1045244  3
-9  model-1_n-2  sites-4_d-2 0.1301768  4
-10 model-1_n-5  sites-4_d-2 0.1234835  4
-11 model-3_n-2  sites-4_d-2 0.1036045  4
-12 model-3_n-5  sites-4_d-2 0.1035618  4
-13 model-1_n-2  sites-5_d-2 0.1245470  5
-14 model-1_n-5  sites-5_d-2 0.1211943  5
-15 model-3_n-2  sites-5_d-2 0.1026349  5
-16 model-3_n-5  sites-5_d-2 0.1035632  5
-17 model-1_n-2 sites-10_d-2 0.1183531 10
-18 model-1_n-5 sites-10_d-2 0.1182662 10
-19 model-3_n-2 sites-10_d-2 0.1050486 10
-20 model-3_n-5 sites-10_d-2 0.1164481 10
+            sites-10_b-0.5_d-2 sites-10_b-1_d-2 sites-2_b-0.5_d-2
+model-1_n-2         0.07626556       0.04793207        0.10091590
+model-1_n-5         0.07816880       0.04827429                NA
+model-3_n-2                 NA       0.04499962        0.06931755
+model-3_n-5         0.06397549       0.04719927        0.07122829
+            sites-2_b-1_d-2 sites-3_b-0.5_d-2 sites-3_b-1_d-2 sites-4_b-0.5_d-2
+model-1_n-2      0.07142226        0.09356384      0.06034960        0.08710078
+model-1_n-5      0.05752562        0.09084449      0.05266673        0.08726160
+model-3_n-2      0.04820149        0.06712381              NA        0.06525329
+model-3_n-5      0.04705904        0.06820154      0.04622317        0.06670384
+            sites-4_b-1_d-2 sites-5_b-0.5_d-2 sites-5_b-1_d-2
+model-1_n-2      0.05646161        0.08313486      0.05313788
+model-1_n-5      0.05027164        0.08638991      0.04852345
+model-3_n-2      0.04573234        0.06487711      0.04582704
+model-3_n-5      0.04582882        0.06597207      0.04534875
+            sites-10_b-0.5_d-2 sites-10_b-1_d-2 sites-2_b-0.5_d-2
+model-1_n-2       2.472485e-05     1.361243e-06      7.803871e-06
+model-1_n-5       3.446915e-05     1.137285e-05                NA
+model-3_n-2                 NA     1.416784e-06      3.945968e-06
+model-3_n-5       2.009172e-06     6.577104e-06      6.623208e-06
+            sites-2_b-1_d-2 sites-3_b-0.5_d-2 sites-3_b-1_d-2 sites-4_b-0.5_d-2
+model-1_n-2    1.193227e-05      4.266703e-05    7.243824e-06      9.773893e-06
+model-1_n-5    7.148348e-06      3.456468e-05    5.072519e-06      3.062974e-05
+model-3_n-2    1.388637e-06      4.079192e-06              NA      9.642465e-07
+model-3_n-5    1.101821e-07      6.679267e-06    1.845284e-07      7.009332e-06
+            sites-4_b-1_d-2 sites-5_b-0.5_d-2 sites-5_b-1_d-2
+model-1_n-2    1.262173e-05      2.071358e-05    5.116604e-06
+model-1_n-5    4.162667e-06      4.015842e-05    2.177565e-06
+model-3_n-2    5.058758e-07      8.323952e-07    2.300304e-07
+model-3_n-5    2.082176e-07      6.482929e-06    7.172283e-08
+            sites-10_b-1_d-2 sites-2_b-0.5_d-2 sites-2_b-1_d-2
+model-1_n-2       0.04793207        0.10091590      0.07142226
+model-1_n-5       0.04827429                NA      0.05752562
+model-3_n-2       0.04499962        0.06931755      0.04820149
+model-3_n-5       0.04719927        0.07122829      0.04705904
+            sites-3_b-0.5_d-2 sites-3_b-1_d-2 sites-4_b-0.5_d-2 sites-4_b-1_d-2
+model-1_n-2        0.09356384      0.06034960        0.08710078      0.05646161
+model-1_n-5        0.09084449      0.05266673        0.08726160      0.05027164
+model-3_n-2        0.06712381              NA        0.06525329      0.04573234
+model-3_n-5        0.06820154      0.04622317        0.06670384      0.04582882
+            sites-5_b-0.5_d-2 sites-5_b-1_d-2 sites-10_b-0.5_d-2
+model-1_n-2        0.08313486      0.05313788         0.07626556
+model-1_n-5        0.08638991      0.04852345         0.07816880
+model-3_n-2        0.06487711      0.04582704                 NA
+model-3_n-5        0.06597207      0.04534875         0.06397549
+           run           variable      value
+1  model-1_n-2   sites-10_b-1_d-2 0.04793207
+2  model-1_n-5   sites-10_b-1_d-2 0.04827429
+3  model-3_n-2   sites-10_b-1_d-2 0.04499962
+4  model-3_n-5   sites-10_b-1_d-2 0.04719927
+5  model-1_n-2  sites-2_b-0.5_d-2 0.10091590
+6  model-1_n-5  sites-2_b-0.5_d-2         NA
+7  model-3_n-2  sites-2_b-0.5_d-2 0.06931755
+8  model-3_n-5  sites-2_b-0.5_d-2 0.07122829
+9  model-1_n-2    sites-2_b-1_d-2 0.07142226
+10 model-1_n-5    sites-2_b-1_d-2 0.05752562
+11 model-3_n-2    sites-2_b-1_d-2 0.04820149
+12 model-3_n-5    sites-2_b-1_d-2 0.04705904
+13 model-1_n-2  sites-3_b-0.5_d-2 0.09356384
+14 model-1_n-5  sites-3_b-0.5_d-2 0.09084449
+15 model-3_n-2  sites-3_b-0.5_d-2 0.06712381
+16 model-3_n-5  sites-3_b-0.5_d-2 0.06820154
+17 model-1_n-2    sites-3_b-1_d-2 0.06034960
+18 model-1_n-5    sites-3_b-1_d-2 0.05266673
+19 model-3_n-2    sites-3_b-1_d-2         NA
+20 model-3_n-5    sites-3_b-1_d-2 0.04622317
+21 model-1_n-2  sites-4_b-0.5_d-2 0.08710078
+22 model-1_n-5  sites-4_b-0.5_d-2 0.08726160
+23 model-3_n-2  sites-4_b-0.5_d-2 0.06525329
+24 model-3_n-5  sites-4_b-0.5_d-2 0.06670384
+25 model-1_n-2    sites-4_b-1_d-2 0.05646161
+26 model-1_n-5    sites-4_b-1_d-2 0.05027164
+27 model-3_n-2    sites-4_b-1_d-2 0.04573234
+28 model-3_n-5    sites-4_b-1_d-2 0.04582882
+29 model-1_n-2  sites-5_b-0.5_d-2 0.08313486
+30 model-1_n-5  sites-5_b-0.5_d-2 0.08638991
+31 model-3_n-2  sites-5_b-0.5_d-2 0.06487711
+32 model-3_n-5  sites-5_b-0.5_d-2 0.06597207
+33 model-1_n-2    sites-5_b-1_d-2 0.05313788
+34 model-1_n-5    sites-5_b-1_d-2 0.04852345
+35 model-3_n-2    sites-5_b-1_d-2 0.04582704
+36 model-3_n-5    sites-5_b-1_d-2 0.04534875
+37 model-1_n-2 sites-10_b-0.5_d-2 0.07626556
+38 model-1_n-5 sites-10_b-0.5_d-2 0.07816880
+39 model-3_n-2 sites-10_b-0.5_d-2         NA
+40 model-3_n-5 sites-10_b-0.5_d-2 0.06397549
+[1] "model-1_n-2" "model-1_n-5" "model-3_n-2" "model-3_n-5"
+           run           variable      value  x
+1  model-1_n-2   sites-10_b-1_d-2 0.04793207  2
+2  model-1_n-5   sites-10_b-1_d-2 0.04827429  2
+3  model-3_n-2   sites-10_b-1_d-2 0.04499962  2
+4  model-3_n-5   sites-10_b-1_d-2 0.04719927  2
+5  model-1_n-2  sites-2_b-0.5_d-2 0.10091590  2
+6  model-1_n-5  sites-2_b-0.5_d-2         NA  2
+7  model-3_n-2  sites-2_b-0.5_d-2 0.06931755  2
+8  model-3_n-5  sites-2_b-0.5_d-2 0.07122829  2
+9  model-1_n-2    sites-2_b-1_d-2 0.07142226  3
+10 model-1_n-5    sites-2_b-1_d-2 0.05752562  3
+11 model-3_n-2    sites-2_b-1_d-2 0.04820149  3
+12 model-3_n-5    sites-2_b-1_d-2 0.04705904  3
+13 model-1_n-2  sites-3_b-0.5_d-2 0.09356384  3
+14 model-1_n-5  sites-3_b-0.5_d-2 0.09084449  3
+15 model-3_n-2  sites-3_b-0.5_d-2 0.06712381  3
+16 model-3_n-5  sites-3_b-0.5_d-2 0.06820154  3
+17 model-1_n-2    sites-3_b-1_d-2 0.06034960  4
+18 model-1_n-5    sites-3_b-1_d-2 0.05266673  4
+19 model-3_n-2    sites-3_b-1_d-2         NA  4
+20 model-3_n-5    sites-3_b-1_d-2 0.04622317  4
+21 model-1_n-2  sites-4_b-0.5_d-2 0.08710078  4
+22 model-1_n-5  sites-4_b-0.5_d-2 0.08726160  4
+23 model-3_n-2  sites-4_b-0.5_d-2 0.06525329  4
+24 model-3_n-5  sites-4_b-0.5_d-2 0.06670384  4
+25 model-1_n-2    sites-4_b-1_d-2 0.05646161  5
+26 model-1_n-5    sites-4_b-1_d-2 0.05027164  5
+27 model-3_n-2    sites-4_b-1_d-2 0.04573234  5
+28 model-3_n-5    sites-4_b-1_d-2 0.04582882  5
+29 model-1_n-2  sites-5_b-0.5_d-2 0.08313486  5
+30 model-1_n-5  sites-5_b-0.5_d-2 0.08638991  5
+31 model-3_n-2  sites-5_b-0.5_d-2 0.06487711  5
+32 model-3_n-5  sites-5_b-0.5_d-2 0.06597207  5
+33 model-1_n-2    sites-5_b-1_d-2 0.05313788 10
+34 model-1_n-5    sites-5_b-1_d-2 0.04852345 10
+35 model-3_n-2    sites-5_b-1_d-2 0.04582704 10
+36 model-3_n-5    sites-5_b-1_d-2 0.04534875 10
+37 model-1_n-2 sites-10_b-0.5_d-2 0.07626556 10
+38 model-1_n-5 sites-10_b-0.5_d-2 0.07816880 10
+39 model-3_n-2 sites-10_b-0.5_d-2         NA 10
+40 model-3_n-5 sites-10_b-0.5_d-2 0.06397549 10
+List of 97
+ $ line                      :List of 6
+  ..$ colour       : chr "black"
+  ..$ linewidth    : num 0.5
+  ..$ linetype     : num 1
+  ..$ lineend      : chr "butt"
+  ..$ arrow        : logi FALSE
+  ..$ inherit.blank: logi TRUE
+  ..- attr(*, "class")= chr [1:2] "element_line" "element"
+ $ rect                      :List of 5
+  ..$ fill         : chr "white"
+  ..$ colour       : chr "black"
+  ..$ linewidth    : num 0.5
+  ..$ linetype     : num 1
+  ..$ inherit.blank: logi TRUE
+  ..- attr(*, "class")= chr [1:2] "element_rect" "element"
+ $ text                      :List of 11
+  ..$ family       : chr ""
+  ..$ face         : chr "plain"
+  ..$ colour       : chr "black"
+  ..$ size         : num 11
+  ..$ hjust        : num 0.5
+  ..$ vjust        : num 0.5
+  ..$ angle        : num 0
+  ..$ lineheight   : num 0.9
+  ..$ margin       : 'margin' num [1:4] 0points 0points 0points 0points
+  .. ..- attr(*, "unit")= int 8
+  ..$ debug        : logi FALSE
+  ..$ inherit.blank: logi TRUE
+  ..- attr(*, "class")= chr [1:2] "element_text" "element"
+ $ title                     : NULL
+ $ aspect.ratio              : NULL
+ $ axis.title                : NULL
+ $ axis.title.x              :List of 11
+  ..$ family       : NULL
+  ..$ face         : NULL
+  ..$ colour       : NULL
+  ..$ size         : NULL
+  ..$ hjust        : NULL
+  ..$ vjust        : num 1
+  ..$ angle        : NULL
+  ..$ lineheight   : NULL
+  ..$ margin       : 'margin' num [1:4] 2.75points 0points 0points 0points
+  .. ..- attr(*, "unit")= int 8
+  ..$ debug        : NULL
+  ..$ inherit.blank: logi TRUE
+  ..- attr(*, "class")= chr [1:2] "element_text" "element"
+ $ axis.title.x.top          :List of 11
+  ..$ family       : NULL
+  ..$ face         : NULL
+  ..$ colour       : NULL
+  ..$ size         : NULL
+  ..$ hjust        : NULL
+  ..$ vjust        : num 0
+  ..$ angle        : NULL
+  ..$ lineheight   : NULL
+  ..$ margin       : 'margin' num [1:4] 0points 0points 2.75points 0points
+  .. ..- attr(*, "unit")= int 8
+  ..$ debug        : NULL
+  ..$ inherit.blank: logi TRUE
+  ..- attr(*, "class")= chr [1:2] "element_text" "element"
+ $ axis.title.x.bottom       : NULL
+ $ axis.title.y              :List of 11
+  ..$ family       : NULL
+  ..$ face         : NULL
+  ..$ colour       : NULL
+  ..$ size         : NULL
+  ..$ hjust        : NULL
+  ..$ vjust        : num 1
+  ..$ angle        : num 90
+  ..$ lineheight   : NULL
+  ..$ margin       : 'margin' num [1:4] 0points 2.75points 0points 0points
+  .. ..- attr(*, "unit")= int 8
+  ..$ debug        : NULL
+  ..$ inherit.blank: logi TRUE
+  ..- attr(*, "class")= chr [1:2] "element_text" "element"
+ $ axis.title.y.left         : NULL
+ $ axis.title.y.right        :List of 11
+  ..$ family       : NULL
+  ..$ face         : NULL
+  ..$ colour       : NULL
+  ..$ size         : NULL
+  ..$ hjust        : NULL
+  ..$ vjust        : num 0
+  ..$ angle        : num -90
+  ..$ lineheight   : NULL
+  ..$ margin       : 'margin' num [1:4] 0points 0points 0points 2.75points
+  .. ..- attr(*, "unit")= int 8
+  ..$ debug        : NULL
+  ..$ inherit.blank: logi TRUE
+  ..- attr(*, "class")= chr [1:2] "element_text" "element"
+ $ axis.text                 :List of 11
+  ..$ family       : NULL
+  ..$ face         : NULL
+  ..$ colour       : chr "grey30"
+  ..$ size         : 'rel' num 0.8
+  ..$ hjust        : NULL
+  ..$ vjust        : NULL
+  ..$ angle        : NULL
+  ..$ lineheight   : NULL
+  ..$ margin       : NULL
+  ..$ debug        : NULL
+  ..$ inherit.blank: logi TRUE
+  ..- attr(*, "class")= chr [1:2] "element_text" "element"
+ $ axis.text.x               :List of 11
+  ..$ family       : NULL
+  ..$ face         : NULL
+  ..$ colour       : NULL
+  ..$ size         : NULL
+  ..$ hjust        : NULL
+  ..$ vjust        : num 1
+  ..$ angle        : NULL
+  ..$ lineheight   : NULL
+  ..$ margin       : 'margin' num [1:4] 2.2points 0points 0points 0points
+  .. ..- attr(*, "unit")= int 8
+  ..$ debug        : NULL
+  ..$ inherit.blank: logi TRUE
+  ..- attr(*, "class")= chr [1:2] "element_text" "element"
+ $ axis.text.x.top           :List of 11
+  ..$ family       : NULL
+  ..$ face         : NULL
+  ..$ colour       : NULL
+  ..$ size         : NULL
+  ..$ hjust        : NULL
+  ..$ vjust        : num 0
+  ..$ angle        : NULL
+  ..$ lineheight   : NULL
+  ..$ margin       : 'margin' num [1:4] 0points 0points 2.2points 0points
+  .. ..- attr(*, "unit")= int 8
+  ..$ debug        : NULL
+  ..$ inherit.blank: logi TRUE
+  ..- attr(*, "class")= chr [1:2] "element_text" "element"
+ $ axis.text.x.bottom        : NULL
+ $ axis.text.y               :List of 11
+  ..$ family       : NULL
+  ..$ face         : NULL
+  ..$ colour       : NULL
+  ..$ size         : NULL
+  ..$ hjust        : num 1
+  ..$ vjust        : NULL
+  ..$ angle        : NULL
+  ..$ lineheight   : NULL
+  ..$ margin       : 'margin' num [1:4] 0points 2.2points 0points 0points
+  .. ..- attr(*, "unit")= int 8
+  ..$ debug        : NULL
+  ..$ inherit.blank: logi TRUE
+  ..- attr(*, "class")= chr [1:2] "element_text" "element"
+ $ axis.text.y.left          : NULL
+ $ axis.text.y.right         :List of 11
+  ..$ family       : NULL
+  ..$ face         : NULL
+  ..$ colour       : NULL
+  ..$ size         : NULL
+  ..$ hjust        : num 0
+  ..$ vjust        : NULL
+  ..$ angle        : NULL
+  ..$ lineheight   : NULL
+  ..$ margin       : 'margin' num [1:4] 0points 0points 0points 2.2points
+  .. ..- attr(*, "unit")= int 8
+  ..$ debug        : NULL
+  ..$ inherit.blank: logi TRUE
+  ..- attr(*, "class")= chr [1:2] "element_text" "element"
+ $ axis.ticks                :List of 6
+  ..$ colour       : chr "grey20"
+  ..$ linewidth    : NULL
+  ..$ linetype     : NULL
+  ..$ lineend      : NULL
+  ..$ arrow        : logi FALSE
+  ..$ inherit.blank: logi TRUE
+  ..- attr(*, "class")= chr [1:2] "element_line" "element"
+ $ axis.ticks.x              : NULL
+ $ axis.ticks.x.top          : NULL
+ $ axis.ticks.x.bottom       : NULL
+ $ axis.ticks.y              : NULL
+ $ axis.ticks.y.left         : NULL
+ $ axis.ticks.y.right        : NULL
+ $ axis.ticks.length         : 'simpleUnit' num 2.75points
+  ..- attr(*, "unit")= int 8
+ $ axis.ticks.length.x       : NULL
+ $ axis.ticks.length.x.top   : NULL
+ $ axis.ticks.length.x.bottom: NULL
+ $ axis.ticks.length.y       : NULL
+ $ axis.ticks.length.y.left  : NULL
+ $ axis.ticks.length.y.right : NULL
+ $ axis.line                 : list()
+  ..- attr(*, "class")= chr [1:2] "element_blank" "element"
+ $ axis.line.x               : NULL
+ $ axis.line.x.top           : NULL
+ $ axis.line.x.bottom        : NULL
+ $ axis.line.y               : NULL
+ $ axis.line.y.left          : NULL
+ $ axis.line.y.right         : NULL
+ $ legend.background         :List of 5
+  ..$ fill         : NULL
+  ..$ colour       : logi NA
+  ..$ linewidth    : NULL
+  ..$ linetype     : NULL
+  ..$ inherit.blank: logi TRUE
+  ..- attr(*, "class")= chr [1:2] "element_rect" "element"
+ $ legend.margin             : 'margin' num [1:4] 5.5points 5.5points 5.5points 5.5points
+  ..- attr(*, "unit")= int 8
+ $ legend.spacing            : 'simpleUnit' num 11points
+  ..- attr(*, "unit")= int 8
+ $ legend.spacing.x          : NULL
+ $ legend.spacing.y          : NULL
+ $ legend.key                :List of 5
+  ..$ fill         : chr "white"
+  ..$ colour       : logi NA
+  ..$ linewidth    : NULL
+  ..$ linetype     : NULL
+  ..$ inherit.blank: logi TRUE
+  ..- attr(*, "class")= chr [1:2] "element_rect" "element"
+ $ legend.key.size           : 'simpleUnit' num 1.2lines
+  ..- attr(*, "unit")= int 3
+ $ legend.key.height         : NULL
+ $ legend.key.width          : NULL
+ $ legend.text               :List of 11
+  ..$ family       : NULL
+  ..$ face         : NULL
+  ..$ colour       : NULL
+  ..$ size         : 'rel' num 0.8
+  ..$ hjust        : NULL
+  ..$ vjust        : NULL
+  ..$ angle        : NULL
+  ..$ lineheight   : NULL
+  ..$ margin       : NULL
+  ..$ debug        : NULL
+  ..$ inherit.blank: logi TRUE
+  ..- attr(*, "class")= chr [1:2] "element_text" "element"
+ $ legend.text.align         : NULL
+ $ legend.title              :List of 11
+  ..$ family       : NULL
+  ..$ face         : NULL
+  ..$ colour       : NULL
+  ..$ size         : NULL
+  ..$ hjust        : num 0
+  ..$ vjust        : NULL
+  ..$ angle        : NULL
+  ..$ lineheight   : NULL
+  ..$ margin       : NULL
+  ..$ debug        : NULL
+  ..$ inherit.blank: logi TRUE
+  ..- attr(*, "class")= chr [1:2] "element_text" "element"
+ $ legend.title.align        : NULL
+ $ legend.position           : chr "right"
+ $ legend.direction          : NULL
+ $ legend.justification      : chr "center"
+ $ legend.box                : NULL
+ $ legend.box.just           : NULL
+ $ legend.box.margin         : 'margin' num [1:4] 0cm 0cm 0cm 0cm
+  ..- attr(*, "unit")= int 1
+ $ legend.box.background     : list()
+  ..- attr(*, "class")= chr [1:2] "element_blank" "element"
+ $ legend.box.spacing        : 'simpleUnit' num 11points
+  ..- attr(*, "unit")= int 8
+ $ panel.background          :List of 5
+  ..$ fill         : chr "white"
+  ..$ colour       : logi NA
+  ..$ linewidth    : NULL
+  ..$ linetype     : NULL
+  ..$ inherit.blank: logi TRUE
+  ..- attr(*, "class")= chr [1:2] "element_rect" "element"
+ $ panel.border              :List of 5
+  ..$ fill         : logi NA
+  ..$ colour       : chr "grey20"
+  ..$ linewidth    : NULL
+  ..$ linetype     : NULL
+  ..$ inherit.blank: logi TRUE
+  ..- attr(*, "class")= chr [1:2] "element_rect" "element"
+ $ panel.spacing             : 'simpleUnit' num 5.5points
+  ..- attr(*, "unit")= int 8
+ $ panel.spacing.x           : NULL
+ $ panel.spacing.y           : NULL
+ $ panel.grid                :List of 6
+  ..$ colour       : chr "grey92"
+  ..$ linewidth    : NULL
+  ..$ linetype     : NULL
+  ..$ lineend      : NULL
+  ..$ arrow        : logi FALSE
+  ..$ inherit.blank: logi TRUE
+  ..- attr(*, "class")= chr [1:2] "element_line" "element"
+ $ panel.grid.major          : NULL
+ $ panel.grid.minor          :List of 6
+  ..$ colour       : NULL
+  ..$ linewidth    : 'rel' num 0.5
+  ..$ linetype     : NULL
+  ..$ lineend      : NULL
+  ..$ arrow        : logi FALSE
+  ..$ inherit.blank: logi TRUE
+  ..- attr(*, "class")= chr [1:2] "element_line" "element"
+ $ panel.grid.major.x        : NULL
+ $ panel.grid.major.y        : NULL
+ $ panel.grid.minor.x        : NULL
+ $ panel.grid.minor.y        : NULL
+ $ panel.ontop               : logi FALSE
+ $ plot.background           :List of 5
+  ..$ fill         : NULL
+  ..$ colour       : chr "white"
+  ..$ linewidth    : NULL
+  ..$ linetype     : NULL
+  ..$ inherit.blank: logi TRUE
+  ..- attr(*, "class")= chr [1:2] "element_rect" "element"
+ $ plot.title                :List of 11
+  ..$ family       : NULL
+  ..$ face         : NULL
+  ..$ colour       : NULL
+  ..$ size         : 'rel' num 1.2
+  ..$ hjust        : num 0
+  ..$ vjust        : num 1
+  ..$ angle        : NULL
+  ..$ lineheight   : NULL
+  ..$ margin       : 'margin' num [1:4] 0points 0points 5.5points 0points
+  .. ..- attr(*, "unit")= int 8
+  ..$ debug        : NULL
+  ..$ inherit.blank: logi TRUE
+  ..- attr(*, "class")= chr [1:2] "element_text" "element"
+ $ plot.title.position       : chr "panel"
+ $ plot.subtitle             :List of 11
+  ..$ family       : NULL
+  ..$ face         : NULL
+  ..$ colour       : NULL
+  ..$ size         : NULL
+  ..$ hjust        : num 0
+  ..$ vjust        : num 1
+  ..$ angle        : NULL
+  ..$ lineheight   : NULL
+  ..$ margin       : 'margin' num [1:4] 0points 0points 5.5points 0points
+  .. ..- attr(*, "unit")= int 8
+  ..$ debug        : NULL
+  ..$ inherit.blank: logi TRUE
+  ..- attr(*, "class")= chr [1:2] "element_text" "element"
+ $ plot.caption              :List of 11
+  ..$ family       : NULL
+  ..$ face         : NULL
+  ..$ colour       : NULL
+  ..$ size         : 'rel' num 0.8
+  ..$ hjust        : num 1
+  ..$ vjust        : num 1
+  ..$ angle        : NULL
+  ..$ lineheight   : NULL
+  ..$ margin       : 'margin' num [1:4] 5.5points 0points 0points 0points
+  .. ..- attr(*, "unit")= int 8
+  ..$ debug        : NULL
+  ..$ inherit.blank: logi TRUE
+  ..- attr(*, "class")= chr [1:2] "element_text" "element"
+ $ plot.caption.position     : chr "panel"
+ $ plot.tag                  :List of 11
+  ..$ family       : NULL
+  ..$ face         : NULL
+  ..$ colour       : NULL
+  ..$ size         : 'rel' num 1.2
+  ..$ hjust        : num 0.5
+  ..$ vjust        : num 0.5
+  ..$ angle        : NULL
+  ..$ lineheight   : NULL
+  ..$ margin       : NULL
+  ..$ debug        : NULL
+  ..$ inherit.blank: logi TRUE
+  ..- attr(*, "class")= chr [1:2] "element_text" "element"
+ $ plot.tag.position         : chr "topleft"
+ $ plot.margin               : 'margin' num [1:4] 5.5points 5.5points 5.5points 5.5points
+  ..- attr(*, "unit")= int 8
+ $ strip.background          :List of 5
+  ..$ fill         : chr "grey85"
+  ..$ colour       : chr "grey20"
+  ..$ linewidth    : NULL
+  ..$ linetype     : NULL
+  ..$ inherit.blank: logi TRUE
+  ..- attr(*, "class")= chr [1:2] "element_rect" "element"
+ $ strip.background.x        : NULL
+ $ strip.background.y        : NULL
+ $ strip.clip                : chr "inherit"
+ $ strip.placement           : chr "inside"
+ $ strip.text                :List of 11
+  ..$ family       : NULL
+  ..$ face         : NULL
+  ..$ colour       : chr "grey10"
+  ..$ size         : 'rel' num 0.8
+  ..$ hjust        : NULL
+  ..$ vjust        : NULL
+  ..$ angle        : NULL
+  ..$ lineheight   : NULL
+  ..$ margin       : 'margin' num [1:4] 4.4points 4.4points 4.4points 4.4points
+  .. ..- attr(*, "unit")= int 8
+  ..$ debug        : NULL
+  ..$ inherit.blank: logi TRUE
+  ..- attr(*, "class")= chr [1:2] "element_text" "element"
+ $ strip.text.x              : NULL
+ $ strip.text.x.bottom       : NULL
+ $ strip.text.x.top          : NULL
+ $ strip.text.y              :List of 11
+  ..$ family       : NULL
+  ..$ face         : NULL
+  ..$ colour       : NULL
+  ..$ size         : NULL
+  ..$ hjust        : NULL
+  ..$ vjust        : NULL
+  ..$ angle        : num -90
+  ..$ lineheight   : NULL
+  ..$ margin       : NULL
+  ..$ debug        : NULL
+  ..$ inherit.blank: logi TRUE
+  ..- attr(*, "class")= chr [1:2] "element_text" "element"
+ $ strip.text.y.left         :List of 11
+  ..$ family       : NULL
+  ..$ face         : NULL
+  ..$ colour       : NULL
+  ..$ size         : NULL
+  ..$ hjust        : NULL
+  ..$ vjust        : NULL
+  ..$ angle        : num 90
+  ..$ lineheight   : NULL
+  ..$ margin       : NULL
+  ..$ debug        : NULL
+  ..$ inherit.blank: logi TRUE
+  ..- attr(*, "class")= chr [1:2] "element_text" "element"
+ $ strip.text.y.right        : NULL
+ $ strip.switch.pad.grid     : 'simpleUnit' num 2.75points
+  ..- attr(*, "unit")= int 8
+ $ strip.switch.pad.wrap     : 'simpleUnit' num 2.75points
+  ..- attr(*, "unit")= int 8
+ - attr(*, "class")= chr [1:2] "theme" "gg"
+ - attr(*, "complete")= logi TRUE
+ - attr(*, "validate")= logi TRUE

@@ -106,33 +106,43 @@ v_df
 var_df
 v_df$run <- rownames(v_df)
 var_df$run <- rownames(var_df)
-m1_1 <- v_df$`g-1_d-0.25`[1:6]
-m2_1 <- v_df$`g-1_d-0.25`[7:12]
-m1_2 <- v_df$`g-1_d-2`[1:6]
-m2_2 <- v_df$`g-1_d-2`[7:12]
-var_m1_1 <- var_df$`g-1_d-0.25`[1:6]
-var_m2_1 <- var_df$`g-1_d-0.25`[7:12]
-var_m1_2 <- var_df$`g-1_d-2`[1:6]
-var_m2_2 <- var_df$`g-1_d-2`[7:12]
-fig_df <- data.frame(m1_g1_d25=m1_1, m2_g1_d25=m2_1, m1_g1_d2=m1_2, m2_g1_d2=m2_2)
-var_fig_df <- data.frame(var_m1_g1_d25=var_m1_1, var_m2_g1_d25=var_m2_1, var_m1_g1_d2=var_m1_2, var_m2_g1_d2=var_m2_2)
+m1_1 <- v_df$`b-0.5_d-0.25`[1:6]
+m1_2 <- v_df$`b-0.5_d-2`[1:6]
+m1_3 <- v_df$`b-1_d-0.25`[1:6]
+m1_4 <- v_df$`b-1_d-2`[1:6]
+m2_1 <- v_df$`b-0.5_d-0.25`[7:12]
+m2_2 <- v_df$`b-0.5_d-2`[7:12]
+m2_3 <- v_df$`b-1_d-0.25`[7:12]
+m2_4 <- v_df$`b-1_d-2`[7:12]
+var_m1_1 <- var_df$`b-0.5_d-0.25`[1:6]
+var_m2_1 <- var_df$`b-0.5_d-0.25`[7:12]
+var_m1_2 <- var_df$`b-0.5_d-2`[1:6]
+var_m2_2 <- var_df$`b-0.5_d-2`[7:12]
+fig_df <- data.frame(m1_b05_d25=m1_1, m2_b05_d25=m2_1, m1_b05_d2=m1_2, m2_b05_d2=m2_2, m1_b1_d25=m1_3, m2_b1_d25=m2_3, m1_b1_d2=m1_4, m2_b1_d2=m2_4)
+var_fig_df <- data.frame(var_m1_b05_d25=var_m1_1, var_m2_b05_d25=var_m2_1, var_m1_b05_d2=var_m1_2, var_m2_b05_d2=var_m2_2)
 fig_df$index <- rownames(fig_df)
 var_fig_df$index <- rownames(var_fig_df)
-fig_df <- pivot_longer(fig_df, cols=1:4, names_to="run", values_to="avg_v")
+fig_df <- pivot_longer(fig_df, cols=1:8, names_to="run", values_to="avg_v")
 var_fig_df <- pivot_longer(var_fig_df, cols=1:4, names_to="run", values_to="var")
-fig_df$x <- rep(c(2,3,4,5,7,10), each=4)
-sqrt(var_fig_df$var)
-fig_df$se <- sqrt(var_fig_df$var)/sqrt(10)
+fig_df$x <- rep(c(2,3,4,5,7,10), each=8)
+fig_df$run <- as.factor(fig_df$run)
+print(levels(fig_df$run))
+#fig_df$x <- as.factor(fig_df$x) 
+print(fig_df, n=1000)
+#sqrt(var_fig_df$var)
+#fig_df$se <- sqrt(var_fig_df$var)/sqrt(10)
 
+model_labels=c("SO, b=0.5, d=2", "SO, b=0.5, d=0.25", "SO, b=1, d=2", "SO, b=1, d=0.25", "SO+PO, b=0.5, d=2", "SO + PO, b=0.5, d=0.25", "SO+PO, b=1, d=2", "SO + PO, b=1, d=0.25") 
 # Generally will be run from evaluation directory
 fig_name <- file.path(".", "exp_3_comparison.png")
 p <- ggplot(data=fig_df, aes(x=x, y=avg_v, colour=run)) +
   geom_line(linewidth=1) +
-  scale_x_discrete(labels=c("2","3","4","5","7","10")) +
+  scale_x_continuous(breaks=c(2,3,4,5,7,10)) +
+  #scale_x_discrete(labels=c("2","3","4","5","7","10")) +
   #geom_errorbar(aes(ymin=avg_v-se, ymax=avg_v+se)) +
   labs(title="", x="Max visits", y="U(d)") + 
   theme(text=element_text(size=7), axis.title = element_text(size = 7), legend.key.size = unit(0.25, 'cm')) +
-  scale_color_discrete(name = "Run", type=c("#c356ea","#ffc100", "#71aef2", "#f7adce"), labels = c("SO, d=0.25", "SO, d=2", "SO+PO, d=0.25", "SO+PO, d=2")) +
+  scale_color_discrete(name = "Run", type=c("#c356ea","#ffc100", "#71aef2", "#f7adce", "#fa754a","#6CCC64", "#68e2e6", "#ea6ff3"), labels = model_labels) +
   theme_bw()
 print(p)
 ggsave(fig_name, plot=p, dpi=300, width=10, height=7, units="cm")
