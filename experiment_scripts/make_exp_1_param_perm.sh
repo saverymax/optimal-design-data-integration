@@ -23,7 +23,6 @@ WORKDIR=$VSC_DATA/projects/optimal_design_presence_only/optimal-design-data-inte
 cores=48
 intensity="donut"
 bias="exponential"
-# change time from 3 to 6 and cores*2 to cores*4
 for m in $models
 do
 for g in $gamma
@@ -43,12 +42,12 @@ echo "#!/bin/bash
 #PBS -o /data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/job_output/
 #PBS -e /data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/job_output/
 #PBS -N ${exp_dir}_${exp_name}
-#PBS -l walltime=6:00:00
+#PBS -l walltime=3:00:00
 #PBS -l nodes=1:ppn=$cores
 #PBS -l mem=100gb
 
 module load CmdStanR
-Rscript $WORKDIR/optimal_design_site_occ.R --working_dir=$WORKDIR --save_dir=experimental_runs/$exp_dir --exp_name=$exp_name --data_reps=$(($cores*4)) --m=5 --min_visits=1 --max_visits=$n --model_selection=$m --random_starts=10 --exch_iter=40 --mcmc_iter=1000 --use_sim_po --po_data_file="po_gen_peak_ints-${intensity}_peak=${dev}_a=${alpha}_b=${b}_g=${g}_d=${d}.Rds" --intensity_func=\"$intensity\" --sd=${dev} --bias_func=\"$bias\" --v_parallel --cores=$cores --alpha=$alpha --beta=$b --gamma=$g --delta=$d --p=$p" > $exp_dir/$exp_name.sh
+Rscript $WORKDIR/optimal_design_site_occ.R --working_dir=$WORKDIR --save_dir=experimental_runs/$exp_dir --exp_name=$exp_name --data_reps=$(($cores*2)) --m=5 --min_visits=1 --max_visits=$n --model_selection=$m --random_starts=10 --exch_iter=40 --mcmc_iter=1000 --use_sim_po --po_data_file="po_gen_peak_ints-${intensity}_peak=${dev}_a=${alpha}_b=${b}_g=${g}_d=${d}.Rds" --intensity_func=\"$intensity\" --sd=${dev} --bias_func=\"$bias\" --v_parallel --cores=$cores --alpha=$alpha --beta=$b --gamma=$g --delta=$d --p=$p" > $exp_dir/$exp_name.sh
 echo "qsub $exp_dir/$exp_name.sh" >> run_exp_1.sh
 done
 done

@@ -12,7 +12,7 @@ exp_name <- "exp_3"
 result_dir <- file.path(exp_dir, exp_name)
 print(result_dir)
 # Look at all files corresponding to this set of experiments
-file_list <- list.files(result_dir)
+file_list <- list.files(result_dir, pattern="peak-5")
 print("available runs")
 print(file_list)
 n_f <- length(file_list)
@@ -37,7 +37,7 @@ for (i in 1:length(file_list)){
   compare_name <- paste(params[[1]][2], params[[1]][4], sep="_")
   print("Name to identify run")
   print(compare_name)
-  param_perm <- paste(params[[1]][6], params[[1]][8], sep="_")
+  param_perm <- paste(params[[1]][5], params[[1]][7], params[[1]][9], sep="_")
   print("current params of interest")
   print(param_perm)
   # Make this list so as to have the permutation names for each subset
@@ -106,14 +106,14 @@ v_df
 var_df
 v_df$run <- rownames(v_df)
 var_df$run <- rownames(var_df)
-m1_1 <- v_df$`b-0.5_d-0.25`[1:6]
-m1_2 <- v_df$`b-0.5_d-2`[1:6]
-m1_3 <- v_df$`b-1_d-0.25`[1:6]
-m1_4 <- v_df$`b-1_d-2`[1:6]
-m2_1 <- v_df$`b-0.5_d-0.25`[7:12]
-m2_2 <- v_df$`b-0.5_d-2`[7:12]
-m2_3 <- v_df$`b-1_d-0.25`[7:12]
-m2_4 <- v_df$`b-1_d-2`[7:12]
+m1_1 <- v_df$`peak-5_b-0.5_d-0.25`[1:6]
+m1_2 <- v_df$`peak-5_b-0.5_d-2`[1:6]
+m1_3 <- v_df$`peak-5_b-1_d-0.25`[1:6]
+m1_4 <- v_df$`peak-5_b-1_d-2`[1:6]
+m2_1 <- v_df$`peak-5_b-0.5_d-0.25`[7:12]
+m2_2 <- v_df$`peak-5_b-0.5_d-2`[7:12]
+m2_3 <- v_df$`peak-5_b-1_d-0.25`[7:12]
+m2_4 <- v_df$`peak-5_b-1_d-2`[7:12]
 var_m1_1 <- var_df$`b-0.5_d-0.25`[1:6]
 var_m2_1 <- var_df$`b-0.5_d-0.25`[7:12]
 var_m1_2 <- var_df$`b-0.5_d-2`[1:6]
@@ -123,7 +123,7 @@ var_fig_df <- data.frame(var_m1_b05_d25=var_m1_1, var_m2_b05_d25=var_m2_1, var_m
 fig_df$index <- rownames(fig_df)
 var_fig_df$index <- rownames(var_fig_df)
 fig_df <- pivot_longer(fig_df, cols=1:8, names_to="run", values_to="avg_v")
-var_fig_df <- pivot_longer(var_fig_df, cols=1:4, names_to="run", values_to="var")
+#var_fig_df <- pivot_longer(var_fig_df, cols=1:4, names_to="run", values_to="var")
 fig_df$x <- rep(c(2,3,4,5,7,10), each=8)
 fig_df$run <- as.factor(fig_df$run)
 print(levels(fig_df$run))

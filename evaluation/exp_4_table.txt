@@ -112,118 +112,55 @@ NULL
 [1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_4/oe_model-1_sites-2_n-2_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
 [1] "oe_model-1_sites-2_n-2_a--2_b-1_g-1_d-2_p-0.2"
 [[1]]
-[1] "oe"      "model-1" "sites-2" "n-2"     "a--2"    "b-1"     "g-1"    
-[8] "d-2"     "p-0.2"  
+[1] "oe"      "model-1" "sites-2" "n-2"     "a--2"    "b-1"     "g-1"   [?2004h[?1049h[22;0;0t[?1h=[?2004h[?12h[?12l[27m[23m[29m[m[H[2J[?25l[1;3Hvar_mat[35m[[mi[35m,][m [33m<-[m var_list[35m[[[mexp_col[35m[[mi[35m]]][m
+  [36m#v_mat[,i] <- exp_list[[exp_col[i]]][m
+[35m}[m
+[36mprint[m[35m([mv_mat[35m)[m
+[36mprint[m[35m([mvar_mat[35m)[m
+v_df [33m<-[m [36mas.data.frame[m[35m([mv_mat[35m)[m
+var_df [33m<-[m [36mas.data.frame[m[35m([mvar_mat[35m)[m
+[36mrownames[m[35m([mv_df[35m)[m [33m<-[m exp_col
+[36mrownames[m[35m([mvar_df[35m)[m [33m<-[m exp_col
+[36mcolnames[m[35m([mv_df[35m)[m [33m<-[m perm_list[35m[[[m[33m1[m[35m]][m
+[36mcolnames[m[35m([mvar_df[35m)[m [33m<-[m perm_list[35m[[[m[33m1[m[35m]][m
+[36mprint[m[35m([mv_df[35m)[m
+[36mprint[m[35m([mvar_df[35m)[m
+caption [33m<-[m [36mpaste[m[35m([m[33m"Comparison of models, sampling effort, and parameter permutations"[m[35m)[m
+label [33m<-[m [36mpaste[m[35m([m[33m"survey_eval"[m[35m,[m sep[33m=[m[33m""[m[35m)[m
+[36mprint[m[35m([m[36mkbl[m[35m([mv_df[35m,[m booktabs [33m=[m [33mT[m[35m,[m escape[33m=[m[33mT[m[35m,[m caption[33m=[mcaption[35m,[m label[33m=[mlabel[35m,[m[17;11Halign[33m=[m[36mc[m[35m([m[33m'lcccc'[m[35m),[m digits[33m=[m[33m4[m[35m,[m format[33m=[m[33m"latex"[m[35m)[m [33m%>%[m[18;9H[36mkable_styling[m[35m([mlatex_options [33m=[m [36mc[m[35m([m[33m"HOLD_position"[m[35m))[m [35m)[m
 
-[1] "Name to identify run"
-[1] "model-1_n-2"
-[1] "current params of interest"
-[1] "sites-2_b-1_d-2"
-[1] "reading file:"
-[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_4/oe_model-1_sites-2_n-2_a--2_b-1_g-1_d-2_p-0.2/results.xlsx"
-[1] "oe_model-1_sites-2_n-5_a--2_b-0.5_g-1_d-2_p-0.2"
-[[1]]
-[1] "oe"      "model-1" "sites-2" "n-5"     "a--2"    "b-0.5"   "g-1"    
-[8] "d-2"     "p-0.2"  
+[36m# For this we can also make a figure as effort increases[m
+v_df
+var_df
+[36m# Move m=10 to end[m
+v_df [33m<-[m v_df [33m%>%[m [36mrelocate[m[35m([m[33m'sites-10_b-0.5_d-2'[m[35m,[m .after[33m=[m[33m'sites-5_b-1_d-2'[m[35m)[m
+v_df
+var_df [33m<-[m var_df [33m%>%[m [36mrelocate[m[35m([m[33m'sites-10_b-1_d-2'[m[35m,[m .after[33m=[m[33m'sites-10_b-0.5_d-2'[m[35m)[m
+v_df[35m$[mrun [33m<-[m [36mrownames[m[35m([mv_df[35m)[m
+var_df[35m$[mrun [33m<-[m [36mrownames[m[35m([mvar_df[35m)[m
+fig_df [33m<-[m [36mmelt[m[35m([mv_df[35m,[m id[33m=[m[33m'run'[m[35m)[m
+fig_df[35m$[mrun [33m<-[m [36mas.factor[m[35m([mfig_df[35m$[mrun[35m)[m
+[36mprint[m[35m([mfig_df[35m)[m
+[36mprint[m[35m([m[36mlevels[m[35m([mfig_df[35m$[mrun[35m))[m
+fig_df[35m$[mx [33m<-[m [36mrep[m[35m([m[36mc[m[35m([m[33m2[m[35m,[m[33m3[m[35m,[m[33m4[m[35m,[m[33m5[m[35m,[m[33m10[m[35m),[m each[33m=[m[33m8[m[35m)[m
+fig_df
 
-[1] "Name to identify run"
-[1] "model-1_n-5"
-[1] "current params of interest"
-[1] "sites-2_b-0.5_d-2"
-[1] "Incorrect file selected: stan"
-[1] "Available files: figures" "Available files: stan"   
-[1] "oe_model-1_sites-2_n-5_a--2_b-1_g-1_d-2_p-0.2"
-[[1]]
-[1] "oe"      "model-1" "sites-2" "n-5"     "a--2"    "b-1"     "g-1"    
-[8] "d-2"     "p-0.2"  
-
-[1] "Name to identify run"
-[1] "model-1_n-5"
-[1] "current params of interest"
-[1] "sites-2_b-1_d-2"
-[1] "reading file:"
-[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_4/oe_model-1_sites-2_n-5_a--2_b-1_g-1_d-2_p-0.2/results.xlsx"
-[1] "oe_model-1_sites-3_n-2_a--2_b-0.5_g-1_d-2_p-0.2"
-[[1]]
-[1] "oe"      "model-1" "sites-3" "n-2"     "a--2"    "b-0.5"   "g-1"    
-[8] "d-2"     "p-0.2"  
-
-[1] "Name to identify run"
-[1] "model-1_n-2"
-[1] "current params of interest"
-[1] "sites-3_b-0.5_d-2"
-[1] "reading file:"
-[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_4/oe_model-1_sites-3_n-2_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
-[1] "oe_model-1_sites-3_n-2_a--2_b-1_g-1_d-2_p-0.2"
-[[1]]
-[1] "oe"      "model-1" "sites-3" "n-2"     "a--2"    "b-1"     "g-1"    
-[8] "d-2"     "p-0.2"  
-
-[1] "Name to identify run"
-[1] "model-1_n-2"
-[1] "current params of interest"
-[1] "sites-3_b-1_d-2"
-[1] "reading file:"
-[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_4/oe_model-1_sites-3_n-2_a--2_b-1_g-1_d-2_p-0.2/results.xlsx"
-[1] "oe_model-1_sites-3_n-5_a--2_b-0.5_g-1_d-2_p-0.2"
-[[1]]
-[1] "oe"      "model-1" "sites-3" "n-5"     "a--2"    "b-0.5"   "g-1"    
-[8] "d-2"     "p-0.2"  
-
-[1] "Name to identify run"
-[1] "model-1_n-5"
-[1] "current params of interest"
-[1] "sites-3_b-0.5_d-2"
-[1] "reading file:"
-[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_4/oe_model-1_sites-3_n-5_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
-[1] "oe_model-1_sites-3_n-5_a--2_b-1_g-1_d-2_p-0.2"
-[[1]]
-[1] "oe"      "model-1" "sites-3" "n-5"     "a--2"    "b-1"     "g-1"    
-[8] "d-2"     "p-0.2"  
-
-[1] "Name to identify run"
-[1] "model-1_n-5"
-[1] "current params of interest"
-[1] "sites-3_b-1_d-2"
-[1] "reading file:"
-[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_4/oe_model-1_sites-3_n-5_a--2_b-1_g-1_d-2_p-0.2/results.xlsx"
-[1] "oe_model-1_sites-4_n-2_a--2_b-0.5_g-1_d-2_p-0.2"
-[[1]]
-[1] "oe"      "model-1" "sites-4" "n-2"     "a--2"    "b-0.5"   "g-1"    
-[8] "d-2"     "p-0.2"  
-
-[1] "Name to identify run"
-[1] "model-1_n-2"
-[1] "current params of interest"
-[1] "sites-4_b-0.5_d-2"
-[1] "reading file:"
-[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_4/oe_model-1_sites-4_n-2_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
-[1] "oe_model-1_sites-4_n-2_a--2_b-1_g-1_d-2_p-0.2"
-[[1]]
-[1] "oe"      "model-1" "sites-4" "n-2"     "a--2"    "b-1"     "g-1"    
-[8] "d-2"     "p-0.2"  
-
-[1] "Name to identify run"
-[1] "model-1_n-2"
-[1] "current params of interest"
-[1] "sites-4_b-1_d-2"
-[1] "reading file:"
-[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_4/oe_model-1_sites-4_n-2_a--2_b-1_g-1_d-2_p-0.2/results.xlsx"
-[1] "oe_model-1_sites-4_n-5_a--2_b-0.5_g-1_d-2_p-0.2"
-[[1]]
-[1] "oe"      "model-1" "sites-4" "n-5"     "a--2"    "b-0.5"   "g-1"    
-[8] "d-2"     "p-0.2"  
-
-[1] "Name to identify run"
-[1] "model-1_n-5"
-[1] "current params of interest"
-[1] "sites-4_b-0.5_d-2"
-[1] "reading file:"
-[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_4/oe_model-1_sites-4_n-5_a--2_b-0.5_g-1_d-2_p-0.2/results.xlsx"
-[1] "oe_model-1_sites-4_n-5_a--2_b-1_g-1_d-2_p-0.2"
-[[1]]
-[1] "oe"      "model-1" "sites-4" "n-5"     "a--2"    "b-1"     "g-1"    
-[8] "d-2"     "p-0.2"  
+model_labels [33m=[m [36mc[m[35m([m[33m"SO, b=1, n=2"[m[35m,[m [33m"SO, b=1, n=2"[m[35m,[m [33m"SO, b=1, n=5"[m[35m,[m [33m"SO+PO, b=1, n=2"[m[35m,[m [33m"SO+PO, b=1, n=2"[m[35m,[m [33m"SO+PO, b=1, n=5"[m[35m,[m [33m"SO+PO, b=1, n=5"[m[35m)[m
+[36m# Generally will be run from evaluation directory[m
+fig_name [33m<-[m [36mfile.path[m[35m([m[33m"."[m[35m,[m [33m"exp_4_comparison.png"[m[35m)[m
+p [33m<-[m [36mggplot[m[35m([mdata[33m=[mfig_df[35m,[m [36maes[m[35m([mx[33m=[mx[35m,[m y[33m=[mvalue[35m,[m colour[33m=[mrun[35m))[m [33m+[m
+  [36mgeom_line[m[35m([mlinewidth[33m=[m[33m1[m[35m)[m [33m+[m
+  [36m#geom_errorbar(aes(ymin=avg_v-se, ymax=avg_v+se)) +[m
+  [36mlabs[m[35m([mtitle[33m=[m[33m""[m[35m,[m x[33m=[m[33m"Max visits"[m[35m,[m y[33m=[m[33m"U(d)"[m[35m)[m [33m+[m
+  [36mtheme[m[35m([mtext[33m=[m[36melement_text[m[35m([msize[33m=[m[33m7[m[35m),[m axis.title [33m=[m [36melement_text[m[35m([msize [33m=[m [33m7[m[35m),[m legend.key.size [33m=[m [36munit[m[35m([m[33m0.25[m[35m,[m [33m'cm'[m[35m))[m [33m+[m
+  [36mscale_color_discrete[m[35m([mname [33m=[m [33m"Run"[m[35m,[m type[33m=[m[36mc[m[35m([m[33m"#c356ea"[m[35m,[m[33m"#ffc100"[m[35m,[m [33m"#71aef2"[m[35m,[m [33m"#f7adce"[m[35m,[m [33m"#fa754a"[m[35m,[m[33m"#6CCC64"[m[35m,[m [33m"#68e2e6"[m[35m,[m [33m"#ea6ff3"[m[35m),[m labels [33m=[m model_labels[35m)[m [33m+[m
+  [36mtheme_bw[m[35m()[m
+  [36mtheme_bw[m[35m()[m
+[36mprint[m[35m([mp[35m)[m
+[36mggsave[m[35m([mfig_name[35m,[m plot[33m=[mp[35m,[m dpi[33m=[m[33m300[m[35m,[m width[33m=[m[33m10[m[35m,[m height[33m=[m[33m7[m[35m,[m units[33m=[m[33m"cm"[m[35m)[m[49;172H131,1[9CBot[48;1H[?25h
+[?2004l[?1l>[?1049l[23;0;0tVim: Caught deadly signal HUP
+Vim: Finished.
+[49;1H    "p-0.2"  
 
 [1] "Name to identify run"
 [1] "model-1_n-5"
