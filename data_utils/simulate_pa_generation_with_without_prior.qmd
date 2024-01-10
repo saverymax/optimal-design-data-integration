@@ -238,7 +238,7 @@ alpha_draws <- rep(alpha, data_reps)
 beta_draws <- rep(beta, data_reps)
 pa_param_draws <- cbind(alpha_draws, beta_draws)
 # Use mean as fixed values for PO params 
-gamma <- 0.1
+gamma <- 1
 delta <- 2
 epsilon <- 1.5
 po_param_vec <- list(alpha=alpha, beta=beta, gamma=gamma, delta=delta, epsilon=1.5)
