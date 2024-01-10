@@ -45,6 +45,7 @@ parser <- add_option(parser, "--alpha", type="double", default=-2, help="Interce
 parser <- add_option(parser, "--beta", type="double", default=0.5, help="Slope for intensity")
 parser <- add_option(parser, "--gamma", type="double", default=1, help="Intercept for bias")
 parser <- add_option(parser, "--delta", type="double", default=.5, help="Slope for bias")
+parser <- add_option(parser, "--sd", type="double", default=5, help="Standard deviation for donut intensity surface")
 parser <- add_option(parser, "--p", type="double", default=0.7, help="Probability of detection")
 parser <- add_option(parser, "--area", type="integer", default=100, help="Area of region D")
 parser <- add_option(parser, "--k", type="integer", default=20, help="Number of sites along one side of grid")
@@ -81,6 +82,7 @@ alpha <- exp_args$alpha
 beta <- exp_args$beta
 gamma <- exp_args$gamma
 delta <- exp_args$delta
+deviation <- exp_args$sd
 p_0 <- exp_args$p
 aux_cor <- exp_args$aux_cor
 # This assumes spatial variance of 1, which was used in Reich 2018 (see supplement)
@@ -94,7 +96,7 @@ m <- exp_args$m
 if (exp_args$intensity_func == "simple"){
   sampling_surface <- get_sampling_surface_simple(k)
 }else{
-  sampling_surface <- get_sampling_surface_donut(k)
+  sampling_surface <- get_sampling_surface_donut(k, deviation)
   if (exp_args$bias_func == "exponential"){
     centroid <- c(10,4)
     sampling_surface <- get_bias_surface_exponential(sampling_surface, centroid)
@@ -146,7 +148,15 @@ if (exp_args$use_sim_po==T){
   # Subset based on datareps in this script
   # The PO data has been pregenerated with 96 reps, tho
   # we can regenerate
-  r_po_data$Y <- r_po_data$Y[1:data_reps, ]
+  if (nrow(r_po_data$Y) >= data_reps){
+    r_po_data$Y <- r_po_data$Y[1:data_reps, ]
+  }
+  else{
+    r_po_data$Y <- matrix(rep(r_po_data$Y[1,], data_reps), nrow=data_reps, ncol=sites, byrow=T)
+    r_po_data$lambda <- matrix(rep(r_po_data$lambda[1,], data_reps), nrow=data_reps, ncol=sites, byrow=T)
+    r_po_data$bias <- matrix(rep(r_po_data$bias[1,], data_reps), nrow=data_reps, ncol=sites, byrow=T)
+  } 
+  # If I ever use another intensity I have to add a check for using the correct number of sites
   stopifnot(r_po_data$params$alpha==alpha)
   stopifnot(r_po_data$params$beta==beta)
   stopifnot(r_po_data$params$gamma==gamma)

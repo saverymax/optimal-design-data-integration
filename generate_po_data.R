@@ -15,6 +15,7 @@ parser <- add_option(parser, "--beta", type="double", default=0.5, help="Slope f
 parser <- add_option(parser, "--gamma", type="double", default=1, help="Intercept for bias")
 parser <- add_option(parser, "--delta", type="double", default=.5, help="Slope for bias")
 parser <- add_option(parser, "--intensity_func", type="character", default="donut", help="Intensity function for sampling surface")
+parser <- add_option(parser, "--sd", type="double", default=5, help="Standard deviation for donut intensity surface")
 parser <- add_option(parser, "--bias_func", type="character", default="exponential", help="Bias function for sampling surface")
 parser <- add_option(parser, "--area", type="integer", default=100, help="Area of region D")
 parser <- add_option(parser, "--k", type="integer", default=20, help="Number of sites along one side of grid")
@@ -41,11 +42,13 @@ alpha <- exp_args$alpha
 beta <- exp_args$beta
 gamma <- exp_args$gamma
 delta <- exp_args$delta
+# variance of surface
+deviation <- exp_args$sd
 # Select the intensity surface
 if (exp_args$intensity_func == "simple"){
   sampling_surface <- get_sampling_surface_simple(k)
 }else{
-  sampling_surface <- get_sampling_surface_donut(k)
+  sampling_surface <- get_sampling_surface_donut(k, deviation)
   if (exp_args$bias_func == "exponential"){
     centroid <- c(10,4)
     sampling_surface <- get_bias_surface_exponential(sampling_surface, centroid)
@@ -69,7 +72,7 @@ r_po_data <- generate_ppp_data_r(sampling_surface, params, sites, data_reps, cor
 r_po_data$params <- list(alpha=alpha, beta=beta, gamma=gamma, delta=delta)
 
 # Save the PO data sets
-param_setting <- paste(exp_args$exp_name, "_", "ints-", exp_args$intensity_func ,"_a=", alpha, "_b=", beta, "_g=", gamma, "_d=", delta, sep="")
+param_setting <- paste(exp_args$exp_name, "_", "ints-", exp_args$intensity_func, "_peak=", deviation ,"_a=", alpha, "_b=", beta, "_g=", gamma, "_d=", delta, sep="")
 p <- ggplot(sampling_surface, aes(x, y, fill=r_po_data$lambda[data_reps,])) + 
   geom_tile() +
   scale_fill_viridis(discrete=FALSE, name="Lambda") +
