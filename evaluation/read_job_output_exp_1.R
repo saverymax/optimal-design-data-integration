@@ -12,7 +12,8 @@ exp_name <- "experimental_runs/exp_1"
 result_dir <- file.path(exp_dir, exp_name)
 print(result_dir)
 # Look at all files corresponding to this set of experiments
-file_list <- list.files(result_dir)
+# using just peak-5 for now
+file_list <- list.files(result_dir, pattern="peak-5")
 print("available runs")
 print(file_list)
 n_f <- length(file_list)

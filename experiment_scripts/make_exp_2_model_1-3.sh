@@ -15,7 +15,7 @@ delta="0.25 2"
 #detection_p="0.2 0.7"
 detection_p="0.2"
 n_surveys="2 3"
-deviation="2 5"
+deviation="5"
 # Might be nice to write job output to the experimental run dir but it's nice to leave that dir created by the R script
 # so as to seperate the HPC and local run capabilities.
 WORKDIR=$VSC_DATA/projects/optimal_design_presence_only/optimal-design-data-integration

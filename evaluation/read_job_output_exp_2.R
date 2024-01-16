@@ -12,7 +12,7 @@ exp_name <- "experimental_runs/exp_2"
 result_dir <- file.path(exp_dir, exp_name)
 print(result_dir)
 # Look at all files corresponding to this set of experiments
-file_list <- list.files(result_dir)
+file_list <- list.files(result_dir, pattern="peak-5")
 print("available runs")
 print(file_list)
 n_f <- length(file_list)
@@ -22,6 +22,7 @@ exp_col <- c("model-1_n-2", "model-1_n-3", "model-3_n-2", "model-3_n-3")
 #exp_col <- c("model-1_n-5", "model-1_n-10", "model-3_n-5", "model-3_n-10", "model-4_n-5", "model-4_n-10", "model-5_n-5", "model-5_n-10")
 exp_list <- vector("list", length=length(exp_col))
 perm_list <- vector("list", length=length(exp_col))
+visit_counts <- vector("list", length=length(exp_col))
 names(exp_list) <- exp_col
 names(perm_list) <- exp_col
 print("inital list to save results")
@@ -36,7 +37,7 @@ for (i in 1:length(file_list)){
   compare_name <- paste(params[[1]][2], params[[1]][4], sep="_")
   print("Name to identify run")
   print(compare_name)
-  param_perm <- paste(params[[1]][5], params[[1]][7], params[[1]][9], sep="_")
+  param_perm <- paste(params[[1]][5], params[[1]][6],  params[[1]][8], params[[1]][10], sep="_")
   print("current params of interest")
   print(param_perm)
   # Make this list so as to have the permutation names for each subset
@@ -45,6 +46,7 @@ for (i in 1:length(file_list)){
     print(paste("Incorrect file selected:", file_name))
     print(paste("Available files:", list.files(dir_path)))
     exp_list[[compare_name]] <- c(exp_list[[compare_name]], NA)
+    visit_counts[[compare_name]] <- c(visit_counts[[compare_name]], NA)
   } 
   else{
     #if (substr(file_name, 1, 1) == "r"){
@@ -61,6 +63,11 @@ for (i in 1:length(file_list)){
     results <- read.xlsx(file_path, sheet="v_stat")
     # Split strings, get params, and then organize table somehow
     exp_list[[compare_name]] <- c(exp_list[[compare_name]], results$v)
+    visit_results <- read.xlsx(file_path, sheet="best_sites")
+    n_visits <- visit_results[1:nrow(visit_results), 11:20]
+    avg_visits <- sum(n_visits) / (nrow(visit_results)*10)
+    avg_visits <- sum(n_visits) / (nrow(visit_results)*10)
+    visit_counts[[compare_name]] <- c(visit_counts[[compare_name]], avg_visits)
   }
 }
 
@@ -68,24 +75,36 @@ print("result list")
 print(exp_list)
 print("Params per model. Make sure each model has params ordered in the same way")
 print(perm_list)
+print("average visits per site")
+print(visit_counts)
 for (i in 1:length(exp_col)){
   stopifnot(identical(perm_list[[1]], perm_list[[i]]))
 }
 v_mat <- matrix(nrow=length(exp_col), ncol=n_f/length(exp_col))
+visit_mat <- matrix(nrow=length(exp_col), ncol=n_f/length(exp_col))
 print(dim(v_mat))
 for (i in 1:length(exp_col)){
   v_mat[i,] <- exp_list[[exp_col[i]]]
   #v_mat[,i] <- exp_list[[exp_col[i]]]
+  visit_mat[i,] <- visit_counts[[exp_col[i]]]
 }
 print(v_mat)
 v_df <- as.data.frame(v_mat)
+visit_df <- as.data.frame(visit_mat)
 rownames(v_df) <- exp_col
+rownames(visit_df) <- exp_col
 colnames(v_df) <- perm_list[[1]]
+colnames(visit_df) <- perm_list[[1]]
 print(v_df)
 caption <- paste("Comparison of models, sampling effort, and parameter permutations")
 label <- paste("survey_eval", sep="")
 print(kbl(v_df, booktabs = T, escape=T, caption=caption, label=label, 
           align=c('lcccc'), digits=4, format="latex") %>% 
         kable_styling(latex_options = c("HOLD_position")) )
-#%>%  
-#
+
+
+print(kbl(visit_df, booktabs = T, escape=T, caption=caption, label=label, 
+          align=c('lcccc'), digits=4, format="latex") %>% 
+        kable_styling(latex_options = c("HOLD_position")) )
+
+

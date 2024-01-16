@@ -19,7 +19,6 @@ n_f <- length(file_list)
 print("number of files")
 print(n_f)
 exp_col <- c("model-1_effort-n-2", "model-1_effort-n-3", "model-1_effort-n-4", "model-1_effort-n-5", "model-1_effort-n-7", "model-1_effort-n-10", "model-3_effort-n-2", "model-3_effort-n-3", "model-3_effort-n-4", "model-3_effort-n-5", "model-3_effort-n-7", "model-3_effort-n-10")
-#exp_col <- c("model-1_n-5", "model-1_n-10", "model-3_n-5", "model-3_n-10", "model-4_n-5", "model-4_n-10", "model-5_n-5", "model-5_n-10")
 exp_list <- vector("list", length=length(exp_col))
 var_list <- vector("list", length=length(exp_col))
 perm_list <- vector("list", length=length(exp_col))
@@ -126,6 +125,7 @@ fig_df <- pivot_longer(fig_df, cols=1:8, names_to="run", values_to="avg_v")
 #var_fig_df <- pivot_longer(var_fig_df, cols=1:4, names_to="run", values_to="var")
 fig_df$x <- rep(c(2,3,4,5,7,10), each=8)
 fig_df$run <- as.factor(fig_df$run)
+print(fig_df)
 print(levels(fig_df$run))
 #fig_df$x <- as.factor(fig_df$x) 
 print(fig_df, n=1000)
@@ -137,6 +137,7 @@ model_labels=c("SO, b=0.5, d=2", "SO, b=0.5, d=0.25", "SO, b=1, d=2", "SO, b=1, 
 fig_name <- file.path(".", "exp_3_comparison.png")
 p <- ggplot(data=fig_df, aes(x=x, y=avg_v, colour=run)) +
   geom_line(linewidth=1) +
+  geom_vline(xintercept=c(2,3,4,5,7,10), color = "#949494", linewidth=0.3) + 
   scale_x_continuous(breaks=c(2,3,4,5,7,10)) +
   #scale_x_discrete(labels=c("2","3","4","5","7","10")) +
   #geom_errorbar(aes(ymin=avg_v-se, ymax=avg_v+se)) +

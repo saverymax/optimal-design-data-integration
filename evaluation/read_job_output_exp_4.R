@@ -13,13 +13,18 @@ exp_name <- "exp_4"
 result_dir <- file.path(exp_dir, exp_name)
 print(result_dir)
 # Look at all files corresponding to this set of experiments
+#file_list <- list.files(result_dir, pattern="peak-5")
 file_list <- list.files(result_dir)
 print("available runs")
 print(file_list)
 n_f <- length(file_list)
 print("number of files")
 print(n_f)
-exp_col <- c("model-1_n-2", "model-1_n-5", "model-3_n-2", "model-3_n-5")
+exp_col <- c("model-1_sites-2_n-2", "model-1_sites-3_n-2", "model-1_sites-4_n-2", "model-1_sites-5_n-2", "model-1_sites-10_n-2",
+	"model-1_sites-2_n-5", "model-1_sites-3_n-5", "model-1_sites-4_n-5", "model-1_sites-5_n-5", "model-1_sites-10_n-5", 
+	"model-3_sites-2_n-2", "model-3_sites-3_n-2", "model-3_sites-4_n-2", "model-3_sites-5_n-2", "model-3_sites-10_n-2",
+	"model-3_sites-2_n-5", "model-3_sites-3_n-5", "model-3_sites-4_n-5", "model-3_sites-5_n-5", "model-3_sites-10_n-5")
+
 exp_list <- vector("list", length=length(exp_col))
 var_list <- vector("list", length=length(exp_col))
 perm_list <- vector("list", length=length(exp_col))
@@ -34,10 +39,10 @@ for (i in 1:length(file_list)){
   file_name <- list.files(dir_path)[2]
   params <- str_split(f, "_")
   print(params)
-  compare_name <- paste(params[[1]][2], params[[1]][4], sep="_")
+  compare_name <- paste(params[[1]][2], params[[1]][3], params[[1]][4], sep="_")
   print("Name to identify run")
   print(compare_name)
-  param_perm <- paste(params[[1]][3], params[[1]][6], params[[1]][8], sep="_")
+  param_perm <- paste(params[[1]][5], params[[1]][7], params[[1]][9], sep="_")
   print("current params of interest")
   print(param_perm)
   # Make this list so as to have the permutation names for each subset
@@ -101,31 +106,84 @@ print(kbl(v_df, booktabs = T, escape=T, caption=caption, label=label,
         kable_styling(latex_options = c("HOLD_position")) )
 
 # For this we can also make a figure as effort increases
-v_df
-var_df
-# Move m=10 to end
-v_df <- v_df %>% relocate('sites-10_b-0.5_d-2', .after='sites-5_b-1_d-2')
-v_df
-var_df <- var_df %>% relocate('sites-10_b-1_d-2', .after='sites-10_b-0.5_d-2')
 v_df$run <- rownames(v_df)
 var_df$run <- rownames(var_df)
-fig_df <- melt(v_df, id='run')
-fig_df$run <- as.factor(fig_df$run)
+# At the moment only using n-2
+m1_1 <- v_df$`peak-2_b-0.5_d-2`[1:5]
+m1_2 <- v_df$`peak-2_b-1_d-2`[1:5]
+m1_3 <- v_df$`peak-5_b-0.5_d-2`[1:5]
+m1_4 <- v_df$`peak-5_b-1_d-2`[1:5]
+m2_1 <- v_df$`peak-2_b-0.5_d-2`[11:15]
+m2_2 <- v_df$`peak-2_b-1_d-2`[11:15]
+m2_3 <- v_df$`peak-5_b-0.5_d-2`[11:15]
+m2_4 <- v_df$`peak-5_b-1_d-2`[11:15]
+
+fig_df <- data.frame(m1_peak_2_b05_d2=m1_1, m2_peak_2_b05_d2=m2_1, m1_peak_2_b1_d2=m1_2, m2_peak_2_b1_d2=m2_2, m1_peak_5_b05_d2=m1_3, m2_peak_5_b05_d2=m2_3, m1_peak_5_b1_d2=m1_4, m2_peak_5_b1_d2=m2_4)
 print(fig_df)
+fig_df <- pivot_longer(fig_df, cols=1:8, names_to="run", values_to="avg_v")
+fig_df$run <- as.factor(fig_df$run)
+fig_df$x <- rep(c(2,3,4,5,10), each=8)
+print(fig_df)
+print("levels")
 print(levels(fig_df$run))
+#[1] "m1_peak_2_b05_d2" "m1_peak_2_b1_d2"  "m1_peak_5_b05_d2" "m1_peak_5_b1_d2" 
+#[5] "m2_peak_2_b05_d2" "m2_peak_2_b1_d2"  "m2_peak_5_b05_d2" "m2_peak_5_b1_d2" 
 fig_df$x <- rep(c(2,3,4,5,10), each=8)
 fig_df
 
-model_labels = c("SO, b=1, n=2", "SO, b=1, n=2", "SO, b=1, n=5", "SO+PO, b=1, n=2", "SO+PO, b=1, n=2", "SO+PO, b=1, n=5", "SO+PO, b=1, n=5")
+model_labels=c("SO, sd=2, b=0.5, d=2", "SO, sd=2, b=1, d=2", "SO, sd=5, b=0.5, sd=2", "SO, d=5, b=1, d=2", "SO+PO, sd=2, b=0.5, d=2", "SO + PO, sd=2, b=1, d=2", "SO+PO, sd=5, b=0.5, d=2", "SO + PO, sd=5, b=1, d=2") 
+#model_labels=c("SO, b=0.5, d=2", "SO, b=0.5, d=0.25", "SO, b=1, d=2", "SO, b=1, d=0.25", "SO+PO, b=0.5, d=2", "SO + PO, b=0.5, d=0.25", "SO+PO, b=1, d=2", "SO + PO, b=1, d=0.25") 
 # Generally will be run from evaluation directory
-fig_name <- file.path(".", "exp_4_comparison.png")
-p <- ggplot(data=fig_df, aes(x=x, y=value, colour=run)) +
+fig_name <- file.path(".", "exp_4_comparison_peaks.png")
+p <- ggplot(data=fig_df, aes(x=x, y=avg_v, colour=run)) +
   geom_line(linewidth=1) +
+  geom_vline(xintercept=c(2,3,4,5,10), color = "#949494", linewidth=0.3) + 
+  scale_x_continuous(breaks=c(2,3,4,5,10)) +
   #geom_errorbar(aes(ymin=avg_v-se, ymax=avg_v+se)) +
   labs(title="", x="Max visits", y="U(d)") + 
   theme(text=element_text(size=7), axis.title = element_text(size = 7), legend.key.size = unit(0.25, 'cm')) +
   scale_color_discrete(name = "Run", type=c("#c356ea","#ffc100", "#71aef2", "#f7adce", "#fa754a","#6CCC64", "#68e2e6", "#ea6ff3"), labels = model_labels) +
   theme_bw()
+print(p)
+ggsave(fig_name, plot=p, dpi=300, width=10, height=7, units="cm")
+
+# The above is a figure for both peaks but only n=2. I want a figure for n=2/5 and only peak=5
+v_df$run <- rownames(v_df)
+m1_1 <- v_df$`peak-5_b-0.5_d-2`[1:5]
+m1_2 <- v_df$`peak-5_b-1_d-2`[1:5]
+m1_3 <- v_df$`peak-5_b-0.5_d-2`[6:10]
+m1_4 <- v_df$`peak-5_b-1_d-2`[6:10]
+m2_1 <- v_df$`peak-5_b-0.5_d-2`[11:15]
+m2_2 <- v_df$`peak-5_b-1_d-2`[11:15]
+m2_3 <- v_df$`peak-5_b-0.5_d-2`[16:20]
+m2_4 <- v_df$`peak-5_b-1_d-2`[16:20]
+
+fig_df <- data.frame(m1_n_2_b05_d2=m1_1, m2_n_2_b05_d2=m2_1, m1_n_2_b1_d2=m1_2, m2_n_2_b1_d2=m2_2, m1_n_5_b05_d2=m1_3, m2_n_5_b05_d2=m2_3, m1_n_5_b1_d2=m1_4, m2_n_5_b1_d2=m2_4)
+print(fig_df)
+fig_df <- pivot_longer(fig_df, cols=1:8, names_to="run", values_to="avg_v")
+fig_df$run <- as.factor(fig_df$run)
+fig_df$x <- rep(c(2,3,4,5,10), each=8)
+print(fig_df)
+print("levels")
+print(levels(fig_df$run))
+#[1] "m1_peak_2_b05_d2" "m1_peak_2_b1_d2"  "m1_peak_5_b05_d2" "m1_peak_5_b1_d2" 
+#[5] "m2_peak_2_b05_d2" "m2_peak_2_b1_d2"  "m2_peak_5_b05_d2" "m2_peak_5_b1_d2" 
+fig_df$x <- rep(c(2,3,4,5,10), each=8)
+fig_df
+
+model_labels=c("SO, n=2, b=0.5, d=2", "SO, n=2, b=1, d=2", "SO, n=5, b=0.5, d=2", "SO, n=5, b=1, d=2", "SO+PO, n=2, b=0.5, d=2", "SO + PO, n=2, b=1, d=2", "SO+PO, n=5, b=0.5, d=2", "SO + PO, n=5, b=1, d=2") 
+# Generally will be run from evaluation directory
+fig_name <- file.path(".", "exp_4_comparison_n.png")
+p <- ggplot(data=fig_df, aes(x=x, y=avg_v, colour=run)) +
+  geom_line(linewidth=1) +
+  geom_vline(xintercept=c(2,3,4,5,10), color = "#949494", linewidth=0.3) + 
+  scale_x_continuous(breaks=c(2,3,4,5,10)) +
+  #geom_errorbar(aes(ymin=avg_v-se, ymax=avg_v+se)) +
+  labs(title="", x="Max visits", y="U(d)") + 
+  theme(text=element_text(size=7), axis.title = element_text(size = 7), legend.key.size = unit(0.25, 'cm')) +
+  scale_color_discrete(name = "Run", type=c("#c356ea","#ffc100", "#71aef2", "#f7adce", "#fa754a","#6CCC64", "#68e2e6", "#ea6ff3"), labels = model_labels) +
   theme_bw()
 print(p)
 ggsave(fig_name, plot=p, dpi=300, width=10, height=7, units="cm")
+
+

@@ -2,7 +2,7 @@
 #PBS -o /data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/job_output/
 #PBS -e /data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/job_output/
 #PBS -N exp_4_oe_model-3_sites-10_n-5_peak-5_a--2_b-1_g-1_d-2_p-0.2
-#PBS -l walltime=13:00:00
+#PBS -l walltime=10:00:00
 #PBS -l nodes=1:ppn=48
 #PBS -l mem=100gb
 
