@@ -194,59 +194,65 @@ fig_name <- file.path(fig_dir, paste("sampling_surface_aux_z.png", sep=""))
 save_basic_plots(fig_name, p)
 
 # Then plot PA data
-p <- ggplot(sampling_surface, aes(x, y, fill=r_survey_data_n1$Y[data_reps,])) + 
-  geom_tile() +
-  scale_fill_viridis(discrete=FALSE, name="Counts") +
-  labs(title="Generated counts per site,\nsampling effort=1", x="", y="") + 
-  theme(text=element_text(size=fig_text_size), axis.title = element_text(size = fig_title_size), legend.key.size = unit(0.25, 'cm')) +
-  coord_fixed()
-fig_name <- file.path(fig_dir, paste("counts-per-site_n1.png", sep=""))
-save_basic_plots(fig_name, p)
-
-p <- ggplot(sampling_surface, aes(x, y, fill=r_survey_data_n1$occupancy[data_reps,])) + 
-  geom_tile() +
-  scale_fill_viridis(discrete=FALSE, name="Occupancy") +
-  labs(title="Generated occupancy persite,\nsampling effort=1", x="", y="") + 
-  theme(text=element_text(size=fig_text_size), axis.title = element_text(size = fig_title_size), legend.key.size = unit(0.25, 'cm')) +
-  coord_fixed()
-fig_name <- file.path(fig_dir, paste("occ-site_n1.png", sep=""))
-save_basic_plots(fig_name, p)
-
-p <- ggplot(sampling_surface, aes(x, y, fill=r_survey_data_n1$theta[data_reps,])) + 
-  geom_tile() +
-  scale_fill_viridis(discrete=FALSE, name="Theta") +
-  labs(title="generated occupancy probability\nper site, sampling effort=1", x="", y="") + 
-  theme(text=element_text(size=fig_text_size), axis.title = element_text(size = fig_title_size), legend.key.size = unit(0.25, 'cm')) +
-  coord_fixed()
-fig_name <- file.path(fig_dir, paste("occ-p-site_n1.png", sep=""))
-save_basic_plots(fig_name, p)
-
-p <- ggplot(sampling_surface, aes(x, y, fill=r_survey_data_n5$Y[data_reps,])) + 
-  geom_tile() +
-  scale_fill_viridis(discrete=FALSE, name="Counts") +
-  labs(title="Generated counts per site,\nsampling effort=5", x="", y="") + 
-  theme(text=element_text(size=fig_text_size), axis.title = element_text(size = fig_title_size), legend.key.size = unit(0.25, 'cm')) +
-  coord_fixed()
-fig_name <- file.path(fig_dir, paste("counts-per-site_n5.png", sep=""))
-save_basic_plots(fig_name, p)
-
-p <- ggplot(sampling_surface, aes(x, y, fill=r_survey_data_n5$occupancy[data_reps,])) + 
-  geom_tile() +
-  scale_fill_viridis(discrete=FALSE, name="Occupancy") +
-  labs(title="Generated occupancy per site,\nsampling effort=5", x="", y="") + 
-  theme(text=element_text(size=fig_text_size), axis.title = element_text(size = fig_title_size), legend.key.size = unit(0.25, 'cm')) +
-  coord_fixed()
-fig_name <- file.path(fig_dir, paste("occ-site_n5.png", sep=""))
-save_basic_plots(fig_name, p)
-
-p <- ggplot(sampling_surface, aes(x, y, fill=r_survey_data_n5$theta[data_reps,])) + 
-  geom_tile() +
-  scale_fill_viridis(discrete=FALSE, name="Theta") +
-  labs(title="generated occupancy probability\nper site, sampling effort=5", x="", y="") + 
-  theme(text=element_text(size=fig_text_size), axis.title = element_text(size = fig_title_size), legend.key.size = unit(0.25, 'cm')) +
-  coord_fixed()
-fig_name <- file.path(fig_dir, paste("occ-p-site_n5.png", sep=""))
-save_basic_plots(fig_name, p)
+max_dr <- 10
+if (data_reps < max_dr){
+  max_dr <- data_reps
+}
+for (data_rep in 1:max_dr){
+  p <- ggplot(sampling_surface, aes(x, y, fill=r_survey_data_n1$Y[data_rep,])) + 
+    geom_tile() +
+    scale_fill_viridis(discrete=FALSE, name="Counts") +
+    labs(title="Generated counts per site,\nsampling effort=1", x="", y="") + 
+    theme(text=element_text(size=fig_text_size), axis.title = element_text(size = fig_title_size), legend.key.size = unit(0.25, 'cm')) +
+    coord_fixed()
+  fig_name <- file.path(fig_dir, paste("data_rep_", data_rep, "_counts-per-site_n1.png", sep=""))
+  save_basic_plots(fig_name, p)
+  
+  p <- ggplot(sampling_surface, aes(x, y, fill=r_survey_data_n1$occupancy[data_rep,])) + 
+    geom_tile() +
+    scale_fill_viridis(discrete=FALSE, name="Occupancy") +
+    labs(title="Generated occupancy persite,\nsampling effort=1", x="", y="") + 
+    theme(text=element_text(size=fig_text_size), axis.title = element_text(size = fig_title_size), legend.key.size = unit(0.25, 'cm')) +
+    coord_fixed()
+  fig_name <- file.path(fig_dir, paste("data_rep_", data_rep, "_occ-site_n1.png", sep=""))
+  save_basic_plots(fig_name, p)
+  
+  p <- ggplot(sampling_surface, aes(x, y, fill=r_survey_data_n1$theta[data_rep,])) + 
+    geom_tile() +
+    scale_fill_viridis(discrete=FALSE, name="Theta") +
+    labs(title="generated occupancy probability\nper site, sampling effort=1", x="", y="") + 
+    theme(text=element_text(size=fig_text_size), axis.title = element_text(size = fig_title_size), legend.key.size = unit(0.25, 'cm')) +
+    coord_fixed()
+  fig_name <- file.path(fig_dir, paste("data_rep_", data_rep, "_occ-p-site_n1.png", sep=""))
+  save_basic_plots(fig_name, p)
+  
+  p <- ggplot(sampling_surface, aes(x, y, fill=r_survey_data_n5$Y[data_rep,])) + 
+    geom_tile() +
+    scale_fill_viridis(discrete=FALSE, name="Counts") +
+    labs(title="Generated counts per site,\nsampling effort=5", x="", y="") + 
+    theme(text=element_text(size=fig_text_size), axis.title = element_text(size = fig_title_size), legend.key.size = unit(0.25, 'cm')) +
+    coord_fixed()
+  fig_name <- file.path(fig_dir, paste("data_rep_", data_rep, "_counts-per-site_n5.png", sep=""))
+  save_basic_plots(fig_name, p)
+  
+  p <- ggplot(sampling_surface, aes(x, y, fill=r_survey_data_n5$occupancy[data_rep,])) + 
+    geom_tile() +
+    scale_fill_viridis(discrete=FALSE, name="Occupancy") +
+    labs(title="Generated occupancy per site,\nsampling effort=5", x="", y="") + 
+    theme(text=element_text(size=fig_text_size), axis.title = element_text(size = fig_title_size), legend.key.size = unit(0.25, 'cm')) +
+    coord_fixed()
+  fig_name <- file.path(fig_dir, paste("occ-site_n5.png", sep=""))
+  save_basic_plots(fig_name, p)
+  
+  p <- ggplot(sampling_surface, aes(x, y, fill=r_survey_data_n5$theta[data_rep,])) + 
+    geom_tile() +
+    scale_fill_viridis(discrete=FALSE, name="Theta") +
+    labs(title="generated occupancy probability\nper site, sampling effort=5", x="", y="") + 
+    theme(text=element_text(size=fig_text_size), axis.title = element_text(size = fig_title_size), legend.key.size = unit(0.25, 'cm')) +
+    coord_fixed()
+  fig_name <- file.path(fig_dir, paste("data_rep_", data_rep, "_occ-p-site_n5.png", sep=""))
+  save_basic_plots(fig_name, p)
+}
 
 # Then the PO data
 p <- ggplot(sampling_surface, aes(x, y, fill=r_po_data$lambda[data_reps,])) + 
