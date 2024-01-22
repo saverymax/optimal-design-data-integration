@@ -126,7 +126,6 @@ Once we have done the extraction, there is the matter of selecting which covaria
 The manual checking and selection will be done in the next code block.
 ```{r process-covar}
 # Need to use crs for grid with units meters but then transform to the crs of raster, so we also us the pp data in crs in meters
-# TODO: Consider transforming raster (nn for categorical;bilinear for continuous)
 cell_size <- 10000
 subgrid <- create_pp_grid(state_bound, crs(crop_lc_rast), cell_size)
 stopifnot(st_crs(subgrid)==st_crs(crop_lc_rast))
@@ -142,6 +141,10 @@ print(p)
 #fig_name="data/ebird/state_grid.png"
 #ggsave(fig_name, plot=p, dpi=300, width=15, height=8, units="cm", bg="white", device="png", type="cairo")
 
+# We are also going to experiment with downsampling the PO data.
+sample(state_po_prj, po_sample_n, replace=F)
+
+# Then create counts
 pp_counts <- aggregate_point_counts(subgrid, state_po_prj)
 pp_counts[which(pp_counts>1)]
 hist(pp_counts[which(pp_counts>1)])
