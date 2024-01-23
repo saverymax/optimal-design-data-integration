@@ -7,7 +7,7 @@ format: pdf
 
 This report is the more modular version of "nuthatch_site_occupancy_in_stan". The documentation regarding the processing and data collection can be found there and in "ebird_nuthatch_occupancy.rmd" as there the processing steps are directly in the script.
 
-However, this report matches the processing used in the optimal design experiments and is used as a way to verify the data generation and stan modelling once the processing steps were made modular.
+However, this report matches the processing used in the optimal design experiments and is used as a way to verify the data generation and stan modelling once the processing steps were made modular. This script can be run after "process_ebird.R" has been run.
 
 ```{r set-up}
 # Load the ebird data in the way it will be used in the sampling procedure, and fit it to a Bayesian model.
@@ -49,6 +49,7 @@ gamma_integration <- TRUE
 ```{r load-initial-data}
 data_reps <- 10
 m <- 5
+po_sample_prop <- .2
 data_pack <- read_rds(file.path(save_dir, "data_pack.RDS"))
 # Unpack
 bias_covars <- data_pack$bias_covars
@@ -67,8 +68,19 @@ state_po_prj <- data_pack$state_po_prj
 rast_surface <- rast(rast_surface_path) 
 sites <- nrow(intensity_covars)
 print(paste("Total sites: ", sites, sep=""))
+# Sample PO points by po_sample_prop, the proportion of data
+# This is done after data pack is created 
+n_po_sample <- round(po_sample_prop * nrow(state_po_prj))
+n_po_sample
+po_id <- sample(1:nrow(state_po_prj), n_po_sample, replace=F)
+state_po_prj_sample <- state_po_prj[po_id, ]
+# Aggregate
+pp_counts <- aggregate_point_counts(subgrid, state_po_prj_sample)
+pp_counts[which(pp_counts>1)]
+hist(pp_counts[which(pp_counts>1)])
+ 
 # Generate po data to match format of simulation script. 
-Y_po <- matrix(rep(data_pack$counts, data_reps), nrow=data_reps, ncol=sites, byrow=T)
+Y_po <- matrix(rep(pp_counts, data_reps), nrow=data_reps, ncol=sites, byrow=T)
 r_po_data <- list(Y=Y_po)
 ```
 
@@ -94,6 +106,15 @@ p <- ggplot() +
   theme_minimal()+
   ggtitle("Labeled nuthatch site")
 print(p)
+
+# Check the sampled PO data
+p <- ggplot() + 
+  geom_spatraster(data=rast_surface) +
+  geom_sf(data=state_po_prj_sample, color=alpha("#FFC81C",0.5), size=0.5)+
+  scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7, na.value="white") +
+  theme_minimal()+
+  ggtitle("Labeled nuthatch site")
+print(p)
 ```
 Everything looks good which means we can proceed to modelling. First we have to generate Presence-Absence data. To do so, we are going to nee
 to make some assumptions about the parameters.
@@ -104,8 +125,9 @@ to the data and use these estimates to generate the PA data. Or we can fit the P
 ```{r fit-ppd}
 if (pp_fit == TRUE){
   # We fit the PP model to the PO data and use the expectation of this posterior to generate the PA data
+  stan_path <- file.path(exp_args$working_dir, "stan_models")
   fit_point_process_ebird(stan_path, exp_dir, sites, area_a, intensity_covars, bias_covars, r_po_data, k_param_intn, k_param_bias, pp_diagnostic=T,
-                        subgrid, rast_surface, gamma_integration)
+                        subgrid, rast_surface, gamma_integration, po_sample_prop)
 }
 pp_posterior <- read_rds(file.path(save_dir, "pp_posterior_ebird.RDS"))
 print("Intensity fit from point process")

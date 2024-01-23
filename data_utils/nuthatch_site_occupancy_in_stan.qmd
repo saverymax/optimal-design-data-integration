@@ -44,8 +44,8 @@ We first load the state polygon and the preprocessed Ebird data. "ebird_nuthatch
 We also load the landcover, EVI, and elevation raster data. These will be processed based on a grid buffer below.
 
 ```{r load-initial-data}
-map_path <- file.path(base_data_dir, "us_states/GOVTUNIT_Tennessee_State_GPKG/GOVTUNIT_Tennessee_State_GPKG.gpkg")
-state_bound <- load_map(map_prj, map_path)
+map_path <- file.path("us_states/GOVTUNIT_Tennessee_State_GPKG/GOVTUNIT_Tennessee_State_GPKG.gpkg")
+state_bound <- load_map(map_prj, map_path, base_data_dir)
 
 # TODO: Include preprocessing for creating the file "nuthatch_filtered_for_occ.csv"
 nuthatch_list <- load_ebird(base_data_dir, ebd_download_dir, state_bound, map_prj)
@@ -104,10 +104,10 @@ crop_elev_rast <- load_elevation(base_data_dir, elev_path, prj_state)
 # Shouldn't need to project either source of rast for elevation rasters
 stopifnot(crs(crop_elev_rast)==crs(crop_lc_rast))
 stopifnot(st_crs(crop_elev_rast)==st_crs(prj_state))
+stopifnot(st_crs(state_po_prj)==st_crs(prj_state))
 p <- ggplot() + 
   geom_spatraster(data=crop_elev_rast) +
-  #geom_sf(data=state_pp_prj, color=alpha("darkgrey", 0.3))+
-  geom_sf(data=state_po, color=alpha("#FFC81C",0.5), size=0.5)+
+  geom_sf(data=state_po_prj, color=alpha("#FFC81C",0.5), size=0.5)+
   geom_sf(data = prj_state, color=alpha("white",0.9), fill='transparent', linewidth=0.4) + 
   scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7) +
   theme_minimal()+
@@ -142,10 +142,15 @@ print(p)
 #ggsave(fig_name, plot=p, dpi=300, width=15, height=8, units="cm", bg="white", device="png", type="cairo")
 
 # We are also going to experiment with downsampling the PO data.
-sample(state_po_prj, po_sample_n, replace=F)
+#sample(state_po_prj, po_sample_n, replace=F)
 
 # Then create counts
-pp_counts <- aggregate_point_counts(subgrid, state_po_prj)
+n_po_sample <- round(.01 * nrow(state_po_prj))
+n_po_sample
+po_id <- sample(1:nrow(state_po_prj), n_po_sample, replace=F)
+state_po_prj_sample <- state_po_prj[po_id, ]
+# Compute the counts using the sample
+pp_counts <- aggregate_point_counts(subgrid, state_po_prj_sample)
 pp_counts[which(pp_counts>1)]
 hist(pp_counts[which(pp_counts>1)])
 subgrid$counts <- pp_counts
@@ -262,6 +267,7 @@ Based on some preliminary modelling, we narrow down the covariates to use to mod
 # Prepare data for feeding into stan models
 link <- "cloglog"
 data_reps <- 20
+area_a <- (10000/1000)^2
 covar_df <- st_drop_geometry(subgrid_covars)
 colnames(covar_df)
 #intensity_covars <- covar_df[c("evi", "elev", "frac_111", )]
@@ -287,7 +293,7 @@ to the data and use these estimates to generate the PA data. Or we can fit the P
 model_path <- "nuthatch_poisson_process.stan"
 model_string <- nuthatch_poisson_process
 write(model_string, model_path)
-data_site_occ = list(N=sites, X=intensity_covars, y=covar_df$counts, Z=bias_covars, k_i=k_param_intn, k_b=k_param_bias)
+data_site_occ = list(N=sites, X=intensity_covars, y=covar_df$counts, Z=bias_covars, k_i=k_param_intn, k_b=k_param_bias, area_a=area_a)
 model <- cmdstan_model(model_path) 
 fit <- model$sample(data=data_site_occ, seed=13, chains=3, iter_sampling=2000, iter_warmup=500) 
 ```
@@ -431,8 +437,17 @@ Using the PO data and generated PA data, we can now fit our site-occupancy model
 # We will use the same data as we used to fit the PO model, only now we will also randomly sample a select set of 
 # sites to use as PA data in the SO model. Otherwise the set-up stays the same.
 #site_idx <- sample(which(pa_gen$Y[10,]>0), m, replace=F)
+m <- 20
 site_idx <- sample(1:sites, m, replace=F)
 site_idx
+p <- ggplot() + 
+  geom_spatraster(data=elev_site_rast) +
+  geom_sf(data = site_centroids[site_idx], color=alpha("white",1)) + 
+  geom_sf(data=state_po_prj, color=alpha("#FFC81C",0.5), size=0.5)+
+  scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7, na.value="white") +
+  theme_minimal()+
+  ggtitle("Labeled nuthatch site")
+print(p)
 covars_sampled_sites <- intensity_covars[site_idx, ]
 dim(covars_sampled_sites)
 covars_sampled_sites
@@ -440,9 +455,9 @@ covars_sampled_sites
 # For the sake of illustration we pick 1 dataset
 selected_counts <- pa_gen$Y[10,site_idx]
 selected_counts
-n_surveys <- rep(n_surveys, m)
-data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, X=covars_sampled_sites, Y=selected_counts, PO=covar_df$counts,
-                         X_po=intensity_covars, Z_po=bias_covars, k_i=k_param_intn, k_b=k_param_bias, model_diag=0)
+site_visits <- rep(n_surveys, m)
+data_site_occ = list(n_surveys=site_visits, n_pa_sites=m, n_po_sites=sites, X=covars_sampled_sites, Y=selected_counts, PO=covar_df$counts,
+                         X_po=intensity_covars, Z_po=bias_covars, k_i=k_param_intn, k_b=k_param_bias, model_diag=0, area_a=area_a)
 model_path <- "nuthatch_site_occ.stan"
 model_string <- nuthatch_poisson_process_site_occupancy
 write(model_string, model_path)

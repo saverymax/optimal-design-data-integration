@@ -144,7 +144,7 @@ main_data_handling_oe <- function(map_prj, map_path, base_data_dir, ebd_download
     ggtitle("2.5km by 2.5km grid over Tennessee")
   fig_name=file.path(exp_dir, "tennessee_grid.png")
   ggsave(fig_name, plot=p, dpi=300, width=15, height=8, units="cm", bg="white", device="png", type="cairo")
-  
+  # Get pp counts here!
   pp_counts <- aggregate_point_counts(subgrid, state_po_prj)
   pp_counts[which(pp_counts>1)]
   hist(pp_counts[which(pp_counts>1)])
@@ -152,7 +152,7 @@ main_data_handling_oe <- function(map_prj, map_path, base_data_dir, ebd_download
   
   # Next calculate covariate aggregation based on the grid.
   # TODO: Add ebird covariates from the buuffer: number_observers and duration_minutes
-  agg_covars <- generate_gridded_covariates(subgrid, crop_lc_rast, crop_evi_rast, crop_elev_rast, state_po_prj)
+  agg_covars <- generate_gridded_covariates(subgrid, crop_lc_rast, crop_evi_rast, crop_elev_rast, state_po_prj_sample)
   subgrid$evi <- agg_covars$evi_agg
   subgrid$elev <- agg_covars$elev_agg
   subgrid_covars <- bind_cols(subgrid, agg_covars$lc_frac)
@@ -384,7 +384,7 @@ generate_ebird_pa <- function(data_reps, area_a, surface_data, p_0, pp_posterior
 }
 
 fit_point_process_ebird <- function(stan_path, exp_dir, sites, area_a, intensity_covars, bias_covars, r_po_data, k_i, k_b, pp_diagnostic,
-                                    subgrid, rast_surface, gamma_integration){
+                                    subgrid, rast_surface, gamma_integration, po_sample_prop){
   # Fit the point process model to the PO data
   stan_models_path <- file.path(stan_path, "stan_nuthatch_models.R")
   model_path <- "nuthatch_poisson_process.stan"
@@ -478,6 +478,6 @@ fit_point_process_ebird <- function(stan_path, exp_dir, sites, area_a, intensity
   
   print("Estimates for intensity (not bias) from pp model")
   print(colMeans(pp_posterior))
-  saveRDS(pp_posterior, file.path(exp_dir, "pp_posterior_ebird.RDS"))
+  saveRDS(pp_posterior, file.path(exp_dir, paste("pp_posterior_ebird_sample", po_sample_prop, ".RDS", sep="")))
 }
   

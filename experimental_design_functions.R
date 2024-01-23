@@ -126,6 +126,7 @@ estimate_v <- function(model, n_surveys, data_reps, m, sites, sampling_surface,
     # Average estimate after R iterations through the datasets.
     # Need to select_idx the sites since it generates for all of them.
     # The 2 index is the ppd for Z
+    # This will be the same as just taking the occ prob instead of mean of bernoulli with probability of occ
     gen_occupancy <- fit$summary(variables=generated_vars[2])$mean
     print("brier comp")
     print(gen_occupancy)

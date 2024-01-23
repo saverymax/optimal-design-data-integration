@@ -39,6 +39,7 @@ parser <- add_option(parser, "--min_visits", type="integer", default=1, help="Mi
 parser <- add_option(parser, "--vary_visits", action="store_true", default=F, help="Allow varying survey effort between sites")
 parser <- add_option(parser, "--model_selection", type="integer", default=1, help="Occupancy model to use: (1) with or (2) without PO data")
 parser <- add_option(parser, "--data_reps", type="integer", default=1, help="number of dataset reps for criterion estimation")
+parser <- add_option(parser, "--po_sample_prop", type="float", default=0.1, help="Proportion of PO sites to sample. 1 will use all PO")
 parser <- add_option(parser, "--random_starts", type="integer", default=1, help="Number of random starts to run the exchange")
 parser <- add_option(parser, "--exch_iter", type="integer", default=2, 
                      help="Number of iterations of exchange before ending optimization. Recommended is 20 but default is set low for test runs.")
@@ -116,8 +117,16 @@ state_po_prj <- data_pack$state_po_prj
 rast_surface <- rast(rast_surface_path) 
 sites <- nrow(intensity_covars)
 # Generate po data to match format of simulation script. 
-Y_po <- matrix(rep(data_pack$counts, data_reps), nrow=data_reps, ncol=sites, byrow=T)
+# TODO: I could do the PO sampling here!
+# Sample PO points by po_sample_prop, the proportion of data
+# Code from data processing has been copied below. Need to remove from load_ebird and process_ebird and nuthatch qmd
+n_po_sample <- round(po_sample_prop * nrow(state_po_prj))
+po_id <- sample(1:nrow(state_po_prj), n_po_sample, replace=F)
+state_po_prj_sample <- state_po_prj[po_id, ]
+pp_counts <- aggregate_point_counts(subgrid, state_po_prj_sample)
+Y_po <- matrix(rep(pp_counts, data_reps), nrow=data_reps, ncol=sites, byrow=T)
 r_po_data <- list(Y=Y_po)
+# This gives aggregated counts after downsampling PO data.
 
 stan_path <- file.path(exp_args$working_dir, "stan_models")
 # Cell size is in meters but let's work with our parameters in kilometer scale
