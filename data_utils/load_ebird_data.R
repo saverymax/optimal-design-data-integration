@@ -152,12 +152,12 @@ main_data_handling_oe <- function(map_prj, map_path, base_data_dir, ebd_download
   
   # Next calculate covariate aggregation based on the grid.
   # TODO: Add ebird covariates from the buuffer: number_observers and duration_minutes
-  agg_covars <- generate_gridded_covariates(subgrid, crop_lc_rast, crop_evi_rast, crop_elev_rast, state_po_prj_sample)
+  agg_covars <- generate_gridded_covariates(subgrid, crop_lc_rast, crop_evi_rast, crop_elev_rast, state_po_prj)
   subgrid$evi <- agg_covars$evi_agg
   subgrid$elev <- agg_covars$elev_agg
   subgrid_covars <- bind_cols(subgrid, agg_covars$lc_frac)
   
-  # The grill will look a bit lopsided because we make the grid in state crs but transform it to raster crs
+  # The grid will look a bit lopsided because we make the grid in state crs but transform it to raster crs
   p <- ggplot() + 
     geom_spatvector(data=subgrid_covars, aes(fill=counts), color=alpha("#B6B6B6", 0.5)) +
     scale_fill_viridis_c(begin=0.2, end=1, option="magma",alpha=0.7) +
@@ -384,7 +384,7 @@ generate_ebird_pa <- function(data_reps, area_a, surface_data, p_0, pp_posterior
 }
 
 fit_point_process_ebird <- function(stan_path, exp_dir, sites, area_a, intensity_covars, bias_covars, r_po_data, k_i, k_b, pp_diagnostic,
-                                    subgrid, rast_surface, gamma_integration, po_sample_prop){
+                                    subgrid, rast_surface, gamma_integration){
   # Fit the point process model to the PO data
   stan_models_path <- file.path(stan_path, "stan_nuthatch_models.R")
   model_path <- "nuthatch_poisson_process.stan"
@@ -478,6 +478,6 @@ fit_point_process_ebird <- function(stan_path, exp_dir, sites, area_a, intensity
   
   print("Estimates for intensity (not bias) from pp model")
   print(colMeans(pp_posterior))
-  saveRDS(pp_posterior, file.path(exp_dir, paste("pp_posterior_ebird_sample", po_sample_prop, ".RDS", sep="")))
+  saveRDS(pp_posterior, file.path(exp_dir, "pp_posterior_ebird.RDS"))
 }
   

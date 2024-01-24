@@ -39,7 +39,7 @@ parser <- add_option(parser, "--min_visits", type="integer", default=1, help="Mi
 parser <- add_option(parser, "--vary_visits", action="store_true", default=F, help="Allow varying survey effort between sites")
 parser <- add_option(parser, "--model_selection", type="integer", default=1, help="Occupancy model to use: (1) with or (2) without PO data")
 parser <- add_option(parser, "--data_reps", type="integer", default=1, help="number of dataset reps for criterion estimation")
-parser <- add_option(parser, "--po_sample_prop", type="float", default=0.1, help="Proportion of PO sites to sample. 1 will use all PO")
+parser <- add_option(parser, "--po_sample_prop", type="double", default=0.1, help="Proportion of PO sites to sample. 1 will use all PO")
 parser <- add_option(parser, "--random_starts", type="integer", default=1, help="Number of random starts to run the exchange")
 parser <- add_option(parser, "--exch_iter", type="integer", default=2, 
                      help="Number of iterations of exchange before ending optimization. Recommended is 20 but default is set low for test runs.")
@@ -84,13 +84,14 @@ data_save_dir <- file.path(exp_args$working_dir, exp_args$data_save_dir)
 # Create dir for figures and stan files
 fig_dir <- file.path(exp_dir, "figures")
 stan_dir <- file.path(exp_dir, "stan")
-dir.create(exp_dir)
+dir.create(exp_dir, recursive=T)
 dir.create(fig_dir)
 dir.create(stan_dir)
 # Set up the rest of the parameters
 # Most of the parameters from the simulation code we don't need. Some we keep, such as m and the prob of detection
 data_reps <- exp_args$data_reps
 p_0 <- exp_args$p
+po_sample_prop <- exp_args$po_sample_prop
 # There will be m sites selected for sampling
 m <- exp_args$m
 cell_size <- exp_args$cell_size
@@ -127,6 +128,16 @@ pp_counts <- aggregate_point_counts(subgrid, state_po_prj_sample)
 Y_po <- matrix(rep(pp_counts, data_reps), nrow=data_reps, ncol=sites, byrow=T)
 r_po_data <- list(Y=Y_po)
 # This gives aggregated counts after downsampling PO data.
+# Save the thinned po data
+p <- ggplot() + 
+  geom_spatraster(data=rast_surface) +
+  geom_sf(data=state_po_prj_sample, color=alpha("#FFC81C",0.5), size=0.5)+
+  scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7, na.value="white") +
+  theme_minimal() +
+  ggtitle("Point pattern of Brown-headed nuthatch observations")
+fig_name=file.path(exp_dir, paste("thinned_ebird_po_data.png", sep=""))
+ggsave(fig_name, plot=p, dpi=300, width=15, height=8, units="cm", bg="white", device="png", type="cairo")
+ 
 
 stan_path <- file.path(exp_args$working_dir, "stan_models")
 # Cell size is in meters but let's work with our parameters in kilometer scale
@@ -231,8 +242,6 @@ print(paste("Cmdstan model", model_strings[[model_selection]]))
 write(model_strings[[model_selection]], model_path)
 model <- cmdstan_model(model_path) 
 # These are the parameters to report
-# Only the PO prior model needs gamma and delta. 
-# If I look at models with and without PO data then I will need to add more options
 if (model_selection==1){
   params <- c("alpha", "gamma", "beta[1]", "beta[2]", "beta[3]", "beta[4]", "beta[5]", "delta[1]")
 }else if (model_selection==2){
@@ -243,10 +252,6 @@ if (model_selection==1){
 print(paste("Using params", paste(params, collapse=" "), "in model", model_selection))
 generated_vars <- c('g_theta_gen')
 
-# The reich paper repeats the entire exchange algorithm procedure 10 times,
-# and retains solution with lowest V(D)
-# Currently I am not repeating the procedure. However, it accounts for uncertainty associated with random m sites 
-# selected for sampling
 p_logging <- exp_args$p_logging
 random_starts <- exp_args$random_starts
 v_list <- vector(mode="list", length=random_starts)
