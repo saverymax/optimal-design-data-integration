@@ -42,13 +42,13 @@ source(file.path(working_dir, "experimental_design_functions.R"))
 stan_models_path <- file.path(working_dir, "stan_models", "stan_nuthatch_models.R")
 source(stan_models_path)
 
-pp_fit <- TRUE
+pp_fit <- F
 gamma_integration <- TRUE
 ```
 
 ```{r load-initial-data}
 data_reps <- 10
-m <- 5
+m <- 10
 po_sample_prop <- .2
 data_pack <- read_rds(file.path(save_dir, "data_pack.RDS"))
 # Unpack
@@ -126,8 +126,8 @@ to the data and use these estimates to generate the PA data. Or we can fit the P
 if (pp_fit == TRUE){
   # We fit the PP model to the PO data and use the expectation of this posterior to generate the PA data
   stan_path <- file.path(exp_args$working_dir, "stan_models")
-  fit_point_process_ebird(stan_path, exp_dir, sites, area_a, intensity_covars, bias_covars, r_po_data, k_param_intn, k_param_bias, pp_diagnostic=T,
-                        subgrid, rast_surface, gamma_integration, po_sample_prop)
+  fit_point_process_ebird(stan_path, exp_dir, sites, area_a, intensity_covars, bias_covars, 
+                          r_po_data, k_param_intn, k_param_bias, pp_diagnostic=T, subgrid, rast_surface, gamma_integration)
 }
 pp_posterior <- read_rds(file.path(save_dir, "pp_posterior_ebird.RDS"))
 print("Intensity fit from point process")
@@ -195,6 +195,16 @@ Using the PO data and generated PA data, we can now fit our site-occupancy model
 #site_idx <- sample(which(pa_gen$Y[10,]>0), m, replace=F)
 site_idx <- sample(1:sites, m, replace=F)
 site_idx
+# Check sites
+p <- ggplot() + 
+  geom_spatraster(data=rast_surface) +
+  geom_sf(data = site_centroids[site_idx], color=alpha("white",1)) + 
+  geom_sf(data=state_po_prj_sample, color=alpha("#FFC81C",0.5), size=0.5)+
+  scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7, na.value="white") +
+  theme_minimal()+
+  ggtitle("Selected sites and sampled PO data")
+print(p)
+
 covars_sampled_sites <- intensity_covars[site_idx, ]
 dim(covars_sampled_sites)
 covars_sampled_sites

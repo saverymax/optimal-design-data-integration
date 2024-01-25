@@ -80,7 +80,6 @@ dir.create(save_dir)
 # Most of the parameters from the simulation code we don't need. Some we keep, such as m and the prob of detection
 data_reps <- exp_args$data_reps
 cell_size <- exp_args$cell_size
-po_sample_prop <- exp_args$po_sample_prop
 gamma_integration <- exp_args$gamma_integration
 
 # This will save the PO data and PA data to the specified dirs in hardcoded file names.
@@ -92,7 +91,7 @@ rast_surface_path <- file.path(save_dir, "rast_surface.tif")
 # Hardcode this for now
 map_prj <- st_crs("ESRI:102003")
 if (exp_args$data_pack==TRUE){
-  main_data_handling_oe(map_prj, map_path, base_data_dir, ebd_download_dir, save_dir, lc_path, modis_path, elev_path, rast_surface_path, cell_size, po_sample_prop)
+  main_data_handling_oe(map_prj, map_path, base_data_dir, ebd_download_dir, save_dir, lc_path, modis_path, elev_path, rast_surface_path, cell_size)
 }
 # Then read in the data and fit the PP model if specified
 data_pack <- read_rds(file.path(save_dir, "data_pack.RDS"))
@@ -125,7 +124,7 @@ area_a <- (cell_size/1000)^2
 #area_a <- 1
 if (exp_args$pp_fit == TRUE){
   fit_point_process_ebird(stan_path, save_dir, sites, area_a, intensity_covars, bias_covars, r_po_data, k_param_intn, k_param_bias, pp_diagnostic,
-                          subgrid, rast_surface, gamma_integration, po_sample_prop)
+                          subgrid, rast_surface, gamma_integration)
 }
 # This assumes somehow the file already exists. If we run this script for the first time, we must set pp_fit=TRUE 
 # Check the posterior
