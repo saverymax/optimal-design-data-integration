@@ -605,9 +605,10 @@ print(optimal_visit_mat)
 print("best V")
 print(best_v)
 print("Avg V(D)")
-print(sum(best_v) / random_starts)
+avg_v <- sum(best_v) / random_starts
+print(avg_v)
 
-write_results(random_starts, best_v, best_site_mat, optimal_visit_mat, v_df, exp_dir, exp_name)
+write_results(random_starts, avg_v, best_v, best_site_mat, optimal_visit_mat, v_df, exp_dir, exp_name, "")
 
 # End cluster
 stopCluster(clust)
