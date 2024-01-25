@@ -508,8 +508,8 @@ plot_sites_ebird <- function(site_centroids, rast_surface, site_idx, title){
 plot_sites_vs_best_ebird <- function(site_centroids, rast_surface, current_site, select_idx, best_select_idx, prev_visits, optimal_visits, title){
   # Plot current set of sites compared to the best sites. 
   # Best will always be pink
-  prev_size <- prev_visits/(length(prev_visits)) + 1.5
-  best_size <- optimal_visits/(length(optimal_visits)) + 1
+  prev_size <- prev_visits/(length(prev_visits)) + 0.5
+  best_size <- optimal_visits/(length(optimal_visits)) 
   # Site centroids are 1 dimensional
   p <- ggplot() + 
     #geom_spatraster(data=rast_surface) +
@@ -525,7 +525,7 @@ plot_sites_vs_best_ebird <- function(site_centroids, rast_surface, current_site,
 }
 
 plot_po_optimal_sites_ebird <- function(site_centroids, rast_surface, po_data, best_select_idx, optimal_visits, title){
-  best_size <- optimal_visits/(length(optimal_visits))
+  best_size <- optimal_visits/(length(optimal_visits)) - 0.5
   p <- ggplot() + 
     geom_spatraster(data=rast_surface) +
     geom_sf(data=po_data, color=alpha("orange",0.5), size=0.5)+
@@ -544,10 +544,6 @@ write_results <- function(random_starts, avg_v, best_v, best_site_mat, visits, v
   site_df <- data.frame(t(best_site_mat), t(visits))
   names(site_df) <- rep(paste("rand-start", c(1:random_starts), sep=""), 2)
   names(v_df) <- c("iter", "v", "rand-start")
-  print(v_stat_df)
-  print(v_df)
-  print(best_v)
-  print(site_df)
   xlsx_list <- list("v_stat"=v_stat_df, "best_v"=best_v, "v_iterations"=v_df, "best_sites"=site_df)
   #write.xlsx(xlsx_list, file=file.path(exp_dir, paste("results_", exp_name, ".xlsx", sep="")), rowNames=F)
   write.xlsx(xlsx_list, file=file.path(exp_dir, paste(file_name, "_results.xlsx", sep="")), rowNames=F)
