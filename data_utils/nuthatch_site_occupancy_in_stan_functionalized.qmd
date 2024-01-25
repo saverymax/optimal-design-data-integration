@@ -48,7 +48,7 @@ gamma_integration <- TRUE
 
 ```{r load-initial-data}
 data_reps <- 10
-m <- 5
+m <- 10
 po_sample_prop <- .2
 data_pack <- read_rds(file.path(save_dir, "data_pack.RDS"))
 # Unpack
@@ -195,6 +195,16 @@ Using the PO data and generated PA data, we can now fit our site-occupancy model
 #site_idx <- sample(which(pa_gen$Y[10,]>0), m, replace=F)
 site_idx <- sample(1:sites, m, replace=F)
 site_idx
+# Check sites
+p <- ggplot() + 
+  geom_spatraster(data=rast_surface) +
+  geom_sf(data = site_centroids[site_idx], color=alpha("white",1)) + 
+  geom_sf(data=state_po_prj_sample, color=alpha("#FFC81C",0.5), size=0.5)+
+  scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7, na.value="white") +
+  theme_minimal()+
+  ggtitle("Selected sites and sampled PO data")
+print(p)
+
 covars_sampled_sites <- intensity_covars[site_idx, ]
 dim(covars_sampled_sites)
 covars_sampled_sites

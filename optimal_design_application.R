@@ -17,6 +17,7 @@ library(openxlsx)
 library(sf)
 library(terra)
 library(tidyterra)
+library(R.utils)
 
 set.seed(13)
 
@@ -43,6 +44,7 @@ parser <- add_option(parser, "--po_sample_prop", type="double", default=0.1, hel
 parser <- add_option(parser, "--random_starts", type="integer", default=1, help="Number of random starts to run the exchange")
 parser <- add_option(parser, "--exch_iter", type="integer", default=2, 
                      help="Number of iterations of exchange before ending optimization. Recommended is 20 but default is set low for test runs.")
+parser <- add_option(parser, "--run_time", type="double", default=2, help="Runtime until exchange is ended, in units of hours")
 parser <- add_option(parser, "--mcmc_iter", type="integer", default=1000, help="Number of MCMC iterations in Stan")
 parser <- add_option(parser, "--p_logging", action="store_true", default=F, help="Boolean for logging information about posterior estimates")
 parser <- add_option(parser, "--v_parallel", action="store_true", default=F, help="Boolean for parallel computation of V criterion")
@@ -176,6 +178,7 @@ if (exp_args$vary_visits == TRUE){
 }
 print(paste("Current visit options:", paste(visits, collapse=" ")))
 
+
 # For the coordinate exchange algorithm, we will need to precompute the nearest neighbors.
 # Need matrix of size: matrix(nrow=nrow(surface), ncol=l). In the simulate we computed distances between 
 # cells. st_distance allows us to do the same here, between grid cells
@@ -257,8 +260,8 @@ random_starts <- exp_args$random_starts
 v_list <- vector(mode="list", length=random_starts)
 names(v_list) <- c(1:random_starts)
 best_v <- vector(mode="numeric", length=random_starts)
-best_site_mat <- matrix(nrow=random_starts, ncol=m)
-optimal_visit_mat <- matrix(nrow=random_starts, ncol=m)
+best_site_mat <- matrix(0, nrow=random_starts, ncol=m)
+optimal_visit_mat <- matrix(0, nrow=random_starts, ncol=m)
 
 # Initiate parallel processing if specified
 if (exp_args$v_parallel==T){
@@ -269,7 +272,11 @@ if (exp_args$v_parallel==T){
   clusterExport(clust, varlist=c("design_criteria", "brier_score_stan"), envir=environment())
 }
 # Start timer
-start_time <- Sys.time()
+start_time <- Sys.time() # Print run time per exchange
+print(paste("Running for ", exp_args$run_time, " hours"))
+print(paste("Time left: ", exp_args$run_time - difftime(Sys.time(), start_time, units = "hours")))
+# Condition for ending exchange after runtime exceeded
+time_exceeded <- FALSE
 for (r_start in 1:random_starts){
   print(paste("random initialization ", r_start, sep=""))
   # we first randomly select m sites, for each run of the exchange algorithm,
@@ -327,7 +334,7 @@ for (r_start in 1:random_starts){
   p <- plot_sites_ebird(site_centroids, rast_surface, site_idx, title)
   fig_name <- file.path(fig_dir, paste("initial_design_", r_start, ".png", sep=""))
   ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm", bg='white', device="png", type="cairo")
-  
+ 
   while ((convergence_cond==FALSE) & (exchange_iter<exp_args$exch_iter)){
     exchange_iter <- exchange_iter + 1
     print(paste("New exchange iteration: ", exchange_iter))
@@ -372,11 +379,11 @@ for (r_start in 1:random_starts){
           # so that current_visits == c(1, 5,5) we will select that index==1 neighbor here 
           # If visits is fixed between sites this vector will always be of 0 length.
           if(exp_args$vary_visits==F){
-	    visit_idx <- c()
-	  }
-	  else{
+      	    visit_idx <- c()
+      	  }
+      	  else{
             visit_idx <- c(neighbor_idx[which(current_visits==exp_args$min_visits)])
-	  }
+      	  }
           print("current s and site")
           print(s)
           print(current_site)
@@ -438,7 +445,7 @@ for (r_start in 1:random_starts){
              print(best_neighbor_idx)
              print(neighbor_idx)
              print(current_site)
-             p <- plot_sites_vs_best_ebird(site_centroids, rast_surface, current_site, best_neighbor_idx, neighbor_idx, possible_visits, current_visits, title)
+             p <- plot_sites_vs_best_ebird(site_centroids, subgrid, current_site, best_neighbor_idx, neighbor_idx, possible_visits, current_visits, title)
              # Then set new best indices
              # best_neighbor and possible_visits will hold the optimal for the local round of iteration
              best_neighbor_idx <- neighbor_idx
@@ -454,7 +461,7 @@ for (r_start in 1:random_starts){
             title <- paste("Non-optimal spatial design: v=", round(new_v_est, 10), 
                            "\nvs current optimal design: v=", round(current_v_est, 10), sep="")
             #print("No change in optimal design")
-            p <- plot_sites_vs_best_ebird(site_centroids, rast_surface, current_site, neighbor_idx, best_neighbor_idx, current_visits, possible_visits, title)
+            p <- plot_sites_vs_best_ebird(site_centroids, subgrid, current_site, neighbor_idx, best_neighbor_idx, current_visits, possible_visits, title)
           }
           fig_name <- file.path(fig_dir, paste("site_locs_rand-start-", r_start, "_ex-iter_", 
                             exchange_iter, "_site-iter-", s, "_effort_", visit, "_nn-iter", n_count,".png", sep=""))
@@ -465,6 +472,37 @@ for (r_start in 1:random_starts){
       # Set design to best from iteration through visits AND neighbors for one site
       # If there is no change from any neighbors, site_idx will not change
       site_idx <- best_neighbor_idx
+      # Check time
+      cur_run_time <- difftime(Sys.time(), start_time, units="hours")
+      print(paste("Current run time is", cur_run_time))
+      print(paste("Time left: ", exp_args$run_time - cur_run_time))
+      # Write results to write after iterating through neighbors and visits for a site
+      # I'm going to save to the same matrices that will also be used for the optimal after each random
+      # start, so that the current results will be overwritten.
+      v_df <- data.frame(x=1:length(v_vec), v=v_vec, r=rep(r_start, length(v_vec)))
+      best_site_mat[r_start,] <- site_idx
+      optimal_visit_mat[r_start,] <- possible_visits
+      best_v[r_start] <- current_v_est
+      cur_avg_v <- sum(best_v) / r_start
+      write_results(r_start, cur_avg_v, best_v, best_site_mat, optimal_visit_mat, v_df, exp_dir, exp_name, "temp")
+      # Current optimal sites 
+      title <- paste("Current PO data and Optimal sites from random init ", r_start, "\n with V(D)=", current_v_est, sep="")
+      p <- plot_po_optimal_sites_ebird(site_centroids, rast_surface, state_po_prj_sample, site_idx, possible_visits, title)
+      fig_name <- file.path(fig_dir, paste("running_optimal_sites_random_start-", r_start, ".png", sep=""))
+      ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm", bg="white", device="png", type="cairo")
+      # Write running results for current site
+      fig_name <- file.path(fig_dir, paste("running_exchange_convergence_random_start-", r_start, ".png", sep=""))
+      p <- ggplot(data=v_df, aes(x=x, y=v)) +
+        geom_line() +
+        theme_bw()
+      ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm")
+      # If we exceed the max allowed run time during the site iteration, we end the exchange
+      # The best results are saved in matrices/results above
+      if (difftime(Sys.time(), start_time, units = "hours") > exp_args$run_time){
+        print("Max runtime exceeded!")
+        time_exceeded <- TRUE
+        break
+      }
     }
     # If after a complete iteration through all the sites, the best sites haven't changed
     # then we can call that convergence
@@ -487,35 +525,23 @@ for (r_start in 1:random_starts){
       # Need to track if there is a change in visits over the course of full iteration
       optimal_visits <- possible_visits
     }
-    # Print run time per exchange
-    cur_time <- Sys.time()
-    run_time <- cur_time - start_time
-    print(paste("Current run time is", run_time))
-    
-    # Write running results for current start after each exchange
-    v_df <- data.frame(x=1:length(v_vec), v=v_vec)
-    fig_name <- file.path(fig_dir, paste("running_exchange_convergence_random_start-", r_start, ".png", sep=""))
-    p <- ggplot(data=v_df, aes(x=x, y=v)) +
-      geom_line() +
-      theme_bw()
-    ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm")
-    
-    # Plot best sites
-    title <- paste("PO data and Optimal sites from random init ", r_start, "\n with V(D)=", current_v_est, sep="")
-    p <- plot_po_optimal_sites_ebird(site_centroids, rast_surface, state_po_prj, best_iter_idx, optimal_visits, title)
-    fig_name <- file.path(fig_dir, paste("running_optimal_sites_random_start-", r_start, ".png", sep=""))
-    ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm", bg="white", device="png", type="cairo")
+    if (time_exceeded == TRUE){
+      break
+    }
   }
-  
   v_list[[r_start]] <- v_vec
   best_site_mat[r_start,] <- best_iter_idx
   optimal_visit_mat[r_start,] <- optimal_visits
   best_v[r_start] <- current_v_est
+  if (time_exceeded == TRUE){
+    break
+  }
 }
+
 end_time <- Sys.time()
-run_time <- end_time - start_time
+cur_run_time <- end_time - start_time
 print("Total run time:")
-print(run_time)
+print(cur_run_time)
 
 
 # Plot the convergence of V(D)
@@ -524,11 +550,18 @@ x_concat <- c()
 rep_labels <- c()
 # Format v for data frame
 for(i in 1:random_starts){
-  v_concat <- c(v_concat, v_list[[i]])
-  l_vec <- rep(paste("y", i, sep=""), length(v_list[[i]]))
-  x_concat <- c(x_concat, 1:length(l_vec))
-  rep_labels <- c(rep_labels, l_vec)
+  # Only make vectors if there is some data for the random start
+  if (length(v_list[[i]]) > 0){
+    v_concat <- c(v_concat, v_list[[i]])
+    l_vec <- rep(paste("y", i, sep=""), length(v_list[[i]]))
+    x_concat <- c(x_concat, 1:length(l_vec))
+    rep_labels <- c(rep_labels, l_vec)
+  }
 }
+print("Final output for figure and saving")
+print(x_concat)
+print(v_concat)
+print(rep_labels)
 
 v_df <- data.frame(x=x_concat, v=v_concat, r=rep_labels)
 fig_name <- file.path(fig_dir, "final_exchange_convergence.png")
@@ -540,10 +573,13 @@ ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm")
 
 # Plot best sites
 for(rs in 1:random_starts){
-  title <- paste("PO data and Optimal sites from random init ", rs, "\n with V(D)=", best_v[rs], sep="")
-  p <- plot_po_optimal_sites_ebird(site_centroids, rast_surface, state_po_prj, best_site_mat[rs,], optimal_visit_mat[rs,], title)
-  fig_name <- file.path(fig_dir, paste("optimal_sites_random_start-", rs, ".png", sep=""))
-  ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm", bg="white", device="png", type="cairo")
+  # Only plot starts for which optimal sites were chosen
+  if (sum(best_site_mat[rs, ]) > 0){
+    title <- paste("PO data and Optimal sites from random init ", rs, "\n with V(D)=", best_v[rs], sep="")
+    p <- plot_po_optimal_sites_ebird(site_centroids, rast_surface, state_po_prj_sample, best_site_mat[rs,], optimal_visit_mat[rs,], title)
+    fig_name <- file.path(fig_dir, paste("optimal_sites_random_start-", rs, ".png", sep=""))
+    ggsave(fig_name, plot=p, dpi=300, width=10, height=7, units="cm", bg="white", device="png", type="cairo")
+  }
 }
 
 print("V list")
@@ -555,9 +591,10 @@ print(optimal_visit_mat)
 print("best V")
 print(best_v)
 print("Avg V(D)")
-print(sum(best_v) / random_starts)
-
-write_results(random_starts, best_v, best_site_mat, optimal_visit_mat, v_df, exp_dir, exp_name)
+# Divide by the final start that was reached
+avg_v <- sum(best_v) / r_start
+print(avg_v)
+write_results(random_starts, avg_v, best_v, best_site_mat, optimal_visit_mat, v_df, exp_dir, exp_name, "final")
 
 # End cluster
 stopCluster(clust)
