@@ -1,0 +1,154 @@
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1"
+[1] "available runs"
+[1] "oe_application_model-1_m-5_n-5_r-96_p-0.2_po_prop-0.01"
+[2] "oe_application_model-1_m-5_n-5_r-96_p-0.2_po_prop-0.05"
+[3] "oe_application_model-1_m-5_n-5_r-96_p-0.2_po_prop-0.1" 
+[4] "oe_application_model-1_m-5_n-5_r-96_p-0.2_po_prop-0.2" 
+[5] "oe_application_model-1_m-5_n-5_r-96_p-0.2_po_prop-0.5" 
+[6] "oe_application_model-1_m-5_n-5_r-96_p-0.2_po_prop-1"   
+[7] "oe_application_model-2_m-5_n-5_r-96_p-0.2_po_prop-0.01"
+[1] "number of files"
+[1] 7
+[1] "inital list to save results"
+$`model-1_prop-0.01`
+NULL
+
+$`model-1_prop-0.05`
+NULL
+
+$`model-1_prop-0.1`
+NULL
+
+$`model-1_prop-0.2`
+NULL
+
+$`model-1_prop-0.5`
+NULL
+
+$`model-1_prop-1`
+NULL
+
+$`model-2_prop-0.01`
+NULL
+
+[1] "oe_application_model-1_m-5_n-5_r-96_p-0.2_po_prop-0.01"
+[[1]]
+[1] "oe"          "application" "model-1"     "m-5"         "n-5"        
+[6] "r-96"        "p-0.2"       "po"          "prop-0.01"  
+
+[1] "Name to identify run"
+[1] "model-1_prop-0.01"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-5_n-5_r-96_p-0.2_po_prop-0.01/final_results.xlsx"
+[1] "oe_application_model-1_m-5_n-5_r-96_p-0.2_po_prop-0.05"
+[[1]]
+[1] "oe"          "application" "model-1"     "m-5"         "n-5"        
+[6] "r-96"        "p-0.2"       "po"          "prop-0.05"  
+
+[1] "Name to identify run"
+[1] "model-1_prop-0.05"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-5_n-5_r-96_p-0.2_po_prop-0.05/final_results.xlsx"
+[1] "oe_application_model-1_m-5_n-5_r-96_p-0.2_po_prop-0.1"
+[[1]]
+[1] "oe"          "application" "model-1"     "m-5"         "n-5"        
+[6] "r-96"        "p-0.2"       "po"          "prop-0.1"   
+
+[1] "Name to identify run"
+[1] "model-1_prop-0.1"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-5_n-5_r-96_p-0.2_po_prop-0.1/final_results.xlsx"
+[1] "oe_application_model-1_m-5_n-5_r-96_p-0.2_po_prop-0.2"
+[[1]]
+[1] "oe"          "application" "model-1"     "m-5"         "n-5"        
+[6] "r-96"        "p-0.2"       "po"          "prop-0.2"   
+
+[1] "Name to identify run"
+[1] "model-1_prop-0.2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-5_n-5_r-96_p-0.2_po_prop-0.2/final_results.xlsx"
+[1] "oe_application_model-1_m-5_n-5_r-96_p-0.2_po_prop-0.5"
+[[1]]
+[1] "oe"          "application" "model-1"     "m-5"         "n-5"        
+[6] "r-96"        "p-0.2"       "po"          "prop-0.5"   
+
+[1] "Name to identify run"
+[1] "model-1_prop-0.5"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-5_n-5_r-96_p-0.2_po_prop-0.5/final_results.xlsx"
+[1] "oe_application_model-1_m-5_n-5_r-96_p-0.2_po_prop-1"
+[[1]]
+[1] "oe"          "application" "model-1"     "m-5"         "n-5"        
+[6] "r-96"        "p-0.2"       "po"          "prop-1"     
+
+[1] "Name to identify run"
+[1] "model-1_prop-1"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-5_n-5_r-96_p-0.2_po_prop-1/final_results.xlsx"
+[1] "oe_application_model-2_m-5_n-5_r-96_p-0.2_po_prop-0.01"
+[[1]]
+[1] "oe"          "application" "model-2"     "m-5"         "n-5"        
+[6] "r-96"        "p-0.2"       "po"          "prop-0.01"  
+
+[1] "Name to identify run"
+[1] "model-2_prop-0.01"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-2_m-5_n-5_r-96_p-0.2_po_prop-0.01/final_results.xlsx"
+[1] "result list"
+$`model-1_prop-0.01`
+[1] 0.1751069
+
+$`model-1_prop-0.05`
+[1] 0.1748053
+
+$`model-1_prop-0.1`
+[1] 0.1681885
+
+$`model-1_prop-0.2`
+[1] 0.168399
+
+$`model-1_prop-0.5`
+[1] 0.1639043
+
+$`model-1_prop-1`
+[1] 0.1774094
+
+$`model-2_prop-0.01`
+[1] 0.1856302
+
+[1] 7 1
+          [,1]
+[1,] 0.1751069
+[2,] 0.1748053
+[3,] 0.1681885
+[4,] 0.1683990
+[5,] 0.1639043
+[6,] 0.1774094
+[7,] 0.1856302
+                         V1
+model-1_prop-0.01 0.1751069
+model-1_prop-0.05 0.1748053
+model-1_prop-0.1  0.1681885
+model-1_prop-0.2  0.1683990
+model-1_prop-0.5  0.1639043
+model-1_prop-1    0.1774094
+model-2_prop-0.01 0.1856302
+\begin{table}[H]
+
+\caption{\label{tab:survey_eval}Comparison of models, sampling effort, and parameter permutations}
+\centering
+\begin{tabular}[t]{ll}
+\toprule
+  & V1\\
+\midrule
+model-1\_prop-0.01 & 0.1751\\
+model-1\_prop-0.05 & 0.1748\\
+model-1\_prop-0.1 & 0.1682\\
+model-1\_prop-0.2 & 0.1684\\
+model-1\_prop-0.5 & 0.1639\\
+\addlinespace
+model-1\_prop-1 & 0.1774\\
+model-2\_prop-0.01 & 0.1856\\
+\bottomrule
+\end{tabular}
+\end{table}

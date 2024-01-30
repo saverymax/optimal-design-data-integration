@@ -342,8 +342,6 @@ for (r_start in 1:random_starts){
   p <- plot_sites_ebird(site_centroids, rast_surface, site_idx, title)
   fig_name <- file.path(fig_dir, paste("initial_design_", r_start, ".png", sep=""))
   ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm", bg='white', device="png", type="cairo")
- 
-  stop("Early stop")
   while ((convergence_cond==FALSE) & (exchange_iter<exp_args$exch_iter)){
     exchange_iter <- exchange_iter + 1
     print(paste("New exchange iteration: ", exchange_iter))

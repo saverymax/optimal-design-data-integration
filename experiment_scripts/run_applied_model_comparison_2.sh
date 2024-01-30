@@ -1,0 +1,10 @@
+qsub application_2/oe_application_model-2_m-12_n-3_r-96_p-0.2.sh
+qsub application_2/oe_application_model-2_m-12_n-5_r-96_p-0.2.sh
+qsub application_2/oe_application_model-2_m-14_n-3_r-96_p-0.2.sh
+qsub application_2/oe_application_model-2_m-14_n-5_r-96_p-0.2.sh
+qsub application_2/oe_application_model-2_m-16_n-3_r-96_p-0.2.sh
+qsub application_2/oe_application_model-2_m-16_n-5_r-96_p-0.2.sh
+qsub application_2/oe_application_model-2_m-18_n-3_r-96_p-0.2.sh
+qsub application_2/oe_application_model-2_m-18_n-5_r-96_p-0.2.sh
+qsub application_2/oe_application_model-2_m-20_n-3_r-96_p-0.2.sh
+qsub application_2/oe_application_model-2_m-20_n-5_r-96_p-0.2.sh
