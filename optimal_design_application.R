@@ -282,7 +282,16 @@ for (r_start in 1:random_starts){
   # from the sampling surface, which includes the auxiliary information.
   # These sites will have n_i = n, the others will have n_i = 0
   # Only sites with n_i=n will contribute to likelihood for the site-occupancy model.
-  site_idx <- sample(1:sites, m, replace=F)
+  if (r_start == 1){
+    # Hardcode start where we start by sampling near biased area.
+    if(m > 20){
+    	stop("More than 20 sites is currently not compatible with initial manual configuration")
+    }
+    site_idx <- c(35, 57, 167, 171, 270, 275, 280, 485, 490, 495, 655, 660, 665, 837, 841, 846, 1007, 1011, 1016, 1148)
+    site_idx <- site_idx[1:m]
+  }else{
+    site_idx <- sample(1:sites, m, replace=F)
+  }
   print("Initial row ids")
   print(site_idx)
   # Initialize for exchange algorithm
@@ -334,6 +343,7 @@ for (r_start in 1:random_starts){
   fig_name <- file.path(fig_dir, paste("initial_design_", r_start, ".png", sep=""))
   ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm", bg='white', device="png", type="cairo")
  
+  stop("Early stop")
   while ((convergence_cond==FALSE) & (exchange_iter<exp_args$exch_iter)){
     exchange_iter <- exchange_iter + 1
     print(paste("New exchange iteration: ", exchange_iter))

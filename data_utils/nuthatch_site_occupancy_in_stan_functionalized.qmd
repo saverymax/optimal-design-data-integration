@@ -115,6 +115,17 @@ p <- ggplot() +
   theme_minimal()+
   ggtitle("Labeled nuthatch site")
 print(p)
+# Try plotting many sites
+site_idx <- c(35, 57, 167, 171, 270, 275, 280, 485, 490, 495, 655, 660, 665, 837, 841, 846, 1007, 1011, 1016, 1148)# 280, 570, 580, 600, 610, 620, 640, 900)
+p <- ggplot() + 
+  geom_spatraster(data=rast_surface) + 
+  geom_sf(data = site_centroids[site_idx], color=alpha("white",1), size=bigger_size) + 
+  scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7, na.value="white") +
+  geom_sf(data=state_po_prj, color=alpha("#FFC81C",0.5), size=0.5)+
+  theme_minimal()+
+  ggtitle("Labeled nuthatch site")
+print(p)
+
 ```
 Everything looks good which means we can proceed to modelling. First we have to generate Presence-Absence data. To do so, we are going to nee
 to make some assumptions about the parameters.

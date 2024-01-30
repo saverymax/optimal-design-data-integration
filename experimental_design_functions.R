@@ -497,7 +497,7 @@ plot_po_optimal_sites <- function(sampling_surface, r_po_data, best_select_idx, 
 plot_sites_ebird <- function(site_centroids, rast_surface, site_idx, title){
   p <- ggplot() + 
     geom_spatraster(data=rast_surface) +
-    geom_sf(data = site_centroids[site_idx], color=alpha("white",1)) + 
+    geom_sf(data = site_centroids[site_idx], color=alpha("white",1), size=0.7) + 
     scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7, na.value="white", name="") +
     theme_minimal()+
     ggtitle(title) +
@@ -525,10 +525,10 @@ plot_sites_vs_best_ebird <- function(site_centroids, rast_surface, current_site,
 }
 
 plot_po_optimal_sites_ebird <- function(site_centroids, rast_surface, po_data, best_select_idx, optimal_visits, title){
-  best_size <- optimal_visits/(length(optimal_visits)) - 0.5
+  best_size <- optimal_visits/(length(optimal_visits)) 
   p <- ggplot() + 
     geom_spatraster(data=rast_surface) +
-    geom_sf(data=po_data, color=alpha("orange",0.5), size=0.5)+
+    geom_sf(data=po_data, color=alpha("orange",0.8), size=0.7)+
     geom_sf(data = site_centroids[best_select_idx], color=alpha("white",1), size=best_size) + 
     scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7, na.value="grey", name="") +
     theme_minimal()+
