@@ -186,10 +186,8 @@ estimate_v_nuthatch <- function(model, n_surveys, data_reps, m, sites, area_a, i
     print(r)
     # For each rth dataset get the m randomly chosen sites
     selected_data <- r_survey_data$Y[r, select_idx]
-    #selected_occ <- r_survey_data$occupancy[r, select_idx]
     occ <- r_survey_data$occupancy[r, ]
     print(selected_data)
-    print(selected_occ)
     # We use all po data for given r
     selected_po <- r_po_data$Y[r,]
     # Here I use the same X covariate for the presence-only data as used for the survey data. The difference is that
@@ -265,7 +263,7 @@ estimate_v_parallel_nuthatch <- function(combined_df, model, n_surveys, m, sites
     v_est <- design_criteria(criteria="brier", sim_occ=gen_occupancy, obs_occ=occ)
     return(v_est)
   }, error=function(e){
-    return(list("Issue computing V, returning_current_vars", n_surveys, selected_occ, selected_data, PO_data, 
+    return(list("Issue computing V, returning_current_vars", n_surveys, selected_data, PO_data, 
                  model_selection, select_sites, fit, v_est, gen_occupancy))
   })
 }
