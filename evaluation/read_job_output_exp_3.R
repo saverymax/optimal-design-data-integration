@@ -118,6 +118,8 @@ var_m2_1 <- var_df$`b-0.5_d-0.25`[7:12]
 var_m1_2 <- var_df$`b-0.5_d-2`[1:6]
 var_m2_2 <- var_df$`b-0.5_d-2`[7:12]
 fig_df <- data.frame(m1_b05_d25=m1_1, m2_b05_d25=m2_1, m1_b05_d2=m1_2, m2_b05_d2=m2_2, m1_b1_d25=m1_3, m2_b1_d25=m2_3, m1_b1_d2=m1_4, m2_b1_d2=m2_4)
+fig_df$m1_b05_d2 = fig_df$m1_b05_d2 + .0005
+fig_df$m1_b1_d2 = fig_df$m1_b1_d2 + .0005
 var_fig_df <- data.frame(var_m1_b05_d25=var_m1_1, var_m2_b05_d25=var_m2_1, var_m1_b05_d2=var_m1_2, var_m2_b05_d2=var_m2_2)
 fig_df$index <- rownames(fig_df)
 var_fig_df$index <- rownames(var_fig_df)
@@ -132,6 +134,7 @@ print(fig_df, n=1000)
 #sqrt(var_fig_df$var)
 #fig_df$se <- sqrt(var_fig_df$var)/sqrt(10)
 
+colors <- c("#1c71e5","#71aef2", "#ff4040","#ffc100", "#31850A", "#97ed6f", "#c356ea", "#ffb0ea")
 model_labels=c("SO, b=0.5, d=2", "SO, b=0.5, d=0.25", "SO, b=1, d=2", "SO, b=1, d=0.25", "SO+PO, b=0.5, d=2", "SO + PO, b=0.5, d=0.25", "SO+PO, b=1, d=2", "SO + PO, b=1, d=0.25") 
 # Generally will be run from evaluation directory
 fig_name <- file.path(".", "exp_3_comparison.png")
@@ -143,7 +146,7 @@ p <- ggplot(data=fig_df, aes(x=x, y=avg_v, colour=run)) +
   #geom_errorbar(aes(ymin=avg_v-se, ymax=avg_v+se)) +
   labs(title="", x="Max visits", y="U(d)") + 
   theme(text=element_text(size=7), axis.title = element_text(size = 7), legend.key.size = unit(0.25, 'cm')) +
-  scale_color_discrete(name = "Run", type=c("#c356ea","#ffc100", "#71aef2", "#f7adce", "#fa754a","#6CCC64", "#68e2e6", "#ea6ff3"), labels = model_labels) +
+  scale_color_discrete(name = "Run", type=colors, labels = model_labels) +
   theme_bw()
 print(p)
 ggsave(fig_name, plot=p, dpi=300, width=10, height=7, units="cm")

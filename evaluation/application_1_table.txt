@@ -1,18 +1,50 @@
 [1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1"
 [1] "available runs"
-[1] "oe_application_model-1_m-5_n-5_r-96_p-0.2_po_prop-0.01"
-[2] "oe_application_model-1_m-5_n-5_r-96_p-0.2_po_prop-0.05"
-[3] "oe_application_model-1_m-5_n-5_r-96_p-0.2_po_prop-0.1" 
-[4] "oe_application_model-1_m-5_n-5_r-96_p-0.2_po_prop-0.2" 
-[5] "oe_application_model-1_m-5_n-5_r-96_p-0.2_po_prop-0.5" 
-[6] "oe_application_model-1_m-5_n-5_r-96_p-0.2_po_prop-1"   
-[7] "oe_application_model-2_m-5_n-5_r-96_p-0.2_po_prop-0.01"
+ [1] "oe_application_model-1_m-10_n-1_r-96_p-0.2_po_prop-0.05"
+ [2] "oe_application_model-1_m-10_n-1_r-96_p-0.2_po_prop-0.1" 
+ [3] "oe_application_model-1_m-10_n-1_r-96_p-0.2_po_prop-0.2" 
+ [4] "oe_application_model-1_m-10_n-1_r-96_p-0.2_po_prop-0.3" 
+ [5] "oe_application_model-1_m-10_n-1_r-96_p-0.2_po_prop-0.5" 
+ [6] "oe_application_model-1_m-10_n-1_r-96_p-0.2_po_prop-0.7" 
+ [7] "oe_application_model-1_m-10_n-1_r-96_p-0.2_po_prop-1"   
+ [8] "oe_application_model-1_m-10_n-2_r-96_p-0.2_po_prop-0.05"
+ [9] "oe_application_model-1_m-10_n-2_r-96_p-0.2_po_prop-0.1" 
+[10] "oe_application_model-1_m-10_n-2_r-96_p-0.2_po_prop-0.2" 
+[11] "oe_application_model-1_m-10_n-2_r-96_p-0.2_po_prop-0.3" 
+[12] "oe_application_model-1_m-10_n-2_r-96_p-0.2_po_prop-0.5" 
+[13] "oe_application_model-1_m-10_n-2_r-96_p-0.2_po_prop-0.7" 
+[14] "oe_application_model-1_m-10_n-2_r-96_p-0.2_po_prop-1"   
+[15] "oe_application_model-1_m-10_n-4_r-96_p-0.2_po_prop-0.05"
+[16] "oe_application_model-1_m-10_n-4_r-96_p-0.2_po_prop-0.1" 
+[17] "oe_application_model-1_m-10_n-4_r-96_p-0.2_po_prop-0.2" 
+[18] "oe_application_model-1_m-10_n-4_r-96_p-0.2_po_prop-0.3" 
+[19] "oe_application_model-1_m-10_n-4_r-96_p-0.2_po_prop-0.5" 
+[20] "oe_application_model-1_m-10_n-4_r-96_p-0.2_po_prop-0.7" 
+[21] "oe_application_model-1_m-10_n-4_r-96_p-0.2_po_prop-1"   
+[22] "oe_application_model-1_m-5_n-1_r-96_p-0.2_po_prop-0.05" 
+[23] "oe_application_model-1_m-5_n-1_r-96_p-0.2_po_prop-0.1"  
+[24] "oe_application_model-1_m-5_n-1_r-96_p-0.2_po_prop-0.2"  
+[25] "oe_application_model-1_m-5_n-1_r-96_p-0.2_po_prop-0.3"  
+[26] "oe_application_model-1_m-5_n-1_r-96_p-0.2_po_prop-0.5"  
+[27] "oe_application_model-1_m-5_n-1_r-96_p-0.2_po_prop-0.7"  
+[28] "oe_application_model-1_m-5_n-1_r-96_p-0.2_po_prop-1"    
+[29] "oe_application_model-1_m-5_n-2_r-96_p-0.2_po_prop-0.05" 
+[30] "oe_application_model-1_m-5_n-2_r-96_p-0.2_po_prop-0.1"  
+[31] "oe_application_model-1_m-5_n-2_r-96_p-0.2_po_prop-0.2"  
+[32] "oe_application_model-1_m-5_n-2_r-96_p-0.2_po_prop-0.3"  
+[33] "oe_application_model-1_m-5_n-2_r-96_p-0.2_po_prop-0.5"  
+[34] "oe_application_model-1_m-5_n-2_r-96_p-0.2_po_prop-0.7"  
+[35] "oe_application_model-1_m-5_n-2_r-96_p-0.2_po_prop-1"    
+[36] "oe_application_model-1_m-5_n-4_r-96_p-0.2_po_prop-0.05" 
+[37] "oe_application_model-1_m-5_n-4_r-96_p-0.2_po_prop-0.1"  
+[38] "oe_application_model-1_m-5_n-4_r-96_p-0.2_po_prop-0.2"  
+[39] "oe_application_model-1_m-5_n-4_r-96_p-0.2_po_prop-0.3"  
+[40] "oe_application_model-1_m-5_n-4_r-96_p-0.2_po_prop-0.5"  
+[41] "oe_application_model-1_m-5_n-4_r-96_p-0.2_po_prop-0.7"  
+[42] "oe_application_model-1_m-5_n-4_r-96_p-0.2_po_prop-1"    
 [1] "number of files"
-[1] 7
+[1] 42
 [1] "inital list to save results"
-$`model-1_prop-0.01`
-NULL
-
 $`model-1_prop-0.05`
 NULL
 
@@ -22,133 +54,591 @@ NULL
 $`model-1_prop-0.2`
 NULL
 
+$`model-1_prop-0.3`
+NULL
+
 $`model-1_prop-0.5`
+NULL
+
+$`model-1_prop-0.7`
 NULL
 
 $`model-1_prop-1`
 NULL
 
-$`model-2_prop-0.01`
-NULL
-
-[1] "oe_application_model-1_m-5_n-5_r-96_p-0.2_po_prop-0.01"
+[1] "oe_application_model-1_m-10_n-1_r-96_p-0.2_po_prop-0.05"
 [[1]]
-[1] "oe"          "application" "model-1"     "m-5"         "n-5"        
-[6] "r-96"        "p-0.2"       "po"          "prop-0.01"  
-
-[1] "Name to identify run"
-[1] "model-1_prop-0.01"
-[1] "reading file:"
-[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-5_n-5_r-96_p-0.2_po_prop-0.01/final_results.xlsx"
-[1] "oe_application_model-1_m-5_n-5_r-96_p-0.2_po_prop-0.05"
-[[1]]
-[1] "oe"          "application" "model-1"     "m-5"         "n-5"        
+[1] "oe"          "application" "model-1"     "m-10"        "n-1"        
 [6] "r-96"        "p-0.2"       "po"          "prop-0.05"  
 
 [1] "Name to identify run"
 [1] "model-1_prop-0.05"
+[1] "current params of interest"
+[1] "m-10_n-1"
 [1] "reading file:"
-[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-5_n-5_r-96_p-0.2_po_prop-0.05/final_results.xlsx"
-[1] "oe_application_model-1_m-5_n-5_r-96_p-0.2_po_prop-0.1"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-10_n-1_r-96_p-0.2_po_prop-0.05/final_results.xlsx"
+[1] "oe_application_model-1_m-10_n-1_r-96_p-0.2_po_prop-0.1"
 [[1]]
-[1] "oe"          "application" "model-1"     "m-5"         "n-5"        
+[1] "oe"          "application" "model-1"     "m-10"        "n-1"        
 [6] "r-96"        "p-0.2"       "po"          "prop-0.1"   
 
 [1] "Name to identify run"
 [1] "model-1_prop-0.1"
+[1] "current params of interest"
+[1] "m-10_n-1"
 [1] "reading file:"
-[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-5_n-5_r-96_p-0.2_po_prop-0.1/final_results.xlsx"
-[1] "oe_application_model-1_m-5_n-5_r-96_p-0.2_po_prop-0.2"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-10_n-1_r-96_p-0.2_po_prop-0.1/final_results.xlsx"
+[1] "oe_application_model-1_m-10_n-1_r-96_p-0.2_po_prop-0.2"
 [[1]]
-[1] "oe"          "application" "model-1"     "m-5"         "n-5"        
+[1] "oe"          "application" "model-1"     "m-10"        "n-1"        
 [6] "r-96"        "p-0.2"       "po"          "prop-0.2"   
 
 [1] "Name to identify run"
 [1] "model-1_prop-0.2"
+[1] "current params of interest"
+[1] "m-10_n-1"
 [1] "reading file:"
-[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-5_n-5_r-96_p-0.2_po_prop-0.2/final_results.xlsx"
-[1] "oe_application_model-1_m-5_n-5_r-96_p-0.2_po_prop-0.5"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-10_n-1_r-96_p-0.2_po_prop-0.2/final_results.xlsx"
+[1] "oe_application_model-1_m-10_n-1_r-96_p-0.2_po_prop-0.3"
 [[1]]
-[1] "oe"          "application" "model-1"     "m-5"         "n-5"        
+[1] "oe"          "application" "model-1"     "m-10"        "n-1"        
+[6] "r-96"        "p-0.2"       "po"          "prop-0.3"   
+
+[1] "Name to identify run"
+[1] "model-1_prop-0.3"
+[1] "current params of interest"
+[1] "m-10_n-1"
+[1] "Incorrect file selected: gen_pa_occ1.png"
+ [1] "Available files: figures"                  
+ [2] "Available files: gen_pa_occ1.png"          
+ [3] "Available files: gen_pa_occ2.png"          
+ [4] "Available files: gen_pa_occ3.png"          
+ [5] "Available files: gen_pa_prob1.png"         
+ [6] "Available files: gen_pa_prob2.png"         
+ [7] "Available files: gen_pa_prob3.png"         
+ [8] "Available files: gen_pa_y1.png"            
+ [9] "Available files: gen_pa_y2.png"            
+[10] "Available files: gen_pa_y3.png"            
+[11] "Available files: stan"                     
+[12] "Available files: thinned_ebird_po_data.png"
+[1] "oe_application_model-1_m-10_n-1_r-96_p-0.2_po_prop-0.5"
+[[1]]
+[1] "oe"          "application" "model-1"     "m-10"        "n-1"        
 [6] "r-96"        "p-0.2"       "po"          "prop-0.5"   
 
 [1] "Name to identify run"
 [1] "model-1_prop-0.5"
+[1] "current params of interest"
+[1] "m-10_n-1"
 [1] "reading file:"
-[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-5_n-5_r-96_p-0.2_po_prop-0.5/final_results.xlsx"
-[1] "oe_application_model-1_m-5_n-5_r-96_p-0.2_po_prop-1"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-10_n-1_r-96_p-0.2_po_prop-0.5/final_results.xlsx"
+[1] "oe_application_model-1_m-10_n-1_r-96_p-0.2_po_prop-0.7"
 [[1]]
-[1] "oe"          "application" "model-1"     "m-5"         "n-5"        
+[1] "oe"          "application" "model-1"     "m-10"        "n-1"        
+[6] "r-96"        "p-0.2"       "po"          "prop-0.7"   
+
+[1] "Name to identify run"
+[1] "model-1_prop-0.7"
+[1] "current params of interest"
+[1] "m-10_n-1"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-10_n-1_r-96_p-0.2_po_prop-0.7/final_results.xlsx"
+[1] "oe_application_model-1_m-10_n-1_r-96_p-0.2_po_prop-1"
+[[1]]
+[1] "oe"          "application" "model-1"     "m-10"        "n-1"        
 [6] "r-96"        "p-0.2"       "po"          "prop-1"     
 
 [1] "Name to identify run"
 [1] "model-1_prop-1"
+[1] "current params of interest"
+[1] "m-10_n-1"
 [1] "reading file:"
-[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-5_n-5_r-96_p-0.2_po_prop-1/final_results.xlsx"
-[1] "oe_application_model-2_m-5_n-5_r-96_p-0.2_po_prop-0.01"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-10_n-1_r-96_p-0.2_po_prop-1/final_results.xlsx"
+[1] "oe_application_model-1_m-10_n-2_r-96_p-0.2_po_prop-0.05"
 [[1]]
-[1] "oe"          "application" "model-2"     "m-5"         "n-5"        
-[6] "r-96"        "p-0.2"       "po"          "prop-0.01"  
+[1] "oe"          "application" "model-1"     "m-10"        "n-2"        
+[6] "r-96"        "p-0.2"       "po"          "prop-0.05"  
 
 [1] "Name to identify run"
-[1] "model-2_prop-0.01"
+[1] "model-1_prop-0.05"
+[1] "current params of interest"
+[1] "m-10_n-2"
 [1] "reading file:"
-[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-2_m-5_n-5_r-96_p-0.2_po_prop-0.01/final_results.xlsx"
-[1] "result list"
-$`model-1_prop-0.01`
-[1] 0.1751069
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-10_n-2_r-96_p-0.2_po_prop-0.05/final_results.xlsx"
+[1] "oe_application_model-1_m-10_n-2_r-96_p-0.2_po_prop-0.1"
+[[1]]
+[1] "oe"          "application" "model-1"     "m-10"        "n-2"        
+[6] "r-96"        "p-0.2"       "po"          "prop-0.1"   
 
+[1] "Name to identify run"
+[1] "model-1_prop-0.1"
+[1] "current params of interest"
+[1] "m-10_n-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-10_n-2_r-96_p-0.2_po_prop-0.1/final_results.xlsx"
+[1] "oe_application_model-1_m-10_n-2_r-96_p-0.2_po_prop-0.2"
+[[1]]
+[1] "oe"          "application" "model-1"     "m-10"        "n-2"        
+[6] "r-96"        "p-0.2"       "po"          "prop-0.2"   
+
+[1] "Name to identify run"
+[1] "model-1_prop-0.2"
+[1] "current params of interest"
+[1] "m-10_n-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-10_n-2_r-96_p-0.2_po_prop-0.2/final_results.xlsx"
+[1] "oe_application_model-1_m-10_n-2_r-96_p-0.2_po_prop-0.3"
+[[1]]
+[1] "oe"          "application" "model-1"     "m-10"        "n-2"        
+[6] "r-96"        "p-0.2"       "po"          "prop-0.3"   
+
+[1] "Name to identify run"
+[1] "model-1_prop-0.3"
+[1] "current params of interest"
+[1] "m-10_n-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-10_n-2_r-96_p-0.2_po_prop-0.3/final_results.xlsx"
+[1] "oe_application_model-1_m-10_n-2_r-96_p-0.2_po_prop-0.5"
+[[1]]
+[1] "oe"          "application" "model-1"     "m-10"        "n-2"        
+[6] "r-96"        "p-0.2"       "po"          "prop-0.5"   
+
+[1] "Name to identify run"
+[1] "model-1_prop-0.5"
+[1] "current params of interest"
+[1] "m-10_n-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-10_n-2_r-96_p-0.2_po_prop-0.5/final_results.xlsx"
+[1] "oe_application_model-1_m-10_n-2_r-96_p-0.2_po_prop-0.7"
+[[1]]
+[1] "oe"          "application" "model-1"     "m-10"        "n-2"        
+[6] "r-96"        "p-0.2"       "po"          "prop-0.7"   
+
+[1] "Name to identify run"
+[1] "model-1_prop-0.7"
+[1] "current params of interest"
+[1] "m-10_n-2"
+[1] "Incorrect file selected: gen_pa_occ1.png"
+ [1] "Available files: figures"                  
+ [2] "Available files: gen_pa_occ1.png"          
+ [3] "Available files: gen_pa_occ2.png"          
+ [4] "Available files: gen_pa_occ3.png"          
+ [5] "Available files: gen_pa_prob1.png"         
+ [6] "Available files: gen_pa_prob2.png"         
+ [7] "Available files: gen_pa_prob3.png"         
+ [8] "Available files: gen_pa_y1.png"            
+ [9] "Available files: gen_pa_y2.png"            
+[10] "Available files: gen_pa_y3.png"            
+[11] "Available files: stan"                     
+[12] "Available files: temp_results.xlsx"        
+[13] "Available files: thinned_ebird_po_data.png"
+[1] "oe_application_model-1_m-10_n-2_r-96_p-0.2_po_prop-1"
+[[1]]
+[1] "oe"          "application" "model-1"     "m-10"        "n-2"        
+[6] "r-96"        "p-0.2"       "po"          "prop-1"     
+
+[1] "Name to identify run"
+[1] "model-1_prop-1"
+[1] "current params of interest"
+[1] "m-10_n-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-10_n-2_r-96_p-0.2_po_prop-1/final_results.xlsx"
+[1] "oe_application_model-1_m-10_n-4_r-96_p-0.2_po_prop-0.05"
+[[1]]
+[1] "oe"          "application" "model-1"     "m-10"        "n-4"        
+[6] "r-96"        "p-0.2"       "po"          "prop-0.05"  
+
+[1] "Name to identify run"
+[1] "model-1_prop-0.05"
+[1] "current params of interest"
+[1] "m-10_n-4"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-10_n-4_r-96_p-0.2_po_prop-0.05/final_results.xlsx"
+[1] "oe_application_model-1_m-10_n-4_r-96_p-0.2_po_prop-0.1"
+[[1]]
+[1] "oe"          "application" "model-1"     "m-10"        "n-4"        
+[6] "r-96"        "p-0.2"       "po"          "prop-0.1"   
+
+[1] "Name to identify run"
+[1] "model-1_prop-0.1"
+[1] "current params of interest"
+[1] "m-10_n-4"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-10_n-4_r-96_p-0.2_po_prop-0.1/final_results.xlsx"
+[1] "oe_application_model-1_m-10_n-4_r-96_p-0.2_po_prop-0.2"
+[[1]]
+[1] "oe"          "application" "model-1"     "m-10"        "n-4"        
+[6] "r-96"        "p-0.2"       "po"          "prop-0.2"   
+
+[1] "Name to identify run"
+[1] "model-1_prop-0.2"
+[1] "current params of interest"
+[1] "m-10_n-4"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-10_n-4_r-96_p-0.2_po_prop-0.2/final_results.xlsx"
+[1] "oe_application_model-1_m-10_n-4_r-96_p-0.2_po_prop-0.3"
+[[1]]
+[1] "oe"          "application" "model-1"     "m-10"        "n-4"        
+[6] "r-96"        "p-0.2"       "po"          "prop-0.3"   
+
+[1] "Name to identify run"
+[1] "model-1_prop-0.3"
+[1] "current params of interest"
+[1] "m-10_n-4"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-10_n-4_r-96_p-0.2_po_prop-0.3/final_results.xlsx"
+[1] "oe_application_model-1_m-10_n-4_r-96_p-0.2_po_prop-0.5"
+[[1]]
+[1] "oe"          "application" "model-1"     "m-10"        "n-4"        
+[6] "r-96"        "p-0.2"       "po"          "prop-0.5"   
+
+[1] "Name to identify run"
+[1] "model-1_prop-0.5"
+[1] "current params of interest"
+[1] "m-10_n-4"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-10_n-4_r-96_p-0.2_po_prop-0.5/final_results.xlsx"
+[1] "oe_application_model-1_m-10_n-4_r-96_p-0.2_po_prop-0.7"
+[[1]]
+[1] "oe"          "application" "model-1"     "m-10"        "n-4"        
+[6] "r-96"        "p-0.2"       "po"          "prop-0.7"   
+
+[1] "Name to identify run"
+[1] "model-1_prop-0.7"
+[1] "current params of interest"
+[1] "m-10_n-4"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-10_n-4_r-96_p-0.2_po_prop-0.7/final_results.xlsx"
+[1] "oe_application_model-1_m-10_n-4_r-96_p-0.2_po_prop-1"
+[[1]]
+[1] "oe"          "application" "model-1"     "m-10"        "n-4"        
+[6] "r-96"        "p-0.2"       "po"          "prop-1"     
+
+[1] "Name to identify run"
+[1] "model-1_prop-1"
+[1] "current params of interest"
+[1] "m-10_n-4"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-10_n-4_r-96_p-0.2_po_prop-1/final_results.xlsx"
+[1] "oe_application_model-1_m-5_n-1_r-96_p-0.2_po_prop-0.05"
+[[1]]
+[1] "oe"          "application" "model-1"     "m-5"         "n-1"        
+[6] "r-96"        "p-0.2"       "po"          "prop-0.05"  
+
+[1] "Name to identify run"
+[1] "model-1_prop-0.05"
+[1] "current params of interest"
+[1] "m-5_n-1"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-5_n-1_r-96_p-0.2_po_prop-0.05/final_results.xlsx"
+[1] "oe_application_model-1_m-5_n-1_r-96_p-0.2_po_prop-0.1"
+[[1]]
+[1] "oe"          "application" "model-1"     "m-5"         "n-1"        
+[6] "r-96"        "p-0.2"       "po"          "prop-0.1"   
+
+[1] "Name to identify run"
+[1] "model-1_prop-0.1"
+[1] "current params of interest"
+[1] "m-5_n-1"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-5_n-1_r-96_p-0.2_po_prop-0.1/final_results.xlsx"
+[1] "oe_application_model-1_m-5_n-1_r-96_p-0.2_po_prop-0.2"
+[[1]]
+[1] "oe"          "application" "model-1"     "m-5"         "n-1"        
+[6] "r-96"        "p-0.2"       "po"          "prop-0.2"   
+
+[1] "Name to identify run"
+[1] "model-1_prop-0.2"
+[1] "current params of interest"
+[1] "m-5_n-1"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-5_n-1_r-96_p-0.2_po_prop-0.2/final_results.xlsx"
+[1] "oe_application_model-1_m-5_n-1_r-96_p-0.2_po_prop-0.3"
+[[1]]
+[1] "oe"          "application" "model-1"     "m-5"         "n-1"        
+[6] "r-96"        "p-0.2"       "po"          "prop-0.3"   
+
+[1] "Name to identify run"
+[1] "model-1_prop-0.3"
+[1] "current params of interest"
+[1] "m-5_n-1"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-5_n-1_r-96_p-0.2_po_prop-0.3/final_results.xlsx"
+[1] "oe_application_model-1_m-5_n-1_r-96_p-0.2_po_prop-0.5"
+[[1]]
+[1] "oe"          "application" "model-1"     "m-5"         "n-1"        
+[6] "r-96"        "p-0.2"       "po"          "prop-0.5"   
+
+[1] "Name to identify run"
+[1] "model-1_prop-0.5"
+[1] "current params of interest"
+[1] "m-5_n-1"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-5_n-1_r-96_p-0.2_po_prop-0.5/final_results.xlsx"
+[1] "oe_application_model-1_m-5_n-1_r-96_p-0.2_po_prop-0.7"
+[[1]]
+[1] "oe"          "application" "model-1"     "m-5"         "n-1"        
+[6] "r-96"        "p-0.2"       "po"          "prop-0.7"   
+
+[1] "Name to identify run"
+[1] "model-1_prop-0.7"
+[1] "current params of interest"
+[1] "m-5_n-1"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-5_n-1_r-96_p-0.2_po_prop-0.7/final_results.xlsx"
+[1] "oe_application_model-1_m-5_n-1_r-96_p-0.2_po_prop-1"
+[[1]]
+[1] "oe"          "application" "model-1"     "m-5"         "n-1"        
+[6] "r-96"        "p-0.2"       "po"          "prop-1"     
+
+[1] "Name to identify run"
+[1] "model-1_prop-1"
+[1] "current params of interest"
+[1] "m-5_n-1"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-5_n-1_r-96_p-0.2_po_prop-1/final_results.xlsx"
+[1] "oe_application_model-1_m-5_n-2_r-96_p-0.2_po_prop-0.05"
+[[1]]
+[1] "oe"          "application" "model-1"     "m-5"         "n-2"        
+[6] "r-96"        "p-0.2"       "po"          "prop-0.05"  
+
+[1] "Name to identify run"
+[1] "model-1_prop-0.05"
+[1] "current params of interest"
+[1] "m-5_n-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-5_n-2_r-96_p-0.2_po_prop-0.05/final_results.xlsx"
+[1] "oe_application_model-1_m-5_n-2_r-96_p-0.2_po_prop-0.1"
+[[1]]
+[1] "oe"          "application" "model-1"     "m-5"         "n-2"        
+[6] "r-96"        "p-0.2"       "po"          "prop-0.1"   
+
+[1] "Name to identify run"
+[1] "model-1_prop-0.1"
+[1] "current params of interest"
+[1] "m-5_n-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-5_n-2_r-96_p-0.2_po_prop-0.1/final_results.xlsx"
+[1] "oe_application_model-1_m-5_n-2_r-96_p-0.2_po_prop-0.2"
+[[1]]
+[1] "oe"          "application" "model-1"     "m-5"         "n-2"        
+[6] "r-96"        "p-0.2"       "po"          "prop-0.2"   
+
+[1] "Name to identify run"
+[1] "model-1_prop-0.2"
+[1] "current params of interest"
+[1] "m-5_n-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-5_n-2_r-96_p-0.2_po_prop-0.2/final_results.xlsx"
+[1] "oe_application_model-1_m-5_n-2_r-96_p-0.2_po_prop-0.3"
+[[1]]
+[1] "oe"          "application" "model-1"     "m-5"         "n-2"        
+[6] "r-96"        "p-0.2"       "po"          "prop-0.3"   
+
+[1] "Name to identify run"
+[1] "model-1_prop-0.3"
+[1] "current params of interest"
+[1] "m-5_n-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-5_n-2_r-96_p-0.2_po_prop-0.3/final_results.xlsx"
+[1] "oe_application_model-1_m-5_n-2_r-96_p-0.2_po_prop-0.5"
+[[1]]
+[1] "oe"          "application" "model-1"     "m-5"         "n-2"        
+[6] "r-96"        "p-0.2"       "po"          "prop-0.5"   
+
+[1] "Name to identify run"
+[1] "model-1_prop-0.5"
+[1] "current params of interest"
+[1] "m-5_n-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-5_n-2_r-96_p-0.2_po_prop-0.5/final_results.xlsx"
+[1] "oe_application_model-1_m-5_n-2_r-96_p-0.2_po_prop-0.7"
+[[1]]
+[1] "oe"          "application" "model-1"     "m-5"         "n-2"        
+[6] "r-96"        "p-0.2"       "po"          "prop-0.7"   
+
+[1] "Name to identify run"
+[1] "model-1_prop-0.7"
+[1] "current params of interest"
+[1] "m-5_n-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-5_n-2_r-96_p-0.2_po_prop-0.7/final_results.xlsx"
+[1] "oe_application_model-1_m-5_n-2_r-96_p-0.2_po_prop-1"
+[[1]]
+[1] "oe"          "application" "model-1"     "m-5"         "n-2"        
+[6] "r-96"        "p-0.2"       "po"          "prop-1"     
+
+[1] "Name to identify run"
+[1] "model-1_prop-1"
+[1] "current params of interest"
+[1] "m-5_n-2"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-5_n-2_r-96_p-0.2_po_prop-1/final_results.xlsx"
+[1] "oe_application_model-1_m-5_n-4_r-96_p-0.2_po_prop-0.05"
+[[1]]
+[1] "oe"          "application" "model-1"     "m-5"         "n-4"        
+[6] "r-96"        "p-0.2"       "po"          "prop-0.05"  
+
+[1] "Name to identify run"
+[1] "model-1_prop-0.05"
+[1] "current params of interest"
+[1] "m-5_n-4"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-5_n-4_r-96_p-0.2_po_prop-0.05/final_results.xlsx"
+[1] "oe_application_model-1_m-5_n-4_r-96_p-0.2_po_prop-0.1"
+[[1]]
+[1] "oe"          "application" "model-1"     "m-5"         "n-4"        
+[6] "r-96"        "p-0.2"       "po"          "prop-0.1"   
+
+[1] "Name to identify run"
+[1] "model-1_prop-0.1"
+[1] "current params of interest"
+[1] "m-5_n-4"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-5_n-4_r-96_p-0.2_po_prop-0.1/final_results.xlsx"
+[1] "oe_application_model-1_m-5_n-4_r-96_p-0.2_po_prop-0.2"
+[[1]]
+[1] "oe"          "application" "model-1"     "m-5"         "n-4"        
+[6] "r-96"        "p-0.2"       "po"          "prop-0.2"   
+
+[1] "Name to identify run"
+[1] "model-1_prop-0.2"
+[1] "current params of interest"
+[1] "m-5_n-4"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-5_n-4_r-96_p-0.2_po_prop-0.2/final_results.xlsx"
+[1] "oe_application_model-1_m-5_n-4_r-96_p-0.2_po_prop-0.3"
+[[1]]
+[1] "oe"          "application" "model-1"     "m-5"         "n-4"        
+[6] "r-96"        "p-0.2"       "po"          "prop-0.3"   
+
+[1] "Name to identify run"
+[1] "model-1_prop-0.3"
+[1] "current params of interest"
+[1] "m-5_n-4"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-5_n-4_r-96_p-0.2_po_prop-0.3/final_results.xlsx"
+[1] "oe_application_model-1_m-5_n-4_r-96_p-0.2_po_prop-0.5"
+[[1]]
+[1] "oe"          "application" "model-1"     "m-5"         "n-4"        
+[6] "r-96"        "p-0.2"       "po"          "prop-0.5"   
+
+[1] "Name to identify run"
+[1] "model-1_prop-0.5"
+[1] "current params of interest"
+[1] "m-5_n-4"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-5_n-4_r-96_p-0.2_po_prop-0.5/final_results.xlsx"
+[1] "oe_application_model-1_m-5_n-4_r-96_p-0.2_po_prop-0.7"
+[[1]]
+[1] "oe"          "application" "model-1"     "m-5"         "n-4"        
+[6] "r-96"        "p-0.2"       "po"          "prop-0.7"   
+
+[1] "Name to identify run"
+[1] "model-1_prop-0.7"
+[1] "current params of interest"
+[1] "m-5_n-4"
+[1] "Incorrect file selected: gen_pa_occ1.png"
+ [1] "Available files: figures"                  
+ [2] "Available files: gen_pa_occ1.png"          
+ [3] "Available files: gen_pa_occ2.png"          
+ [4] "Available files: gen_pa_occ3.png"          
+ [5] "Available files: gen_pa_prob1.png"         
+ [6] "Available files: gen_pa_prob2.png"         
+ [7] "Available files: gen_pa_prob3.png"         
+ [8] "Available files: gen_pa_y1.png"            
+ [9] "Available files: gen_pa_y2.png"            
+[10] "Available files: gen_pa_y3.png"            
+[11] "Available files: stan"                     
+[12] "Available files: thinned_ebird_po_data.png"
+[1] "oe_application_model-1_m-5_n-4_r-96_p-0.2_po_prop-1"
+[[1]]
+[1] "oe"          "application" "model-1"     "m-5"         "n-4"        
+[6] "r-96"        "p-0.2"       "po"          "prop-1"     
+
+[1] "Name to identify run"
+[1] "model-1_prop-1"
+[1] "current params of interest"
+[1] "m-5_n-4"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-5_n-4_r-96_p-0.2_po_prop-1/final_results.xlsx"
+[1] "result list"
 $`model-1_prop-0.05`
-[1] 0.1748053
+[1] 0.1952493 0.1940442 0.1818065 0.1845699 0.1963548 0.1984064
 
 $`model-1_prop-0.1`
-[1] 0.1681885
+[1] 0.1903465 0.1899240 0.1752912 0.1824869 0.1972323 0.1954243
 
 $`model-1_prop-0.2`
-[1] 0.168399
+[1] 0.1898657 0.1918115 0.1750800 0.1836577 0.1957789 0.2037319
+
+$`model-1_prop-0.3`
+[1]        NA 0.1996761 0.1790450 0.1778713 0.1875642 0.1995151
 
 $`model-1_prop-0.5`
-[1] 0.1639043
+[1] 0.1879862 0.1941895 0.1799835 0.1830538 0.1896157 0.1990048
+
+$`model-1_prop-0.7`
+[1] 0.1840795        NA 0.1770687 0.1807703 0.1928091        NA
 
 $`model-1_prop-1`
-[1] 0.1774094
+[1] 0.1860055 0.1957660 0.1855652 0.1746181 0.1853243 0.1992249
 
-$`model-2_prop-0.01`
-[1] 0.1856302
+[1] "Params per model. Make sure each model has params ordered in the same way"
+$`model-1_prop-0.05`
+[1] "m-10_n-1" "m-10_n-2" "m-10_n-4" "m-5_n-1"  "m-5_n-2"  "m-5_n-4" 
 
-[1] 7 1
-          [,1]
-[1,] 0.1751069
-[2,] 0.1748053
-[3,] 0.1681885
-[4,] 0.1683990
-[5,] 0.1639043
-[6,] 0.1774094
-[7,] 0.1856302
-                         V1
-model-1_prop-0.01 0.1751069
-model-1_prop-0.05 0.1748053
-model-1_prop-0.1  0.1681885
-model-1_prop-0.2  0.1683990
-model-1_prop-0.5  0.1639043
-model-1_prop-1    0.1774094
-model-2_prop-0.01 0.1856302
+$`model-1_prop-0.1`
+[1] "m-10_n-1" "m-10_n-2" "m-10_n-4" "m-5_n-1"  "m-5_n-2"  "m-5_n-4" 
+
+$`model-1_prop-0.2`
+[1] "m-10_n-1" "m-10_n-2" "m-10_n-4" "m-5_n-1"  "m-5_n-2"  "m-5_n-4" 
+
+$`model-1_prop-0.3`
+[1] "m-10_n-1" "m-10_n-2" "m-10_n-4" "m-5_n-1"  "m-5_n-2"  "m-5_n-4" 
+
+$`model-1_prop-0.5`
+[1] "m-10_n-1" "m-10_n-2" "m-10_n-4" "m-5_n-1"  "m-5_n-2"  "m-5_n-4" 
+
+$`model-1_prop-0.7`
+[1] "m-10_n-1" "m-10_n-2" "m-10_n-4" "m-5_n-1"  "m-5_n-2"  "m-5_n-4" 
+
+$`model-1_prop-1`
+[1] "m-10_n-1" "m-10_n-2" "m-10_n-4" "m-5_n-1"  "m-5_n-2"  "m-5_n-4" 
+
+[1] 7 6
+          [,1]      [,2]      [,3]      [,4]      [,5]      [,6]
+[1,] 0.1952493 0.1940442 0.1818065 0.1845699 0.1963548 0.1984064
+[2,] 0.1903465 0.1899240 0.1752912 0.1824869 0.1972323 0.1954243
+[3,] 0.1898657 0.1918115 0.1750800 0.1836577 0.1957789 0.2037319
+[4,]        NA 0.1996761 0.1790450 0.1778713 0.1875642 0.1995151
+[5,] 0.1879862 0.1941895 0.1799835 0.1830538 0.1896157 0.1990048
+[6,] 0.1840795        NA 0.1770687 0.1807703 0.1928091        NA
+[7,] 0.1860055 0.1957660 0.1855652 0.1746181 0.1853243 0.1992249
+                   m-10_n-1  m-10_n-2  m-10_n-4   m-5_n-1   m-5_n-2   m-5_n-4
+model-1_prop-0.05 0.1952493 0.1940442 0.1818065 0.1845699 0.1963548 0.1984064
+model-1_prop-0.1  0.1903465 0.1899240 0.1752912 0.1824869 0.1972323 0.1954243
+model-1_prop-0.2  0.1898657 0.1918115 0.1750800 0.1836577 0.1957789 0.2037319
+model-1_prop-0.3         NA 0.1996761 0.1790450 0.1778713 0.1875642 0.1995151
+model-1_prop-0.5  0.1879862 0.1941895 0.1799835 0.1830538 0.1896157 0.1990048
+model-1_prop-0.7  0.1840795        NA 0.1770687 0.1807703 0.1928091        NA
+model-1_prop-1    0.1860055 0.1957660 0.1855652 0.1746181 0.1853243 0.1992249
 \begin{table}[H]
 
 \caption{\label{tab:survey_eval}Comparison of models, sampling effort, and parameter permutations}
 \centering
-\begin{tabular}[t]{ll}
+\begin{tabular}[t]{llccccl}
 \toprule
-  & V1\\
+  & m-10\_n-1 & m-10\_n-2 & m-10\_n-4 & m-5\_n-1 & m-5\_n-2 & m-5\_n-4\\
 \midrule
-model-1\_prop-0.01 & 0.1751\\
-model-1\_prop-0.05 & 0.1748\\
-model-1\_prop-0.1 & 0.1682\\
-model-1\_prop-0.2 & 0.1684\\
-model-1\_prop-0.5 & 0.1639\\
+model-1\_prop-0.05 & 0.1952 & 0.1940 & 0.1818 & 0.1846 & 0.1964 & 0.1984\\
+model-1\_prop-0.1 & 0.1903 & 0.1899 & 0.1753 & 0.1825 & 0.1972 & 0.1954\\
+model-1\_prop-0.2 & 0.1899 & 0.1918 & 0.1751 & 0.1837 & 0.1958 & 0.2037\\
+model-1\_prop-0.3 & NA & 0.1997 & 0.1790 & 0.1779 & 0.1876 & 0.1995\\
+model-1\_prop-0.5 & 0.1880 & 0.1942 & 0.1800 & 0.1831 & 0.1896 & 0.1990\\
 \addlinespace
-model-1\_prop-1 & 0.1774\\
-model-2\_prop-0.01 & 0.1856\\
+model-1\_prop-0.7 & 0.1841 & NA & 0.1771 & 0.1808 & 0.1928 & NA\\
+model-1\_prop-1 & 0.1860 & 0.1958 & 0.1856 & 0.1746 & 0.1853 & 0.1992\\
 \bottomrule
 \end{tabular}
 \end{table}

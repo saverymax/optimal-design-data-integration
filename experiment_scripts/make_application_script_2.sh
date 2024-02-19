@@ -5,11 +5,12 @@ mkdir $exp_dir
 rm run_applied_model_comparison_2.sh
 run_time=20
 models="2"
-sites="12 14 16 18 20"
+sites="5 10 15 20"
 detection_p="0.2"
-n_surveys="3 5"
+n_surveys="1"
 WORKDIR=$VSC_DATA/projects/optimal_design_presence_only/optimal-design-data-integration
 cores=48
+po_p=1
 BASE_DATA_DIR=$VSC_DATA/projects/data
 map_file=us_states/GOVTUNIT_Tennessee_State_GPKG/GOVTUNIT_Tennessee_State_GPKG.gpkg
 landcover_file=copernicus_landcover/W100N40_PROBAV_LC100_global_v3.0.1_2019-nrt_Discrete-Classification-map_EPSG-4326.tif

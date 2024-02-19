@@ -171,6 +171,7 @@ print(levels(fig_df$run))
 fig_df$x <- rep(c(2,3,4,5,10), each=8)
 fig_df
 
+colors <- c("#1c71e5","#71aef2", "#ff4040","#ffc100", "#31850A", "#97ed6f", "#c356ea", "#ffb0ea")
 model_labels=c("SO, n=2, b=0.5, d=2", "SO, n=2, b=1, d=2", "SO, n=5, b=0.5, d=2", "SO, n=5, b=1, d=2", "SO+PO, n=2, b=0.5, d=2", "SO + PO, n=2, b=1, d=2", "SO+PO, n=5, b=0.5, d=2", "SO + PO, n=5, b=1, d=2") 
 # Generally will be run from evaluation directory
 fig_name <- file.path(".", "exp_4_comparison_n.png")
@@ -179,9 +180,9 @@ p <- ggplot(data=fig_df, aes(x=x, y=avg_v, colour=run)) +
   geom_vline(xintercept=c(2,3,4,5,10), color = "#949494", linewidth=0.3) + 
   scale_x_continuous(breaks=c(2,3,4,5,10)) +
   #geom_errorbar(aes(ymin=avg_v-se, ymax=avg_v+se)) +
-  labs(title="", x="Max visits", y="U(d)") + 
+  labs(title="", x="Sites", y="U(d)") + 
   theme(text=element_text(size=7), axis.title = element_text(size = 7), legend.key.size = unit(0.25, 'cm')) +
-  scale_color_discrete(name = "Run", type=c("#c356ea","#ffc100", "#71aef2", "#f7adce", "#fa754a","#6CCC64", "#68e2e6", "#ea6ff3"), labels = model_labels) +
+  scale_color_discrete(name = "Run", type=colors, labels = model_labels) +
   theme_bw()
 print(p)
 ggsave(fig_name, plot=p, dpi=300, width=10, height=7, units="cm")
