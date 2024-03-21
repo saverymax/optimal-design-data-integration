@@ -312,6 +312,7 @@ for (r_start in 1:random_starts){
   v_vec <- c()
   # Compute v for initial design
   # Not comparing sampling effort here
+  test_run_time <- Sys.time()
   if (exp_args$v_parallel==T){
     combined_df <- cbind(r_survey_data_n5$occupancy, r_survey_data_n5$Y, r_po_data$Y)
     estimate_vec <- parApply(clust, combined_df, 1, FUN=estimate_v_parallel_nuthatch, model, possible_visits, m, sites, area_a, 
@@ -329,6 +330,8 @@ for (r_start in 1:random_starts){
                                site_idx, select_sites, r_survey_data_n5, r_po_data,
                                p_logging, params, generated_vars, k_param_intn, k_param_bias, model_selection, exp_args$mcmc_iter)
   }
+  print("Run time for initial V computation")
+  print(Sys.time() - test_run_time)
   # Once the posterior is computed on each of R datasets, find the average score:
   new_v_est <- sum(estimate_mat) / data_reps
   print("Design score from initial exchange")
