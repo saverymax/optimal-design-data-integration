@@ -13,3 +13,5 @@ The third model uses the posterior from presence-only data modelled as a non-hom
 The code also supports site-occupancy models using the probit likelihood, both with and without site-specific effects. However, these have not been tested in the exchange and results are not reported.
 
 ## Application
+
+The two supported models in this section are such and such

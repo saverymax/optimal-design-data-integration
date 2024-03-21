@@ -11,7 +11,10 @@ Welcome to optimal-design-data-integration's documentation!
    :caption: Contents:
 
    introduction.md
+   installation.md
+   data.md
    usage.md
+   modelling.md
 
 
 
