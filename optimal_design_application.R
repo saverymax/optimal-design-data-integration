@@ -341,7 +341,7 @@ for (r_start in 1:random_starts){
   # Use the evi as the background for these plots
   p <- plot_sites_ebird(site_centroids, rast_surface, site_idx, title)
   fig_name <- file.path(fig_dir, paste("initial_design_", r_start, ".png", sep=""))
-  ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm", bg='white', device="png", type="cairo")
+  ggsave(fig_name, plot=p, dpi=300, width=10, height=6, units="cm", bg='white', device="png", type="cairo")
   while ((convergence_cond==FALSE) & (exchange_iter<exp_args$exch_iter)){
     exchange_iter <- exchange_iter + 1
     print(paste("New exchange iteration: ", exchange_iter))
@@ -472,7 +472,7 @@ for (r_start in 1:random_starts){
           }
           fig_name <- file.path(fig_dir, paste("site_locs_rand-start-", r_start, "_ex-iter_", 
                             exchange_iter, "_site-iter-", s, "_effort_", visit, "_nn-iter", n_count,".png", sep=""))
-          ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm", bg="white", device="png", type="cairo")
+          ggsave(fig_name, plot=p, dpi=300, width=7, height=5, units="cm", bg="white", device="png", type="cairo")
           # Then go to the next neighbor or site
         }
       }
@@ -497,13 +497,13 @@ for (r_start in 1:random_starts){
       title <- paste("Current PO data and Optimal sites from random init ", r_start, "\n with V(D)=", current_v_est, sep="")
       p <- plot_po_optimal_sites_ebird(site_centroids, rast_surface, state_po_prj_sample, site_idx, possible_visits, title)
       fig_name <- file.path(fig_dir, paste("running_optimal_sites_random_start-", r_start, ".png", sep=""))
-      ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm", bg="white", device="png", type="cairo")
+      ggsave(fig_name, plot=p, dpi=300, width=7, height=5, units="cm", bg="white", device="png", type="cairo")
       # Write running results for current site
       fig_name <- file.path(fig_dir, paste("running_exchange_convergence_random_start-", r_start, ".png", sep=""))
       p <- ggplot(data=v_df, aes(x=x, y=v)) +
         geom_line() +
         theme_bw()
-      ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm")
+      ggsave(fig_name, plot=p, dpi=300, width=7, height=5, units="cm")
       # If we exceed the max allowed run time during the site iteration, we end the exchange
       # The best results are saved in matrices/results above
       if (difftime(Sys.time(), start_time, units = "hours") > exp_args$run_time){
@@ -577,7 +577,7 @@ p <- ggplot(data=v_df, aes(x=x, y=v, colour=r)) +
   geom_line() +
   theme_bw()
 print(p)
-ggsave(fig_name, plot=p, dpi=300, width=7, height=6, units="cm")
+ggsave(fig_name, plot=p, dpi=300, width=7, height=5, units="cm")
 
 # Plot best sites
 for(rs in 1:random_starts){
@@ -586,7 +586,7 @@ for(rs in 1:random_starts){
     title <- paste("PO data and Optimal sites from random init ", rs, "\n with V(D)=", best_v[rs], sep="")
     p <- plot_po_optimal_sites_ebird(site_centroids, rast_surface, state_po_prj_sample, best_site_mat[rs,], optimal_visit_mat[rs,], title)
     fig_name <- file.path(fig_dir, paste("optimal_sites_random_start-", rs, ".png", sep=""))
-    ggsave(fig_name, plot=p, dpi=300, width=10, height=7, units="cm", bg="white", device="png", type="cairo")
+    ggsave(fig_name, plot=p, dpi=300, width=10, height=6, units="cm", bg="white", device="png", type="cairo")
   }
 }
 
