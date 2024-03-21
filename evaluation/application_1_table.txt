@@ -108,19 +108,8 @@ NULL
 [1] "model-1_prop-0.3"
 [1] "current params of interest"
 [1] "m-10_n-1"
-[1] "Incorrect file selected: gen_pa_occ1.png"
- [1] "Available files: figures"                  
- [2] "Available files: gen_pa_occ1.png"          
- [3] "Available files: gen_pa_occ2.png"          
- [4] "Available files: gen_pa_occ3.png"          
- [5] "Available files: gen_pa_prob1.png"         
- [6] "Available files: gen_pa_prob2.png"         
- [7] "Available files: gen_pa_prob3.png"         
- [8] "Available files: gen_pa_y1.png"            
- [9] "Available files: gen_pa_y2.png"            
-[10] "Available files: gen_pa_y3.png"            
-[11] "Available files: stan"                     
-[12] "Available files: thinned_ebird_po_data.png"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-10_n-1_r-96_p-0.2_po_prop-0.3/final_results.xlsx"
 [1] "oe_application_model-1_m-10_n-1_r-96_p-0.2_po_prop-0.5"
 [[1]]
 [1] "oe"          "application" "model-1"     "m-10"        "n-1"        
@@ -218,20 +207,8 @@ NULL
 [1] "model-1_prop-0.7"
 [1] "current params of interest"
 [1] "m-10_n-2"
-[1] "Incorrect file selected: gen_pa_occ1.png"
- [1] "Available files: figures"                  
- [2] "Available files: gen_pa_occ1.png"          
- [3] "Available files: gen_pa_occ2.png"          
- [4] "Available files: gen_pa_occ3.png"          
- [5] "Available files: gen_pa_prob1.png"         
- [6] "Available files: gen_pa_prob2.png"         
- [7] "Available files: gen_pa_prob3.png"         
- [8] "Available files: gen_pa_y1.png"            
- [9] "Available files: gen_pa_y2.png"            
-[10] "Available files: gen_pa_y3.png"            
-[11] "Available files: stan"                     
-[12] "Available files: temp_results.xlsx"        
-[13] "Available files: thinned_ebird_po_data.png"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-10_n-2_r-96_p-0.2_po_prop-0.7/final_results.xlsx"
 [1] "oe_application_model-1_m-10_n-2_r-96_p-0.2_po_prop-1"
 [[1]]
 [1] "oe"          "application" "model-1"     "m-10"        "n-2"        
@@ -538,19 +515,8 @@ NULL
 [1] "model-1_prop-0.7"
 [1] "current params of interest"
 [1] "m-5_n-4"
-[1] "Incorrect file selected: gen_pa_occ1.png"
- [1] "Available files: figures"                  
- [2] "Available files: gen_pa_occ1.png"          
- [3] "Available files: gen_pa_occ2.png"          
- [4] "Available files: gen_pa_occ3.png"          
- [5] "Available files: gen_pa_prob1.png"         
- [6] "Available files: gen_pa_prob2.png"         
- [7] "Available files: gen_pa_prob3.png"         
- [8] "Available files: gen_pa_y1.png"            
- [9] "Available files: gen_pa_y2.png"            
-[10] "Available files: gen_pa_y3.png"            
-[11] "Available files: stan"                     
-[12] "Available files: thinned_ebird_po_data.png"
+[1] "reading file:"
+[1] "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/application_1/oe_application_model-1_m-5_n-4_r-96_p-0.2_po_prop-0.7/final_results.xlsx"
 [1] "oe_application_model-1_m-5_n-4_r-96_p-0.2_po_prop-1"
 [[1]]
 [1] "oe"          "application" "model-1"     "m-5"         "n-4"        
@@ -573,13 +539,13 @@ $`model-1_prop-0.2`
 [1] 0.1898657 0.1918115 0.1750800 0.1836577 0.1957789 0.2037319
 
 $`model-1_prop-0.3`
-[1]        NA 0.1996761 0.1790450 0.1778713 0.1875642 0.1995151
+[1] 0.1860687 0.1996761 0.1790450 0.1778713 0.1875642 0.1995151
 
 $`model-1_prop-0.5`
 [1] 0.1879862 0.1941895 0.1799835 0.1830538 0.1896157 0.1990048
 
 $`model-1_prop-0.7`
-[1] 0.1840795        NA 0.1770687 0.1807703 0.1928091        NA
+[1] 0.1840795 0.1874887 0.1770687 0.1807703 0.1928091 0.1921509
 
 $`model-1_prop-1`
 [1] 0.1860055 0.1957660 0.1855652 0.1746181 0.1853243 0.1992249
@@ -611,17 +577,17 @@ $`model-1_prop-1`
 [1,] 0.1952493 0.1940442 0.1818065 0.1845699 0.1963548 0.1984064
 [2,] 0.1903465 0.1899240 0.1752912 0.1824869 0.1972323 0.1954243
 [3,] 0.1898657 0.1918115 0.1750800 0.1836577 0.1957789 0.2037319
-[4,]        NA 0.1996761 0.1790450 0.1778713 0.1875642 0.1995151
+[4,] 0.1860687 0.1996761 0.1790450 0.1778713 0.1875642 0.1995151
 [5,] 0.1879862 0.1941895 0.1799835 0.1830538 0.1896157 0.1990048
-[6,] 0.1840795        NA 0.1770687 0.1807703 0.1928091        NA
+[6,] 0.1840795 0.1874887 0.1770687 0.1807703 0.1928091 0.1921509
 [7,] 0.1860055 0.1957660 0.1855652 0.1746181 0.1853243 0.1992249
                    m-10_n-1  m-10_n-2  m-10_n-4   m-5_n-1   m-5_n-2   m-5_n-4
 model-1_prop-0.05 0.1952493 0.1940442 0.1818065 0.1845699 0.1963548 0.1984064
 model-1_prop-0.1  0.1903465 0.1899240 0.1752912 0.1824869 0.1972323 0.1954243
 model-1_prop-0.2  0.1898657 0.1918115 0.1750800 0.1836577 0.1957789 0.2037319
-model-1_prop-0.3         NA 0.1996761 0.1790450 0.1778713 0.1875642 0.1995151
+model-1_prop-0.3  0.1860687 0.1996761 0.1790450 0.1778713 0.1875642 0.1995151
 model-1_prop-0.5  0.1879862 0.1941895 0.1799835 0.1830538 0.1896157 0.1990048
-model-1_prop-0.7  0.1840795        NA 0.1770687 0.1807703 0.1928091        NA
+model-1_prop-0.7  0.1840795 0.1874887 0.1770687 0.1807703 0.1928091 0.1921509
 model-1_prop-1    0.1860055 0.1957660 0.1855652 0.1746181 0.1853243 0.1992249
 \begin{table}[H]
 
@@ -634,10 +600,10 @@ model-1_prop-1    0.1860055 0.1957660 0.1855652 0.1746181 0.1853243 0.1992249
 model-1\_prop-0.05 & 0.1952 & 0.1940 & 0.1818 & 0.1846 & 0.1964 & 0.1984\\
 model-1\_prop-0.1 & 0.1903 & 0.1899 & 0.1753 & 0.1825 & 0.1972 & 0.1954\\
 model-1\_prop-0.2 & 0.1899 & 0.1918 & 0.1751 & 0.1837 & 0.1958 & 0.2037\\
-model-1\_prop-0.3 & NA & 0.1997 & 0.1790 & 0.1779 & 0.1876 & 0.1995\\
+model-1\_prop-0.3 & 0.1861 & 0.1997 & 0.1790 & 0.1779 & 0.1876 & 0.1995\\
 model-1\_prop-0.5 & 0.1880 & 0.1942 & 0.1800 & 0.1831 & 0.1896 & 0.1990\\
 \addlinespace
-model-1\_prop-0.7 & 0.1841 & NA & 0.1771 & 0.1808 & 0.1928 & NA\\
+model-1\_prop-0.7 & 0.1841 & 0.1875 & 0.1771 & 0.1808 & 0.1928 & 0.1922\\
 model-1\_prop-1 & 0.1860 & 0.1958 & 0.1856 & 0.1746 & 0.1853 & 0.1992\\
 \bottomrule
 \end{tabular}
