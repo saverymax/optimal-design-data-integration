@@ -1,6 +1,6 @@
 # Modelling
 
-## Available models/priors
+## Simulated setting
 
 There are 3 models that can be used within the exchange algorithm. All models are based on the site-occupancy likelihood, with varying priors. 
 
@@ -11,3 +11,5 @@ The next model allows the intensity to vary over the space and is specified by t
 The third model uses the posterior from presence-only data modelled as a non-homogenous poisson process as the prior for the parameters in the site-occupancy model. 
 
 The code also supports site-occupancy models using the probit likelihood, both with and without site-specific effects. However, these have not been tested in the exchange and results are not reported.
+
+## Application

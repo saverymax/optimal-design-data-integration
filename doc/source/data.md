@@ -1,5 +1,7 @@
 # Data
 
+This describes the data used in both the simulated and applied experiments
+
 ## eBird 
 
 The optimal design procedure available in this project can be applied to real or simulated data. In the associated paper with 
@@ -10,7 +12,7 @@ To download and process the data for the experiments or your own usage, you can 
 	1. 
 	2. 
 	3. When the data is downloaded and placed in the appropriate directory, run the processing script process_ebird.R
-		```Rscript process_ebird.R```
+```Rscript process_ebird.R```
 
 ## Land cover data
 
@@ -44,7 +46,12 @@ There are numerous ways to download MODIS data.
 Another option is to use the Copernicus data viewer: See https://land.copernicus.eu/global/products/lc and https://lcviewer.vito.be/2019
 
 We can also access 
+
 ## Simulated data
+
+Describe where the generated PO data is.
+
+
 
 To run the simulated data experiments, we have to first run the script generate_po_data.R script. The bash script generate_po_datasets.sh contains the command to do so. The reason that we have to run this script is to create the PO datasets that will be used throughout the optimal design. But the same parameters that create the PO data must also be used to create the PA data. We pregenerate the PO data so that any experiment that particular combination of parameters can just load the correct dataset. To generate the PO dataset, we can run
 
