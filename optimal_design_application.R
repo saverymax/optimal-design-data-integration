@@ -25,13 +25,7 @@ set.seed(13)
 parser <- OptionParser()
 parser <- add_option(parser, "--working_dir", type="character", default=".", help="Path to the directory containing code to source for the main script and associated functions")
 parser <- add_option(parser, "--save_dir", type="character", default=".", help="Path to save experimental results.  Typically set to experimental_runs/name-of-experiment within the working directory.")
-parser <- add_option(parser, "--base_data_dir", type="character", default="./data", help="Path to the directory containing covariate data")
-parser <- add_option(parser, "--ebird_data_dir", type="character", default="ebird", help="Name of directory containing processed ebird data, within basedir")
 parser <- add_option(parser, "--data_save_dir", type="character", default="data/ebird", help="Directory to in which preporcessed covariate data is saved")
-parser <- add_option(parser, "--map_file", type="character", help="Name of file containing processed US geopackage fil")
-parser <- add_option(parser, "--landcover_file", type="character", help="Name of landcover tif")
-parser <- add_option(parser, "--modis_file", type="character", help="Name of modis EVI tif")
-parser <- add_option(parser, "--elevation_file", type="character", help="Name of elevation tif")
 parser <- add_option(parser, "--exp_name", type="character", default="oe_application", help="Name of current experiment, which is used for dir to save output")
 parser <- add_option(parser, "--m", type="integer", default=5, help="Number of sites to survey. We will randomly select m sites to use in the exchange algorithm. While it would be interesting to optimize this during the exchange algorithm, at the moment this is computationally intensive and we leave this as a fixed integer.")
 parser <- add_option(parser, "--max_visits", type="integer", default=5, help="Maximum number of time to visit each site")
@@ -49,7 +43,7 @@ parser <- add_option(parser, "--p_logging", action="store_true", default=F, help
 parser <- add_option(parser, "--v_parallel", action="store_true", default=F, help="Boolean for parallel computation of V criterion")
 parser <- add_option(parser, "--cores", type="integer", default=4, help="Number of cores to use for parallel processing")
 parser <- add_option(parser, "--p", type="double", default=0.2, help="Probability of detection")
-parser <- add_option(parser, "--cell_size", type="integer", default=10000, help="Size of one side of cell in point process grid")
+parser <- add_option(parser, "--cell_size", type="integer", default=10000, help="Size of one side of cell in point process grid, in meters")
 
 exp_args <- parse_args(parser)
 print(exp_args)
@@ -58,13 +52,6 @@ select <- dplyr::select
 sort <- base::sort
 
 # Set important global variables if we're just running within Rstudio. hacky :)
-#base_data_dir <- "C:\\Users\\msavery\\OneDrive - UGent\\Documents\\ghent_phd_spatial_doe\\data\\"
-#ebd_download_dir <- "ebd_US_bnhnut_201901_201912_smp_relJul-2023"
-#lc_path <- "copernicus_landcover/W100N40_PROBAV_LC100_global_v3.0.1_2019-nrt_Discrete-Classification-map_EPSG-4326.tif"
-#modis_path <- "modis_landcover_dynamics/MCD12Q2.061_EVI_Area_0_doy2019001_aid0001.tif"
-#elev_path <- "elevation_aster/ASTGTM_NC.003_ASTER_GDEM_DEM_doy2000061_aid0001.tif"
-#map_path <- "us_states/GOVTUNIT_Tennessee_State_GPKG/GOVTUNIT_Tennessee_State_GPKG.gpkg"
-#data_save_dir <- file.path(".", "data/ebird")
 
 # Source modules
 source(file.path(exp_args$working_dir, "data_utils", "load_ebird_data.R"))
@@ -75,12 +62,6 @@ source(stan_models_path)
 # Set data paths
 exp_name <- exp_args$exp_name
 exp_dir <- file.path(exp_args$working_dir, exp_args$save_dir, exp_name)
-base_data_dir <- file.path(exp_args$base_data_dir)
-ebd_download_dir <- file.path(exp_args$ebird_data_dir)
-map_path <- exp_args$map_file
-modis_path <- exp_args$modis_file
-lc_path <- exp_args$landcover_file
-elev_path <- exp_args$elevation_file
 data_save_dir <- file.path(exp_args$working_dir, exp_args$data_save_dir)
 # Create dir for figures and stan files
 fig_dir <- file.path(exp_dir, "figures")

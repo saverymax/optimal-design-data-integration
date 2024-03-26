@@ -128,7 +128,6 @@ if (exp_args$pp_fit == TRUE){
 }
 # This assumes somehow the file already exists. If we run this script for the first time, we must set pp_fit=TRUE 
 # Check the posterior
-# The function should save the matrix of MCMC draws, so we can later sample from them or take the means.
 pp_posterior <- read_rds(file.path(save_dir, "pp_posterior_ebird.RDS"))
 print("Loaded raw posterior. If gamma_integration is/was true, then this will be mean of posterior from each draw of gample, not the posterior samples themselves")
 print(pp_posterior)

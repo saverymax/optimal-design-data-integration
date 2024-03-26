@@ -1,10 +1,11 @@
 # Data
 
-This describes the data used in both the simulated and applied experiments. The data for the applied setting is described first. For all data downloaded in these instructions, it will be easiest to place them all in the same directory that you later provide to the script to run the design algorithm.
+This describes the data used in both the simulated and applied experiments. The data for the applied setting is described first. For all data downloaded in these instructions, it will be easiest to place them all in the same directory that you later provide to the script to preprocess data. HOWEVER, it is not necessary to follow these steps if you would 
+like to use our pre-processed data set. Within this repository, the data can be found in the ```data/ebird/data_pack.RDS``` file. This should be provided to the ```optimal_design_application.R``` script as described in the usage section of this documentation.
 
-For the purpose of the blind review, we have provided all data necessary to run the application in the directory above the main source-code repository for this project. It is not possible to put the data in the main directory (ie how it would be structured in the github repository) as the datasets are too large. Once this code and data is made public, the data will be stored in a separate public-facing repository.
+For the purpose of the blind review, we have provided all data necessary to reconstruct the pre-processed data in the directory above the main source-code directory (named ```optimal_design_site_occ```) for this project. It is not possible to put the data in the main directory (i.e., how it is structured in the github repository) as the datasets are too large for GitHub. Once this code and data is made public, the unprocessed data will be stored in a separate public-facing repository.
 
-To run the code, you can use the data we provide. Alternatively, the instructions below describe how to download this data from scratch.
+Again, to run the experiment code, you can use the data we provide via the file ```data/ebird/data_pack.RDS```. Alternatively, the instructions below describe how to download, process, and create this file and data from scratch.
 
 ## Map data
 
@@ -54,37 +55,130 @@ In this work we use the AppEARS app to download elevation data for our region of
 
 The previous data processing steps should be completed before the eBird data is downloaded. In this work we use Brown-headed Nuthatch data within Tennessee.
 
-
 The Brown-headed Nuthatch dataset is first downloaded from the eBird site <https://science.ebird.org/en/use-ebird-data/download-ebird-data-products>. You must initally ask for access to the eBird data. Once access is granted, when we download the data we filter first by species (brown-headed nuthatch) and year (2019) via the downloader user interface.
 
-Once the eBird data is downloaded and the previously mentioned data sources are also downloaded, we can run the script that prepares the data for use within the exchange algorithm. Importantly, change the ```--base_data_dir``` to the location where you have saved all your data. To run this processing with the data we use in this project, leave the other CLI arguments as they are and place the data we provide in your base data directory.
+Once the eBird data is downloaded and the previously mentioned data sources are also downloaded, we can run the script that prepares the data for use within the exchange algorithm. Importantly, in the command shown below, change the ```--base_data_dir``` to the location where you have saved all your data. To run this processing with the data we use in this project, leave the other CLI arguments as they are and place the data we provide in your base data directory (for arguments ```--ebird_data_dir, --map_file, --landcover_file, --modis_file, --elevation_file```).
 ```
-Rscript data_utils/process_ebird.R --working_dir=. --base_data_dir=your/base/data/directory --ebird_data_dir="ebd_US_bnhnut_201901_201912_smp_relJul-2023" --map_file="us_states/GOVTUNIT_Tennessee_State_GPKG/GOVTUNIT_Tennessee_State_GPKG.gpkg" --landcover_file="copernicus_landcover/W100N40_PROBAV_LC100_global_v3.0.1_2019-nrt_Discrete-Classification-map_EPSG-4326.tif" --modis_file="modis_landcover_dynamics/MCD12Q2.061_EVI_Area_0_doy2019001_aid0001.tif" --elevation_file="elevation_aster/ASTGTM_NC.003_ASTER_GDEM_DEM_doy2000061_aid0001.tif" --save_dir="data/ebird" --data_pack --pp_fit --pp_diagnostic
+Rscript data_utils/process_ebird.R --working_dir=. --base_data_dir=your/base/data/directory --ebird_data_dir="ebd_US_bnhnut_201901_201912_smp_relJul-2023" --map_file="us_states/GOVTUNIT_Tennessee_State_GPKG/GOVTUNIT_Tennessee_State_GPKG.gpkg" --landcover_file="copernicus_landcover/W100N40_PROBAV_LC100_global_v3.0.1_2019-nrt_Discrete-Classification-map_EPSG-4326.tif" --modis_file="modis_landcover_dynamics/MCD12Q2.061_EVI_Area_0_doy2019001_aid0001.tif" --elevation_file="elevation_aster/ASTGTM_NC.003_ASTER_GDEM_DEM_doy2000061_aid0001.tif" --save_dir="data/ebird" --data_pack --pp_fit --pp_diagnostic --aux_process --gamma_integration
 ```
 The process_ebird.R script performs a number of data processing steps using the R package auk. These steps include verifying the correct time period is filtered, selecting complete checklists (those with all species reported), and only those with stationary and travelling protocols (excluding historical and incidental). For pure PO data modelling we can use the incidental observations as well, but for this occupancy analysis we'll stick to the 2 protocols.
 
-Once the auk steps are performed, there is also a sequence of spatial data processing steps as well, to create the discretized covariates for the site-occupancy model and the non-homogeneous poisson process. After these steps are performed, data_pack.RDS is saved, which contains all data necessary to run the applied experiments without relying on the original data files such as the elevation and EVI tifs.
+Once the auk steps are performed, there is also a sequence of spatial data processing steps as well, to create the discretized covariates for the site-occupancy model and the non-homogeneous poisson process. After these steps are performed, data_pack.RDS is saved, which contains all data necessary to run the applied experiments without relying on the original data files such as the elevation and EVI tifs. If ```--pp_fit``` is included, the posterior from the non-homogeneous model poisson process is fit and if ```--gamma_integration``` is included, the posterior of alpha is average over gamma to remove the correlation between the two parameters. The NHPP posterior is required in order to have an estimate of the parameters to generate the PA data for the integration for approximation of the expected utility function.
 
-TODO: OOPS, once I run process ebrid, I don't need to call anything more. Need to fix this is the scripts.
+Once the ```process_ebird.R``` script is sucessefully run and the ```data_pack.RDS``` file generated, you are ready to run the optimal design algorithm applied to the Brown-headed nuthatch example or your own use-case.
+
+For further reference, the CLI options for the ```process_ebird.R``` script as listed below:
+```
+Options:
+        -h, --help
+                Show this help message and exit
+
+        --working_dir=WORKING_DIR
+                Path to the directory containing code to source for the main script
+
+        --base_data_dir=BASE_DATA_DIR
+                Path to the directory containing covariate data
+
+        --ebird_data_dir=EBIRD_DATA_DIR
+                Name of directory containing processed ebird data csv's, within basedir
+
+        --save_dir=SAVE_DIR
+                Directory to save data within basedir
+
+        --map_file=MAP_FILE
+                Nmae of file containing processed US geopackage fil
+
+        --landcover_file=LANDCOVER_FILE
+                Name of landcover tif
+
+        --modis_file=MODIS_FILE
+                Name of modis EVI tif
+
+        --elevation_file=ELEVATION_FILE
+                Name of elevation tif
+
+        --data_reps=DATA_REPS
+                Number of dataset reps for criterion estimation
+
+        --cell_size=CELL_SIZE
+                Size of one side of cell in point process grid
+
+        --auk_process
+                Boolean for running the initial auk filtering steps to generate smallers csv's
+
+        --data_pack
+                Boolean for generating the data pack if not already generated
+
+        --pp_fit
+                Boolean to fit the Point Process posterior after data saving steps
+
+        --pp_diagnostic
+                Boolean for printing diagnostics for point process model
+
+        --gamma_integration
+                Boolean for integrating over gamma in the PP
+```
+
 
 ## Simulated data
 
-Describe where the generated PO data is.
-The simulated data that you need to run the code associated with the simulated experiments can be found in the directory within this repository ```data/sim_data```. We also provide instructions to generate this data yourself.
+The above instructions describe how to pre-process the data for the applied case-study. To run the simulated experiments, the data processing is simpler but there are still a few pre-processing steps we need to take. If you would like to skip these steps, we have provided the data you need to get started with the optimal design in ```data/sim_data```. See the instructions in the usage section in that case.  
 
-To run the simulated data experiments, we have to first run the script generate_po_data.R script. The bash script generate_po_datasets.sh contains the command to do so. The reason that we have to run this script is to create the PO datasets that will be used throughout the optimal design. But the same parameters that create the PO data must also be used to create the PA data. We pregenerate the PO data so that any experiment that particular combination of parameters can just load the correct dataset. To generate the PO dataset, we can run
-
+To generate the data for the simulated experiments yourself, you have to first run the script ```generate_po_data.R```. The bash script ```experiment_scripts/generate_po_datasets.sh``` contains the command that generates all PO datasets used in this work. However, the same parameter settings that create the PO data must also be used to create the PA data, so that the two processes match. We pregenerate the PO data so that any experiment for a particular combination of parameters can just load the correct PO dataset that has been pre-generated, instead of having to generate a new dataset everytime we call the script. Therefore, to generate one particular PO dataset, we can run
 ```
 Rscript generate_po_data.R --working_dir=. --exp_name=po_gen --alpha=-2 --beta=0.5 --gamma=1 --delta=0.25 --intensity_func="donut" --bias_fun="exponential" --data_reps=96
 ```
+This will simulate PO data for the particular values of the parameters as seen in the command. The bash script ```experiment_scripts/generate_po_datasets.sh``` will run the R script with all parameter combinations that we use in the experiments in the associated paper.
 
-The bash script in the experiment_scripts directory (experiment_scripts/generate_po_datasets.sh) will run the R script with all parameter combinations that we use in the experiments in the associated paper.
-
-Then, we can run the optimal design using a particular PO simulated dataset. This is admittedly a bit difficult since we have to specify the same parameter sets that are used to generate the PO data in the design script, where these same parameters (alpha and beta) will be used to generate the PA data. For example given that we have ```--alpha=-2 --beta=0.5 --gamma=1 --delta=0.25``` above, in the design we need to run the script with
+Then, once the dataset/s are generated, we can run the optimal design using a particular PO simulated dataset. This is admittedly a bit difficult since we have to specify the same parameter sets that are used to generate the PO data in the design script, where these same parameters (alpha and beta) will be used to generate the PA data. For example given that we have ```--alpha=-2 --beta=0.5 --gamma=1 --delta=0.25``` above, in the design we need to run the optimal design script with
 ```
-Rscript optimal-design-data-integration/optimal_design_site_occ.R --working_dir=. --exp_name=oe_model-4_m-5_n-10_r-96_intns-donut_a--2_b-0.5_g-1_d-0.25_p-0.2 --data_reps=96 --m=5 --min_visits=1 --max_visits=10 --vary_visits --model_selection=4 --random_starts=3 --exch_iter=20 --mcmc_iter=1000 --use_sim_po --po_data_file=po_gen_ints-donut_a=-2_b=0.5_g=1_d=0.25.Rds --intensity_func="donut" --bias_func="exponential" --v_parallel --cores=48 --alpha=-2 --beta=0.5 --gamma=1 --delta=0.25 --p=0.2 --aux_cor=0.8
+Rscript optimal_design_site_occ.R --working_dir=. --exp_name=params_a--2_b-0.5_g-1_d-0.25_p-0.2 --data_reps=96 --m=5 --min_visits=1 --max_visits=10 --vary_visits --model_selection=2 --random_starts=3 --exch_iter=20 --mcmc_iter=1000 --use_sim_po --po_data_file=po_gen_ints-donut_a=-2_b=0.5_g=1_d=0.25.Rds --intensity_func="donut" --bias_func="exponential" --v_parallel --cores=48 --alpha=-2 --beta=0.5 --gamma=1 --delta=0.25 --p=0.2 --aux_cor=0.8
 ```
-for example. We also need to make sure we use the --use_sim_po flag with the correct dataset for the specified parameters:
+for example. We need to make sure we use the --use_sim_po flag with the correct dataset for the specified parameters:
 ```
 --po_data_file=po_gen_ints-donut_a=-2_b=0.5_g=1_d=0.25.Rds
+```
+This is the dataset generated by the call of ```generate_po_data.R```. Once you have done this for the parameter values you are interested in, you are ready to run the simualted design experiments (or you can just use the pre-processed data already provided as there are many dataset combinations already there).
+
+For further reference, the CLI options for the ```generate_po_data.R``` script are listed below:
+```
+Options:
+        -h, --help
+                Show this help message and exit
+
+        --working_dir=WORKING_DIR
+                Path to the directory containing script
+
+        --exp_name=EXP_NAME
+                Base name to save data
+
+        --alpha=ALPHA
+                Intercept for intensity
+
+        --beta=BETA
+                Slope for intensity
+
+        --gamma=GAMMA
+                Intercept for bias
+
+        --delta=DELTA
+                Slope for bias
+
+        --intensity_func=INTENSITY_FUNC
+                Intensity function for sampling surface
+
+        --sd=SD
+                Standard deviation for donut intensity surface
+
+        --bias_func=BIAS_FUNC
+                Bias function for sampling surface
+
+        --area=AREA
+                Area of region D
+
+        --k=K
+                Number of sites along one side of grid
+
+        --data_reps=DATA_REPS
+                Number of dataset reps for criterion estimation
 ```

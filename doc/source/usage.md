@@ -118,7 +118,7 @@ The experimental results will be written to the folder named in the save_dir arg
 
 ### CLI Arguments
 
-Many of the CLI arguments between the simulated (optimal_design_site_occ.R) and applied (optimal_design_application.R) scripts are shared.
+Many of the CLI arguments between the simulated (optimal_design_site_occ.R) and applied (optimal_design_application.R) scripts are shared. However, the application relies on a pre-generated dataset, containing the PO data and related covariates. The steps to create this data were described in the data section of the documentation. This data is provided to the script via the ```---data_save_dir``` option.         
 ```
 Options:
         -h, --help
@@ -130,26 +130,8 @@ Options:
         --save_dir=SAVE_DIR
                 Path to save experimental results.  Typically set to experimental_runs/name-of-experiment within the working directory.
 
-        --base_data_dir=BASE_DATA_DIR
-                Path to the directory containing covariate data
-
-        --ebird_data_dir=EBIRD_DATA_DIR
-                Name of directory containing processed ebird data, within basedir
-
         --data_save_dir=DATA_SAVE_DIR
                 Directory to in which preporcessed covariate data is saved
-
-        --map_file=MAP_FILE
-                Name of file containing processed US geopackage fil
-
-        --landcover_file=LANDCOVER_FILE
-                Name of landcover tif
-
-        --modis_file=MODIS_FILE
-                Name of modis EVI tif
-
-        --elevation_file=ELEVATION_FILE
-                Name of elevation tif
 
         --exp_name=EXP_NAME
                 Name of current experiment, which is used for dir to save output
@@ -200,14 +182,16 @@ Options:
                 Probability of detection
 
         --cell_size=CELL_SIZE
-                Size of one side of cell in point process grid
+                Size of one side of cell in point process grid, in meters.
 ```
 
 ### Running 
 
 An example of running the exchange algorithm applied to a real-world case is shown below. It is recommended to use this script on a machine with multiple cores in order to expedite the computation of the exchange algorithm.
 ```
-Rscript optimal_design_application.R --working_dir=. --save_dir=experimental_runs/test_application --base_data_dir=path/to/downloaded/data --data_save_dir=data/ebird --ebird_data_dir=ebd_US_bnhnut_201901_201912_smp_relJul-2023 --map_file=us_states/GOVTUNIT_Tennessee_State_GPKG/GOVTUNIT_Tennessee_State_GPKG.gpkg --landcover_file=copernicus_landcover/W100N40_PROBAV_LC100_global_v3.0.1_2019-nrt_Discrete-Classification-map_EPSG-4326.tif --modis_file=modis_landcover_dynamics/MCD12Q2.061_EVI_Area_0_doy2019001_aid0001.tif --elevation_file=elevation_aster/ASTGTM_NC.003_ASTER_GDEM_DEM_doy2000061_aid0001.tif --exp_name=test_application --data_reps=4 --m=10 --min_visits=1 --max_visits=4 --vary_visits --random_starts=10 --model_selection=1 --p=0.2 --po_sample_prop=0.05 --exch_iter=40 --mcmc_iter=1000 --v_parallel --cores=4 --run_time=1
+Rscript optimal_design_application.R --working_dir=. --save_dir=experimental_runs/test_application --data_save_dir=data/ebird --exp_name=test_application --data_reps=4 --m=10 --min_visits=1 --max_visits=4 --vary_visits --random_starts=10 --model_selection=1 --p=0.2 --po_sample_prop=0.05 --exch_iter=40 --mcmc_iter=1000 --v_parallel --cores=4 --run_time=2
 ```
-The ```--base_data_dir=path/to/data``` argument is used to specify the location of the downloaded data sources: landcover, map file, ebird data, elevation, and EVI. These are typically stored outside of the repository for this code, as they can take up a sizeable amount of memory. And CLI arguments for the data will expect the files to be stored in the directory you give. More detail about these datasets is given in the data section of this documentation.
+The model that does not use Presence-only (PO) data is specified as ```--model_selection=1```. To use PO data in the model, specify ```2```.
+
+```cell_size``` is by default set to 10,000 meters. This refers to the side of one square cell in the discretized region. It is important to specify this correctly for your use case if you use another cell size. 
 
