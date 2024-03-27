@@ -61,14 +61,14 @@ estimate_v <- function(model, n_surveys, data_reps, m, sites, sampling_surface,
     else if(model_selection==1){
       data_site_occ = list(n_surveys=n_surveys, n_sites=m, total_sites=sites, X=select_sites$aux_x, X_all=sampling_surface$aux_x, Y=selected_data)
     }
-    else if(model_selection==4){
+    else if(model_selection==2){
       data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, total_sites=sites, Y=selected_data)
     }
-    else if(model_selection==5){
+    else if(model_selection==4){
       data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, Y=selected_data, PO=selected_po)
     }
     else{
-      stop("Other models implementation needs to be checked")
+      stop("Other models is not available")
     }
     # For debugging quiet_model can be turned off
     # refresh=0 turns off messages except errors from stan
@@ -157,14 +157,14 @@ estimate_v_parallel <- function(combined_df, model, n_surveys, m, sites, samplin
   else if(model_selection==1){
     data_site_occ = list(n_surveys=n_surveys, n_sites=m, total_sites=sites, X=select_sites$aux_x, X_all=sampling_surface$aux_x, Y=selected_data)
   }
-  else if(model_selection==4){
+  else if(model_selection==2){
     data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, total_sites=sites, Y=selected_data)
   }
-  else if(model_selection==5){
+  else if(model_selection==4){
     data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, Y=selected_data, PO=PO_data)
   }
   else{
-    stop("Other models implementation needs to be checked")
+    stop("Other models implementation is not available")
   }
   # refresh=0 turns off messages except errors from stan
   # quiet function silences stan output 

@@ -2,7 +2,7 @@
 
 Should I do that dependencies thing?
 
-# CmdStan
+## CmdStan
 
 This code requires CmdStanR and CmdStan. Please make sure you have these available on your system following the instructions here: https://mc-stan.org/cmdstanr/articles/cmdstanr.html
 

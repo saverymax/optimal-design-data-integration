@@ -46,7 +46,6 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="installation.html#cmdstan">CmdStan</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Data</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#map-data">Map data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#land-cover-data">Land cover data</a></li>
@@ -88,8 +87,8 @@
 <h1>Data<a class="headerlink" href="#data" title="Permalink to this heading"></a></h1>
 <p>This describes the data used in both the simulated and applied experiments. The data for the applied setting is described first. For all data downloaded in these instructions, it will be easiest to place them all in the same directory that you later provide to the script to preprocess data. HOWEVER, it is not necessary to follow these steps if you would
 like to use our pre-processed data set. Within this repository, the data can be found in the <code class="docutils literal notranslate"><span class="pre">data/ebird/data_pack.RDS</span></code> file. This should be provided to the <code class="docutils literal notranslate"><span class="pre">optimal_design_application.R</span></code> script as described in the usage section of this documentation.</p>
-<p>For the purpose of the blind review, we have provided all data necessary to reconstruct the pre-processed data in the directory above the main source-code repository for this project. It is not possible to put the data in the main directory (ie how it would be structured in the github repository) as the datasets are too large for GitHub. Once this code and data is made public, the data will be stored in a separate public-facing repository.</p>
-<p>Again, to run the experiment code, you can use the data we provide in <code class="docutils literal notranslate"><span class="pre">data/ebird/data_pack.RDS</span></code>. Alternatively, the instructions below describe how to download and process this data from scratch.</p>
+<p>For the purpose of the blind review, we have provided all data necessary to reconstruct the pre-processed data in the directory above the main source-code directory (named <code class="docutils literal notranslate"><span class="pre">optimal_design_site_occ</span></code>) for this project. It is not possible to put the data in the main directory (i.e., how it is structured in the github repository) as the datasets are too large for GitHub. Once this code and data is made public, the unprocessed data will be stored in a separate public-facing repository.</p>
+<p>Again, to run the experiment code, you can use the data we provide via the file <code class="docutils literal notranslate"><span class="pre">data/ebird/data_pack.RDS</span></code>. Alternatively, the instructions below describe how to download, process, and create this file and data from scratch.</p>
 <section id="map-data">
 <h2>Map data<a class="headerlink" href="#map-data" title="Permalink to this heading"></a></h2>
 <p>It will be essential to have a file defining your region of interest before you can proceed with the steps below. We download a .gpkg file from <a class="reference external" href="https://apps.nationalmap.gov/downloader/">https://apps.nationalmap.gov/downloader/</a> for Tennesse in the work here, but you are welcome to define your own region. The code here uses read_sf() from the sf package in R, which is compatible with multiple map file types (.shp, .gpkg). Place this file in a base data directory that you will you use to store all the data for running the code the instructions here describe.</p>
@@ -142,6 +141,57 @@ of the globe for your use-case. On this case, we simply need one section that ap
 <p>The process_ebird.R script performs a number of data processing steps using the R package auk. These steps include verifying the correct time period is filtered, selecting complete checklists (those with all species reported), and only those with stationary and travelling protocols (excluding historical and incidental). For pure PO data modelling we can use the incidental observations as well, but for this occupancy analysis we’ll stick to the 2 protocols.</p>
 <p>Once the auk steps are performed, there is also a sequence of spatial data processing steps as well, to create the discretized covariates for the site-occupancy model and the non-homogeneous poisson process. After these steps are performed, data_pack.RDS is saved, which contains all data necessary to run the applied experiments without relying on the original data files such as the elevation and EVI tifs. If <code class="docutils literal notranslate"><span class="pre">--pp_fit</span></code> is included, the posterior from the non-homogeneous model poisson process is fit and if <code class="docutils literal notranslate"><span class="pre">--gamma_integration</span></code> is included, the posterior of alpha is average over gamma to remove the correlation between the two parameters. The NHPP posterior is required in order to have an estimate of the parameters to generate the PA data for the integration for approximation of the expected utility function.</p>
 <p>Once the <code class="docutils literal notranslate"><span class="pre">process_ebird.R</span></code> script is sucessefully run and the <code class="docutils literal notranslate"><span class="pre">data_pack.RDS</span></code> file generated, you are ready to run the optimal design algorithm applied to the Brown-headed nuthatch example or your own use-case.</p>
+<p>For further reference, the CLI options for the <code class="docutils literal notranslate"><span class="pre">process_ebird.R</span></code> script as listed below:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Options</span><span class="p">:</span>
+        <span class="o">-</span><span class="n">h</span><span class="p">,</span> <span class="o">--</span><span class="n">help</span>
+                <span class="n">Show</span> <span class="n">this</span> <span class="n">help</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">exit</span>
+
+        <span class="o">--</span><span class="n">working_dir</span><span class="o">=</span><span class="n">WORKING_DIR</span>
+                <span class="n">Path</span> <span class="n">to</span> <span class="n">the</span> <span class="n">directory</span> <span class="n">containing</span> <span class="n">code</span> <span class="n">to</span> <span class="n">source</span> <span class="k">for</span> <span class="n">the</span> <span class="n">main</span> <span class="n">script</span>
+
+        <span class="o">--</span><span class="n">base_data_dir</span><span class="o">=</span><span class="n">BASE_DATA_DIR</span>
+                <span class="n">Path</span> <span class="n">to</span> <span class="n">the</span> <span class="n">directory</span> <span class="n">containing</span> <span class="n">covariate</span> <span class="n">data</span>
+
+        <span class="o">--</span><span class="n">ebird_data_dir</span><span class="o">=</span><span class="n">EBIRD_DATA_DIR</span>
+                <span class="n">Name</span> <span class="n">of</span> <span class="n">directory</span> <span class="n">containing</span> <span class="n">processed</span> <span class="n">ebird</span> <span class="n">data</span> <span class="n">csv</span><span class="s1">&#39;s, within basedir</span>
+
+        <span class="o">--</span><span class="n">save_dir</span><span class="o">=</span><span class="n">SAVE_DIR</span>
+                <span class="n">Directory</span> <span class="n">to</span> <span class="n">save</span> <span class="n">data</span> <span class="n">within</span> <span class="n">basedir</span>
+
+        <span class="o">--</span><span class="n">map_file</span><span class="o">=</span><span class="n">MAP_FILE</span>
+                <span class="n">Nmae</span> <span class="n">of</span> <span class="n">file</span> <span class="n">containing</span> <span class="n">processed</span> <span class="n">US</span> <span class="n">geopackage</span> <span class="n">fil</span>
+
+        <span class="o">--</span><span class="n">landcover_file</span><span class="o">=</span><span class="n">LANDCOVER_FILE</span>
+                <span class="n">Name</span> <span class="n">of</span> <span class="n">landcover</span> <span class="n">tif</span>
+
+        <span class="o">--</span><span class="n">modis_file</span><span class="o">=</span><span class="n">MODIS_FILE</span>
+                <span class="n">Name</span> <span class="n">of</span> <span class="n">modis</span> <span class="n">EVI</span> <span class="n">tif</span>
+
+        <span class="o">--</span><span class="n">elevation_file</span><span class="o">=</span><span class="n">ELEVATION_FILE</span>
+                <span class="n">Name</span> <span class="n">of</span> <span class="n">elevation</span> <span class="n">tif</span>
+
+        <span class="o">--</span><span class="n">data_reps</span><span class="o">=</span><span class="n">DATA_REPS</span>
+                <span class="n">Number</span> <span class="n">of</span> <span class="n">dataset</span> <span class="n">reps</span> <span class="k">for</span> <span class="n">criterion</span> <span class="n">estimation</span>
+
+        <span class="o">--</span><span class="n">cell_size</span><span class="o">=</span><span class="n">CELL_SIZE</span>
+                <span class="n">Size</span> <span class="n">of</span> <span class="n">one</span> <span class="n">side</span> <span class="n">of</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">point</span> <span class="n">process</span> <span class="n">grid</span>
+
+        <span class="o">--</span><span class="n">auk_process</span>
+                <span class="n">Boolean</span> <span class="k">for</span> <span class="n">running</span> <span class="n">the</span> <span class="n">initial</span> <span class="n">auk</span> <span class="n">filtering</span> <span class="n">steps</span> <span class="n">to</span> <span class="n">generate</span> <span class="n">smallers</span> <span class="n">csv</span><span class="s1">&#39;s</span>
+
+        <span class="o">--</span><span class="n">data_pack</span>
+                <span class="n">Boolean</span> <span class="k">for</span> <span class="n">generating</span> <span class="n">the</span> <span class="n">data</span> <span class="n">pack</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">already</span> <span class="n">generated</span>
+
+        <span class="o">--</span><span class="n">pp_fit</span>
+                <span class="n">Boolean</span> <span class="n">to</span> <span class="n">fit</span> <span class="n">the</span> <span class="n">Point</span> <span class="n">Process</span> <span class="n">posterior</span> <span class="n">after</span> <span class="n">data</span> <span class="n">saving</span> <span class="n">steps</span>
+
+        <span class="o">--</span><span class="n">pp_diagnostic</span>
+                <span class="n">Boolean</span> <span class="k">for</span> <span class="n">printing</span> <span class="n">diagnostics</span> <span class="k">for</span> <span class="n">point</span> <span class="n">process</span> <span class="n">model</span>
+
+        <span class="o">--</span><span class="n">gamma_integration</span>
+                <span class="n">Boolean</span> <span class="k">for</span> <span class="n">integrating</span> <span class="n">over</span> <span class="n">gamma</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">PP</span>
+</pre></div>
+</div>
 </section>
 <section id="simulated-data">
 <h2>Simulated data<a class="headerlink" href="#simulated-data" title="Permalink to this heading"></a></h2>
@@ -160,6 +210,48 @@ of the globe for your use-case. On this case, we simply need one section that ap
 </pre></div>
 </div>
 <p>This is the dataset generated by the call of <code class="docutils literal notranslate"><span class="pre">generate_po_data.R</span></code>. Once you have done this for the parameter values you are interested in, you are ready to run the simualted design experiments (or you can just use the pre-processed data already provided as there are many dataset combinations already there).</p>
+<p>For further reference, the CLI options for the <code class="docutils literal notranslate"><span class="pre">generate_po_data.R</span></code> script are listed below:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Options</span><span class="p">:</span>
+        <span class="o">-</span><span class="n">h</span><span class="p">,</span> <span class="o">--</span><span class="n">help</span>
+                <span class="n">Show</span> <span class="n">this</span> <span class="n">help</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">exit</span>
+
+        <span class="o">--</span><span class="n">working_dir</span><span class="o">=</span><span class="n">WORKING_DIR</span>
+                <span class="n">Path</span> <span class="n">to</span> <span class="n">the</span> <span class="n">directory</span> <span class="n">containing</span> <span class="n">script</span>
+
+        <span class="o">--</span><span class="n">exp_name</span><span class="o">=</span><span class="n">EXP_NAME</span>
+                <span class="n">Base</span> <span class="n">name</span> <span class="n">to</span> <span class="n">save</span> <span class="n">data</span>
+
+        <span class="o">--</span><span class="n">alpha</span><span class="o">=</span><span class="n">ALPHA</span>
+                <span class="n">Intercept</span> <span class="k">for</span> <span class="n">intensity</span>
+
+        <span class="o">--</span><span class="n">beta</span><span class="o">=</span><span class="n">BETA</span>
+                <span class="n">Slope</span> <span class="k">for</span> <span class="n">intensity</span>
+
+        <span class="o">--</span><span class="n">gamma</span><span class="o">=</span><span class="n">GAMMA</span>
+                <span class="n">Intercept</span> <span class="k">for</span> <span class="n">bias</span>
+
+        <span class="o">--</span><span class="n">delta</span><span class="o">=</span><span class="n">DELTA</span>
+                <span class="n">Slope</span> <span class="k">for</span> <span class="n">bias</span>
+
+        <span class="o">--</span><span class="n">intensity_func</span><span class="o">=</span><span class="n">INTENSITY_FUNC</span>
+                <span class="n">Intensity</span> <span class="n">function</span> <span class="k">for</span> <span class="n">sampling</span> <span class="n">surface</span>
+
+        <span class="o">--</span><span class="n">sd</span><span class="o">=</span><span class="n">SD</span>
+                <span class="n">Standard</span> <span class="n">deviation</span> <span class="k">for</span> <span class="n">donut</span> <span class="n">intensity</span> <span class="n">surface</span>
+
+        <span class="o">--</span><span class="n">bias_func</span><span class="o">=</span><span class="n">BIAS_FUNC</span>
+                <span class="n">Bias</span> <span class="n">function</span> <span class="k">for</span> <span class="n">sampling</span> <span class="n">surface</span>
+
+        <span class="o">--</span><span class="n">area</span><span class="o">=</span><span class="n">AREA</span>
+                <span class="n">Area</span> <span class="n">of</span> <span class="n">region</span> <span class="n">D</span>
+
+        <span class="o">--</span><span class="n">k</span><span class="o">=</span><span class="n">K</span>
+                <span class="n">Number</span> <span class="n">of</span> <span class="n">sites</span> <span class="n">along</span> <span class="n">one</span> <span class="n">side</span> <span class="n">of</span> <span class="n">grid</span>
+
+        <span class="o">--</span><span class="n">data_reps</span><span class="o">=</span><span class="n">DATA_REPS</span>
+                <span class="n">Number</span> <span class="n">of</span> <span class="n">dataset</span> <span class="n">reps</span> <span class="k">for</span> <span class="n">criterion</span> <span class="n">estimation</span>
+</pre></div>
+</div>
 </section>
 </section>
 

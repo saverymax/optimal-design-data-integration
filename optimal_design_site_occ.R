@@ -287,14 +287,12 @@ fig_name <- file.path(fig_dir, paste("po-thinning-per-site.png", sep=""))
 save_basic_plots(fig_name, p)
 
 # We can experiment with these models in the exchange algorithm
-# Model 1 uses just basic priors over params. Model 3 uses PO data as prior. Model 2
-# uses different link function but is otherwise the same as model 1. Model has constant
+# Model 1 uses just basic priors over params. Model 3 uses PO data as prior. Model 2 and 4 has constant
 # intensity, which doesn't make that much sense to use in this case.
 model_strings <- list(
 	"cloglog_site_occupancy"=cloglog_site_occupancy, 
-	"site_occ_probit"=site_occupany_detection, 
+  "poisson_process_constant"=pp_site_occ_constant_no_po,
 	"poisson_poisson_prior"=poisson_process_site_occupancy, 
-	"poisson_process_constant"=pp_site_occ_constant_no_po,
 	"poisson_process_constant_po_prior"=pp_site_occ_constant_po
 	)
 model_selection <- exp_args$model_selection
@@ -309,7 +307,7 @@ model <- cmdstan_model(model_path)
 # Then constant models need only alpha
 if (model_selection==3){
   params <- c('p', 'alpha', 'beta', 'gamma', 'delta')
-}else if ((model_selection==4)|(model_selection==5)){
+}else if ((model_selection==2)|(model_selection==4)){
   params <- c('p', 'alpha')
 }else{
   params <- c('p', 'alpha', 'beta')
