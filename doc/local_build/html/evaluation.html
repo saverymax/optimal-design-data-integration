@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Evaluation &mdash; optimal-design-data-integration 0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Experiments" href="experiments.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            optimal-design-data-integration
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data.html">Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modelling.html">Modelling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="experiments.html">Experiments</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Evaluation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#scripts">Scripts</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">optimal-design-data-integration</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Evaluation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/evaluation.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="evaluation">
+<h1>Evaluation<a class="headerlink" href="#evaluation" title="Permalink to this heading"></a></h1>
+<p>All scripts used to evaluate the results of the optimal design algorithm are evailable in the <code class="docutils literal notranslate"><span class="pre">evaluation</span></code> directory within this repository. Typically, the worklflow of evaluation code is designed to be run after the design algorithm is completed, across different settings of the parameters or algorithm. Then, the evaluation scripts can be run to generate tables and figures related to the set of experiments run for a particular set of parameters and options. The optimal designs themselves can be found in the results directory within the saved files for a particular experiment.</p>
+<p>The instructions here describe how to recreate the figures and tables presented in the paper associated with this work. Beyond this, for your particular use-case and experimental settings, the scripts will need to be manually altered if you would like to compare multiple runs.</p>
+<section id="scripts">
+<h2>Scripts<a class="headerlink" href="#scripts" title="Permalink to this heading"></a></h2>
+<p>For each experiment reported in the paper, there is a script to run the corresponding evaluation and generate the figures and tables shown in the paper. There are also a few other experimental evaluation scripts included in the code here that were not able to be reported in the paper due to lack of space.</p>
+<p>For example, <code class="docutils literal notranslate"><span class="pre">evaluation/read_job_output_exp_1.R</span></code> will generate the results for the first experiment reported in the paper, in which results were compared when presence-only data was and awas not included and when the number of visits to each site was held constant. To run this script, you need to have run the design algorithm with all permutations presented in the paper. The script to do this is in the <code class="docutils literal notranslate"><span class="pre">experiment_scripts/exp_1</span></code> directory, as explained in the <a class="reference internal" href="experiments.html"><span class="doc std std-doc">experiments section</span></a> of this documentation. However, we have provided all necessary files to run the evaluation scripts here. They are structured in the <code class="docutils literal notranslate"><span class="pre">experimental_runs</span></code> directory under the name of each experiment. The evalution scripts will generate the tables and figures from the paper using these files. However, it is also possible to repeat the experiments yourself using the scripts in <code class="docutils literal notranslate"><span class="pre">experiment_scripts</span></code> and given you have enough compute.</p>
+<p>By navigating to the evalution directory in a Linux system and running
+<code class="docutils literal notranslate"><span class="pre">Rscript</span> <span class="pre">read_job_output_exp_1.R</span> <span class="pre">&gt;</span> <span class="pre">exp_1_table.txt</span></code>
+a Latex table can be found at the end of the file that matches Table 1 from the project’s paper.</p>
+<p>Each of the scripts can be run as follows:</p>
+<p><code class="docutils literal notranslate"><span class="pre">Rscript</span> <span class="pre">read_job_output_exp_2.R</span> <span class="pre">&gt;</span> <span class="pre">exp_2_table.txt</span></code>
+This will generate a table comparing models with and without PO data, when visits are and are not allowed to vary, over a few parameter setings of beta and delta.
+A table comparing the total number of visits for each run is also generated.</p>
+<p><code class="docutils literal notranslate"><span class="pre">Rscript</span> <span class="pre">read_job_output_exp_3.R</span> <span class="pre">&gt;</span> <span class="pre">exp_3_table.txt</span></code>
+This will generate a table and a figure showing the effect of increasing the maximum number of visits to each site.</p>
+<p><code class="docutils literal notranslate"><span class="pre">Rscript</span> <span class="pre">read_job_output_exp_4.R</span> <span class="pre">&gt;</span> <span class="pre">exp_4_table.txt</span></code>
+This generates a table and figure showing the effect of increasing the number of total sites used in the optimal design.</p>
+<p><code class="docutils literal notranslate"><span class="pre">Rscript</span> <span class="pre">read_job_output_application_1.R</span> <span class="pre">&gt;</span> <span class="pre">application_1_table.txt</span></code>
+This generates a table comparing the optimal designs as the amount of PO data used in the site occupancy model is increased.</p>
+<p><code class="docutils literal notranslate"><span class="pre">Rscript</span> <span class="pre">read_job_output_application_2.R</span> <span class="pre">&gt;</span> <span class="pre">application_2_table.txt</span></code>
+Finally, this script generates a table comparing the effect of increasing visits and sites on the designs created using a site occupancy model with no PO data.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="experiments.html" class="btn btn-neutral float-left" title="Experiments" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Max Savery.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

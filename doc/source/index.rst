@@ -15,6 +15,7 @@ Welcome to optimal-design-data-integration's documentation!
    data.md
    usage.md
    modelling.md
+   experiments.md
    evaluation.md
 
 
