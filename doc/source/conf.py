@@ -7,9 +7,9 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'optimal-design-data-integration'
-copyright = '2023, Max Savery'
-author = 'Max Savery'
-release = '0'
+copyright = '2023, anonymous'
+author = 'anonymnous'
+release = '1.0'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
