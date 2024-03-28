@@ -191,7 +191,7 @@ An example of running the exchange algorithm applied to a real-world case is sho
 ```
 Rscript optimal_design_application.R --working_dir=. --save_dir=experimental_runs/test_application --data_save_dir=data/ebird --exp_name=test_application --data_reps=4 --m=10 --min_visits=1 --max_visits=4 --vary_visits --random_starts=10 --model_selection=1 --p=0.2 --po_sample_prop=0.05 --exch_iter=40 --mcmc_iter=1000 --v_parallel --cores=4 --run_time=2
 ```
-The model that does not use Presence-only (PO) data is specified as ```--model_selection=1```. To use PO data in the model, specify ```2```.
+The model that uses Presence-only (PO) data is specified as ```--model_selection=1```. To not use PO data in the model, specify ```2```.
 
 ```cell_size``` is by default set to 10,000 meters. This refers to the side of one square cell in the discretized region. It is important to specify this correctly for your use case if you use another cell size. 
 

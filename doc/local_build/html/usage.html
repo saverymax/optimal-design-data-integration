@@ -46,7 +46,6 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="installation.html#cmdstan">CmdStan</a></li>
 <li class="toctree-l1"><a class="reference internal" href="data.html">Data</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Usage</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#simulated-settting">Simulated settting</a><ul>
@@ -62,6 +61,8 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="modelling.html">Modelling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="experiments.html">Experiments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="evaluation.html">Evaluation</a></li>
 </ul>
 
         </div>
@@ -277,7 +278,7 @@
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Rscript</span> <span class="n">optimal_design_application</span><span class="o">.</span><span class="n">R</span> <span class="o">--</span><span class="n">working_dir</span><span class="o">=.</span> <span class="o">--</span><span class="n">save_dir</span><span class="o">=</span><span class="n">experimental_runs</span><span class="o">/</span><span class="n">test_application</span> <span class="o">--</span><span class="n">data_save_dir</span><span class="o">=</span><span class="n">data</span><span class="o">/</span><span class="n">ebird</span> <span class="o">--</span><span class="n">exp_name</span><span class="o">=</span><span class="n">test_application</span> <span class="o">--</span><span class="n">data_reps</span><span class="o">=</span><span class="mi">4</span> <span class="o">--</span><span class="n">m</span><span class="o">=</span><span class="mi">10</span> <span class="o">--</span><span class="n">min_visits</span><span class="o">=</span><span class="mi">1</span> <span class="o">--</span><span class="n">max_visits</span><span class="o">=</span><span class="mi">4</span> <span class="o">--</span><span class="n">vary_visits</span> <span class="o">--</span><span class="n">random_starts</span><span class="o">=</span><span class="mi">10</span> <span class="o">--</span><span class="n">model_selection</span><span class="o">=</span><span class="mi">1</span> <span class="o">--</span><span class="n">p</span><span class="o">=</span><span class="mf">0.2</span> <span class="o">--</span><span class="n">po_sample_prop</span><span class="o">=</span><span class="mf">0.05</span> <span class="o">--</span><span class="n">exch_iter</span><span class="o">=</span><span class="mi">40</span> <span class="o">--</span><span class="n">mcmc_iter</span><span class="o">=</span><span class="mi">1000</span> <span class="o">--</span><span class="n">v_parallel</span> <span class="o">--</span><span class="n">cores</span><span class="o">=</span><span class="mi">4</span> <span class="o">--</span><span class="n">run_time</span><span class="o">=</span><span class="mi">2</span>
 </pre></div>
 </div>
-<p>The model that does not use Presence-only (PO) data is specified as <code class="docutils literal notranslate"><span class="pre">--model_selection=1</span></code>. To use PO data in the model, specify <code class="docutils literal notranslate"><span class="pre">2</span></code>.</p>
+<p>The model that uses Presence-only (PO) data is specified as <code class="docutils literal notranslate"><span class="pre">--model_selection=1</span></code>. To not use PO data in the model, specify <code class="docutils literal notranslate"><span class="pre">2</span></code>.</p>
 <p><code class="docutils literal notranslate"><span class="pre">cell_size</span></code> is by default set to 10,000 meters. This refers to the side of one square cell in the discretized region. It is important to specify this correctly for your use case if you use another cell size.</p>
 </section>
 </section>
