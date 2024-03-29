@@ -108,7 +108,6 @@ Options:
 An example command to run an experiment is shown below. The options here are set so the code will run quickly, but these should not be used for actual design generation. The CLI arguments used for the results reported in the paper can be found in the experiment_scripts directory. ```--v_parallel --cores=4``` are not included in the options but could be added, depending on the number of cores available to you. 
 ```
 Rscript optimal_design_site_occ.R --working_dir=. --save_dir=experimental_runs/test_run --exp_name=design-test-run --data_reps=4 --m=5 --min_visits=1 --max_visits=4 --vary_visits --model_selection=3 --random_starts=3 --exch_iter=10 --mcmc_iter=1000 --use_sim_po --po_data_file=po_gen_peak_ints-donut_peak=2_a=-2_b=0.5_g=1_d=0.25.Rds --intensity_func="donut" --sd=5 --bias_func="exponential" --alpha=-2 --beta=0.5 --gamma=1 --delta=0.25 --p=0.2
-
 ```
 Setting the initial values for the alpha, beta, gamma, and delta parameters will control the data generation process and specify a higher or lower intensity and bias. However, it is important that the ```--po_data_file``` name needs to match the parameter values. In the data provided with this code, these datasets have been pre-generated for a wide variety of parameter combinations. These are available in the directory ```data/sim_data```. This data is generated with the generate_po_data.R and generate_po_datasets.sh scripts, which is explained in the data section of this documentation.
 
