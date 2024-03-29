@@ -15,6 +15,11 @@ library(parallel)
 library(optparse)
 library(openxlsx)
 
+print("Packages loaded:")
+print(.packages(TRUE))
+design_pkgs <- c("ggplot2", "viridis", "cmdstanr", "bayesplot", "dplyr", 
+	"tidyr", "reshape2", "spatstat", "parallel", "optparse", "openxlsx")
+
 set.seed(13)
 
 # R=1000 datasets for monte carlo approx
@@ -291,8 +296,8 @@ save_basic_plots(fig_name, p)
 # intensity, which doesn't make that much sense to use in this case.
 model_strings <- list(
 	"cloglog_site_occupancy"=cloglog_site_occupancy, 
-  "poisson_process_constant"=pp_site_occ_constant_no_po,
-	"poisson_poisson_prior"=poisson_process_site_occupancy, 
+	"poisson_process_constant"=pp_site_occ_constant_no_po,
+	"poisson_process_prior"=poisson_process_site_occupancy, 
 	"poisson_process_constant_po_prior"=pp_site_occ_constant_po
 	)
 model_selection <- exp_args$model_selection
@@ -373,6 +378,7 @@ for (r_start in 1:random_starts){
   print(select_sites)
   print("site idx")
   print(site_idx)
+  test_run_time <- Sys.time()
   if (exp_args$v_parallel==T){
     combined_df <- cbind(r_survey_data_n5$occupancy, r_survey_data_n5$Y, r_po_data$Y)
     estimate_vec <- parApply(clust, combined_df, 1, FUN=estimate_v_parallel, model, possible_visits, m, sites, sampling_surface, 
@@ -385,6 +391,8 @@ for (r_start in 1:random_starts){
                                site_idx, select_sites, r_survey_data_n5, r_po_data,
                                p_logging, params, generated_vars, model_selection, exp_args$mcmc_iter, exp_args$debug_stan)
   }
+  print("Run time for initial V computation")
+  print(Sys.time() - test_run_time)
   # Once the posterior is computed on each of R datasets, find the average score:
   new_v_est <- sum(estimate_mat) / data_reps
   print("Design score from initial exchange")
