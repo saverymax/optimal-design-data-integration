@@ -1,6 +1,8 @@
 # Installation
 
-The R package versions used in this work are listed below. All results reported in the paper were generated from code using these software versions. The script for the applied runs requires a few extra spatial packages. 
+## Dependencies
+
+The R package versions used in this work are listed below. All results reported in the paper were generated from code using these software versions. The script for the applied work requires a few extra spatial packages. 
 
 - cmdstanr: 0.5.2
 - openxlsx: 4.2.5
@@ -19,7 +21,6 @@ For application:
 - tidyterra: 0.4.0       
 - terra: 1.7-55          
 - sf: 1.0-14
-
 
 
 ## CmdStan

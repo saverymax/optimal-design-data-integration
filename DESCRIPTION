@@ -1,3 +1,18 @@
-design_pkgs <- c("ggplot2", "viridis", "cmdstanr", "bayesplot", "dplyr", 
-	"tidyr", "reshape2", "spatstat", "parallel", "optparse", "openxlsx")
+Remotes:
+	ggplot2 
+	viridis 
+	cmdstanr 
+	bayesplot 
+	dplyr 
+	tidyr 
+	reshape2 
+	spatstat 
+	parallel 
+	optparse 
+	openxlsx
+	tidyverse
+	sf
+	terra
+	tidyterra
+
 
