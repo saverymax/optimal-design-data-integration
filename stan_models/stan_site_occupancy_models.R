@@ -15,10 +15,6 @@ cloglog_site_occupancy <- '
     }
     model{
       // priors
-      // Here we need to have a likelihood*prior function for the presence-only data, where I can plug in the value
-      // of the current parameter (alpha/beta/gamma/delta), and get the value of 
-      // the posterior every time the value of alpha/beta/delta/gamma change.
-      // These are the priors for the parameters specified in the model for presence-only data
       target += normal_lpdf(alpha | 0,10);
       target += normal_lpdf(beta | 0,10);
       vector[n_sites] g_theta;
@@ -63,10 +59,6 @@ poisson_process_site_occupancy <- '
     }
     model{
       // priors
-      // Here we need to have a likelihood*prior function for the presence-only data, where I can plug in the value
-      // of the current parameter (alpha/beta/gamma/delta), and get the value of 
-      // the posterior every time the value of alpha/beta/delta/gamma change.
-      // These are the priors for the parameters specified in the model for presence-only data
       target += normal_lpdf(alpha |   0,10);
       target += normal_lpdf(beta | 0,10);
       target += normal_lpdf(gamma | 0,10);
