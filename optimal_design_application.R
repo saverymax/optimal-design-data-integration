@@ -3,11 +3,10 @@
 ######################################################
 
 library(tidyverse)
-library(ggplot2)
 library(viridis)
-#library(hrbrthemes)
 library(cmdstanr) 
 library(bayesplot)
+#library(ggplot2)
 library(reshape2)
 library(spatstat)
 library(parallel)
@@ -18,6 +17,8 @@ library(sf)
 library(terra)
 library(tidyterra)
 
+print("Packing info")
+print(sessionInfo())
 set.seed(13)
 
 # R=1000 datasets for monte carlo approx

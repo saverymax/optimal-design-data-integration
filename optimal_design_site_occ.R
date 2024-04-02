@@ -3,23 +3,19 @@
 ######################################################
 
 library(ggplot2)
-library(viridis)
-#library(hrbrthemes)
-library(cmdstanr) 
-library(bayesplot)
 library(dplyr)
 library(tidyr)
+library(viridis)
+library(cmdstanr) 
+library(bayesplot)
 library(reshape2)
 library(spatstat)
 library(parallel)
 library(optparse)
 library(openxlsx)
 
-print("Packages loaded:")
-print(.packages(TRUE))
-design_pkgs <- c("ggplot2", "viridis", "cmdstanr", "bayesplot", "dplyr", 
-	"tidyr", "reshape2", "spatstat", "parallel", "optparse", "openxlsx")
-
+print("Package info")
+print(sessionInfo())
 set.seed(13)
 
 # R=1000 datasets for monte carlo approx
