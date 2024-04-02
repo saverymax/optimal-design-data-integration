@@ -42,7 +42,7 @@ alpha <- exp_args$alpha
 beta <- exp_args$beta
 gamma <- exp_args$gamma
 delta <- exp_args$delta
-# variance of surface
+# standard deviation of surface
 deviation <- exp_args$sd
 # Select the intensity surface
 if (exp_args$intensity_func == "simple"){

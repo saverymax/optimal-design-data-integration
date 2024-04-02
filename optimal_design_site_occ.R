@@ -18,7 +18,6 @@ print("Package info")
 print(sessionInfo())
 set.seed(13)
 
-# R=1000 datasets for monte carlo approx
 # Create command line arguments
 parser <- OptionParser()
 parser <- add_option(parser, "--working_dir", type="character", default=".", help="Path to the directory containing code to source for the main script and associated functions")
@@ -72,12 +71,11 @@ dir.create(stan_dir)
 data_reps <- exp_args$data_reps
 # Area for whole space, which allows us to set area for sites based on number of sites.
 area_D <- exp_args$area
-# For generating data according to GP
+# For generating data according to GP. Currently not configurable
 gp_bool <- F
 # k is one side of grid
 k <- exp_args$k
 sites <- k^2
-# alpha=2 indicates "good" quality of auxiliary information
 alpha <- exp_args$alpha
 beta <- exp_args$beta
 gamma <- exp_args$gamma
@@ -85,14 +83,11 @@ delta <- exp_args$delta
 deviation <- exp_args$sd
 p_0 <- exp_args$p
 aux_cor <- exp_args$aux_cor
-# This assumes spatial variance of 1, which was used in Reich 2018 (see supplement)
+# This assumes spatial variance of 1, if not using cloglog link
 sigma <- 1
 # There will be m sites selected for sampling
-# 36/4 was used in paper
 m <- exp_args$m
-# Based on the size of grid get the auxiliary data and coordinates
-# Because these don't really depend on any random variables and just location 
-# in the grid, there will be one fixed dataset throughout the optimization
+# get the auxiliary data and coordinates
 if (exp_args$intensity_func == "simple"){
   sampling_surface <- get_sampling_surface_simple(k)
 }else{
@@ -117,12 +112,11 @@ corr_matrix <- specify_corr(sampling_surface[,1:2])
 
 # Next, we use this data to generate the rest of the datasets
 # The data generating function will sample R occupancy maps|params
-# and then R complete datasets|occupancy maps'
-# It turns out that if we want to compare different survey efforts it is convenient to have pre-generated datasets for
+# and then R complete datasets|occupancy maps
+# If we want to compare different survey efforts it is convenient to have pre-generated datasets for
 # each number of visits
 # The number of surveys can differ between sites so it is a vector
-# We will select m sites to have these visits, otherwise the sites will have 0 visits
-# We will compare the number of visits during the optimization
+# Select m sites to have these visits, otherwise the sites will have 0 visits
 link_func <- "cloglog"
 if (exp_args$vary_visits == TRUE){
   visits <- c(exp_args$min_visits, exp_args$max_visits)
@@ -142,12 +136,11 @@ if (exp_args$use_sim_po==T){
   r_po_data <- readRDS(file=file.path(exp_args$working_dir, 
                             "data", "sim_data", exp_args$po_data_file))
   Y_positive_indices <- which(r_po_data$Y>0)
-  # This is the data at which there are counts > 0
   print("Data with counts > 0")
   print(r_po_data$Y[Y_positive_indices])
   # Subset based on datareps in this script
-  # The PO data has been pregenerated with 96 reps, tho
-  # we can regenerate
+  # PO data is pregenerated with r reps, usually 96.
+  # Otherwise, check if they match
   if (nrow(r_po_data$Y) >= data_reps){
     r_po_data$Y <- r_po_data$Y[1:data_reps, ]
   }
@@ -156,7 +149,7 @@ if (exp_args$use_sim_po==T){
     r_po_data$lambda <- matrix(rep(r_po_data$lambda[1,], data_reps), nrow=data_reps, ncol=sites, byrow=T)
     r_po_data$bias <- matrix(rep(r_po_data$bias[1,], data_reps), nrow=data_reps, ncol=sites, byrow=T)
   } 
-  # If I ever use another intensity I have to add a check for using the correct number of sites
+  # Params in this script and those from pregen PO data need to match.
   stopifnot(r_po_data$params$alpha==alpha)
   stopifnot(r_po_data$params$beta==beta)
   stopifnot(r_po_data$params$gamma==gamma)
@@ -166,7 +159,7 @@ if (exp_args$use_sim_po==T){
 }
   
 # For the coordinate exchange algorithm, we will need to precompute the nearest neighbors.
-# I take a naive approach here of choosing the top l neighbors
+# Here we choose the closest l neighbors
 l <- 4
 nearest_neighbors <- get_neighbors(sampling_surface, l)
 dim(nearest_neighbors)
@@ -174,7 +167,7 @@ nearest_neighbors
 fig_text_size <- 7
 fig_title_size <- 10
 
-# Use the final generation iteration to look at the presence-absence and presence-only data
+# Use the final generation iteration to visualize the presence-absence and presence-only data
 p <- ggplot(sampling_surface, aes(x, y, fill=aux_x)) + 
   geom_tile() +
   scale_fill_viridis(discrete=FALSE, name="") +
@@ -287,9 +280,8 @@ p <- ggplot() +
 fig_name <- file.path(fig_dir, paste("po-thinning-per-site.png", sep=""))
 save_basic_plots(fig_name, p)
 
-# We can experiment with these models in the exchange algorithm
-# Model 1 uses just basic priors over params. Model 3 uses PO data as prior. Model 2 and 4 has constant
-# intensity, which doesn't make that much sense to use in this case.
+# Model 1 uses just basic priors over params. Model 3 uses PO data as prior. Model 2 and 4 have constant
+# intensity, which are only for testing purposes
 model_strings <- list(
 	"cloglog_site_occupancy"=cloglog_site_occupancy, 
 	"poisson_process_constant"=pp_site_occ_constant_no_po,
@@ -305,7 +297,7 @@ write(model_strings[[model_selection]], model_path)
 model <- cmdstan_model(model_path) 
 # These are the parameters to report
 # Only the PO prior model needs gamma and delta. 
-# Then constant models need only alpha
+# The constant models need only alpha
 if (model_selection==3){
   params <- c('p', 'alpha', 'beta', 'gamma', 'delta')
 }else if ((model_selection==2)|(model_selection==4)){
@@ -316,10 +308,7 @@ if (model_selection==3){
 print(paste("Using params", paste(params, collapse=" ")))
 generated_vars <- c('g_theta_gen', 'occ_gen')
 
-# The reich paper repeats the entire exchange algorithm procedure 10 times,
-# and retains solution with lowest V(D)
-# Currently I am not repeating the procedure. However, it accounts for uncertainty associated with random m sites 
-# selected for sampling
+# Random starts to repeat the entire exchange algorithm procedure
 p_logging <- exp_args$p_logging
 random_starts <- exp_args$random_starts
 v_list <- vector(mode="list", length=random_starts)
@@ -345,7 +334,7 @@ for (r_start in 1:random_starts){
   # These sites will have n_i = n, the others will have n_i = 0
   # Only sites with n_i=n will contribute to likelihood for the site-occupancy model.
   if (r_start == 1){
-    # Hardcode start where we start by sampling near biased area.
+    # Hardcode for first random start where we start by sampling near biased area.
     if(m > 10){
 	stop("More than 10 sites is currently not compatible with initial configuration")
     }
@@ -355,9 +344,6 @@ for (r_start in 1:random_starts){
     site_idx <- sample(1:sites, m, replace=F)
   }
   # Initialize for exchange algorithm
-  # I don't need best_neighbor_idx but it allows me to not modify the 
-  # the vector that is looped over during the exchange. Even though this concurrent looping should be ok, as the sites are independently 
-  # exchanged, but for organization purposes they are separate variables. 
   best_neighbor_idx <- site_idx
   # Vector to hold potential sampling effort at each site
   # optimal_visits will be initiated in algorithm
@@ -370,7 +356,6 @@ for (r_start in 1:random_starts){
   exchange_iter <- 0
   v_vec <- c()
   # Compute v for initial design
-  # Not comparing sampling effort here
   print(select_sites)
   print("site idx")
   print(site_idx)
@@ -409,9 +394,7 @@ for (r_start in 1:random_starts){
   while ((convergence_cond==FALSE) & (exchange_iter<=exp_args$exch_iter)){
     exchange_iter <- exchange_iter + 1
     print(paste("New exchange iteration: ", exchange_iter))
-    # Data structure for each score estimate
-    # Then compute the posterior based on those sites and generated data, for each r dataset
-    # We iterate through the sites, computing the estimate of $V(D)$ for each so that we explore the effect of each site on the design
+    # We iterate through the sites, so that we explore the effect of each site on the design
     for (s in 1:length(site_idx)){
       print(paste("ex iter: ", exchange_iter, ", current site index: ", s, sep=""))
       current_site <- site_idx[s]
@@ -419,7 +402,7 @@ for (r_start in 1:random_starts){
       neighbor_set <- nearest_neighbors[current_site,]
       # Set the current sites to the best from iteration over sites neighbors
       current_visits <- possible_visits
-      # We first iterate through the neighbors of each site, and compute V for each exchange. 
+      # We iterate through the neighbors of each site, and compute V for each exchange. 
       # The initial estimate will be for our initial design.
       for (visit in visits){
         n_count <- 0
@@ -479,8 +462,6 @@ for (r_start in 1:random_starts){
           print(neighbor_idx)
           print("current neighbor")
           print(nn)
-          #print("current data selction after visits altered")
-          #print(r_survey_data$Y[,neighbor_idx])
           if (exp_args$v_parallel==T){
             combined_df <- cbind(r_survey_data$occupancy, r_survey_data$Y, r_po_data$Y)
             estimate_vec <- parApply(clust, combined_df, 1, FUN=estimate_v_parallel, model, current_visits, m, sites, sampling_surface, 

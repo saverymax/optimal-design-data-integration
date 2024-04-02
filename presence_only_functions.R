@@ -16,7 +16,6 @@ generate_coords <- function(grid, counts){
   k <- .5
   for (site in 1:length(counts)){
     if (counts[site] > 0){
-      # Could make the coordinates dependent on the covariates, which would be interesting.
       # Currently assumes quadrates are centered on integers.
       x_coord <- runif(counts[site], grid$x[site]-k, grid$x[site]+k)
       y_coord <- runif(counts[site], grid$y[site]-k, grid$y[site]+k)

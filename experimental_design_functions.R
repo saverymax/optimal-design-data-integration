@@ -47,11 +47,10 @@ estimate_v <- function(model, n_surveys, data_reps, m, sites, sampling_surface,
   for (r in 1:data_reps){
     # For each rth dataset get the m randomly chosen sites
     selected_data <- r_survey_data$Y[r, select_idx]
-    #selected_occ <- r_survey_data$occupancy[r, select_idx]
     occ <- r_survey_data$occupancy[r, ]
-    # We use all po data for given r
+    # We use all po data for a given r
     selected_po <- r_po_data$Y[r,]
-    # Here I use the same X covariate for the presence-only data as used for the survey data. The difference is that
+    # In the model the same X covariate is used for the presence-only data as is used for the survey data. The difference is that
     # the survey data here is a subset (select_sites) of the sites, whereas the presence only data 
     # needs covariates for the whole grid to approximate the expected count in the entire region.
     if (model_selection==3){
@@ -84,7 +83,6 @@ estimate_v <- function(model, n_surveys, data_reps, m, sites, sampling_surface,
     if (p_logging==T){
       print("Logging posterior")
       posterior <- fit$draws()
-      # TODO: Why is estimate for alpha now rather large??
       print(fit$summary(variables=params))
       
       color_scheme_set("mix-blue-pink")
@@ -95,16 +93,6 @@ estimate_v <- function(model, n_surveys, data_reps, m, sites, sampling_surface,
       plot_title <- ggtitle(paste("Posterior distributions, with means and 90% interval"))
       p_post <- mcmc_areas(posterior,  prob = 0.9, point_est="mean", regex_pars = params) + plot_title
       print(p_post)
-      
-      #if(model_selection==3){
-      #  plot_title <- ggtitle(paste("Posterior distributions, with means and 90% interval"))
-      #  p_post <- mcmc_areas(posterior,  prob = 0.9, point_est="mean", regex_pars = c("gamma", "delta")) + plot_title
-      #  print(p_post)
-      #}
-      
-      #plot_title <- ggtitle(paste("Posterior distribution of detection probability, mean and 90% interval"))
-      #p_post <- mcmc_areas(posterior,  prob = 0.9, point_est="mean", pars = c("p")) + plot_title
-      #print(p_post)
       
       # Check issues with divergences
       color_scheme_set("darkgray")
@@ -124,9 +112,8 @@ estimate_v <- function(model, n_surveys, data_reps, m, sites, sampling_surface,
       
     }
     # Average estimate after R iterations through the datasets.
-    # Need to select_idx the sites since it generates for all of them.
     # The 2 index is the ppd for Z
-    # This will be the same as just taking the occ prob instead of mean of bernoulli with probability of occ
+    # This will be the same as just taking the occ prob instead of mean of a bernoulli with probability of occ
     gen_occupancy <- fit$summary(variables=generated_vars[2])$mean
     print("brier comp")
     print(gen_occupancy)
@@ -143,13 +130,9 @@ estimate_v_parallel <- function(combined_df, model, n_surveys, m, sites, samplin
                        select_idx, select_sites, generated_vars, model_selection, mcmc_iter){
   
   # For each rth dataset get the m randomly chosen sites for the occupancy data, Y surveys, and PO.
-  #selected_occ <- combined_df[select_idx]
   occ <- combined_df[1:sites]
   selected_data <- combined_df[sites+select_idx]
   PO_data <- combined_df[(2*sites+1):length(combined_df)] 
-  # Here I use the same X covariate for the presence-only data as used for the survey data. The difference is that
-  # the survey data here is a subset (select_sites) of the sites, whereas the presence only data 
-  # needs covariates for the whole grid to approximate the expected count in the entire region.
   if (model_selection==3){
     data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, X=select_sites$aux_x, Y=selected_data, PO=PO_data, 
                          X_po=sampling_surface$aux_x, Z_po=sampling_surface$aux_z, model_diag=0)
@@ -166,8 +149,6 @@ estimate_v_parallel <- function(combined_df, model, n_surveys, m, sites, samplin
   else{
     stop("Other models implementation is not available")
   }
-  # refresh=0 turns off messages except errors from stan
-  # quiet function silences stan output 
   fit <- model$sample(data=data_site_occ, seed=13, chains=1, 
                             iter_sampling=mcmc_iter, iter_warmup=100, refresh=0, show_messages=F)
   
@@ -184,15 +165,10 @@ estimate_v_nuthatch <- function(model, n_surveys, data_reps, m, sites, area_a, i
   for (r in 1:data_reps){
     print("rth dataset:")
     print(r)
-    # For each rth dataset get the m randomly chosen sites
     selected_data <- r_survey_data$Y[r, select_idx]
     occ <- r_survey_data$occupancy[r, ]
     print(selected_data)
-    # We use all po data for given r
     selected_po <- r_po_data$Y[r,]
-    # Here I use the same X covariate for the presence-only data as used for the survey data. The difference is that
-    # the survey data here is a subset (select_sites) of the sites, whereas the presence only data 
-    # needs covariates for the whole grid to approximate the expected count in the entire region.
     if (model_selection==1){
       data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, area_a=area_a, X=select_sites, Y=selected_data, PO=selected_po,
                            X_po=intensity_covars, Z_po=bias_covars, k_i=k_i, k_b=k_b, model_diag=0)
@@ -202,8 +178,6 @@ estimate_v_nuthatch <- function(model, n_surveys, data_reps, m, sites, area_a, i
     }else{
       stop("No other models implemented")
     }
-    # refresh=0 turns off messages except errors from stan
-    # quiet function silences stan output 
     fit <- model$sample(data=data_site_occ, seed=13, chains=1, 
                         iter_sampling=mcmc_iter, iter_warmup=100, refresh=0, show_messages=F)
     if (p_logging==T){
@@ -235,13 +209,9 @@ estimate_v_nuthatch <- function(model, n_surveys, data_reps, m, sites, area_a, i
 estimate_v_parallel_nuthatch <- function(combined_df, model, n_surveys, m, sites, area_a, intensity_covars, bias_covars, 
                                          select_idx, select_sites, generated_vars, k_i, k_b, model_selection, mcmc_iter){
   tryCatch({
-    # For each rth dataset get the m randomly chosen sites for the occupancy data, Y surveys, and PO.
     occ <- combined_df[1:sites]
     selected_data <- combined_df[sites+select_idx]
     PO_data <- combined_df[(2*sites+1):length(combined_df)] 
-    # Here I use the same X covariate for the presence-only data as used for the survey data. The difference is that
-    # the survey data here is a subset (select_sites) of the sites, whereas the presence only data 
-    # needs covariates for the whole grid to approximate the expected count in the entire region.
     if (model_selection==1){
       data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, area_a=area_a, X=select_sites, Y=selected_data, PO=PO_data,
                            X_po=intensity_covars, Z_po=bias_covars, k_i=k_i, k_b=k_b, model_diag=0)
@@ -251,8 +221,6 @@ estimate_v_parallel_nuthatch <- function(combined_df, model, n_surveys, m, sites
     }else{
       stop("No other models implemented")
     }
-    # refresh=0 turns off messages except errors from stan
-    # quiet function silences stan output 
     fit <- "temp"
     v_est <- "temp"
     gen_occupancy <- "temp"
@@ -280,12 +248,10 @@ get_neighbors <- function(surface, l){
   # Data structure for nn; could be df too
   nearest_neighbors <- matrix(nrow=nrow(surface), ncol=l)
   for (row in 1:nrow(surface)){
-    # Don't actually need the coords here; we're working just with row indices
-    #print(paste(x_coord, y_coord))
     # This gives us the closest neighboring rows (in surface) for a set of coordinates
     min_points <- sort(distances[row, ])[2:(l+1)]
     stopifnot(length(min_points)==l)
-    # Take column names, which gives us a character vector annoyingly
+    # Take column names, which gives us a character vector 
     nearest_neighbor_rows <- as.numeric(names(min_points))
     nearest_neighbors[row,] <- nearest_neighbor_rows
   }
@@ -303,7 +269,6 @@ get_neighbors_sf_grid <- function(centroids, l){
     min_points <- order(distances[row, ])[2:(l+1)]
     stopifnot(!(row%in%min_points))
     stopifnot(length(min_points)==l)
-    # Take column names, which gives us a character vector annoyingly
     nearest_neighbors[row,] <- min_points 
   }
   return(nearest_neighbors)
@@ -318,10 +283,6 @@ exchange_coordinates_deterministic <- function(select_id, cur_site_index, new_ne
 }
 
 exchange_coordinates_stochastic <- function(select_id, current_site, cur_site_index, n_neighbors, l){
-  # In the exchange algorithm, we pick a site, find a neighbor close to that site,
-  # and then switch that site with n>0 to n=0 and the other site to n>0, for 
-  # whatever value of n we are using.
-  # Make sure new neighbors are not in current list.
   new_site <- F
   while (new_site==F){
     # Get the neighbors for the selected site
@@ -381,12 +342,11 @@ get_sampling_surface_donut <- function(k, deviation){
   sampling_grid <- expand.grid(x, y)
   sampling_grid
   # Then compute distance from each location to center of the grid.
-  # This gives a gaussain function that peaks a certain distance (7) away from the centroid
+  # This gives a gaussain function that peaks a certain distance away from the centroid
   r <- apply(sampling_grid, 1, distance_func, center_coord=center_coord)
   # Then create x covariate
   x <- exp(-10*((r-7)/deviation)^2)
-  # This gives us the data for the auxiliary surveys x_i in the paper, which will be the 
-  # covariates used in the paper X_i^T = [1, X_i1]
+  # This gives us the data for the auxiliary surveys x_i 
   x_1 <- qnorm(0.98*x + .01)
   sampling_grid$aux_x <- x_1
   colnames(sampling_grid) <- c("x", "y", "aux_x")
@@ -394,8 +354,6 @@ get_sampling_surface_donut <- function(k, deviation){
 }
 
 get_bias_surface_correlated <- function(sampling_grid, aux_cor){
-  # Various ways to generate correlated vector from one already existing:
-  # https://stats.stackexchange.com/questions/15011/generate-a-random-variable-with-a-defined-correlation-to-an-existing-variables
   V <- matrix(c(1, aux_cor, aux_cor, 1), nrow=2, ncol=2)
   R <- chol(V)
   aux_z <- rnorm(k*k, 0, 1)
@@ -403,7 +361,6 @@ get_bias_surface_correlated <- function(sampling_grid, aux_cor){
   cor_X <- X %*% R 
   print("Correlation between X and Z")
   print(cor(cor_X))
-  #cor_X[1:5, 1]
   sampling_grid$aux_z <- cor_X[,2]
   return(sampling_grid)
 }
@@ -415,7 +372,6 @@ get_bias_surface_exponential <- function(sampling_grid, centroid){
   grid_points <- expand.grid(x, y)
   # Then compute distance from centroid to every other location
   r <- apply(grid_points, 1, function(x, center_coord){sqrt((center_coord[1] - x[1])^2 + (center_coord[2] - x[2])^2)}, center_coord=centroid)
-  # Then create z covariate
   x <- exp(-2*((r)/5))
   x_1 <- qnorm(0.98*x + .01)
   sampling_grid$aux_z <- x_1
@@ -428,9 +384,6 @@ generate_data_so <- function(data_reps, surface_data, corr_matrix, p_0, alpha, b
   Y_detection <- matrix(nrow=data_reps, ncol=sites)
   theta_reps <- matrix(nrow=data_reps, ncol=sites)
   for (r in 1:data_reps){
-    # Equivalent way to induce correlation  
-    #R <- t(chol(corr_matrix)) 
-    #theta <- b_0 + sampling_surface$aux*b_1 + R %*% rnorm(sites)
     if (link=="cloglog"){
       g_theta <- 1 - exp(-exp(alpha + surface_data$aux_x*beta))
     }else{
@@ -543,6 +496,5 @@ write_results <- function(random_starts, avg_v, best_v, best_site_mat, visits, v
   names(site_df) <- rep(paste("rand-start", c(1:random_starts), sep=""), 2)
   names(v_df) <- c("iter", "v", "rand-start")
   xlsx_list <- list("v_stat"=v_stat_df, "best_v"=best_v, "v_iterations"=v_df, "best_sites"=site_df)
-  #write.xlsx(xlsx_list, file=file.path(exp_dir, paste("results_", exp_name, ".xlsx", sep="")), rowNames=F)
   write.xlsx(xlsx_list, file=file.path(exp_dir, paste(file_name, "_results.xlsx", sep="")), rowNames=F)
 }

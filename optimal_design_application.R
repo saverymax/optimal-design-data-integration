@@ -21,7 +21,6 @@ print("Package info")
 print(sessionInfo())
 set.seed(13)
 
-# R=1000 datasets for monte carlo approx
 # Create command line arguments
 parser <- OptionParser()
 parser <- add_option(parser, "--working_dir", type="character", default=".", help="Path to the directory containing code to source for the main script and associated functions")
@@ -52,8 +51,6 @@ stopifnot(exp_args$p_logging==F)
 select <- dplyr::select
 sort <- base::sort
 
-# Set important global variables if we're just running within Rstudio. hacky :)
-
 # Source modules
 source(file.path(exp_args$working_dir, "data_utils", "load_ebird_data.R"))
 source(file.path(exp_args$working_dir, "experimental_design_functions.R"))
@@ -79,8 +76,8 @@ po_sample_prop <- exp_args$po_sample_prop
 m <- exp_args$m
 cell_size <- exp_args$cell_size
 
-# That set the intial experimental environment up. Now we can focus on loading our covariates and data
-# This involves a lot of data processing which we pack intothe main_data_handling function
+# Then set the intial experimental environment up, ie loading our covariates and data
+# This involves a lot of data processing which we pack into the main_data_handling function
 # It is necessary to run the process_ebird script first to generate the rds file. See documentation about data generation.
 rast_surface_path <- file.path(data_save_dir, "rast_surface.tif")
 data_pack <- read_rds(file.path(data_save_dir, "data_pack.RDS"))
@@ -101,16 +98,14 @@ state_po_prj <- data_pack$state_po_prj
 rast_surface <- rast(rast_surface_path) 
 sites <- nrow(intensity_covars)
 # Generate po data to match format of simulation script. 
-# TODO: I could do the PO sampling here!
 # Sample PO points by po_sample_prop, the proportion of data
-# Code from data processing has been copied below. Need to remove from load_ebird and process_ebird and nuthatch qmd
 n_po_sample <- round(po_sample_prop * nrow(state_po_prj))
 po_id <- sample(1:nrow(state_po_prj), n_po_sample, replace=F)
 state_po_prj_sample <- state_po_prj[po_id, ]
+# This gives aggregated counts after downsampling PO data.
 pp_counts <- aggregate_point_counts(subgrid, state_po_prj_sample)
 Y_po <- matrix(rep(pp_counts, data_reps), nrow=data_reps, ncol=sites, byrow=T)
 r_po_data <- list(Y=Y_po)
-# This gives aggregated counts after downsampling PO data.
 # Save the thinned po data
 p <- ggplot() + 
   geom_spatraster(data=rast_surface) +
@@ -125,8 +120,6 @@ ggsave(fig_name, plot=p, dpi=300, width=15, height=8, units="cm", bg="white", de
 stan_path <- file.path(exp_args$working_dir, "stan_models")
 # Cell size is in meters but let's work with our parameters in kilometer scale
 area_a <- (cell_size/1000)^2
-# Set to one for practical purposes
-#area_a <- 1
 # The point process model needs to be fit in the process_ebird script.Please see documentation regarding that before using the optimal design code 
 if(!file.exists(file.path(data_save_dir, "pp_posterior_ebird.RDS"))){
   stop("Please run process_ebird.R with the relevant CLI arguments before running the optimal design! See the documentation for more details")
@@ -141,7 +134,7 @@ if(!file.exists(file.path(data_save_dir, "pp_posterior_ebird.RDS"))){
 
 # Then generate PA data.
 # It turns out that if we want to compare different survey efforts it is convenient to have pre-generated datasets for
-# each number of visits, though it is coded a bit awkwardly here.
+# each number of visits, though it is coded a bit awkwardly here (n1/n5 dataset refers to min/max visits dataset, not just 1/5).
 # The number of surveys can differ between sites so it is a vector
 # We will select m sites to have these visits, otherwise the sites will have 0 visits
 # We will compare the number of visits during the optimization
@@ -170,7 +163,7 @@ print(dim(nearest_neighbors))
 
 # Have to use subgrid_covars for this since it still has geometry and not intensity_/bias_covars
 # Create plots of the occupancy and probability maps
-# Plot the data for n=5 so that when vary_visits=T we can observe counts above 1.
+# Plot the data for n>5 so that when vary_visits=T we can observe counts above 1.
 d_examine <- ifelse(data_reps<3, data_reps, 3)
 for(d_i in 1:d_examine){
   occ_map <- st_geometry(subgrid) %>% st_sf()
@@ -277,9 +270,6 @@ for (r_start in 1:random_starts){
   print("Initial row ids")
   print(site_idx)
   # Initialize for exchange algorithm
-  # I don't need best_neighbor_idx but it allows me to not modify the 
-  # the vector that is looped over during the exchange. Even though this concurrent looping should be ok, as the sites are independently 
-  # exchanged, but for organization purposes they are separate variables. 
   best_neighbor_idx <- site_idx
   # Vector to hold potential sampling effort at each site
   # optimal_visits will be initiated in algorithm
@@ -293,7 +283,7 @@ for (r_start in 1:random_starts){
   exchange_iter <- 0
   v_vec <- c()
   # Compute v for initial design
-  # Not comparing sampling effort here
+  # Not comparing sampling effort here for the initial score
   test_run_time <- Sys.time()
   if (exp_args$v_parallel==T){
     combined_df <- cbind(r_survey_data_n5$occupancy, r_survey_data_n5$Y, r_po_data$Y)
@@ -332,7 +322,7 @@ for (r_start in 1:random_starts){
     print(paste("New exchange iteration: ", exchange_iter))
     # Data structure for each score estimate
     # Then compute the posterior based on those sites and generated data, for each r dataset
-    # We iterate through the sites, computing the estimate of $V(D)$ for each so that we explore the effect of each site on the design
+    # We iterate through the sites, computing the estimate of V(D) for each so that we explore the effect of each site on the design
     for (s in 1:length(site_idx)){
       print(paste("ex iter: ", exchange_iter, ", current site index: ", s, sep=""))
       current_site <- site_idx[s]
@@ -403,8 +393,6 @@ for (r_start in 1:random_starts){
           print(best_neighbor_idx)
           print("temp neighbor idx")
           print(neighbor_idx)
-          #print("current data selction after visits altered")
-          #print(r_survey_data$Y[,neighbor_idx])
           if (exp_args$v_parallel==T){
             combined_df <- cbind(r_survey_data$occupancy, r_survey_data$Y, r_po_data$Y)
             estimate_vec <- parApply(clust, combined_df, 1, FUN=estimate_v_parallel_nuthatch, model, current_visits, m, sites, area_a, 
@@ -452,7 +440,6 @@ for (r_start in 1:random_starts){
           else{
             title <- paste("Non-optimal spatial design: v=", round(new_v_est, 10), 
                            "\nvs current optimal design: v=", round(current_v_est, 10), sep="")
-            #print("No change in optimal design")
             p <- plot_sites_vs_best_ebird(site_centroids, subgrid, current_site, neighbor_idx, best_neighbor_idx, current_visits, possible_visits, title)
           }
           fig_name <- file.path(fig_dir, paste("site_locs_rand-start-", r_start, "_ex-iter_", 
@@ -469,7 +456,7 @@ for (r_start in 1:random_starts){
       print(paste("Current run time is", cur_run_time))
       print(paste("Time left: ", exp_args$run_time - cur_run_time))
       # Write results to write after iterating through neighbors and visits for a site
-      # I'm going to save to the same matrices that will also be used for the optimal after each random
+      # Saving to the same matrices that will also be used for the optimal after each random
       # start, so that the current results will be overwritten.
       v_df <- data.frame(x=1:length(v_vec), v=v_vec, r=rep(r_start, length(v_vec)))
       best_site_mat[r_start,] <- site_idx
