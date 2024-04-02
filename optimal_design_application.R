@@ -17,7 +17,7 @@ library(sf)
 library(terra)
 library(tidyterra)
 
-print("Packing info")
+print("Package info")
 print(sessionInfo())
 set.seed(13)
 
