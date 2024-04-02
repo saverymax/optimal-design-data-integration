@@ -4,7 +4,8 @@ stan_models/*.exe
 *.stan
 experimental_runs*/*
 data/ebird/*.png
-experimental_scripts/oe*
+experimental_scripts/application_*/*
+experimental_scripts/exp_*/*
 optimal_design_site_occ_files/
 job_output*/*
 .Rproj.user
