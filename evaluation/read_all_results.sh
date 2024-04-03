@@ -1,0 +1,7 @@
+exp_dir="/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs"
+Rscript read_job_output_exp_1.R --base_dir=$exp_dir > exp_1_table.txt
+Rscript read_job_output_exp_2.R --base_dir=$exp_dir > exp_2_table.txt
+Rscript read_job_output_exp_3.R --base_dir=$exp_dir > exp_3_table.txt
+Rscript read_job_output_exp_4.R --base_dir=$exp_dir > exp_4_table.txt
+Rscript read_job_output_application_1.R --base_dir=$exp_dir > application_1_table.txt
+Rscript read_job_output_application_2.R --base_dir=$exp_dir > application_2_table.txt
