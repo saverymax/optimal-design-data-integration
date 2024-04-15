@@ -1,11 +1,19 @@
 # Data
 
-This describes the data used in both the simulated and applied experiments. The data for the applied setting is described first. For all data downloaded in these instructions, it will be easiest to place them all in the same directory that you later provide to the script to preprocess data. HOWEVER, it is not necessary to follow these steps if you would 
-like to use our pre-processed data set. Within this repository, the data can be found in the ```data/ebird/data_pack.RDS``` file. This should be provided to the ```optimal_design_application.R``` script as described in the usage section of this documentation.
+This describes the data used in both the simulated and applied experiments. The data for the applied setting is described first. For all data downloaded in these instructions, it will be easiest to place them all in the same directory that you later provide to the script to pre-process the data. HOWEVER, it is not necessary to follow these steps if you would 
+like to use our pre-processed data set. Within this repository, the data can be found in the ```optimal-design-data-integration/data/ebird/data_pack.RDS``` file. This should be provided to the ```optimal_design_application.R``` script as described in the usage section of this documentation. You can skip to the [usage section](usage) in this case.
 
-For the purpose of the blind review, we have provided all data necessary to reconstruct the pre-processed data in the directory above the main source-code directory (named ```optimal_design_site_occ```) for this project. It is not possible to put the data in the main directory (i.e., how it is structured in the github repository) as the datasets are too large for GitHub. Once this code and data is made public, the unprocessed data will be stored in a separate public-facing repository.
+We have also provided all data necessary to reconstruct the pre-processed data in the zipped ```raw_data``` folder in the figshare repository. This means that you don't have to follow the data downloading steps and can skip to the [data processing](#processing-data) section below. Upon the public release of this repository, the pre-processed data and code will also be available in a public GitHub repository.
 
-Again, to run the experiment code, you can use the data we provide via the file ```data/ebird/data_pack.RDS```. Alternatively, the instructions below describe how to download, process, and create this file and data from scratch.
+Again, to run the experiment code, you can use the data we provide via the file ```optimal-design-data-integation/data/ebird/data_pack.RDS```. Alternatively, the instructions below describe how to download, process, and create this file and data from scratch.
+
+## Additional packages
+
+If you would like to recreate the data used in this work, a few extra packages are required:
+- auk
+- exactextracr
+- lubridate
+
 
 ## Map data
 
@@ -43,7 +51,7 @@ There are various vegetation products available online. We use the MODIS product
 
 	5. Submit your request and wait for the order to complete.
 
-EVI is described here: <https://www.usgs.gov/landsat-missions/landsat-enhanced-vegetation-index#:~:text=EVI%20is%20similar%20to%20Normalized,in%20areas%20with%20dense%20vegetation>.
+EVI is described here: <https://www.usgs.gov/landsat-missions/landsat-enhanced-vegetation-index>.
 
 Another option is to use the Copernicus data viewer: See https://land.copernicus.eu/global/products/lc and use the NDVI product. Regardless, once you have downloaded the .tif file, place it within the data directory that you are storing your data related to this project.
 
@@ -57,13 +65,17 @@ The previous data processing steps should be completed before the eBird data is 
 
 The Brown-headed Nuthatch dataset is first downloaded from the eBird site <https://science.ebird.org/en/use-ebird-data/download-ebird-data-products>. You must initally ask for access to the eBird data. Once access is granted, when we download the data we filter first by species (brown-headed nuthatch) and year (2019) via the downloader user interface.
 
-Once the eBird data is downloaded and the previously mentioned data sources are also downloaded, we can run the script that prepares the data for use within the exchange algorithm. Importantly, in the command shown below, change the ```--base_data_dir``` to the location where you have saved all your data. To run this processing with the data we use in this project, leave the other CLI arguments as they are and place the data we provide in your base data directory (for arguments ```--ebird_data_dir, --map_file, --landcover_file, --modis_file, --elevation_file```).
+## Processing data
+
+Once the eBird data is downloaded and the previously mentioned data sources are also downloaded, we can run the script that prepares the data for use within the exchange algorithm. Importantly, in the command shown below, change the ```--base_data_dir``` to the location where you have saved all your data. For example, once you have unzipped the ```raw_data``` folder, you will have a directory ```data``` with a subdirectory ```data/copernicus_landcover```, for example. As ```base_data_dir```, provide the path to ```data``` that contains the rest of the subdirectories. 
+
+To run this processing with the data we use in this project, leave the other CLI arguments as they are and place the data we provide in your base data directory (for arguments ```--ebird_data_dir, --map_file, --landcover_file, --modis_file, --elevation_file```). Navigate to the ```optimal-design-data-integration``` source code directory if you have not done so yet. Then run
 ```
-Rscript data_utils/process_ebird.R --working_dir=. --base_data_dir=your/base/data/directory --ebird_data_dir="ebd_US_bnhnut_201901_201912_smp_relJul-2023" --map_file="us_states/GOVTUNIT_Tennessee_State_GPKG/GOVTUNIT_Tennessee_State_GPKG.gpkg" --landcover_file="copernicus_landcover/W100N40_PROBAV_LC100_global_v3.0.1_2019-nrt_Discrete-Classification-map_EPSG-4326.tif" --modis_file="modis_landcover_dynamics/MCD12Q2.061_EVI_Area_0_doy2019001_aid0001.tif" --elevation_file="elevation_aster/ASTGTM_NC.003_ASTER_GDEM_DEM_doy2000061_aid0001.tif" --save_dir="data/ebird" --data_pack --pp_fit --pp_diagnostic --aux_process --gamma_integration
+Rscript data_utils/process_ebird.R --working_dir=. --base_data_dir=your/base/data/directory --ebird_data_dir="ebd_US_bnhnut_201901_201912_smp_relJul-2023" --map_file="us_states/GOVTUNIT_Tennessee_State_GPKG/GOVTUNIT_Tennessee_State_GPKG.gpkg" --landcover_file="copernicus_landcover/Discrete-Classification-map_EPSG-4326.tif" --modis_file="modis_landcover_dynamics/MCD12Q2.061_EVI_Area_0_doy2019001_aid0001.tif" --elevation_file="elevation_aster/ASTGTM_NC.003_ASTER_GDEM_DEM_doy2000061_aid0001.tif" --save_dir="data/ebird" --data_pack --pp_fit --pp_diagnostic --auk_process --gamma_integration
 ```
 The process_ebird.R script performs a number of data processing steps using the R package auk. These steps include verifying the correct time period is filtered, selecting complete checklists (those with all species reported), and only those with stationary and travelling protocols (excluding historical and incidental). For pure PO data modelling we can use the incidental observations as well, but for this occupancy analysis we'll stick to the 2 protocols.
 
-Once the auk steps are performed, there is also a sequence of spatial data processing steps as well, to create the discretized covariates for the site-occupancy model and the non-homogeneous poisson process. After these steps are performed, data_pack.RDS is saved, which contains all data necessary to run the applied experiments without relying on the original data files such as the elevation and EVI tifs. If ```--pp_fit``` is included, the posterior from the non-homogeneous model poisson process is fit and if ```--gamma_integration``` is included, the posterior of alpha is average over gamma to remove the correlation between the two parameters. The NHPP posterior is required in order to have an estimate of the parameters to generate the PA data for the integration for approximation of the expected utility function.
+Once the auk steps are performed, preliminary files are saved (```"nuthatch_filtered_for_occ.csv"``` being the most important one), and it is not necessary to use the ```auk_process``` option if you run the script again. It does take some time to run this first step though. Once these files are saved, there is a sequence of spatial data processing steps as well, to create the discretized covariates for the site-occupancy model and the non-homogeneous poisson process. After these steps are performed, data_pack.RDS is saved, which contains all data necessary to run the applied experiments without relying on the original data files such as the elevation and EVI tifs. If ```--pp_fit``` is included, the posterior from the non-homogeneous poisson process (NHPP) is fit and if ```--gamma_integration``` is included, the posterior of alpha is averaged over gamma to remove the correlation between the two parameters. The NHPP posterior is required in order to have an estimate of the parameters to generate the PA data for the integration for approximation of the expected utility function, so you must include this option the first time you run the script. Gamma integration is optional but recommended as without it the alpha estimate is unreliable and may result in additional noise in the generated PA datasets used in the exchange algorithm.
 
 Once the ```process_ebird.R``` script is sucessefully run and the ```data_pack.RDS``` file generated, you are ready to run the optimal design algorithm applied to the Brown-headed nuthatch example or your own use-case.
 

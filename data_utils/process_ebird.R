@@ -32,7 +32,6 @@ library(openxlsx)
 library(sf)
 library(terra)
 library(tidyterra)
-library(auk)
 library(lubridate)
 library(exactextractr)
 
@@ -84,6 +83,7 @@ gamma_integration <- exp_args$gamma_integration
 
 # This will save the PO data and PA data to the specified dirs in hardcoded file names.
 if (exp_args$auk_process==TRUE){
+  library(auk)
   initial_auk_processing(base_data_dir, ebd_download_dir)
 }
 

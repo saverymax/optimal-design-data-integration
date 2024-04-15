@@ -98,7 +98,7 @@ main_data_handling_oe <- function(map_prj, map_path, base_data_dir, ebd_download
     #geom_sf(data=state_pp_prj, color=alpha("darkgrey", 0.3))+
     geom_sf(data=state_po_prj, color=alpha("#FFC81C",0.5), size=0.5)+
     geom_sf(data = prj_state, color=alpha("white",0.9), fill='transparent', linewidth=0.4) + 
-    scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7) +
+    scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7, name="") +
     theme_minimal()+
     ggtitle("Brown-headed Nuthatch and landcover in Tennessee")
   print(p)
@@ -112,7 +112,7 @@ main_data_handling_oe <- function(map_prj, map_path, base_data_dir, ebd_download
     #geom_sf(data=state_pp_prj, color=alpha("darkgrey", 0.3))+
     geom_sf(data=state_po_prj, color=alpha("#FFC81C",0.5), size=0.5)+
     geom_sf(data = prj_state, color=alpha("white",0.9), fill='transparent', linewidth=0.4) + 
-    scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7) +
+    scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7, name="") +
     theme_minimal()+
     ggtitle("Brown-headed Nuthatch and EVI in Tennessee")
   fig_name=file.path(exp_dir, "evi.png")
@@ -127,7 +127,7 @@ main_data_handling_oe <- function(map_prj, map_path, base_data_dir, ebd_download
     #geom_sf(data=state_pp_prj, color=alpha("darkgrey", 0.3))+
     geom_sf(data=state_po, color=alpha("#FFC81C",0.5), size=0.5)+
     geom_sf(data = prj_state, color=alpha("white",0.9), fill='transparent', linewidth=0.4) + 
-    scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7) +
+    scale_fill_viridis_c(begin=0.2, end=1, option="viridis",alpha=0.7, name="") +
     theme_minimal()+
     ggtitle("Brown-headed Nuthatch and elevation in Tennessee")
   fig_name=file.path(exp_dir, "elevation.png")

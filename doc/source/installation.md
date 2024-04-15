@@ -25,4 +25,4 @@ For application:
 
 ## CmdStan
 
-This code requires CmdStanR and CmdStan. To install these, a few extra steps beyond the typical R pacakge installation command are required. Please make sure you have these packages available on your system following the instructions here: https://mc-stan.org/cmdstanr/articles/cmdstanr.html. Note that it is necessary to install CmdStan separately after installing CmdStanR.
+This code requires CmdStanR and CmdStan. To install these, a few extra steps beyond the typical R pacakge installation command are required. Please make sure you have these packages available on your system following the instructions here: <https://mc-stan.org/cmdstanr/articles/cmdstanr.html>. Note that it is necessary to install CmdStan separately after installing CmdStanR.

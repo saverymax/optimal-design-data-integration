@@ -1,6 +1,6 @@
 # Usage
 
-Usage of this code is described here. The simulated experiments and the applied experiments (to Brown-headed Nuthatch data) are run in separate scripts. The use of each will be explained. It is recommend to run this code on a Linux system; however, it has been tested on Windows as well.
+Usage of this code is described here. The simulated experiments and the applied experiments (to Brown-headed Nuthatch data) are run in separate scripts. The use of each will be explained. It is recommended to run this code on a Linux system; however, it should be usable on Windows as well.
 
 ## Simulated settting
 
@@ -105,19 +105,19 @@ Options:
 
 ### Running
 
-An example command to run an experiment is shown below. The options here are set so the code will run quickly, but these should not be used for actual design generation. The CLI arguments used for the results reported in the paper can be found in the experiment_scripts directory. ```--v_parallel --cores=4``` are not included in the options but could be added, depending on the number of cores available to you. 
+An example command to run an experiment is shown below. The options here are set so the code will run quickly, but these should not be used for actual design generation. The CLI arguments used for the results reported in the paper can be found in the experiment_scripts directory. ```--v_parallel --cores=4``` are included in the options but could be removed or increased, depending on the number of cores available to you. ```data_reps``` is set to 4, but is increased (as well as the number of cores) for the reported experimental results.
 ```
-Rscript optimal_design_site_occ.R --working_dir=. --save_dir=experimental_runs/test_run --exp_name=design-test-run --data_reps=4 --m=5 --min_visits=1 --max_visits=4 --vary_visits --model_selection=3 --random_starts=3 --exch_iter=10 --mcmc_iter=1000 --use_sim_po --po_data_file=po_gen_peak_ints-donut_peak=2_a=-2_b=0.5_g=1_d=0.25.Rds --intensity_func="donut" --sd=5 --bias_func="exponential" --alpha=-2 --beta=0.5 --gamma=1 --delta=0.25 --p=0.2
+Rscript optimal_design_site_occ.R --working_dir=. --save_dir=experimental_runs/test_run --exp_name=design-test-run --data_reps=4 --m=5 --min_visits=1 --max_visits=4 --vary_visits --model_selection=3 --random_starts=3 --exch_iter=10 --mcmc_iter=1000 --use_sim_po --po_data_file=po_gen_peak_ints-donut_peak=2_a=-2_b=0.5_g=1_d=0.25.Rds --intensity_func="donut" --sd=5 --bias_func="exponential" --alpha=-2 --beta=0.5 --gamma=1 --delta=0.25 --p=0.2 --v_parallel --cores=4
 ```
 Setting the initial values for the alpha, beta, gamma, and delta parameters will control the data generation process and specify a higher or lower intensity and bias. However, it is important that the ```--po_data_file``` name needs to match the parameter values. In the data provided with this code, these datasets have been pre-generated for a wide variety of parameter combinations. These are available in the directory ```data/sim_data```. This data is generated with the generate_po_data.R and generate_po_datasets.sh scripts, which is explained in the data section of this documentation.
 
-The experimental results will be written to the folder named in the save_dir argument, experimental_runs/test_run above. This is created automatically by the script. Saved to this folder will be figures from the exchange (iterations, optimal designs, and convergence) and data generation. An .xlsx file will be saved that contains the optimal design indices for each random start, as well as the design scores (the minimized utility), including both the best score and the scores during the course of the optimization. The rest of the output printed during the experiment is written to stdout, which is left to the user to control. Typically I write these to .o and .e files that match the experiment name when running on the HPC cluster.
+The experimental results will be written to the folder named in the ```save_dir``` argument, ```experimental_runs/test_run``` above. This is created automatically by the script. Saved to this folder will be figures from the exchange (iterations, optimal designs, and convergence) and data generation. An .xlsx file will be saved that contains the optimal design indices for each random start, as well as the design scores (the minimized utility), including both the best score and the scores during the course of the optimization. The rest of the output printed during the experiment is written to stdout, which is left to the user to control. Typically I write these to .o and .e files that match the experiment name when running on the HPC cluster.
 
 ## Applied Setting
 
 ### CLI Arguments
 
-Many of the CLI arguments between the simulated (optimal_design_site_occ.R) and applied (optimal_design_application.R) scripts are shared. However, the application relies on a pre-generated dataset, containing the PO data and related covariates. The steps to create this data were described in the data section of the documentation. This data is provided to the script via the ```---data_save_dir``` option.         
+Many of the CLI arguments between the simulated (```optimal_design_site_occ.R```) and applied (```optimal_design_application.R```) scripts are shared. However, the application relies on a pre-generated dataset, containing the PO data and related covariates. The steps to create this data were described in the data section of the documentation. This data is provided to the script via the ```---data_save_dir``` option.         
 ```
 Options:
         -h, --help

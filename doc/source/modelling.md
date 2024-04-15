@@ -112,11 +112,11 @@ fit <- model$sample(data=data_site_occ, seed=13, chains=1, iter_sampling=mcmc_it
 ```
 This can be found in the ```estimate_v_nuthatch``` function in the ```experimental_design_functions.R``` module within the source code. Of course, the variables used to fit this model are in memory during the exchange algorithm. The model is fit R times during the exchange algorithm, and we do not provide instructions here to fit a one-off model. This can be provided upon request.
 
-When running the exchange algorithm these models can be selected using the options 1 (without PO data) and 2 (with PO data). For example
+When running the exchange algorithm these models can be selected using the options 1 (with PO data) and 2 (without PO data, only PA data). For example
 ```
 Rscript optimal_design_application.R --working_dir=. --save_dir=experimental_runs/test_application --data_save_dir=data/ebird --exp_name=test_application --data_reps=4 --m=10 --min_visits=1 --max_visits=4 --vary_visits --random_starts=10 --model_selection=2 --p=0.2 --po_sample_prop=0.05 --exch_iter=40 --mcmc_iter=1000 --v_parallel --cores=4 --run_time=2
 ```
-where ```--model_selection=2``` will specify the use of PO data within the algorithm.
+where ```--model_selection=2``` will specify the use of only PA data within the algorithm.
 
 
 ## Simulated setting
