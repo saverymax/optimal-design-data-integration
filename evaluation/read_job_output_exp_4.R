@@ -142,7 +142,7 @@ fig_df$x <- rep(c(2,3,4,5,10), each=8)
 fig_df
 
 colors <- c("#1c71e5","#71aef2", "#ff4040","#ffc100", "#31850A", "#97ed6f", "#c356ea", "#ffb0ea")
-model_labels=c("SO, n=2, b=0.5, d=2", "SO, n=2, b=1, d=2", "SO, n=5, b=0.5, d=2", "SO, n=5, b=1, d=2", "SO+PO, n=2, b=0.5, d=2", "SO+PO, n=2, b=1, d=2", "SO+PO, n=5, b=0.5, d=2", "SO+PO, n=5, b=1, d=2") 
+model_labels=c("SO, n=2, \u03B2=0.5, \u03B4=2", "SO, n=2, \u03B2=1, \u03B4=2", "SO, n=5, \u03B2=0.5, \u03B4=2", "SO, n=5, \u03B2=1, \u03B4=2", "SO+PO, n=2, \u03B2=0.5, \u03B4=2", "SO+PO, n=2, \u03B2=1, \u03B4=2", "SO+PO, n=5, \u03B2=0.5, \u03B4=2", "SO+PO, n=5, \u03B2=1, \u03B4=2") 
 # Generally will be run from evaluation directory
 fig_name <- file.path(".", "exp_4_comparison_n.png")
 p <- ggplot(data=fig_df, aes(x=x, y=avg_v, colour=run)) +
