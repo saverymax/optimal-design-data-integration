@@ -464,7 +464,7 @@ for (r_start in 1:random_starts){
       best_v[r_start] <- current_v_est
       cur_avg_v <- sum(best_v) / r_start
       # Pass total starts to format excel correctly
-      write_results(random_starts, cur_avg_v, best_v, best_site_mat, optimal_visit_mat, v_df, exp_dir, exp_name, "temp")
+      write_results(random_starts, cur_avg_v, best_v, best_site_mat, optimal_visit_mat, v_df, exp_dir, exp_name, "temp_")
       # Current optimal sites 
       title <- paste("Current PO data and Optimal sites from random init ", r_start, "\n with V(D)=", current_v_est, sep="")
       p <- plot_po_optimal_sites_ebird(site_centroids, rast_surface, state_po_prj_sample, site_idx, possible_visits, title)
