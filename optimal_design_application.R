@@ -574,7 +574,7 @@ print("Avg V(D)")
 # Divide by the final start that was reached
 avg_v <- sum(best_v) / r_start
 print(avg_v)
-write_results(random_starts, avg_v, best_v, best_site_mat, optimal_visit_mat, v_df, exp_dir, exp_name, "final")
+write_results(random_starts, avg_v, best_v, best_site_mat, optimal_visit_mat, v_df, exp_dir, exp_name, "final_")
 
 # End cluster
 stopCluster(clust)
