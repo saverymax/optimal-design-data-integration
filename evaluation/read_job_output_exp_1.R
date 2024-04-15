@@ -14,17 +14,13 @@ exp_dir <- args$base_dir
 exp_name <- "exp_1"
 result_dir <- file.path(exp_dir, exp_name)
 # Look at all files corresponding to this set of experiments
-# using just peak-5 for now
 file_list <- list.files(result_dir, pattern="peak-5")
 print("available runs")
 print(file_list)
 n_f <- length(file_list)
 print("number of files")
 print(n_f)
-#exp_col <- c("model-1_n-5", "model-1_n-10", "model-3_n-5", "model-3_n-10")
-#exp_col <- c("model-1_n-1", "model-1_n-5", "model-3_n-1", "model-3_n-5", "model-4_n-1", "model-4_n-5", "model-5_n-1", "model-5_n-5")
 exp_col <- c("model-1_n-1", "model-1_n-3", "model-3_n-1", "model-3_n-3")
-#exp_col <- c("model-1_n-5", "model-1_n-10", "model-3_n-5", "model-3_n-10", "model-4_n-5", "model-4_n-10", "model-5_n-5", "model-5_n-10")
 exp_list <- vector("list", length=length(exp_col))
 perm_list <- vector("list", length=length(exp_col))
 names(exp_list) <- exp_col
@@ -35,13 +31,12 @@ for (i in 1:length(file_list)){
   f <- file_list[i]
   print(f)
   dir_path <- file.path(result_dir, f)
-  file_name <- list.files(dir_path)[2]
+  file_name <- list.files(dir_path, pattern=".xlsx")
   params <- str_split(f, "_")
   print(params)
   compare_name <- paste(params[[1]][2], params[[1]][4], sep="_")
   print("Name to identify run")
   print(compare_name)
-  #param_perm <- paste(params[[1]][8], params[[1]][10], sep="_")
   param_perm <- paste(params[[1]][7], params[[1]][9], params[[1]][11], sep="_")
   print("current params of interest")
   print(param_perm)
@@ -53,17 +48,8 @@ for (i in 1:length(file_list)){
     exp_list[[compare_name]] <- c(exp_list[[compare_name]], NA)
   } 
   else{
-    #if (substr(file_name, 1, 1) == "r"){
-    #  new_file <- substr(file_name, 12, str_length(file_name))
-    #  file_path <- file.path(dir_path, new_file)
-    #  old_path <- file.path(dir_path, file_name)
-    #  file.rename(old_path, file_path)
-    #}else{
-    #  file_path <- file.path(dir_path, file_name)
-    #}
     file_path <- file.path(dir_path, file_name) 
     results <- read.xlsx(file_path, sheet="v_stat")
-    # Split strings, get params, and then organize table somehow
     exp_list[[compare_name]] <- c(exp_list[[compare_name]], results$v)
   }
 }
@@ -79,7 +65,6 @@ v_mat <- matrix(nrow=length(exp_col), ncol=n_f/length(exp_col))
 print(dim(v_mat))
 for (i in 1:length(exp_col)){
   v_mat[i,] <- exp_list[[exp_col[i]]]
-  #v_mat[,i] <- exp_list[[exp_col[i]]]
 }
 print(v_mat)
 v_df <- as.data.frame(v_mat)
@@ -91,5 +76,3 @@ label <- paste("survey_eval", sep="")
 print(kbl(v_df, booktabs = T, escape=T, caption=caption, label=label, 
           align=c('lcccc'), digits=4, format="latex") %>% 
         kable_styling(latex_options = c("HOLD_position")) )
-#%>%  
-#        add_header_above(c(" " = 1, "w/ station" = 2, "w/o station" = 2)))

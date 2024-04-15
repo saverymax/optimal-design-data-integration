@@ -38,7 +38,7 @@ for (i in 1:length(file_list)){
   f <- file_list[i]
   print(f)
   dir_path <- file.path(result_dir, f)
-  file_name <- list.files(dir_path)[2]
+  file_name <- list.files(dir_path, pattern=".xlsx")
   params <- str_split(f, "_")
   print(params)
   compare_name <- paste(params[[1]][2], params[[1]][3], params[[1]][4], sep="_")
