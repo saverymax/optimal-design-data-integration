@@ -15,6 +15,7 @@ The R package versions used in this work are listed below. All results reported 
 - bayesplot: 1.9.0       
 - ggplot2: 3.3.6
 - viridis: 0.6.2         
+- kableExtra: 1.3.4
 
 For application: 
 

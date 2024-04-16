@@ -2,7 +2,7 @@
 
 ## Dependencies
 
-The R package versions used in this work are listed below. All results reported in the paper were generated from code using these software versions. The script for the applied work requires a few extra spatial packages. 
+The R package versions used in this work are listed below. All results reported in the paper were generated from code using these software versions. The script for the applied work requires a few extra spatial packages.
 
 - cmdstanr: 0.5.2
 - openxlsx: 4.2.5
@@ -23,6 +23,7 @@ For application:
 - terra: 1.7-55          
 - sf: 1.0-14
 
+We plan to create a Rocker (Docker for R) container for this application in the near future.
 
 ## CmdStan
 

@@ -1,11 +1,13 @@
 # Data
 
-This describes the data used in both the simulated and applied experiments. The data for the applied setting is described first. For all data downloaded in these instructions, it will be easiest to place them all in the same directory that you later provide to the script to pre-process the data. HOWEVER, it is not necessary to follow these steps if you would 
+This describes the data used in both the simulated and applied experiments. The data for the applied setting is described first. For all data downloaded in these instructions, it will be easiest to place them all in the same directory that you later provide to the script to pre-process the data. 
+
+HOWEVER, it is not necessary to follow these steps if you would 
 like to use our pre-processed data set. Within this repository, the data can be found in the ```optimal-design-data-integration/data/ebird/data_pack.RDS``` file. This should be provided to the ```optimal_design_application.R``` script as described in the usage section of this documentation. You can skip to the [usage section](usage) in this case.
 
 We have also provided all data necessary to reconstruct the pre-processed data in the zipped ```raw_data``` folder in the figshare repository. This means that you don't have to follow the data downloading steps and can skip to the [data processing](#processing-data) section below. Upon the public release of this repository, the pre-processed data and code will also be available in a public GitHub repository.
 
-Again, to run the experiment code, you can use the data we provide via the file ```optimal-design-data-integation/data/ebird/data_pack.RDS```. Alternatively, the instructions below describe how to download, process, and create this file and data from scratch.
+To clarify, the data processing proceeds as: download -> pre-process -> run experiments. We have provided instructions and preliminary files for each step of the process, so the user can choose where to start to replicate the work. Again, to run the experiment code, you can use the data we provide via the file ```optimal-design-data-integation/data/ebird/data_pack.RDS```. Alternatively, the instructions below describe how to download, process, and create this file and data from scratch.  
 
 ## Additional packages
 
@@ -17,15 +19,15 @@ If you would like to recreate the data used in this work, a few extra packages a
 
 ## Map data
 
-It will be essential to have a file defining your region of interest before you can proceed with the steps below. We download a .gpkg file from <https://apps.nationalmap.gov/downloader/> for Tennesse in the work here, but you are welcome to define your own region. The code here uses read_sf() from the sf package in R, which is compatible with multiple map file types (.shp, .gpkg). Place this file in a base data directory that you will you use to store all the data for running the code the instructions here describe.
+It will be essential to have a file defining your region of interest before you can proceed with the steps below. We download a .gpkg file from <https://apps.nationalmap.gov/downloader/> for Tennesse in the work here, but you are welcome to define your own region. The code here uses read_sf() from the sf package in R, which is compatible with multiple map file types (.shp, .gpkg). Place this file in a base data directory that you will you use to store all the data for running the design code.
 
 ## Land cover data
 
 Land cover data can be acquired from numerous sources. These include products from MODIS, Sentinel-II, Landsat, or Proba-V. In this documentation we
-provide limited instructions for obtaining data the Proba-V product from Copernicus.
+provide limited instructions for obtaining the Proba-V product from Copernicus.
 
 To download the PROBA-V satellite data, go to <https://land.copernicus.eu/global/products/lc> and use the world viewer (<https://lcviewer.vito.be/2019>). Select the appropriate section/s 
-of the globe for your use-case. On this case, we simply need one section that appropriately covers Tennessee. Information regarding the product itself can be found in the documentation: <https://land.copernicus.eu/global/sites/cgls.vito.be/files/products/CGLOPS1_PUM_LC100m-V3_I3.4.pdf>. Important for this analysis are the classifications of each landcover type.
+of the globe for your use-case. In our case, we simply need one section that appropriately covers Tennessee. Information regarding the product itself can be found in the documentation: <https://land.copernicus.eu/global/sites/cgls.vito.be/files/products/CGLOPS1_PUM_LC100m-V3_I3.4.pdf>. Important for this analysis are the classifications of each landcover type.
 
 
 ## Enhanced Vegetation Index (EVI)
@@ -53,7 +55,7 @@ There are various vegetation products available online. We use the MODIS product
 
 EVI is described here: <https://www.usgs.gov/landsat-missions/landsat-enhanced-vegetation-index>.
 
-Another option is to use the Copernicus data viewer: See https://land.copernicus.eu/global/products/lc and use the NDVI product. Regardless, once you have downloaded the .tif file, place it within the data directory that you are storing your data related to this project.
+Another option is to use the Copernicus data viewer: See <https://land.copernicus.eu/global/products/lc> and use the NDVI product. Regardless, once you have downloaded the .tif file, place it within the data directory that you are storing your data related to this project.
 
 ## Elevation
 
@@ -67,19 +69,19 @@ The Brown-headed Nuthatch dataset is first downloaded from the eBird site <https
 
 ## Processing data
 
-Once the eBird data is downloaded and the previously mentioned data sources are also downloaded, we can run the script that prepares the data for use within the exchange algorithm. Importantly, in the command shown below, change the ```--base_data_dir``` to the location where you have saved all your data. For example, once you have unzipped the ```raw_data``` folder, you will have a directory ```data``` with a subdirectory ```data/copernicus_landcover```, for example. As ```base_data_dir```, provide the path to ```data``` that contains the rest of the subdirectories. 
+Once the eBird data is downloaded and the previously mentioned data sources are also downloaded, we can run the script that prepares the data for use within the exchange algorithm. Importantly, in the command shown below, change the ```--base_data_dir``` to the location where you have saved all your data. **For example**, once you have unzipped the ```raw_data``` folder in the figshare repository, you will have a directory ```data``` with a subdirectory ```data/copernicus_landcover```, for example. As ```base_data_dir```, provide the path to (including) ```data``` that contains the rest of the subdirectories. 
 
-To run this processing with the data we use in this project, leave the other CLI arguments as they are and place the data we provide in your base data directory (for arguments ```--ebird_data_dir, --map_file, --landcover_file, --modis_file, --elevation_file```). Navigate to the ```optimal-design-data-integration``` source code directory if you have not done so yet. Then run
+To run this processing with the data we use in this project, leave the other CLI arguments as they are and give the path to ```data``` from the unizpped ```raw_data``` file as the base data directory (for arguments ```--ebird_data_dir, --map_file, --landcover_file, --modis_file, --elevation_file```). Navigate to the ```optimal-design-data-integration``` source code directory if you have not done so yet. Then run
 ```
 Rscript data_utils/process_ebird.R --working_dir=. --base_data_dir=your/base/data/directory --ebird_data_dir="ebd_US_bnhnut_201901_201912_smp_relJul-2023" --map_file="us_states/GOVTUNIT_Tennessee_State_GPKG/GOVTUNIT_Tennessee_State_GPKG.gpkg" --landcover_file="copernicus_landcover/Discrete-Classification-map_EPSG-4326.tif" --modis_file="modis_landcover_dynamics/MCD12Q2.061_EVI_Area_0_doy2019001_aid0001.tif" --elevation_file="elevation_aster/ASTGTM_NC.003_ASTER_GDEM_DEM_doy2000061_aid0001.tif" --save_dir="data/ebird" --data_pack --pp_fit --pp_diagnostic --auk_process --gamma_integration
 ```
 The process_ebird.R script performs a number of data processing steps using the R package auk. These steps include verifying the correct time period is filtered, selecting complete checklists (those with all species reported), and only those with stationary and travelling protocols (excluding historical and incidental). For pure PO data modelling we can use the incidental observations as well, but for this occupancy analysis we'll stick to the 2 protocols.
 
-Once the auk steps are performed, preliminary files are saved (```"nuthatch_filtered_for_occ.csv"``` being the most important one), and it is not necessary to use the ```auk_process``` option if you run the script again. It does take some time to run this first step though. Once these files are saved, there is a sequence of spatial data processing steps as well, to create the discretized covariates for the site-occupancy model and the non-homogeneous poisson process. After these steps are performed, data_pack.RDS is saved, which contains all data necessary to run the applied experiments without relying on the original data files such as the elevation and EVI tifs. If ```--pp_fit``` is included, the posterior from the non-homogeneous poisson process (NHPP) is fit and if ```--gamma_integration``` is included, the posterior of alpha is averaged over gamma to remove the correlation between the two parameters. The NHPP posterior is required in order to have an estimate of the parameters to generate the PA data for the integration for approximation of the expected utility function, so you must include this option the first time you run the script. Gamma integration is optional but recommended as without it the alpha estimate is unreliable and may result in additional noise in the generated PA datasets used in the exchange algorithm.
+Once the auk steps are performed, preliminary files are saved (```"nuthatch_filtered_for_occ.csv"``` being the most important one), and it is not necessary to use the ```auk_process``` option if you run the script again. It does take some time to run this first step though. Once these files are saved, there is a sequence of spatial data processing steps as well, to create the discretized covariates for the site-occupancy model and the non-homogeneous poisson process. After these steps are performed, ```data_pack.RDS1``` is saved, which contains all data necessary to run the applied experiments without relying on the original data files such as the elevation and EVI tifs. If ```--pp_fit``` is included, the posterior from the non-homogeneous poisson process (NHPP) is fit and if ```--gamma_integration``` is included, the posterior of alpha is averaged over gamma to remove the correlation between the two parameters. The NHPP posterior is required in order to have an estimate of the parameters to generate the PA data for the integration for approximation of the expected utility function, so you must include this option the first time you run the script. Gamma integration is optional but recommended as without it the alpha estimate is unreliable and may result in additional noise in the generated PA datasets used in the exchange algorithm.
 
 Once the ```process_ebird.R``` script is sucessefully run and the ```data_pack.RDS``` file generated, you are ready to run the optimal design algorithm applied to the Brown-headed nuthatch example or your own use-case.
 
-For further reference, the CLI options for the ```process_ebird.R``` script as listed below:
+For further reference, the CLI options for the ```process_ebird.R``` script are listed below:
 ```
 Options:
         -h, --help
@@ -150,7 +152,7 @@ for example. We need to make sure we use the --use_sim_po flag with the correct 
 ```
 --po_data_file=po_gen_ints-donut_a=-2_b=0.5_g=1_d=0.25.Rds
 ```
-This is the dataset generated by the call of ```generate_po_data.R```. Once you have done this for the parameter values you are interested in, you are ready to run the simualted design experiments (or you can just use the pre-processed data already provided as there are many dataset combinations already there).
+This is the dataset generated by the call of ```generate_po_data.R```. Once you have done this for the parameter values you are interested in, you are ready to run the simulated design experiments (or you can just use the pre-processed data already provided as there are many dataset combinations already there).
 
 For further reference, the CLI options for the ```generate_po_data.R``` script are listed below:
 ```

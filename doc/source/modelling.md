@@ -2,7 +2,7 @@
 
 ## Application
 
-The two supported models in the application module of the code are shown below. They are written in the Bayesian programming language Stan. The models used in this work are site occupancy models with and without presence-only (PO) data as a prior on the intensity parameters.  
+The two supported models in the application module of the code are shown below. They are written in the Bayesian programming language Stan. The models used in this work are site occupancy models with presence-absence (PA) data only and with PA + presence-only (PO) data as a prior on the intensity parameters.  
 
 The first model shown below does not use the PO data. We can see that there is a simple wide normal prior placed on the parameters (alpha and betas). We do not model bias (delta or gamma) here because it is not necessary when we are not using the PO data.
 
@@ -45,14 +45,12 @@ nuthatch_site_occ_no_po <- '
       // We generate over all sites, instead of just those being used for PA
       vector[n_po_sites] g_theta_gen;
       array[n_po_sites] int occ_gen; 
-      // Note that we do not include gamma here because the 
-      // probability of occupancy is just P(N(C_i)>0) = G(alpha + beta X)
       g_theta_gen = 1 - exp(-exp(alpha + X_po*beta + log(area_a)));
       occ_gen = bernoulli_rng(g_theta_gen);
     }
 '
 ```
-The mext model uses presence-only data as a prior. This approach uses the poisson approximation to the non-homogenuous Poisson process (NHPP) -- as discussed in the paper -- to model the number of PO observations at each site in the region. This poisson distributed variable is parameterized via the intensity and bias, but the occupancy probability is modelled only as a function of intensity. Wide normal priors are placed on the parameters for the NHPP. 
+The mext model uses presence-only data as a prior. This approach uses the Poisson approximation to the non-homogeneous Poisson process (NHPP) -- as discussed in the paper -- to model the number of PO observations at each site in the region. This Poisson distributed variable is parameterized via the intensity and bias, but the occupancy probability is modelled only as a function of intensity. Wide normal priors are placed on the parameters for the NHPP. 
 ```
 
 nuthatch_poisson_process_site_occupancy <- '
@@ -112,7 +110,7 @@ fit <- model$sample(data=data_site_occ, seed=13, chains=1, iter_sampling=mcmc_it
 ```
 This can be found in the ```estimate_v_nuthatch``` function in the ```experimental_design_functions.R``` module within the source code. Of course, the variables used to fit this model are in memory during the exchange algorithm. The model is fit R times during the exchange algorithm, and we do not provide instructions here to fit a one-off model. This can be provided upon request.
 
-When running the exchange algorithm these models can be selected using the options 1 (with PO data) and 2 (without PO data, only PA data). For example
+When running the exchange algorithm these models can be selected using the options 1 (with PO + PA data) and 2 (without PO data, only PA data). For example
 ```
 Rscript optimal_design_application.R --working_dir=. --save_dir=experimental_runs/test_application --data_save_dir=data/ebird --exp_name=test_application --data_reps=4 --m=10 --min_visits=1 --max_visits=4 --vary_visits --random_starts=10 --model_selection=2 --p=0.2 --po_sample_prop=0.05 --exch_iter=40 --mcmc_iter=1000 --v_parallel --cores=4 --run_time=2
 ```
