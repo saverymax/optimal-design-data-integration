@@ -55,7 +55,7 @@ There are various vegetation products available online. We use the MODIS product
 
 EVI is described here: <https://www.usgs.gov/landsat-missions/landsat-enhanced-vegetation-index>.
 
-Another option is to use the Copernicus data viewer: See <https://land.copernicus.eu/global/products/lc> and use the NDVI product. Regardless, once you have downloaded the .tif file, place it within the data directory that you are storing your data related to this project.
+Another option is to use the Copernicus data viewer: See <https://land.copernicus.eu/en/products/vegetation> and use the NDVI product. Regardless, once you have downloaded the .tif file, place it within the data directory that you are storing your data related to this project.
 
 ## Elevation
 
