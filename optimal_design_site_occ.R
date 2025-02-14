@@ -51,8 +51,8 @@ parser <- add_option(parser, "--k", type="integer", default=20, help="Number of 
 parser <- add_option(parser, "--aux_cor", type="double", default=0.8, help="Correlation between auxiliary covariates if using 'correlation' bias function.")
 parser <- add_option(parser, "--misspec_run", type="character", default="none", help="Flag for running misspecification experiments")
 parser <- add_option(parser, "--misspec", type="double", default="0", help="Strength of covariate to be misspecified")
-parser <- add_option(parser, "--gamma_integration", action="store_true", default=F, help="Flag for use of posterior estimates from NHPP in which gamma is integrated out.")
-parser <- add_option(parser, "--posterior_file", type="character", default="", help="File name of saved NHPP posterior for use with --gamma_integration")
+parser <- add_option(parser, "--gamma_int", action="store_true", default=F, help="Flag for use of posterior estimates from NHPP in which gamma is integrated out.")
+parser <- add_option(parser, "--posterior_file", type="character", default="", help="File name of saved NHPP posterior for use with --gamma_int")
 
 
 exp_args <- parse_args(parser)
@@ -108,9 +108,12 @@ if (exp_args$intensity_func == "simple"){
   }
   # Filter for only a quarter of the grid.
   # If we filter, we need to change the total sites as well
-  sites <- sites/4
-  stopifnot(sites>m)
-  sampling_surface <- sampling_surface %>% dplyr::filter(x<11, y<11)
+  # For misspec runs no filtering.
+  if (exp_args$misspec_run=="none"){
+    sites <- sites/4
+    stopifnot(sites>m)
+    sampling_surface <- sampling_surface %>% dplyr::filter(x<11, y<11)
+    }
 }
 print(sampling_surface)
 corr_matrix <- specify_corr(sampling_surface[,1:2])
@@ -121,17 +124,18 @@ if (!exp_args$misspec_run=="none"){
   centroid_2 <- c(18,18)
   sampling_surface <- get_bias_surface_misspecified(sampling_surface, centroid_2, misspec_strength)
 }
-if (!exp_args$missspec_run=="none"&exp_args$intensity_func=="simple"){
+if (!exp_args$misspec_run=="none"&exp_args$intensity_func=="simple"){
   warning("Misspecification behavior with simple sampling surface is untested")
 } 
 
 # Now load the NHPP posterior if doing gamma integration tests
 # Currently no option to use NHPP posterior without gamma integration
 if (exp_args$gamma_int==T){
-  if(!file.exists(file.path(data_save_dir, exp_args$posterior_file))){
-    stop("Please run generate_op_data_misspec.R with the relevant CLI arguments before running the optimal design! See the documentation for more details")
+  if(!file.exists(file.path(exp_args$working_dir, "data", "sim_data", "misspec", exp_args$posterior_file))){
+    stop(paste("Please run generate_op_data_misspec.R with the relevant CLI arguments before running the optimal design!\nFile ", 
+        exp_args$posterior_file, "does not exist. See the documentation for more details"))
   }else{
-    nhpp_posterior <- read_rds(file.path(data_save_dir, exp_args$posterior_file))
+    nhpp_posterior <- read_rds(file.path(exp_args$working_dir, "data", "sim_data", "misspec", exp_args$posterior_file))
     print("Mean posterior alpha and beta integrated over point process fits")
     print(nhpp_posterior)
   }
@@ -143,8 +147,13 @@ if (exp_args$gamma_int==T){
 
 # Load pre-generated dataset or downloaded PO dataset.
 if (exp_args$use_sim_po==T){
-  r_po_data <- readRDS(file=file.path(exp_args$working_dir, 
-                                      "data", "sim_data", exp_args$po_data_file))
+  if (exp_args$misspec_run=="none"){
+      r_po_data <- readRDS(file=file.path(exp_args$working_dir, 
+                                          "data", "sim_data", exp_args$po_data_file))
+  } else{
+      r_po_data <- readRDS(file=file.path(exp_args$working_dir, 
+                                      "data", "sim_data", "misspec", exp_args$po_data_file))
+  } 
   Y_positive_indices <- which(r_po_data$Y>0)
   print("Data with counts > 0")
   print(r_po_data$Y[Y_positive_indices])

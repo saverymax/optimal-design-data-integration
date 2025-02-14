@@ -378,6 +378,20 @@ get_bias_surface_exponential <- function(sampling_grid, centroid){
   return(sampling_grid)
 }
 
+get_bias_surface_misspecified <- function(sampling_grid, centroid, strength){
+  x <- seq(1:k)
+  y <- seq(1:k)
+  # Generate all possible coordinate points
+  grid_points <- expand.grid(x, y)
+  # Then compute distance from centroid to every other location
+  r <- apply(grid_points, 1, function(x, center_coord){sqrt((center_coord[1] - x[1])^2 + (center_coord[2] - x[2])^2)}, center_coord=centroid)
+  # Then create z covariate
+  x <- exp(-strength*((r)/5))
+  x_1 <- qnorm(0.98*x + .01)
+  sampling_grid$aux_e <- x_1
+  return(sampling_grid)
+}
+
 generate_data_so <- function(data_reps, surface_data, corr_matrix, p_0, alpha, beta, sigma, n, sites, link){
   # Generate some random covariate data that will be used to model theta
   occupancy_maps <- matrix(nrow=data_reps, ncol=sites)
