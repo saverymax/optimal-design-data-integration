@@ -49,6 +49,10 @@ parser <- add_option(parser, "--p", type="double", default=0.7, help="Probabilit
 parser <- add_option(parser, "--area", type="integer", default=100, help="Area of region D.  This is important in order to correctly scale the covariates.")
 parser <- add_option(parser, "--k", type="integer", default=20, help="Number of sites along one side of grid")
 parser <- add_option(parser, "--aux_cor", type="double", default=0.8, help="Correlation between auxiliary covariates if using 'correlation' bias function.")
+parser <- add_option(parser, "--misspec_run", type="character", default="none", help="Flag for running misspecification experiments")
+parser <- add_option(parser, "--misspec", type="double", default="0", help="Strength of covariate to be misspecified")
+parser <- add_option(parser, "--gamma_integration", action="store_true", default=F, help="Flag for use of posterior estimates from NHPP in which gamma is integrated out.")
+parser <- add_option(parser, "--posterior_file", type="character", default="", help="File name of saved NHPP posterior for use with --gamma_integration")
 
 
 exp_args <- parse_args(parser)
@@ -81,6 +85,7 @@ beta <- exp_args$beta
 gamma <- exp_args$gamma
 delta <- exp_args$delta
 deviation <- exp_args$sd
+misspec_strength <- exp_args$misspec
 p_0 <- exp_args$p
 aux_cor <- exp_args$aux_cor
 # This assumes spatial variance of 1, if not using cloglog link
@@ -110,31 +115,36 @@ if (exp_args$intensity_func == "simple"){
 print(sampling_surface)
 corr_matrix <- specify_corr(sampling_surface[,1:2])
 
-# Next, we use this data to generate the rest of the datasets
-# The data generating function will sample R occupancy maps|params
-# and then R complete datasets|occupancy maps
-# If we want to compare different survey efforts it is convenient to have pre-generated datasets for
-# each number of visits
-# The number of surveys can differ between sites so it is a vector
-# Select m sites to have these visits, otherwise the sites will have 0 visits
-link_func <- "cloglog"
-if (exp_args$vary_visits == TRUE){
-  visits <- c(exp_args$min_visits, exp_args$max_visits)
-  print("Creating datasets for varying survey effort between sites")
-  r_survey_data_n1 <- generate_data_so(data_reps, sampling_surface, corr_matrix, p_0, alpha, beta, sigma, visits[1], sites, link=link_func)
-  r_survey_data_n5 <- generate_data_so(data_reps, sampling_surface, corr_matrix, p_0, alpha, beta, sigma, visits[2], sites, link=link_func)
-} else{
-  visits <- c(exp_args$max_visits)
-  print("Creating datasets for fixed survey effort across sites")
-  r_survey_data_n1 <- generate_data_so(data_reps, sampling_surface, corr_matrix, p_0, alpha, beta, sigma, visits[1], sites, link=link_func)
-  r_survey_data_n5 <- generate_data_so(data_reps, sampling_surface, corr_matrix, p_0, alpha, beta, sigma, visits[1], sites, link=link_func)
+# Get covariate that will be the source of misspecification 
+# There will be a few different options for misspec_run, so it is a character
+if (!exp_args$misspec_run=="none"){
+  centroid_2 <- c(18,18)
+  sampling_surface <- get_bias_surface_misspecified(sampling_surface, centroid_2, misspec_strength)
 }
-print(paste("Current visit options:", paste(visits, collapse=" ")))
+if (!exp_args$missspec_run=="none"&exp_args$intensity_func=="simple"){
+  warning("Misspecification behavior with simple sampling surface is untested")
+} 
+
+# Now load the NHPP posterior if doing gamma integration tests
+# Currently no option to use NHPP posterior without gamma integration
+if (exp_args$gamma_int==T){
+  if(!file.exists(file.path(data_save_dir, exp_args$posterior_file))){
+    stop("Please run generate_op_data_misspec.R with the relevant CLI arguments before running the optimal design! See the documentation for more details")
+  }else{
+    nhpp_posterior <- read_rds(file.path(data_save_dir, exp_args$posterior_file))
+    print("Mean posterior alpha and beta integrated over point process fits")
+    print(nhpp_posterior)
+  }
+  if (!exp_args$misspec_run=="none"&exp_args$gamma_int==T){
+    warning("Point process posterior has been estimated on a PO dataset generated with the misspecification covariate included.\n
+            It is recommendeded to only set gamma integration flag to true when running a misspecification experiment.")
+  } 
+}
 
 # Load pre-generated dataset or downloaded PO dataset.
 if (exp_args$use_sim_po==T){
   r_po_data <- readRDS(file=file.path(exp_args$working_dir, 
-                            "data", "sim_data", exp_args$po_data_file))
+                                      "data", "sim_data", exp_args$po_data_file))
   Y_positive_indices <- which(r_po_data$Y>0)
   print("Data with counts > 0")
   print(r_po_data$Y[Y_positive_indices])
@@ -157,6 +167,48 @@ if (exp_args$use_sim_po==T){
 }else{
   stop("No other data source implemented in this script")
 }
+
+# Next, we use this the sampling surface and potential nhpp posterior to generate the rest of the datasets
+# The data generating function will sample R occupancy maps|params
+# and then R complete datasets|occupancy maps
+# If we want to compare different survey efforts it is convenient to have pre-generated datasets for
+# each number of visits
+# The number of surveys can differ between sites so it is a vector
+# Select m sites to have these visits, otherwise the sites will have 0 visits
+link_func <- "cloglog"
+#Options for misspecification experiments included. oracle is the same as the basic runs
+# but the sampling surface bias surface will now have an extra covariate in it.
+# TODO: If I include sequential with no gamma, need to run generate_po_data_misspec again. And possible fix generate_data_so to 
+# use vectors and posteriors instead of fixed value.
+if (exp_args$misspec_run=="none"|exp_args$misspec_run=="oracle"){
+  if (exp_args$vary_visits == TRUE){
+    visits <- c(exp_args$min_visits, exp_args$max_visits)
+    print("Creating datasets for varying survey effort between sites")
+    r_survey_data_n1 <- generate_data_so(data_reps, sampling_surface, corr_matrix, p_0, alpha, beta, sigma, visits[1], sites, link=link_func)
+    r_survey_data_n5 <- generate_data_so(data_reps, sampling_surface, corr_matrix, p_0, alpha, beta, sigma, visits[2], sites, link=link_func)
+  } else{
+    visits <- c(exp_args$max_visits)
+    print("Creating datasets for fixed survey effort across sites")
+    r_survey_data_n1 <- generate_data_so(data_reps, sampling_surface, corr_matrix, p_0, alpha, beta, sigma, visits[1], sites, link=link_func)
+    r_survey_data_n5 <- generate_data_so(data_reps, sampling_surface, corr_matrix, p_0, alpha, beta, sigma, visits[1], sites, link=link_func)
+  }
+}else if (exp_args$misspec_run=="sequential"){
+  if (exp_args$vary_visits == TRUE){
+    visits <- c(exp_args$min_visits, exp_args$max_visits)
+    # nhpp_posterior will have data_reps number of rows, but every row is the same point estimate.
+    print("Creating datasets for varying survey effort between sites")
+    # 
+    r_survey_data_n1 <- generate_data_so(data_reps, sampling_surface, corr_matrix, p_0, nhpp_posterior[1,1], nhpp_posterior[1,2], sigma, visits[1], sites, link=link_func)
+    r_survey_data_n5 <- generate_data_so(data_reps, sampling_surface, corr_matrix, p_0, nhpp_posterior[1,1], nhpp_posterior[1,2], sigma, visits[2], sites, link=link_func)
+  } else{
+    visits <- c(exp_args$max_visits)
+    print("Creating datasets for fixed survey effort across sites")
+    r_survey_data_n1 <- generate_data_so(data_reps, sampling_surface, corr_matrix, p_0, nhpp_posterior[1,1], nhpp_posterior[1,2], sigma, visits[1], sites, link=link_func)
+    r_survey_data_n5 <- generate_data_so(data_reps, sampling_surface, corr_matrix, p_0, nhpp_posterior[1,1], nhpp_posterior[1,2], sigma, visits[1], sites, link=link_func)
+  }
+}
+print(paste("Current visit options:", paste(visits, collapse=" ")))
+
   
 # For the coordinate exchange algorithm, we will need to precompute the nearest neighbors.
 # Here we choose the closest l neighbors
@@ -184,6 +236,15 @@ p <- ggplot(sampling_surface, aes(x, y, fill=aux_z)) +
   theme(text=element_text(size=fig_text_size), axis.title = element_text(size = fig_title_size), legend.key.size = unit(0.25, 'cm')) +
   coord_fixed()
 fig_name <- file.path(fig_dir, paste("sampling_surface_aux_z.png", sep=""))
+save_basic_plots(fig_name, p)
+
+p <- ggplot(sampling_surface, aes(x, y, fill=aux_e)) + 
+  geom_tile() +
+  scale_fill_viridis(discrete=FALSE, name="") +
+  ggtitle("Source of misspecification") +
+  theme(text=element_text(size=fig_text_size), axis.title = element_text(size = fig_title_size), legend.key.size = unit(0.25, 'cm')) +
+  coord_fixed()
+fig_name <- file.path(fig_dir, paste("sampling_surface_aux_e.png", sep=""))
 save_basic_plots(fig_name, p)
 
 # Then plot PA data

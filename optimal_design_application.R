@@ -120,7 +120,8 @@ ggsave(fig_name, plot=p, dpi=300, width=15, height=8, units="cm", bg="white", de
 stan_path <- file.path(exp_args$working_dir, "stan_models")
 # Cell size is in meters but let's work with our parameters in kilometer scale
 area_a <- (cell_size/1000)^2
-# The point process model needs to be fit in the process_ebird script.Please see documentation regarding that before using the optimal design code 
+# The point process model needs to be fit in the process_ebird script. 
+# Please see documentation regarding that before using the optimal design code 
 if(!file.exists(file.path(data_save_dir, "pp_posterior_ebird.RDS"))){
   stop("Please run process_ebird.R with the relevant CLI arguments before running the optimal design! See the documentation for more details")
 }else{
@@ -129,8 +130,7 @@ if(!file.exists(file.path(data_save_dir, "pp_posterior_ebird.RDS"))){
   print("Intensity fit from point process")
   print(pp_posterior)
 }
-# There is a question of whether to use draws from the posterior or just the expectation. This will have to be resolved
-# later when discussing Bayesian optimal  design
+# The mean is taken here because we have estimated alpha by integrating over gamma in monte carlo integration.
 
 # Then generate PA data.
 # It turns out that if we want to compare different survey efforts it is convenient to have pre-generated datasets for
