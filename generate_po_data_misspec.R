@@ -36,7 +36,7 @@ set.seed(13)
 data_dir <- file.path(exp_args$working_dir, "data", "sim_data", "misspec")
 dir.create(data_dir)
 
-poisson_process <- '
+poisson_process_gamma_no_int <- '
     data{
       int<lower = 1> N;
       int<lower=0> k_i; // number of predictors for intensity

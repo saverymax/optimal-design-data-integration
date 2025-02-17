@@ -5,6 +5,7 @@
 library(ggplot2)
 library(dplyr)
 library(tidyr)
+library(readr)
 library(viridis)
 library(cmdstanr) 
 library(bayesplot)
@@ -51,7 +52,6 @@ parser <- add_option(parser, "--k", type="integer", default=20, help="Number of 
 parser <- add_option(parser, "--aux_cor", type="double", default=0.8, help="Correlation between auxiliary covariates if using 'correlation' bias function.")
 parser <- add_option(parser, "--misspec_run", type="character", default="none", help="Flag for running misspecification experiments")
 parser <- add_option(parser, "--misspec", type="double", default="0", help="Strength of covariate to be misspecified")
-parser <- add_option(parser, "--gamma_int", action="store_true", default=F, help="Flag for use of posterior estimates from NHPP in which gamma is integrated out.")
 parser <- add_option(parser, "--posterior_file", type="character", default="", help="File name of saved NHPP posterior for use with --gamma_int")
 
 
@@ -88,6 +88,10 @@ deviation <- exp_args$sd
 misspec_strength <- exp_args$misspec
 p_0 <- exp_args$p
 aux_cor <- exp_args$aux_cor
+
+if (!(exp_args$misspec_run %in% c("none", "oracle", "sequential"))){
+  stop("Misspecification run can only be one of 'none', 'oracle', or 'sequential'.")
+}
 # This assumes spatial variance of 1, if not using cloglog link
 sigma <- 1
 # There will be m sites selected for sampling
@@ -129,8 +133,9 @@ if (!exp_args$misspec_run=="none"&exp_args$intensity_func=="simple"){
 } 
 
 # Now load the NHPP posterior if doing gamma integration tests
-# Currently no option to use NHPP posterior without gamma integration
-if (exp_args$gamma_int==T){
+# Posterior file will be named correctly regardless of CLI options so we don't need 
+# to specify gamma integration in the options, only differential between sequential and everything else.
+if (exp_args$misspec_run=="sequential"){
   if(!file.exists(file.path(exp_args$working_dir, "data", "sim_data", "misspec", exp_args$posterior_file))){
     stop(paste("Please run generate_op_data_misspec.R with the relevant CLI arguments before running the optimal design!\nFile ", 
         exp_args$posterior_file, "does not exist. See the documentation for more details"))
@@ -139,10 +144,6 @@ if (exp_args$gamma_int==T){
     print("Mean posterior alpha and beta integrated over point process fits")
     print(nhpp_posterior)
   }
-  if (!exp_args$misspec_run=="none"&exp_args$gamma_int==T){
-    warning("Point process posterior has been estimated on a PO dataset generated with the misspecification covariate included.\n
-            It is recommendeded to only set gamma integration flag to true when running a misspecification experiment.")
-  } 
 }
 
 # Load pre-generated dataset or downloaded PO dataset.
@@ -151,6 +152,7 @@ if (exp_args$use_sim_po==T){
       r_po_data <- readRDS(file=file.path(exp_args$working_dir, 
                                           "data", "sim_data", exp_args$po_data_file))
   } else{
+      # PO dataset will be named correctly in the CLI argument regardless of the misspecification run
       r_po_data <- readRDS(file=file.path(exp_args$working_dir, 
                                       "data", "sim_data", "misspec", exp_args$po_data_file))
   } 
@@ -185,10 +187,10 @@ if (exp_args$use_sim_po==T){
 # The number of surveys can differ between sites so it is a vector
 # Select m sites to have these visits, otherwise the sites will have 0 visits
 link_func <- "cloglog"
-#Options for misspecification experiments included. oracle is the same as the basic runs
-# but the sampling surface bias surface will now have an extra covariate in it.
-# TODO: If I include sequential with no gamma, need to run generate_po_data_misspec again. And possible fix generate_data_so to 
-# use vectors and posteriors instead of fixed value.
+# As of 2-17-2025, options for misspecification experiments are included. oracle is the same as the basic runs
+# in generating the PA data. 
+# TODO: Possibly alter generate_data_so to 
+# use vectors or fixed values so that full posteriors could be used
 if (exp_args$misspec_run=="none"|exp_args$misspec_run=="oracle"){
   if (exp_args$vary_visits == TRUE){
     visits <- c(exp_args$min_visits, exp_args$max_visits)
@@ -247,14 +249,16 @@ p <- ggplot(sampling_surface, aes(x, y, fill=aux_z)) +
 fig_name <- file.path(fig_dir, paste("sampling_surface_aux_z.png", sep=""))
 save_basic_plots(fig_name, p)
 
-p <- ggplot(sampling_surface, aes(x, y, fill=aux_e)) + 
-  geom_tile() +
-  scale_fill_viridis(discrete=FALSE, name="") +
-  ggtitle("Source of misspecification") +
-  theme(text=element_text(size=fig_text_size), axis.title = element_text(size = fig_title_size), legend.key.size = unit(0.25, 'cm')) +
-  coord_fixed()
-fig_name <- file.path(fig_dir, paste("sampling_surface_aux_e.png", sep=""))
-save_basic_plots(fig_name, p)
+if (exp_args$misspec_run=="none"){
+  p <- ggplot(sampling_surface, aes(x, y, fill=aux_e)) + 
+    geom_tile() +
+    scale_fill_viridis(discrete=FALSE, name="") +
+    ggtitle("Source of misspecification") +
+    theme(text=element_text(size=fig_text_size), axis.title = element_text(size = fig_title_size), legend.key.size = unit(0.25, 'cm')) +
+    coord_fixed()
+  fig_name <- file.path(fig_dir, paste("sampling_surface_aux_e.png", sep=""))
+  save_basic_plots(fig_name, p)
+}
 
 # Then plot PA data
 max_dr <- 10
