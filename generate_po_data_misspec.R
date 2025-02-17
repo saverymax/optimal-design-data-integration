@@ -13,7 +13,7 @@ parser <- add_option(parser, "--exp_name", type="character", default="po_gen_mis
 parser <- add_option(parser, "--alpha", type="double", default=-2, help="Intercept for intensity")
 parser <- add_option(parser, "--beta", type="double", default=0.5, help="Slope for intensity")
 parser <- add_option(parser, "--gamma", type="double", default=1, help="Intercept for bias")
-parser <- add_option(parser, "--delta", type="double", default=.5, help="Slope for bias")
+parser <- add_option(parser, "--delta", type="double", default=0.25, help="Slope for bias")
 parser <- add_option(parser, "--epsilon", type="double", default=1.5, help="Slope for covariate inducing misspec")
 parser <- add_option(parser, "--intensity_func", type="character", default="donut", help="Intensity function for sampling surface")
 parser <- add_option(parser, "--sd", type="double", default=5, help="Standard deviation for donut intensity surface")
@@ -22,7 +22,6 @@ parser <- add_option(parser, "--area", type="integer", default=100, help="Area o
 parser <- add_option(parser, "--k", type="integer", default=20, help="Number of sites along one side of grid")
 parser <- add_option(parser, "--data_reps", type="integer", default=4, help="Number of dataset reps for criterion estimation")
 parser <- add_option(parser, "--gamma_reps", type="integer", default=10, help="Number of dataset reps for criterion estimation")
-parser <- add_option(parser, "--gen_path", type="character", default="sequential", help="Generate PO data with sequential or oracle method")
 exp_args <- parse_args(parser)
 print(exp_args)
 
@@ -36,6 +35,37 @@ set.seed(13)
 
 data_dir <- file.path(exp_args$working_dir, "data", "sim_data", "misspec")
 dir.create(data_dir)
+
+poisson_process <- '
+    data{
+      int<lower = 1> N;
+      int<lower=0> k_i; // number of predictors for intensity
+      int<lower=0> k_b; // number of predictors for bias
+      matrix[N, k_i] X; // predictor matrix for intensity
+      matrix[N, k_b] Z; // predictor matrix for bias
+      array[N] int y;
+    }
+    parameters{
+      real alpha;
+      real gamma;
+      vector[k_i] beta;       // vector of params for intensity
+      vector[k_b] delta;      // vector of params for bias
+    }
+    model{
+      //priors
+      target += normal_lpdf(alpha | 0,10);
+      target += normal_lpdf(beta | 0,10);
+      target += normal_lpdf(gamma | 0,10);
+      target += normal_lpdf(delta | 0,10);
+
+      // likelihood
+      target += poisson_log_lpmf(y | alpha + X * beta + gamma + Z * delta);
+    }
+    generated quantities{
+      array[N] int y_rep;
+      y_rep = poisson_log_rng(alpha + X * beta + gamma + Z * delta);
+    }
+'
 
 # Will need this model to do the gamma integration
 poisson_process_gamma_constant <- '
@@ -68,6 +98,10 @@ poisson_process_gamma_constant <- '
     }
 '
 
+model_path <- "poisson_process_sim_misspec.stan"
+model_string <- poisson_process_gamma_no_int
+write(model_string, model_path)
+model_pp_gamma_no_int <- cmdstan_model(model_path) 
 model_path <- "poisson_process_sim_gamma_misspec.stan"
 model_string <- poisson_process_gamma_constant
 write(model_string, model_path)
@@ -212,8 +246,9 @@ for (si in 1:length(misspec_strength)){
   saveRDS(r_po_data, file=file.path(data_dir, paste(param_setting, ".Rds", sep="")))
   
   po_params <- c("alpha", "beta[1]", "delta[1]")
-  # 3 cols for alpha, beta, and delta (gamma is not a parameter)
+  # 3 cols for alpha, beta, and delta (gamma is integrated out)
   pp_rep <- matrix(nrow=gamma_reps, ncol=length(po_params))
+  # First save the posterior with gamma integration
   for (i in 1:gamma_reps){
     data_site_occ = list(gamma=gamma_sample[i], N=sites, X=as.matrix(sampling_surface$aux_x), y=r_po_data$Y[1,], 
                          Z=as.matrix(sampling_surface$aux_z), k_i=k_i, k_b=k_b)
@@ -222,6 +257,15 @@ for (si in 1:length(misspec_strength)){
     pp_rep[i,] <- fit_means
   }
   # Get mean of each parameter from the iterations
-  pp_posterior_int <- matrix(rep(colMeans(pp_rep[,1:2]), data_reps), nrow=data_reps, byrow = T)
-  saveRDS(pp_posterior_int, file.path(data_dir, paste("pp_posterior_", param_setting, ".Rds", sep="")))
+  pp_posterior <- matrix(rep(colMeans(pp_rep[,1:2]), data_reps), nrow=data_reps, byrow = T)
+  saveRDS(pp_posterior, file.path(data_dir, paste("pp_posterior_", param_setting, ".Rds", sep="")))
+
+  # And then save it without gamma integration
+  po_params <- c("alpha", "beta[1]", "gamma", "delta[1]")
+  data_site_occ = list(gamma=gamma_sample[i], N=sites, X=as.matrix(sampling_surface$aux_x), y=r_po_data$Y[1,], 
+                       Z=as.matrix(sampling_surface$aux_z), k_i=k_i, k_b=k_b)
+  fit_pp_gamma_no_int <- quiet(model_pp_gamma_no_int$sample(data=data_site_occ, seed=13, chains=n_chains, iter_sampling=mcmc_iter, iter_warmup=500, show_messages=F, refresh=0))
+  fit_means <- fit_pp_gamma_no_int$summary(po_params)$mean
+  pp_posterior <- matrix(rep(fit_means, data_reps), nrow=data_reps, byrow = T)
+  saveRDS(pp_posterior, file.path(data_dir, paste("pp_posterior_", param_setting, ".Rds", sep="")))
 }
