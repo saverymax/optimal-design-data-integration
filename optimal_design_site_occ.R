@@ -667,5 +667,7 @@ print(avg_v)
 write_results(random_starts, avg_v, best_v, best_site_mat, optimal_visit_mat, v_df, exp_dir, exp_name, "")
 
 # End cluster
-stopCluster(clust)
+if (exp_args$v_parallel==T){
+  stopCluster(clust)
+}
 

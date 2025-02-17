@@ -1,4 +1,4 @@
-module load R
+#module load R
 data_reps=96
 #alpha="-2 -1.5 -1 -0.5"
 alpha="-2"
