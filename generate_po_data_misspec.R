@@ -245,14 +245,14 @@ for (si in 1:length(misspec_strength)){
   }
   # Get mean of each parameter from the iterations
   pp_posterior <- matrix(rep(colMeans(pp_rep[,1:2]), data_reps), nrow=data_reps, byrow = T)
-  saveRDS(pp_posterior, file.path(data_dir, paste("pp_posterior_", param_setting, ".Rds", sep="")))
+  saveRDS(pp_posterior, file.path(data_dir, paste("pp_posterior_", param_setting, "_int", ".Rds", sep="")))
 
   # And then save it without gamma integration
   po_params <- c("alpha", "beta[1]", "gamma", "delta[1]")
-  data_site_occ = list(gamma=gamma_sample[i], N=sites, X=as.matrix(sampling_surface$aux_x), y=r_po_data$Y[1,], 
+  data_site_occ = list(N=sites, X=as.matrix(sampling_surface$aux_x), y=r_po_data$Y[1,], 
                        Z=as.matrix(sampling_surface$aux_z), k_i=k_i, k_b=k_b)
   fit_pp_gamma_no_int <- quiet(model_pp_gamma_no_int$sample(data=data_site_occ, seed=13, chains=n_chains, iter_sampling=mcmc_iter, iter_warmup=500, show_messages=F, refresh=0))
   fit_means <- fit_pp_gamma_no_int$summary(po_params)$mean
   pp_posterior <- matrix(rep(fit_means, data_reps), nrow=data_reps, byrow = T)
-  saveRDS(pp_posterior, file.path(data_dir, paste("pp_posterior_", param_setting, ".Rds", sep="")))
+  saveRDS(pp_posterior, file.path(data_dir, paste("pp_posterior_", param_setting, "_no_int", ".Rds", sep="")))
 }
