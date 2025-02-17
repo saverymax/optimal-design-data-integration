@@ -107,22 +107,8 @@ model_string <- poisson_process_gamma_constant
 write(model_string, model_path)
 model_pp_gamma_int <- cmdstan_model(model_path) 
 
-# Data generating functions for the misspecification that are distinct from the orginal
+# Data generating function for the misspecification that are distinct from the orginal
 # PO data generation functions
-get_bias_surface_misspecified <- function(sampling_grid, centroid, strength){
-  x <- seq(1:k)
-  y <- seq(1:k)
-  # Generate all possible coordinate points
-  grid_points <- expand.grid(x, y)
-  # Then compute distance from centroid to every other location
-  r <- apply(grid_points, 1, function(x, center_coord){sqrt((center_coord[1] - x[1])^2 + (center_coord[2] - x[2])^2)}, center_coord=centroid)
-  # Then create z covariate
-  x <- exp(-strength*((r)/5))
-  x_1 <- qnorm(0.98*x + .01)
-  sampling_grid$aux_e <- x_1
-  return(sampling_grid)
-}
-
 generate_ppp_data_misspecified <- function(surface_data, params, n_sites, data_reps, corr_matrix, gp_bool, area_D){
   # Generate some random covariate data per site on a grid that will be used to model lambda and b
   # There will be r (data_reps) datasets replicated, for use with the exchange 
@@ -193,6 +179,7 @@ for (si in 1:length(misspec_strength)){
     sampling_surface <- get_bias_surface_misspecified(sampling_surface, centroid_2, strength)
   }
   # Generate PO data for that particular setting
+  # This function has been added to the experimental_design_functions.R script
   r_po_data <- generate_ppp_data_misspecified(sampling_surface, po_param_vec, sites, data_reps, corr_matrix=NA, gp_bool=FALSE, area_D)
   # Save params for later reference
   params <- list(alpha=alpha, beta=beta, gamma=gamma, delta=delta)
