@@ -1,0 +1,386 @@
+[1] "available runs"
+ [1] "oe_model-3_sites-5_n-5_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0_oracle"              
+ [2] "oe_model-3_sites-5_n-5_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0_sequential_int"      
+ [3] "oe_model-3_sites-5_n-5_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0_sequential_no_int"   
+ [4] "oe_model-3_sites-5_n-5_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.01_oracle"           
+ [5] "oe_model-3_sites-5_n-5_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.01_sequential_int"   
+ [6] "oe_model-3_sites-5_n-5_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.01_sequential_no_int"
+ [7] "oe_model-3_sites-5_n-5_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.05_oracle"           
+ [8] "oe_model-3_sites-5_n-5_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.05_sequential_int"   
+ [9] "oe_model-3_sites-5_n-5_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.05_sequential_no_int"
+[10] "oe_model-3_sites-5_n-5_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.1_oracle"            
+[11] "oe_model-3_sites-5_n-5_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.1_sequential_int"    
+[12] "oe_model-3_sites-5_n-5_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.1_sequential_no_int" 
+[13] "oe_model-3_sites-5_n-5_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0_oracle"                 
+[14] "oe_model-3_sites-5_n-5_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0_sequential_int"         
+[15] "oe_model-3_sites-5_n-5_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0_sequential_no_int"      
+[16] "oe_model-3_sites-5_n-5_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.01_oracle"              
+[17] "oe_model-3_sites-5_n-5_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.01_sequential_int"      
+[18] "oe_model-3_sites-5_n-5_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.01_sequential_no_int"   
+[19] "oe_model-3_sites-5_n-5_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.05_oracle"              
+[20] "oe_model-3_sites-5_n-5_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.05_sequential_int"      
+[21] "oe_model-3_sites-5_n-5_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.05_sequential_no_int"   
+[22] "oe_model-3_sites-5_n-5_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.1_oracle"               
+[23] "oe_model-3_sites-5_n-5_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.1_sequential_int"       
+[24] "oe_model-3_sites-5_n-5_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.1_sequential_no_int"    
+[1] "number of files"
+[1] 24
+[1] "inital list to save results"
+$oracle
+NULL
+
+$sequential_no_int
+NULL
+
+$sequential_int
+NULL
+
+[1] "oe_model-3_sites-5_n-5_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0_oracle"
+[[1]]
+ [1] "oe"        "model-3"   "sites-5"   "n-5"       "peak-5"    "a--2"     
+ [7] "b-0.5"     "g-1"       "d-0.25"    "p-0.2"     "misspec-0" "oracle"   
+
+[1] "Name to identify run"
+[1] "oracle"
+[1] "current params of interest"
+[1] "b-0.5_d-0.25_misspec-0"
+[1] "oe_model-3_sites-5_n-5_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0_sequential_int"
+[[1]]
+ [1] "oe"         "model-3"    "sites-5"    "n-5"        "peak-5"    
+ [6] "a--2"       "b-0.5"      "g-1"        "d-0.25"     "p-0.2"     
+[11] "misspec-0"  "sequential" "int"       
+
+[1] "Name to identify run"
+[1] "sequential_int"
+[1] "current params of interest"
+[1] "b-0.5_d-0.25_misspec-0"
+[1] "oe_model-3_sites-5_n-5_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0_sequential_no_int"
+[[1]]
+ [1] "oe"         "model-3"    "sites-5"    "n-5"        "peak-5"    
+ [6] "a--2"       "b-0.5"      "g-1"        "d-0.25"     "p-0.2"     
+[11] "misspec-0"  "sequential" "no"         "int"       
+
+[1] "Name to identify run"
+[1] "sequential_no_int"
+[1] "current params of interest"
+[1] "b-0.5_d-0.25_misspec-0"
+[1] "oe_model-3_sites-5_n-5_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.01_oracle"
+[[1]]
+ [1] "oe"           "model-3"      "sites-5"      "n-5"          "peak-5"      
+ [6] "a--2"         "b-0.5"        "g-1"          "d-0.25"       "p-0.2"       
+[11] "misspec-0.01" "oracle"      
+
+[1] "Name to identify run"
+[1] "oracle"
+[1] "current params of interest"
+[1] "b-0.5_d-0.25_misspec-0.01"
+[1] "oe_model-3_sites-5_n-5_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.01_sequential_int"
+[[1]]
+ [1] "oe"           "model-3"      "sites-5"      "n-5"          "peak-5"      
+ [6] "a--2"         "b-0.5"        "g-1"          "d-0.25"       "p-0.2"       
+[11] "misspec-0.01" "sequential"   "int"         
+
+[1] "Name to identify run"
+[1] "sequential_int"
+[1] "current params of interest"
+[1] "b-0.5_d-0.25_misspec-0.01"
+[1] "oe_model-3_sites-5_n-5_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.01_sequential_no_int"
+[[1]]
+ [1] "oe"           "model-3"      "sites-5"      "n-5"          "peak-5"      
+ [6] "a--2"         "b-0.5"        "g-1"          "d-0.25"       "p-0.2"       
+[11] "misspec-0.01" "sequential"   "no"           "int"         
+
+[1] "Name to identify run"
+[1] "sequential_no_int"
+[1] "current params of interest"
+[1] "b-0.5_d-0.25_misspec-0.01"
+[1] "oe_model-3_sites-5_n-5_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.05_oracle"
+[[1]]
+ [1] "oe"           "model-3"      "sites-5"      "n-5"          "peak-5"      
+ [6] "a--2"         "b-0.5"        "g-1"          "d-0.25"       "p-0.2"       
+[11] "misspec-0.05" "oracle"      
+
+[1] "Name to identify run"
+[1] "oracle"
+[1] "current params of interest"
+[1] "b-0.5_d-0.25_misspec-0.05"
+[1] "oe_model-3_sites-5_n-5_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.05_sequential_int"
+[[1]]
+ [1] "oe"           "model-3"      "sites-5"      "n-5"          "peak-5"      
+ [6] "a--2"         "b-0.5"        "g-1"          "d-0.25"       "p-0.2"       
+[11] "misspec-0.05" "sequential"   "int"         
+
+[1] "Name to identify run"
+[1] "sequential_int"
+[1] "current params of interest"
+[1] "b-0.5_d-0.25_misspec-0.05"
+[1] "oe_model-3_sites-5_n-5_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.05_sequential_no_int"
+[[1]]
+ [1] "oe"           "model-3"      "sites-5"      "n-5"          "peak-5"      
+ [6] "a--2"         "b-0.5"        "g-1"          "d-0.25"       "p-0.2"       
+[11] "misspec-0.05" "sequential"   "no"           "int"         
+
+[1] "Name to identify run"
+[1] "sequential_no_int"
+[1] "current params of interest"
+[1] "b-0.5_d-0.25_misspec-0.05"
+[1] "oe_model-3_sites-5_n-5_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.1_oracle"
+[[1]]
+ [1] "oe"          "model-3"     "sites-5"     "n-5"         "peak-5"     
+ [6] "a--2"        "b-0.5"       "g-1"         "d-0.25"      "p-0.2"      
+[11] "misspec-0.1" "oracle"     
+
+[1] "Name to identify run"
+[1] "oracle"
+[1] "current params of interest"
+[1] "b-0.5_d-0.25_misspec-0.1"
+[1] "oe_model-3_sites-5_n-5_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.1_sequential_int"
+[[1]]
+ [1] "oe"          "model-3"     "sites-5"     "n-5"         "peak-5"     
+ [6] "a--2"        "b-0.5"       "g-1"         "d-0.25"      "p-0.2"      
+[11] "misspec-0.1" "sequential"  "int"        
+
+[1] "Name to identify run"
+[1] "sequential_int"
+[1] "current params of interest"
+[1] "b-0.5_d-0.25_misspec-0.1"
+[1] "oe_model-3_sites-5_n-5_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.1_sequential_no_int"
+[[1]]
+ [1] "oe"          "model-3"     "sites-5"     "n-5"         "peak-5"     
+ [6] "a--2"        "b-0.5"       "g-1"         "d-0.25"      "p-0.2"      
+[11] "misspec-0.1" "sequential"  "no"          "int"        
+
+[1] "Name to identify run"
+[1] "sequential_no_int"
+[1] "current params of interest"
+[1] "b-0.5_d-0.25_misspec-0.1"
+[1] "oe_model-3_sites-5_n-5_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0_oracle"
+[[1]]
+ [1] "oe"        "model-3"   "sites-5"   "n-5"       "peak-5"    "a--2"     
+ [7] "b-0.5"     "g-1"       "d-2"       "p-0.2"     "misspec-0" "oracle"   
+
+[1] "Name to identify run"
+[1] "oracle"
+[1] "current params of interest"
+[1] "b-0.5_d-2_misspec-0"
+[1] "oe_model-3_sites-5_n-5_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0_sequential_int"
+[[1]]
+ [1] "oe"         "model-3"    "sites-5"    "n-5"        "peak-5"    
+ [6] "a--2"       "b-0.5"      "g-1"        "d-2"        "p-0.2"     
+[11] "misspec-0"  "sequential" "int"       
+
+[1] "Name to identify run"
+[1] "sequential_int"
+[1] "current params of interest"
+[1] "b-0.5_d-2_misspec-0"
+[1] "oe_model-3_sites-5_n-5_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0_sequential_no_int"
+[[1]]
+ [1] "oe"         "model-3"    "sites-5"    "n-5"        "peak-5"    
+ [6] "a--2"       "b-0.5"      "g-1"        "d-2"        "p-0.2"     
+[11] "misspec-0"  "sequential" "no"         "int"       
+
+[1] "Name to identify run"
+[1] "sequential_no_int"
+[1] "current params of interest"
+[1] "b-0.5_d-2_misspec-0"
+[1] "oe_model-3_sites-5_n-5_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.01_oracle"
+[[1]]
+ [1] "oe"           "model-3"      "sites-5"      "n-5"          "peak-5"      
+ [6] "a--2"         "b-0.5"        "g-1"          "d-2"          "p-0.2"       
+[11] "misspec-0.01" "oracle"      
+
+[1] "Name to identify run"
+[1] "oracle"
+[1] "current params of interest"
+[1] "b-0.5_d-2_misspec-0.01"
+[1] "oe_model-3_sites-5_n-5_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.01_sequential_int"
+[[1]]
+ [1] "oe"           "model-3"      "sites-5"      "n-5"          "peak-5"      
+ [6] "a--2"         "b-0.5"        "g-1"          "d-2"          "p-0.2"       
+[11] "misspec-0.01" "sequential"   "int"         
+
+[1] "Name to identify run"
+[1] "sequential_int"
+[1] "current params of interest"
+[1] "b-0.5_d-2_misspec-0.01"
+[1] "oe_model-3_sites-5_n-5_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.01_sequential_no_int"
+[[1]]
+ [1] "oe"           "model-3"      "sites-5"      "n-5"          "peak-5"      
+ [6] "a--2"         "b-0.5"        "g-1"          "d-2"          "p-0.2"       
+[11] "misspec-0.01" "sequential"   "no"           "int"         
+
+[1] "Name to identify run"
+[1] "sequential_no_int"
+[1] "current params of interest"
+[1] "b-0.5_d-2_misspec-0.01"
+[1] "oe_model-3_sites-5_n-5_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.05_oracle"
+[[1]]
+ [1] "oe"           "model-3"      "sites-5"      "n-5"          "peak-5"      
+ [6] "a--2"         "b-0.5"        "g-1"          "d-2"          "p-0.2"       
+[11] "misspec-0.05" "oracle"      
+
+[1] "Name to identify run"
+[1] "oracle"
+[1] "current params of interest"
+[1] "b-0.5_d-2_misspec-0.05"
+[1] "oe_model-3_sites-5_n-5_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.05_sequential_int"
+[[1]]
+ [1] "oe"           "model-3"      "sites-5"      "n-5"          "peak-5"      
+ [6] "a--2"         "b-0.5"        "g-1"          "d-2"          "p-0.2"       
+[11] "misspec-0.05" "sequential"   "int"         
+
+[1] "Name to identify run"
+[1] "sequential_int"
+[1] "current params of interest"
+[1] "b-0.5_d-2_misspec-0.05"
+[1] "oe_model-3_sites-5_n-5_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.05_sequential_no_int"
+[[1]]
+ [1] "oe"           "model-3"      "sites-5"      "n-5"          "peak-5"      
+ [6] "a--2"         "b-0.5"        "g-1"          "d-2"          "p-0.2"       
+[11] "misspec-0.05" "sequential"   "no"           "int"         
+
+[1] "Name to identify run"
+[1] "sequential_no_int"
+[1] "current params of interest"
+[1] "b-0.5_d-2_misspec-0.05"
+[1] "oe_model-3_sites-5_n-5_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.1_oracle"
+[[1]]
+ [1] "oe"          "model-3"     "sites-5"     "n-5"         "peak-5"     
+ [6] "a--2"        "b-0.5"       "g-1"         "d-2"         "p-0.2"      
+[11] "misspec-0.1" "oracle"     
+
+[1] "Name to identify run"
+[1] "oracle"
+[1] "current params of interest"
+[1] "b-0.5_d-2_misspec-0.1"
+[1] "oe_model-3_sites-5_n-5_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.1_sequential_int"
+[[1]]
+ [1] "oe"          "model-3"     "sites-5"     "n-5"         "peak-5"     
+ [6] "a--2"        "b-0.5"       "g-1"         "d-2"         "p-0.2"      
+[11] "misspec-0.1" "sequential"  "int"        
+
+[1] "Name to identify run"
+[1] "sequential_int"
+[1] "current params of interest"
+[1] "b-0.5_d-2_misspec-0.1"
+[1] "oe_model-3_sites-5_n-5_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.1_sequential_no_int"
+[[1]]
+ [1] "oe"          "model-3"     "sites-5"     "n-5"         "peak-5"     
+ [6] "a--2"        "b-0.5"       "g-1"         "d-2"         "p-0.2"      
+[11] "misspec-0.1" "sequential"  "no"          "int"        
+
+[1] "Name to identify run"
+[1] "sequential_no_int"
+[1] "current params of interest"
+[1] "b-0.5_d-2_misspec-0.1"
+[1] "result list"
+$oracle
+[1] 0.09622288 0.09776990 0.09679203 0.09497804 0.09317871 0.09613100 0.09475528
+[8] 0.09472477
+
+$sequential_no_int
+[1] 0.12121681 0.08818725 0.15093056 0.11064919 0.07446208 0.06562668 0.17267544
+[8] 0.06230234
+
+$sequential_int
+[1] 0.02266376 0.01570712 0.03574567 0.03267005 0.01340652 0.01255507 0.02906683
+[8] 0.01469736
+
+[1] "variance"
+[[1]]
+NULL
+
+[[2]]
+NULL
+
+[[3]]
+NULL
+
+$oracle
+[1] 1.063678e-05 5.256512e-06 9.670493e-06 3.915014e-06 3.119570e-06
+[6] 3.285249e-06 3.373926e-06 1.155263e-05
+
+$sequential_int
+[1] 9.479641e-08 3.975263e-07 1.358884e-06 1.547832e-06 2.248026e-06
+[6] 1.951144e-07 6.266284e-06 1.339571e-06
+
+$sequential_no_int
+[1] 1.141255e-04 2.796581e-05 1.834246e-04 4.597740e-05 7.349432e-06
+[6] 1.718601e-05 1.985176e-04 3.408351e-06
+
+[1] "Params per model. Make sure each model has params ordered in the same way"
+$oracle
+[1] "b-0.5_d-0.25_misspec-0"    "b-0.5_d-0.25_misspec-0.01"
+[3] "b-0.5_d-0.25_misspec-0.05" "b-0.5_d-0.25_misspec-0.1" 
+[5] "b-0.5_d-2_misspec-0"       "b-0.5_d-2_misspec-0.01"   
+[7] "b-0.5_d-2_misspec-0.05"    "b-0.5_d-2_misspec-0.1"    
+
+$sequential_no_int
+[1] "b-0.5_d-0.25_misspec-0"    "b-0.5_d-0.25_misspec-0.01"
+[3] "b-0.5_d-0.25_misspec-0.05" "b-0.5_d-0.25_misspec-0.1" 
+[5] "b-0.5_d-2_misspec-0"       "b-0.5_d-2_misspec-0.01"   
+[7] "b-0.5_d-2_misspec-0.05"    "b-0.5_d-2_misspec-0.1"    
+
+$sequential_int
+[1] "b-0.5_d-0.25_misspec-0"    "b-0.5_d-0.25_misspec-0.01"
+[3] "b-0.5_d-0.25_misspec-0.05" "b-0.5_d-0.25_misspec-0.1" 
+[5] "b-0.5_d-2_misspec-0"       "b-0.5_d-2_misspec-0.01"   
+[7] "b-0.5_d-2_misspec-0.05"    "b-0.5_d-2_misspec-0.1"    
+
+[1] 8 3
+           [,1]       [,2]       [,3]
+[1,] 0.09622288 0.12121681 0.02266376
+[2,] 0.09776990 0.08818725 0.01570712
+[3,] 0.09679203 0.15093056 0.03574567
+[4,] 0.09497804 0.11064919 0.03267005
+[5,] 0.09317871 0.07446208 0.01340652
+[6,] 0.09613100 0.06562668 0.01255507
+[7,] 0.09475528 0.17267544 0.02906683
+[8,] 0.09472477 0.06230234 0.01469736
+             [,1]         [,2]         [,3]
+[1,] 1.063678e-05 1.141255e-04 9.479641e-08
+[2,] 5.256512e-06 2.796581e-05 3.975263e-07
+[3,] 9.670493e-06 1.834246e-04 1.358884e-06
+[4,] 3.915014e-06 4.597740e-05 1.547832e-06
+[5,] 3.119570e-06 7.349432e-06 2.248026e-06
+[6,] 3.285249e-06 1.718601e-05 1.951144e-07
+[7,] 3.373926e-06 1.985176e-04 6.266284e-06
+[8,] 1.155263e-05 3.408351e-06 1.339571e-06
+                              oracle sequential_no_int sequential_int
+b-0.5_d-0.25_misspec-0    0.09622288        0.12121681     0.02266376
+b-0.5_d-0.25_misspec-0.01 0.09776990        0.08818725     0.01570712
+b-0.5_d-0.25_misspec-0.05 0.09679203        0.15093056     0.03574567
+b-0.5_d-0.25_misspec-0.1  0.09497804        0.11064919     0.03267005
+b-0.5_d-2_misspec-0       0.09317871        0.07446208     0.01340652
+b-0.5_d-2_misspec-0.01    0.09613100        0.06562668     0.01255507
+b-0.5_d-2_misspec-0.05    0.09475528        0.17267544     0.02906683
+b-0.5_d-2_misspec-0.1     0.09472477        0.06230234     0.01469736
+                                oracle sequential_no_int sequential_int
+b-0.5_d-0.25_misspec-0    1.063678e-05      1.141255e-04   9.479641e-08
+b-0.5_d-0.25_misspec-0.01 5.256512e-06      2.796581e-05   3.975263e-07
+b-0.5_d-0.25_misspec-0.05 9.670493e-06      1.834246e-04   1.358884e-06
+b-0.5_d-0.25_misspec-0.1  3.915014e-06      4.597740e-05   1.547832e-06
+b-0.5_d-2_misspec-0       3.119570e-06      7.349432e-06   2.248026e-06
+b-0.5_d-2_misspec-0.01    3.285249e-06      1.718601e-05   1.951144e-07
+b-0.5_d-2_misspec-0.05    3.373926e-06      1.985176e-04   6.266284e-06
+b-0.5_d-2_misspec-0.1     1.155263e-05      3.408351e-06   1.339571e-06
+\begin{table}[H]
+\centering
+\caption{\label{tab:survey_eval}Comparison of models, sampling effort, and parameter permutations}
+\centering
+\begin{tabular}[t]{llcc}
+\toprule
+  & oracle & sequential\_no\_int & sequential\_int\\
+\midrule
+b-0.5\_d-0.25\_misspec-0 & 0.0962 & 0.1212 & 0.0227\\
+b-0.5\_d-0.25\_misspec-0.01 & 0.0978 & 0.0882 & 0.0157\\
+b-0.5\_d-0.25\_misspec-0.05 & 0.0968 & 0.1509 & 0.0357\\
+b-0.5\_d-0.25\_misspec-0.1 & 0.0950 & 0.1106 & 0.0327\\
+b-0.5\_d-2\_misspec-0 & 0.0932 & 0.0745 & 0.0134\\
+\addlinespace
+b-0.5\_d-2\_misspec-0.01 & 0.0961 & 0.0656 & 0.0126\\
+b-0.5\_d-2\_misspec-0.05 & 0.0948 & 0.1727 & 0.0291\\
+b-0.5\_d-2\_misspec-0.1 & 0.0947 & 0.0623 & 0.0147\\
+\bottomrule
+\end{tabular}
+\end{table}
