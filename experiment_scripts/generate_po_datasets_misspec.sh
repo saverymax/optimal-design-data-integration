@@ -1,12 +1,10 @@
-module load R
+#module load R
 data_reps=96
 alpha="-2"
 beta="0.5 1"
 gamma="1"
 delta="0.25 2"
 deviation=5
-# Might be nice to write job output to the experimental run dir but it's nice to leave that dir created by the R script
-# so as to seperate the HPC and local run capabilities.
 WORKDIR=$VSC_DATA/projects/optimal_design_presence_only/optimal-design-data-integration
 for d in $delta
 do
