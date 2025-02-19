@@ -52,7 +52,7 @@ parser <- add_option(parser, "--k", type="integer", default=20, help="Number of 
 parser <- add_option(parser, "--aux_cor", type="double", default=0.8, help="Correlation between auxiliary covariates if using 'correlation' bias function.")
 parser <- add_option(parser, "--misspec_run", type="character", default="none", help="Flag for running misspecification experiments")
 parser <- add_option(parser, "--misspec", type="double", default="0", help="Strength of covariate to be misspecified")
-parser <- add_option(parser, "--posterior_file", type="character", default="", help="File name of saved NHPP posterior for use with --gamma_int")
+parser <- add_option(parser, "--posterior_file", type="character", default="", help="File name of saved NHPP posterior for use with gamma integration")
 
 
 exp_args <- parse_args(parser)
