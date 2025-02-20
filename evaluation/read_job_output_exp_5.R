@@ -22,7 +22,7 @@ print(file_list)
 n_f <- length(file_list)
 print("number of files")
 print(n_f)
-exp_col <- c("oracle", "sequential_no_int", "sequential_int")
+exp_col <- c("oracle_n-3", "sequential_no_int_n-3", "sequential_int_n-3", "oracle_n-5", "sequential_no_int_n-5", "sequential_int_n-5")
 
 exp_list <- vector("list", length=length(exp_col))
 var_list <- vector("list", length=length(exp_col))
@@ -38,12 +38,15 @@ for (i in 1:length(file_list)){
   file_name <- list.files(dir_path, pattern=".xlsx")
   params <- str_split(f, "_")
   print(params)
+  if (length(file_name)==0){
+    warning(paste("xlsx does not exist. The job likely crashed. Rerun job ", f))
+  }
   if (params[[1]][12]=="oracle"){
-    compare_name <- paste(params[[1]][12], sep="_")
+    compare_name <- paste(params[[1]][12], params[[1]][4], sep="_")
   }else if(params[[1]][13]=="int"){
-    compare_name <- paste(params[[1]][12], params[[1]][13], sep="_")
+    compare_name <- paste(params[[1]][12], params[[1]][13], params[[1]][4], sep="_")
   }else{
-    compare_name <- paste(params[[1]][12], params[[1]][13], params[[1]][14], sep="_")
+    compare_name <- paste(params[[1]][12], params[[1]][13], params[[1]][14], params[[1]][4], sep="_")
   }
   print("Name to identify run")
   print(compare_name)
@@ -52,7 +55,12 @@ for (i in 1:length(file_list)){
   print(param_perm)
   # Make this list so as to have the permutation names for each subset
   perm_list[[compare_name]] <- c(perm_list[[compare_name]], param_perm)
-  if (substr(file_name, str_length(file_name)-3, str_length(file_name))!= "xlsx"){
+  if (length(file_name)==0){
+    print("No file exists. Setting to NA")
+    exp_list[[compare_name]] <- c(exp_list[[compare_name]], NA)
+    var_list[[compare_name]] <- c(var_list[[compare_name]], NA)
+  }
+  else if (substr(file_name, str_length(file_name)-3, str_length(file_name))!= "xlsx"){
     print(paste("Incorrect file selected:", file_name))
     print(paste("Available files:", list.files(dir_path)))
     exp_list[[compare_name]] <- c(exp_list[[compare_name]], NA)
@@ -108,11 +116,19 @@ rownames(v_df) <- perm_list[[1]]
 rownames(var_df) <- perm_list[[1]]
 print(v_df)
 print(var_df)
-caption <- paste("Comparison of models, sampling effort, and parameter permutations")
-label <- paste("survey_eval", sep="")
+caption <- paste("Evaluation of misspecification and gamma integration")
+label <- paste("misspec_eval", sep="")
 print(kbl(v_df, booktabs = T, escape=T, caption=caption, label=label, 
           align=c('lcccc'), digits=4, format="latex") %>% 
         kable_styling(latex_options = c("HOLD_position")) )
+
+caption <- paste("Variation in eval of misspecification and gamma integration")
+label <- paste("mispec_eval_var", sep="")
+print(kbl(var_df, booktabs = T, escape=T, caption=caption, label=label, 
+          align=c('lccc'), digits=4, format="latex") %>% 
+        kable_styling(latex_options = c("HOLD_position")) )
+
+
 
 ## For this we can also make a figure as effort increases
 #v_df$run <- rownames(v_df)

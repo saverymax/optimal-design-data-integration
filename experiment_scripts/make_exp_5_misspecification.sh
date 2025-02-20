@@ -10,7 +10,7 @@ gamma="1"
 delta="0.25 2"
 misspec="0 0.01 0.05 0.1"
 p="0.2"
-n_surveys="5"
+n_surveys="3"
 total_sites="5"
 deviation="5"
 # TODO: Add both run paths and gamma integration
