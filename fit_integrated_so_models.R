@@ -9,9 +9,10 @@ library(bayesplot)
 library(optparse)
 library(openxlsx)
 
+
+parser <- add_option(parser, "--design_selection", type="character", default="", help="Name of experiment name that corresponds to file from experiment runs to load and use to fit the SO model")
 parser <- add_option(parser, "--po_data_file", type="character", default="po_gen_ints-donut_a=-2_b=0.5_g=1_d=0.5.Rds", help="File name of PO data to use in optimization")
-parser <- add_option(parser, "--design_selection", type="character", default="", help="Name of design from experiment runs to load and use to fit the SO model")
-parser <- add_option(parser, "--model_selection", type="integer", default=3, help="Occupancy model to use. Further details are provided in the modelling section of the documentation.")
+parser <- add_option(parser, "--model_selection", type="integer", default=3, help="Occupancy model to use.")
 
 if (exp_args$model_selction!=3){
   stop("Only integrated model (3) is supported in this script")
@@ -42,8 +43,8 @@ print(paste("Cmdstan model", model_strings[[model_selection]]))
 write(model_strings[[model_selection]], model_path)
 model <- cmdstan_model(model_path) 
 
-# With integration
-data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, X=as.matrix(covars_sampled_sites), Y=pa_gen_pp_int$Y[data_rep, ], PO=po_gen$Y[1,], X_po=as.matrix(sampling_surface$aux_x), Z_po=as.matrix(sampling_surface$aux_z), k_i=k_i, k_b=k_b, model_diag=0)
+data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, X=select_sites$aux_x, Y=selected_data, PO=selected_po, 
+                           X_po=sampling_surface$aux_x, Z_po=sampling_surface$aux_z, model_diag=0)
 fit_so_1 <- model_so$sample(data=data_site_occ, seed=13, chains=n_chains, iter_sampling=mcmc_iter, iter_warmup=500)
 
 all_params <- c("alpha", "beta[1]", "gamma", "delta[1]")
