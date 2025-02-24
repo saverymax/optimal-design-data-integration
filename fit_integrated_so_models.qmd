@@ -32,9 +32,9 @@ experiment_files <- c("oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2
   "oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.05_oracle",
   "oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.05_sequential_int",
   "oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.05_sequential_no_int",
-  "oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.1_oracle",
-  "oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.1_sequential_int",
-  "oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.1_sequential_no_int",
+  #"oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.1_oracle",
+  #"oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.1_sequential_int",
+  #"oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.1_sequential_no_int",
   "oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0_oracle",
   "oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0_sequential_int",
   "oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0_sequential_no_int",
@@ -44,11 +44,12 @@ experiment_files <- c("oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2
   "oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.05_oracle",
   "oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.05_sequential_int",
   "oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.05_sequential_no_int",
-  "oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.1_oracle",
-  "oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.1_sequential_int",
-  "oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.1_sequential_no_int",
+  #"oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.1_oracle",
+  #"oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.1_sequential_int",
+  #"oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.1_sequential_no_int",
   "oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0_oracle",
-  "oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0_sequential_int"
+  "oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0_sequential_int",
+  "oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0_sequential_no_int"
 )
 ```
 
@@ -57,7 +58,8 @@ k <- 20
 sites <- k^2
 m <- 5
 n <- 3
-data_reps <- 1
+design_reps <- 10
+data_reps <- 10
 n_surveys <- rep(n, m)
 sigma <- 1
 visits <- 3
@@ -81,8 +83,11 @@ model_so <- cmdstan_model(model_path)
 
 ```{r fits}
 all_params <- c("alpha", "beta", "gamma", "delta")
+gen_params <- c("occ_gen")
 fit_matrix <- matrix(nrow=length(experiment_files), ncol=length(all_params))
-v_matrix <- matrix(nrow=length(experiment_files), ncol=data_reps)
+v_matrix <- matrix(nrow=length(experiment_files), ncol=data_reps*design_reps)
+chain_array <- array(dim=c(length(experiment_files), design_reps*data_reps*n_chains*mcmc_iter, length(all_params)))
+gen_array <- array(dim=c(length(experiment_files), data_reps*design_reps, sites))
 text_size <- 10
 
 sampling_surface <- get_sampling_surface_donut(k, deviation)
@@ -110,12 +115,7 @@ for (e_i in 1:length(experiment_files)){
     stop(paste("Check run ", experiment_files[e_i], sep=""))
   }
   design_results <- read.xlsx(file.path(result_path, experiment_files[e_i], "results.xlsx"), sheet="best_sites")
-  # There will be r designs for the r random starts.
-  site_idx <- design_results$`rand-start1`
-  site_idx
-  sampling_surface$aux_x
-  covars_sampled_sites <- sampling_surface[site_idx, ]
-  dim(as.matrix(covars_sampled_sites))
+
   pa_eval_data <- generate_data_so(data_reps, sampling_surface, corr_matrix=NA, p_0, alpha, beta, sigma, visits, sites, link=link_func)
   
   # Check the data
@@ -147,26 +147,63 @@ for (e_i in 1:length(experiment_files)){
     theme(text=element_text(size=text_size), legend.key.size = unit(0.25, 'cm')) +
     coord_fixed()
   print(p)
-  # Then fit over the data reps
+  # Iterate over designs and data reps
+  # There will be d_i designs for the 10 random starts used in the experiments.
   chain_matrix <- matrix(nrow=0, ncol=length(all_params))
-  for (data_rep in 1:data_reps){
-    selected_counts <- pa_eval_data$Y[data_rep, site_idx]
-    data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, X=covars_sampled_sites$aux_x, Y=selected_counts, PO=po_gen$Y[1, ], X_po=sampling_surface$aux_x, Z_po=sampling_surface$aux_z, model_diag=0)
-    fit_so_1 <- quiet(model_so$sample(data=data_site_occ, seed=13, chains=n_chains, iter_sampling=mcmc_iter, iter_warmup=500, refresh=0, show_messages=F)) 
-    fit_draws <- fit_so_1$draws(all_params, format="matrix")
-    chain_matrix <- rbind(chain_matrix, fit_draws)
-    gen_occupancy <- fit_so_1$summary(variables="occ_gen")$mean
-    v_est <- design_criteria(criteria="brier", sim_occ=gen_occupancy, obs_occ=pa_eval_data$Y)
-    v_matrix[e_i, data_rep] <- v_est
-    print(mcmc_pairs(fit_draws))
+  iter_cnt <- 0
+  for (d_i in 1:design_reps){
+    d_rep_name <- paste("rand-start", d_i, sep="")
+    site_idx <- design_results[[d_rep_name]]
+    covars_sampled_sites <- sampling_surface[site_idx, ]
+    # Then fit over the data reps
+    for (data_rep in 1:data_reps){
+      iter_cnt <- iter_cnt + 1
+      selected_counts <- pa_eval_data$Y[data_rep, site_idx]
+      data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, X=covars_sampled_sites$aux_x, Y=selected_counts, PO=po_gen$Y[1, ], X_po=sampling_surface$aux_x, Z_po=sampling_surface$aux_z, model_diag=0)
+      fit_so_1 <- quiet(model_so$sample(data=data_site_occ, seed=13, chains=n_chains, iter_sampling=mcmc_iter, iter_warmup=500, refresh=0, show_messages=F)) 
+      fit_draws <- fit_so_1$draws(all_params, format="matrix")
+      chain_matrix <- rbind(chain_matrix, fit_draws)
+      gen_occupancy <- fit_so_1$summary(variables="occ_gen")$mean
+      v_est <- design_criteria(criteria="brier", sim_occ=gen_occupancy, obs_occ=pa_eval_data$Y)
+      v_matrix[e_i, iter_cnt] <- v_est
+      gen_array[e_i, iter_cnt, ] <- gen_occupancy
+    }
   }
   fit_matrix[e_i, ] <- colMeans(chain_matrix)
+  chain_array[e_i, ,] <- chain_matrix
 }
 ```
+
 ```{r fit-inspect}
 v_means <- rowMeans(v_matrix)
-v_var <- apply(v_matrix, margin=1, var)
-print(experiment_files)
-df <- data.frame(exp=experiment_files, v_means=v_means, v_var=sqrt(v_var))
+v_var <- apply(v_matrix, MARGIN=1, FUN=var)
+exp_names <- c()
+for (exp in 1:length(experiment_files)){
+  param_split <- str_split(experiment_files[exp], "_")
+  exp_name <- paste(param_split)
+  beta <- param_split[[1]][7]
+  delta <- param_split[[1]][9]
+  misspec_id <- param_split[[1]][11:length(param_split[[1]])]
+  exp_name <- paste(beta, "_", delta, "_", paste(misspec_id, collapse="_"), sep ="")
+  exp_names <- c(exp_names, exp_name)
+}
+df <- data.frame(exp=exp_names, v_means=v_means, v_var=sqrt(v_var))
 print(df)
+```
+A little too intense to look at all PPDs for $Y$.
+```{r ppd}
+#for (i in 1:length(experiment_files)){
+#  for (j in 1:data_reps){
+#    print(experiment_files[i])
+#    generated_occ <- gen_array[i, j, ]
+#    ppd_df <- data.frame(x=sampling_surface$x, y=sampling_surface$y, occ_rep=generated_occ)
+#    
+#    # Plot generated ys and thetas on the sampling grid
+#    p <- ggplot(ppd_df, aes(x, y, fill=occ_rep)) + 
+#        geom_tile() +
+#        scale_fill_viridis(discrete=FALSE) +
+#        ggtitle("PPD occupancy per site")
+#    print(p)
+#  }
+#}
 ```
