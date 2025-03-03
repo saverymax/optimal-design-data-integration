@@ -14,6 +14,7 @@ library(bayesplot)
 library(openxlsx)
 library(stringr)
 library(readr)
+library(kableExtra)
 
 #working_dir <- "C:\\Users\\msavery\\OneDrive - UGent\\Documents\\ghent_phd_spatial_doe\\code\\optimal_design_site_occ"
 working_dir <- "."
@@ -26,15 +27,16 @@ source(stan_models_path)
 knitr::opts_chunk$set(tidy.opts = list(width.cutoff = 60), tidy = TRUE)
 
 # Hardcode all run names, sorry :(
-experiment_files <- c("oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.01_oracle",
+experiment_files <- c(
+  "oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.01_oracle",
   "oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.01_sequential_int",
   "oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.01_sequential_no_int",
   "oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.05_oracle",
   "oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.05_sequential_int",
   "oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.05_sequential_no_int",
-  #"oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.1_oracle",
-  #"oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.1_sequential_int",
-  #"oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.1_sequential_no_int",
+  "oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.1_oracle",
+  "oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.1_sequential_int",
+  "oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.1_sequential_no_int",
   "oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0_oracle",
   "oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0_sequential_int",
   "oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0_sequential_no_int",
@@ -44,9 +46,9 @@ experiment_files <- c("oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2
   "oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.05_oracle",
   "oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.05_sequential_int",
   "oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.05_sequential_no_int",
-  #"oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.1_oracle",
-  #"oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.1_sequential_int",
-  #"oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.1_sequential_no_int",
+  "oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.1_oracle",
+  "oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.1_sequential_int",
+  "oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.1_sequential_no_int",
   "oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0_oracle",
   "oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0_sequential_int",
   "oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0_sequential_no_int"
@@ -66,6 +68,7 @@ visits <- 3
 p_0 <- 0.2
 deviation <- 5
 mcmc_iter <- 2000
+warmup <- 500
 n_chains <- 3
 centroid <- c(10,4)
 centroid_2 <- c(18,18)
@@ -93,7 +96,8 @@ text_size <- 10
 sampling_surface <- get_sampling_surface_donut(k, deviation)
 sampling_surface <- get_bias_surface_exponential(sampling_surface, centroid)
 
-for (e_i in 1:length(experiment_files)){
+# TODO: 23-24
+for (e_i in 23:length(experiment_files)){
   # Get particular strength 
   print(paste("Current experiment: ", experiment_files[e_i]))
   param_split <- str_split(experiment_files[e_i], "_")
@@ -160,7 +164,7 @@ for (e_i in 1:length(experiment_files)){
       iter_cnt <- iter_cnt + 1
       selected_counts <- pa_eval_data$Y[data_rep, site_idx]
       data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, X=covars_sampled_sites$aux_x, Y=selected_counts, PO=po_gen$Y[1, ], X_po=sampling_surface$aux_x, Z_po=sampling_surface$aux_z, model_diag=0)
-      fit_so_1 <- quiet(model_so$sample(data=data_site_occ, seed=13, chains=n_chains, iter_sampling=mcmc_iter, iter_warmup=500, refresh=0, show_messages=F)) 
+      fit_so_1 <- quiet(model_so$sample(data=data_site_occ, seed=13, chains=n_chains, iter_sampling=mcmc_iter, iter_warmup=warmup, refresh=0, show_messages=F)) 
       fit_draws <- fit_so_1$draws(all_params, format="matrix")
       chain_matrix <- rbind(chain_matrix, fit_draws)
       gen_occupancy <- fit_so_1$summary(variables="occ_gen")$mean
@@ -187,8 +191,15 @@ for (exp in 1:length(experiment_files)){
   exp_name <- paste(beta, "_", delta, "_", paste(misspec_id, collapse="_"), sep ="")
   exp_names <- c(exp_names, exp_name)
 }
-df <- data.frame(exp=exp_names, v_means=v_means, v_var=sqrt(v_var))
-print(df)
+df <- data.frame(exp=exp_names, v_means=v_means, v_sd=sqrt(v_var))
+print(df, max=100)
+```
+```{r kable}
+caption <- paste("Comparison of models fit to designs")
+label <- paste("survey_eval", sep="")
+print(kbl(df, booktabs = T, escape=T, caption=caption, label=label, 
+          align=c('lcc'), digits=4, format="latex") %>% 
+        kable_styling(latex_options = c("HOLD_position")) )
 ```
 A little too intense to look at all PPDs for $Y$.
 ```{r ppd}
