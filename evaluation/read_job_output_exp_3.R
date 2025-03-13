@@ -147,10 +147,11 @@ fig_df_b1_d2$run <- as.factor(fig_df_b1_d2$run)
 
 #colors <- c("#1c71e5","#71aef2", "#ff4040","#ffc100", "#31850A", "#97ed6f", "#c356ea", "#ffb0ea")
 colors <- c("#1c71e5", "#ff4040")
-model_labels_1 <- c("SO, \u03B2=0.5, \u03B4=0.25", "SO+PO, \u03B2=0.5, \u03B4=0.25")
-model_labels_2 <- c("SO, \u03B2=0.5, \u03B4=2", "SO+PO, \u03B2=0.5, \u03B4=2")
-model_labels_3 <- c("SO, \u03B2=1, \u03B4=0.25", "SO+PO, \u03B2=1, \u03B4=0.25") 
-model_labels_4 <- c("SO, \u03B2=1, \u03B4=2", "SO+PO, \u03B2=1, \u03B4=2") 
+model_labels <- c("SO",  "SO+PO")
+title_1 <- "Run: \u03B2=0.5, \u03B4=0.25"
+title_2 <- "Run: \u03B2=0.5, \u03B4=2"
+title_3 <- "Run: \u03B2=1, \u03B4=0.25"
+title_4 <- "Run: \u03B2=1, \u03B4=2"
 # Generally will be run from evaluation directory
 fig_name <- file.path(".", "exp_3_comparison_b05_d25.png")
 p <- ggplot(data=fig_df_b05_d25, aes(x=x, y=avg_v, colour=run)) +
@@ -159,8 +160,47 @@ p <- ggplot(data=fig_df_b05_d25, aes(x=x, y=avg_v, colour=run)) +
   scale_x_continuous(breaks=c(2,3,4,5,7,10)) +
   #scale_x_discrete(labels=c("2","3","4","5","7","10")) +
   #geom_errorbar(aes(ymin=avg_v-se, ymax=avg_v+se)) +
-  labs(title="Environment: \u03B2=0.5, \u03B4=0.25", x="Max visits", y="U(d)") + 
-  theme(text=element_text(size=7), axis.title = element_text(size = 7), legend.key.size = unit(0.25, 'cm'), legend.position.inside = c(1, 1)) +
-  scale_color_discrete(name = "Run", type=colors, labels = model_labels_1) +
+  labs(title=title_1, x="Max visits", y="U(d)") + 
+  theme(text=element_text(size=7), axis.title = element_text(size = 7), legend.key.size = unit(0.25, 'cm')) +
+  scale_color_discrete(name = "Model", type=colors, labels = model_labels) +
+  theme_bw()
+ggsave(fig_name, plot=p, dpi=300, width=10, height=7, units="cm")
+
+fig_name <- file.path(".", "exp_3_comparison_b05_d2.png")
+p <- ggplot(data=fig_df_b05_d2, aes(x=x, y=avg_v, colour=run)) +
+  geom_line(linewidth=1) +
+  geom_vline(xintercept=c(2,3,4,5,7,10), color = "#949494", linewidth=0.3) + 
+  scale_x_continuous(breaks=c(2,3,4,5,7,10)) +
+  #scale_x_discrete(labels=c("2","3","4","5","7","10")) +
+  #geom_errorbar(aes(ymin=avg_v-se, ymax=avg_v+se)) +
+  labs(title=title_2, x="Max visits", y="U(d)") + 
+  theme(text=element_text(size=7), axis.title = element_text(size = 7), legend.key.size = unit(0.25, 'cm')) +
+  scale_color_discrete(name = "Model", type=colors, labels = model_labels) +
+  theme_bw()
+ggsave(fig_name, plot=p, dpi=300, width=10, height=7, units="cm")
+
+fig_name <- file.path(".", "exp_3_comparison_b1_d25.png")
+p <- ggplot(data=fig_df_b1_d25, aes(x=x, y=avg_v, colour=run)) +
+  geom_line(linewidth=1) +
+  geom_vline(xintercept=c(2,3,4,5,7,10), color = "#949494", linewidth=0.3) + 
+  scale_x_continuous(breaks=c(2,3,4,5,7,10)) +
+  #scale_x_discrete(labels=c("2","3","4","5","7","10")) +
+  #geom_errorbar(aes(ymin=avg_v-se, ymax=avg_v+se)) +
+  labs(title=title_3, x="Max visits", y="U(d)") + 
+  theme(text=element_text(size=7), axis.title = element_text(size = 7), legend.key.size = unit(0.25, 'cm')) +
+  scale_color_discrete(name = "Model", type=colors, labels = model_labels) +
+  theme_bw()
+ggsave(fig_name, plot=p, dpi=300, width=10, height=7, units="cm")
+
+fig_name <- file.path(".", "exp_3_comparison_b1_d2.png")
+p <- ggplot(data=fig_df_b1_d2, aes(x=x, y=avg_v, colour=run)) +
+  geom_line(linewidth=1) +
+  geom_vline(xintercept=c(2,3,4,5,7,10), color = "#949494", linewidth=0.3) + 
+  scale_x_continuous(breaks=c(2,3,4,5,7,10)) +
+  #scale_x_discrete(labels=c("2","3","4","5","7","10")) +
+  #geom_errorbar(aes(ymin=avg_v-se, ymax=avg_v+se)) +
+  labs(title=title_4, x="Max visits", y="U(d)") + 
+  theme(text=element_text(size=7), axis.title = element_text(size = 7), legend.key.size = unit(0.25, 'cm')) +
+  scale_color_discrete(name = "Model", type=colors, labels = model_labels) +
   theme_bw()
 ggsave(fig_name, plot=p, dpi=300, width=10, height=7, units="cm")
