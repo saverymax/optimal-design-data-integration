@@ -9,6 +9,7 @@ library(cmdstanr)
 
 parser <- OptionParser()
 parser <- add_option(parser, "--working_dir", type="character", default=".", help="Path to the directory containing script")
+parser <- add_option(parser, "--save_dir", type="character", default=".", help="Name of folder to save data within the data/sim_data directory")
 parser <- add_option(parser, "--exp_name", type="character", default="po_gen_misspec", help="Base name to save data")
 parser <- add_option(parser, "--alpha", type="double", default=-2, help="Intercept for intensity")
 parser <- add_option(parser, "--beta", type="double", default=0.5, help="Slope for intensity")
@@ -33,7 +34,7 @@ source(file.path(exp_args$working_dir, "experimental_design_functions.R"))
 source(file.path(exp_args$working_dir, "presence_only_functions.R"))
 set.seed(13)
 
-data_dir <- file.path(exp_args$working_dir, "data", "sim_data", "misspec")
+data_dir <- file.path(exp_args$working_dir, "data", "sim_data", exp_args$save_dir)
 dir.create(data_dir)
 
 poisson_process_gamma_no_int <- '
@@ -190,8 +191,8 @@ for (si in 1:length(misspec_strength)){
   
   p <- ggplot(sampling_surface, aes(x, y, fill=aux_e)) + 
     geom_tile() +
-    scale_fill_viridis(discrete=FALSE, name="E") +
-    ggtitle(paste("Initial sampling surface, E covariate with misspec scale of ", strength, sep="")) +
+    scale_fill_viridis(discrete=FALSE, name="", limit=range(c(0, 2.5))) +
+    ggtitle(paste("Covariate causing misspecification\nRate of spatial decay: ", strength, sep="")) +
     theme(text=element_text(size=5), legend.key.size = unit(0.25, 'cm')) +
     coord_fixed()
   fig_name <- file.path(data_dir, paste("misspecification_strength_", param_setting, ".png", sep=""))
@@ -209,7 +210,7 @@ for (si in 1:length(misspec_strength)){
   
   p <- ggplot(sampling_surface, aes(x, y, fill=r_po_data$bias[data_reps,])) + 
     geom_tile() +
-    scale_fill_viridis(discrete=FALSE, "Bias") +
+    scale_fill_viridis(discrete=FALSE, "Bias", limit=range(c(0, 1))) +
     ggtitle("Generated bias per site") +
     theme(text=element_text(size=5), legend.key.size = unit(0.25, 'cm')) +
     coord_fixed()
