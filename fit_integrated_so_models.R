@@ -1,5 +1,6 @@
 library(ggplot2)
 library(dplyr)
+library(tidyr)
 library(viridis)
 library(cmdstanr) 
 library(bayesplot)
@@ -77,6 +78,10 @@ all_params <- c("alpha", "beta", "gamma", "delta")
 gen_params <- c("occ_gen")
 fit_matrix <- matrix(nrow=length(experiment_files), ncol=length(all_params))
 v_matrix <- matrix(nrow=length(experiment_files), ncol=data_reps*design_reps)
+alpha_matrix <- matrix(nrow=length(experiment_files), ncol=data_reps*design_reps)
+beta_matrix <- matrix(nrow=length(experiment_files), ncol=data_reps*design_reps)
+gamma_matrix <- matrix(nrow=length(experiment_files), ncol=data_reps*design_reps)
+delta_matrix <- matrix(nrow=length(experiment_files), ncol=data_reps*design_reps)
 chain_array <- array(dim=c(length(experiment_files), design_reps*data_reps*n_chains*mcmc_iter, length(all_params)))
 gen_array <- array(dim=c(length(experiment_files), data_reps*design_reps, sites))
 text_size <- 10
@@ -160,8 +165,13 @@ for (e_i in 23:length(experiment_files)){
       }
       chain_matrix <- rbind(chain_matrix, fit_draws)
       gen_occupancy <- fit_so_1$summary(variables="occ_gen")$mean
-      v_est <- design_criteria(criteria="brier", sim_occ=gen_occupancy, obs_occ=pa_eval_data$Y)
+      stopifnot(length(gen_occupancy)==length(pa_eval_data$Y[data_rep,]))
+      v_est <- design_criteria(criteria="brier", sim_occ=gen_occupancy, obs_occ=pa_eval_data$Y[data_rep,])
       v_matrix[e_i, iter_cnt] <- v_est
+      alpha_matrix <- [e_i, iter_cnt] <- fit_so_1$summary(variables="alpha")$mean
+      beta_matrix <- [e_i, iter_cnt] <- fit_so_1$summary(variables="beta")$mean
+      gamma_matrix <- [e_i, iter_cnt] <- fit_so_1$summary(variables="gamma")$mean
+      delta_matrix <- [e_i, iter_cnt] <- fit_so_1$summary(variables="delta")$mean
       gen_array[e_i, iter_cnt, ] <- gen_occupancy
     }
   }
@@ -171,25 +181,49 @@ for (e_i in 23:length(experiment_files)){
 
 # Get the average optimality scores
 v_means <- rowMeans(v_matrix)
+a_means <- rowMeans(alpha_matrix)
+b_means <- rowMeans(beta_matrix)
+g_means <- rowMeans(gamma_matrix)
+d_means <- rowMeans(delta_matrix)
 v_var <- apply(v_matrix, MARGIN=1, FUN=var)
-exp_names <- c()
+full_exp_name <- c()
+exp_list <- list()
 for (exp in 1:length(experiment_files)){
   param_split <- str_split(experiment_files[exp], "_")
-  exp_name <- paste(param_split)
   beta <- param_split[[1]][7]
   delta <- param_split[[1]][9]
-  misspec_id <- param_split[[1]][11:length(param_split[[1]])]
-  exp_name <- paste(beta, "_", delta, "_", paste(misspec_id, collapse="_"), sep ="")
-  exp_names <- c(exp_names, exp_name)
+  misspec_id <- param_split[[1]][11]
+  gamma_run <- param_split[[1]][12:length(param_split[[1]])]
+  gamma_run_id <- paste(gamma_run, collapse="_")
+  exp_name <- paste(beta, "_", delta, "_", misspec_id, sep="")
+  full_exp_name <- c(full_exp_name, paste(exp_name, gamma_run_id))
+  run_list <- list()
+  run_list[[gamma_run_id]]=c(v_means[exp], sqrt(v_var[exp]))
+  exp_list[[exp_name]] <- c(exp_list[[exp_name]], run_list)
+  
 }
-df <- data.frame(exp=exp_names, v_means=v_means, v_sd=sqrt(v_var))
-print(df)
+exp_list
+df <- data.frame(exp=full_exp_name, v_means=v_means, v_sd=sqrt(v_var))
+param_df <- data.frame(exp=full_exp_name, alpha=a_means, beta=b_means, gamma=g_means, delta=d_means)
+
+result_matrix <- matrix(nrow=(length(exp_list)), ncol=6)
+for (i in 1:length(exp_list)){
+  result_matrix[i, ] <- unlist(exp_list[[i]])
+  param_names <- c(param_names) <- names(exp_list)[i]
+}
+
+result_df <- as.data.frame(result_matrix)
+rownames(result_df) <- names(exp_list)
+col_names <- c("Oracle mean", "Oracle sd", "Sequential int mean", "Sequential int sd", "Sequential no int mean", "Sequential no int mean")
+colnames(result_df) <- col_names
 
 caption <- paste("Comparison of models fit to designs")
 label <- paste("survey_eval", sep="")
-print(kbl(df, booktabs = T, escape=T, caption=caption, label=label, 
-          align=c('lcc'), digits=4, format="latex") %>% 
+print(kbl(result_df, booktabs = T, escape=T, caption=caption, label=label, 
+          align=c('lcccccc'), digits=4, format="latex") %>% 
         kable_styling(latex_options = c("HOLD_position")) )
+
+df
 
 #A little too intense to look at all PPDs for $Y$.
 #for (i in 1:length(experiment_files)){
