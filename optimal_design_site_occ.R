@@ -50,7 +50,7 @@ parser <- add_option(parser, "--p", type="double", default=0.7, help="Probabilit
 parser <- add_option(parser, "--area", type="integer", default=100, help="Area of region D.  This is important in order to correctly scale the covariates.")
 parser <- add_option(parser, "--k", type="integer", default=20, help="Number of sites along one side of grid")
 parser <- add_option(parser, "--aux_cor", type="double", default=0.8, help="Correlation between auxiliary covariates if using 'correlation' bias function.")
-parser <- add_option(parser, "--misspec_run", type="character", default="none", help="Flag for running misspecification experiments")
+parser <- add_option(parser, "--misspec_run", type="character", default="none", help="Flag for running misspecification experiments. One of none, oracle, sequential or pa-only")
 parser <- add_option(parser, "--misspec", type="double", default="0", help="Strength of covariate to be misspecified")
 parser <- add_option(parser, "--posterior_file", type="character", default="", help="File name of saved NHPP posterior for use with gamma integration")
 
@@ -89,8 +89,8 @@ misspec_strength <- exp_args$misspec
 p_0 <- exp_args$p
 aux_cor <- exp_args$aux_cor
 
-if (!(exp_args$misspec_run %in% c("none", "oracle", "sequential"))){
-  stop("Misspecification run can only be one of 'none', 'oracle', or 'sequential'.")
+if (!(exp_args$misspec_run %in% c("none", "oracle", "sequential", "pa-only"))){
+  stop("Misspecification run can only be one of 'none', 'oracle', 'sequential' or 'pa-only'. ")
 }
 # This assumes spatial variance of 1, if not using cloglog link
 sigma <- 1
@@ -135,7 +135,7 @@ if (!exp_args$misspec_run=="none"&exp_args$intensity_func=="simple"){
 # Now load the NHPP posterior if doing gamma integration tests
 # Posterior file will be named correctly regardless of CLI options so we don't need 
 # to specify gamma integration in the options, only differential between sequential and everything else.
-if (exp_args$misspec_run=="sequential"){
+if (exp_args$misspec_run=="sequential"|exp_args$misspec_run=="pa-only"){
   if(!file.exists(file.path(exp_args$working_dir, "data", "sim_data", "misspec", exp_args$posterior_file))){
     stop(paste("Please run generate_op_data_misspec.R with the relevant CLI arguments before running the optimal design!\nFile ", 
         exp_args$posterior_file, "does not exist. See the documentation for more details"))
@@ -203,7 +203,7 @@ if (exp_args$misspec_run=="none"|exp_args$misspec_run=="oracle"){
     r_survey_data_n1 <- generate_data_so(data_reps, sampling_surface, corr_matrix, p_0, alpha, beta, sigma, visits[1], sites, link=link_func)
     r_survey_data_n5 <- generate_data_so(data_reps, sampling_surface, corr_matrix, p_0, alpha, beta, sigma, visits[1], sites, link=link_func)
   }
-}else if (exp_args$misspec_run=="sequential"){
+}else if (exp_args$misspec_run=="sequential"|exp_args$misspec_run=="pa-only"){
   if (exp_args$vary_visits == TRUE){
     visits <- c(exp_args$min_visits, exp_args$max_visits)
     # nhpp_posterior will have data_reps number of rows, but every row is the same point estimate.
@@ -249,7 +249,7 @@ p <- ggplot(sampling_surface, aes(x, y, fill=aux_z)) +
 fig_name <- file.path(fig_dir, paste("sampling_surface_aux_z.png", sep=""))
 save_basic_plots(fig_name, p)
 
-if (exp_args$misspec_run=="none"){
+if (!exp_args$misspec_run=="none"){
   p <- ggplot(sampling_surface, aes(x, y, fill=aux_e)) + 
     geom_tile() +
     scale_fill_viridis(discrete=FALSE, name="") +
@@ -308,7 +308,7 @@ for (data_rep in 1:max_dr){
     labs(title="Generated occupancy per site,\nsampling effort=5", x="", y="") + 
     theme(text=element_text(size=fig_text_size), axis.title = element_text(size = fig_title_size), legend.key.size = unit(0.25, 'cm')) +
     coord_fixed()
-  fig_name <- file.path(fig_dir, paste("occ-site_n5.png", sep=""))
+  fig_name <- file.path(fig_dir, paste("data_rep_", data_rep, "_occ-site_n5.png", sep=""))
   save_basic_plots(fig_name, p)
   
   p <- ggplot(sampling_surface, aes(x, y, fill=r_survey_data_n5$theta[data_rep,])) + 
