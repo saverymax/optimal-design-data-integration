@@ -65,7 +65,9 @@ poisson_process_site_occupancy <- '
       target += normal_lpdf(delta | 0,10);
       // Call prior function for presence-only here.
       vector[n_pa_sites] g_theta;
-      target += poisson_log_lpmf(PO | alpha + beta * X_po + gamma + delta * Z_po);
+      vector[n_po_sites] log_eta;
+      log_eta = alpha + beta * X_po + gamma + delta * Z_po;
+      target += poisson_log_lpmf(PO | log_eta);
       g_theta = 1 - exp(-exp(alpha + beta * X));
       for (i in 1:n_pa_sites) {
         if (Y[i] > 0){
