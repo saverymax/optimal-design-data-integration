@@ -136,6 +136,7 @@ if (!exp_args$misspec_run=="none"&exp_args$intensity_func=="simple"){
 # Posterior file will be named correctly regardless of CLI options so we don't need 
 # to specify gamma integration in the options, only differential between sequential and everything else.
 if (exp_args$misspec_run=="sequential"|exp_args$misspec_run=="pa-only"){
+  print(paste("Loading NHPP posterior for PA data generation for ", exp_args$misspec_run, " procedure", sep=""))
   if(!file.exists(file.path(exp_args$working_dir, "data", "sim_data", "misspec", exp_args$posterior_file))){
     stop(paste("Please run generate_op_data_misspec.R with the relevant CLI arguments before running the optimal design!\nFile ", 
         exp_args$posterior_file, "does not exist. See the documentation for more details"))
@@ -192,6 +193,7 @@ link_func <- "cloglog"
 # TODO: Possibly alter generate_data_so to 
 # use vectors or fixed values so that full posteriors could be used
 if (exp_args$misspec_run=="none"|exp_args$misspec_run=="oracle"){
+  print(paste("Generating PA data according to non-sequential procedure: ", exp_args$misspec_run, sep=""))
   if (exp_args$vary_visits == TRUE){
     visits <- c(exp_args$min_visits, exp_args$max_visits)
     print("Creating datasets for varying survey effort between sites")
@@ -204,6 +206,7 @@ if (exp_args$misspec_run=="none"|exp_args$misspec_run=="oracle"){
     r_survey_data_n5 <- generate_data_so(data_reps, sampling_surface, corr_matrix, p_0, alpha, beta, sigma, visits[1], sites, link=link_func)
   }
 }else if (exp_args$misspec_run=="sequential"|exp_args$misspec_run=="pa-only"){
+  print(paste("Generating PA data according to sequential procedure: ", exp_args$misspec_run, sep=""))
   if (exp_args$vary_visits == TRUE){
     visits <- c(exp_args$min_visits, exp_args$max_visits)
     # nhpp_posterior will have data_reps number of rows, but every row is the same point estimate.
