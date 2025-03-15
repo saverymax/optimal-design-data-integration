@@ -43,7 +43,7 @@ echo "#!/bin/bash
 #PBS -l nodes=1:ppn=$cores
 #PBS -l mem=100gb
 
-module load CmdStanR/0.5.2-foss-2022a-R-4.2.1
+module load CmdStanR
 Rscript $WORKDIR/optimal_design_site_occ.R --working_dir=$WORKDIR --save_dir=experimental_runs/$exp_dir --exp_name=$exp_name --data_reps=$(($cores*2)) --m=$sites --min_visits=1 --max_visits=$n_surveys --model_selection=$m --random_starts=10 --exch_iter=40 --mcmc_iter=1000 --use_sim_po --po_data_file="po_gen_ints-${intensity}_peak=${deviation}_a=${alpha}_b=${b}_g=${gamma}_d=${d}_e=${mc}.Rds" --intensity_func=\"$intensity\" --sd=${deviation} --bias_func=\"$bias\" --v_parallel --cores=$cores --alpha=${alpha} --beta=${b} --gamma=${gamma} --delta=${d} --p=$p --misspec_run=\"$r\" --misspec=${mc}" > $exp_dir/$exp_name.sh
 echo "qsub $exp_dir/$exp_name.sh" >> run_$exp_dir.sh
 
@@ -81,7 +81,7 @@ echo "#!/bin/bash
 #PBS -l mem=100gb
 
 module load CmdStanR
-Rscript $WORKDIR/optimal_design_site_occ.R --working_dir=$WORKDIR --save_dir=experimental_runs/$exp_dir --exp_name=$exp_name --data_reps=$(($cores*2)) --m=$sites --min_visits=1 --max_visits=$n_surveys --vary_visits --model_selection=$m --random_starts=10 --exch_iter=40 --mcmc_iter=1000 --use_sim_po --po_data_file="po_gen_ints-${intensity}_peak=${deviation}_a=${alpha}_b=${b}_g=${gamma}_d=${d}_e=${mc}.Rds" --intensity_func=\"$intensity\" --sd=${deviation} --bias_func=\"$bias\" --v_parallel --cores=$cores --alpha=${alpha} --beta=${b} --gamma=${gamma} --delta=${d} --p=$p --misspec_run=\"$r\" --misspec=${mc} --posterior_file=pp_posterior_po_gen_ints-donut_peak=5_a=${alpha}_b=${b}_g=${gamma}_d=${d}_e=${mc}_$int_status.Rds" > $exp_dir/$exp_name.sh
+Rscript $WORKDIR/optimal_design_site_occ.R --working_dir=$WORKDIR --save_dir=experimental_runs/$exp_dir --exp_name=$exp_name --data_reps=$(($cores*2)) --m=$sites --min_visits=1 --max_visits=$n_surveys --model_selection=$m --random_starts=10 --exch_iter=40 --mcmc_iter=1000 --use_sim_po --po_data_file="po_gen_ints-${intensity}_peak=${deviation}_a=${alpha}_b=${b}_g=${gamma}_d=${d}_e=${mc}.Rds" --intensity_func=\"$intensity\" --sd=${deviation} --bias_func=\"$bias\" --v_parallel --cores=$cores --alpha=${alpha} --beta=${b} --gamma=${gamma} --delta=${d} --p=$p --misspec_run=\"$r\" --misspec=${mc} --posterior_file=pp_posterior_po_gen_ints-donut_peak=5_a=${alpha}_b=${b}_g=${gamma}_d=${d}_e=${mc}_$int_status.Rds" > $exp_dir/$exp_name.sh
 echo "qsub $exp_dir/$exp_name.sh" >> run_$exp_dir.sh
 
 
