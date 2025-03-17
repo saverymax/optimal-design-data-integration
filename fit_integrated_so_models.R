@@ -9,12 +9,12 @@ library(stringr)
 library(readr)
 library(kableExtra)
 
-#working_dir <- "C:\\Users\\msavery\\OneDrive - UGent\\Documents\\ghent_phd_spatial_doe\\code\\optimal_design_site_occ"
+working_dir <- "C:\\Users\\msavery\\OneDrive - UGent\\Documents\\ghent_phd_spatial_doe\\code\\optimal_design_site_occ"
 #working_dir <- "."
-working_dir <- "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration"
+#working_dir <- "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration"
 po_path <- file.path(working_dir, "data", "sim_data", "misspec")
-result_path <- "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5"
-#result_path <- "C:\\Users\\msavery\\OneDrive - UGent\\Documents\\ghent_phd_spatial_doe\\data\\globus_hpc_collection\\exp_5_misspec"
+#result_path <- "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5"
+result_path <- "C:\\Users\\msavery\\OneDrive - UGent\\Documents\\ghent_phd_spatial_doe\\data\\globus_hpc_collection\\exp_5_misspec.1"
 
 source(file.path(working_dir, "experimental_design_functions.R"))
 source(file.path(working_dir, "presence_only_functions.R"))
@@ -69,15 +69,15 @@ k <- 20
 sites <- k^2
 m <- 5
 n <- 3
-design_reps <- 10
-data_reps <- 10
+design_reps <- 2#10
+data_reps <- 2#10
 n_surveys <- rep(n, m)
 sigma <- 1
 visits <- 3
 p_0 <- 0.2
 deviation <- 5
-mcmc_iter <- 2000
-warmup <- 500
+mcmc_iter <- 300#2000
+warmup <- 100#500
 n_chains <- 3
 centroid <- c(10,4)
 centroid_2 <- c(18,18)
@@ -98,14 +98,14 @@ model_so <- cmdstan_model(model_path)
 
 
 
-all_params <- c("alpha", "beta", "gamma", "delta")
+all_params <- c("alpha", "beta")
 gen_params <- c("occ_gen")
 fit_matrix <- matrix(nrow=length(experiment_files), ncol=length(all_params))
 v_matrix <- matrix(nrow=length(experiment_files), ncol=data_reps*design_reps)
 alpha_matrix <- matrix(nrow=length(experiment_files), ncol=data_reps*design_reps)
 beta_matrix <- matrix(nrow=length(experiment_files), ncol=data_reps*design_reps)
-gamma_matrix <- matrix(nrow=length(experiment_files), ncol=data_reps*design_reps)
-delta_matrix <- matrix(nrow=length(experiment_files), ncol=data_reps*design_reps)
+#gamma_matrix <- matrix(nrow=length(experiment_files), ncol=data_reps*design_reps)
+#delta_matrix <- matrix(nrow=length(experiment_files), ncol=data_reps*design_reps)
 chain_array <- array(dim=c(length(experiment_files), design_reps*data_reps*n_chains*mcmc_iter, length(all_params)))
 gen_array <- array(dim=c(length(experiment_files), data_reps*design_reps, sites))
 text_size <- 10
@@ -113,7 +113,6 @@ text_size <- 10
 sampling_surface <- get_sampling_surface_donut(k, deviation)
 sampling_surface <- get_bias_surface_exponential(sampling_surface, centroid)
 
-# TODO: HMmm, no gamma/delta for no po. Also need to check parsing of params
 for (e_i in 1:length(experiment_files)){
   # Get particular strength 
   print(paste("Current experiment: ", experiment_files[e_i]))
@@ -123,6 +122,8 @@ for (e_i in 1:length(experiment_files)){
   misspec <- as.numeric(str_split(misspec, "-")[[1]][2])
   delta <- param_split[[1]][9]
   delta <- as.numeric(str_split(delta, "-")[[1]][2])
+  # Either oracle, sequential, or pa-only. Don't need the int/no int option
+  gen_seq <- param_split[[1]][[12]]
   # Don't need to misspecification to fit the model but good to check it
   sampling_surface <- get_bias_surface_misspecified(sampling_surface, centroid_2, misspec)
   if (misspec == 0){
@@ -181,12 +182,19 @@ for (e_i in 1:length(experiment_files)){
     for (data_rep in 1:data_reps){
       iter_cnt <- iter_cnt + 1
       selected_counts <- pa_eval_data$Y[data_rep, site_idx]
-      if (
-      data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, X=covars_sampled_sites$aux_x, Y=selected_counts, PO=po_gen$Y[1, ], X_po=sampling_surface$aux_x, Z_po=sampling_surface$aux_z, model_diag=0)
-      fit_so_1 <- quiet(model_so_po$sample(data=data_site_occ, seed=13, chains=n_chains, iter_sampling=mcmc_iter, iter_warmup=warmup, refresh=0, show_messages=F)) 
+      if (gen_seq=="pa-only"){
+        data_site_occ = list(n_surveys=n_surveys, n_sites=m, total_sites=sites, X=covars_sampled_sites$aux_x, X_all=sampling_surface$aux_x, Y=selected_counts)
+        fit_so_1 <- quiet(model_so$sample(data=data_site_occ, seed=13, chains=n_chains, iter_sampling=mcmc_iter, iter_warmup=warmup, refresh=0, show_messages=F)) 
+      }
+      else{
+        data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, X=covars_sampled_sites$aux_x, Y=selected_counts, PO=po_gen$Y[1, ], X_po=sampling_surface$aux_x, Z_po=sampling_surface$aux_z, model_diag=0)
+        fit_so_1 <- quiet(model_so_po$sample(data=data_site_occ, seed=13, chains=n_chains, iter_sampling=mcmc_iter, iter_warmup=warmup, refresh=0, show_messages=F)) 
+      }
       fit_draws <- fit_so_1$draws(all_params, format="matrix")
       if (dim(fit_draws)[1]!=n_chains*mcmc_iter){
         warning(paste("Posterior chains for run", e_i, data_rep, "is of unexpected dimension:", dim(fit_draws), sep=" "))
+        # Just a little code so it doesn't crash
+        fit_draws <- rbind(fit_draws, matrix(0, nrow=(n_chains*mcmc_iter) - dim(fit_draws)[1], ncol=dim(fit_draws)[2]))
       }
       chain_matrix <- rbind(chain_matrix, fit_draws)
       gen_occupancy <- fit_so_1$summary(variables="occ_gen")$mean
@@ -195,8 +203,8 @@ for (e_i in 1:length(experiment_files)){
       v_matrix[e_i, iter_cnt] <- v_est
       alpha_matrix[e_i, iter_cnt] <- fit_so_1$summary(variables="alpha")$mean
       beta_matrix[e_i, iter_cnt] <- fit_so_1$summary(variables="beta")$mean
-      gamma_matrix[e_i, iter_cnt] <- fit_so_1$summary(variables="gamma")$mean
-      delta_matrix[e_i, iter_cnt] <- fit_so_1$summary(variables="delta")$mean
+      #gamma_matrix[e_i, iter_cnt] <- fit_so_1$summary(variables="gamma")$mean
+      #delta_matrix[e_i, iter_cnt] <- fit_so_1$summary(variables="delta")$mean
       gen_array[e_i, iter_cnt, ] <- gen_occupancy
     }
   }
@@ -208,11 +216,15 @@ for (e_i in 1:length(experiment_files)){
 v_means <- rowMeans(v_matrix)
 a_means <- rowMeans(alpha_matrix)
 b_means <- rowMeans(beta_matrix)
-g_means <- rowMeans(gamma_matrix)
-d_means <- rowMeans(delta_matrix)
+#g_means <- rowMeans(gamma_matrix)
+#d_means <- rowMeans(delta_matrix)
 v_var <- apply(v_matrix, MARGIN=1, FUN=var)
+a_var <- apply(alpha_matrix, MARGIN=1, FUN=var)
+b_var <- apply(beta_matrix, MARGIN=1, FUN=var)
 full_exp_name <- c()
 exp_list <- list()
+a_exp_list <- list()
+b_exp_list <- list()
 for (exp in 1:length(experiment_files)){
   param_split <- str_split(experiment_files[exp], "_")
   beta <- param_split[[1]][7]
@@ -223,32 +235,63 @@ for (exp in 1:length(experiment_files)){
   exp_name <- paste(beta, "_", delta, "_", misspec_id, sep="")
   full_exp_name <- c(full_exp_name, paste(exp_name, gamma_run_id))
   run_list <- list()
-  run_list[[gamma_run_id]]=c(v_means[exp], sqrt(v_var[exp]))
+  a_run_list <- list()
+  b_run_list <- list()
+  run_list[[gamma_run_id]] <- c(v_means[exp], sqrt(v_var[exp]))
+  a_run_list[[gamma_run_id]] <- c(a_means[exp], sqrt(a_var[exp]))
+  b_run_list[[gamma_run_id]] <- c(b_means[exp], sqrt(b_var[exp]))
   exp_list[[exp_name]] <- c(exp_list[[exp_name]], run_list)
-  
+  a_exp_list[[exp_name]] <- c(a_exp_list[[exp_name]], a_run_list)
+  b_exp_list[[exp_name]] <- c(b_exp_list[[exp_name]], b_run_list)
 }
-exp_list
+print(exp_list)
 df <- data.frame(exp=full_exp_name, v_means=v_means, v_sd=sqrt(v_var))
-param_df <- data.frame(exp=full_exp_name, alpha=a_means, beta=b_means, gamma=g_means, delta=d_means)
+print("Long df of all runs")
+print(df)
+param_df <- data.frame(exp=full_exp_name, alpha=a_means, alpha_sd=sqrt(a_var), beta=b_means, beta_sd=sqrt(b_var))#, gamma=g_means, delta=d_means)
+print("Avg parameter estimates over runs")
+print(param_df)
 
-result_matrix <- matrix(nrow=(length(exp_list)), ncol=6)
+result_matrix <- matrix(nrow=(length(exp_list)), ncol=10)
+a_result_matrix <- matrix(nrow=(length(exp_list)), ncol=10)
+b_result_matrix <- matrix(nrow=(length(exp_list)), ncol=10)
+param_names <- c()
 for (i in 1:length(exp_list)){
   result_matrix[i, ] <- unlist(exp_list[[i]])
-  param_names <- c(param_names) <- names(exp_list)[i]
+  a_result_matrix[i, ] <- unlist(a_exp_list[[i]])
+  b_result_matrix[i, ] <- unlist(b_exp_list[[i]])
+  param_names <- c(param_names, names(exp_list)[i])
 }
 
 result_df <- as.data.frame(result_matrix)
+a_result_df <- as.data.frame(a_result_matrix)
+b_result_df <- as.data.frame(b_result_matrix)
+
 rownames(result_df) <- names(exp_list)
-col_names <- c("Oracle mean", "Oracle sd", "Sequential int mean", "Sequential int sd", "Sequential no int mean", "Sequential no int mean")
+rownames(a_result_df) <- names(exp_list)
+rownames(b_result_df) <- names(exp_list)
+col_names <- c("Oracle mean", "Oracle sd", "Sequential int mean", "Sequential int sd", "Sequential no int mean", "Sequential no int sd", "PA-only mean", "PA-only sd")
 colnames(result_df) <- col_names
+colnames(a_result_df) <- col_names
+colnames(b_result_df) <- col_names
 
 caption <- paste("Comparison of models fit to designs")
 label <- paste("survey_eval", sep="")
 print(kbl(result_df, booktabs = T, escape=T, caption=caption, label=label, 
-          align=c('lcccccc'), digits=4, format="latex") %>% 
+          align=c('lcccccccc'), digits=4, format="latex") %>% 
         kable_styling(latex_options = c("HOLD_position")) )
 
-df
+caption <- paste("Comparison of alpha estimates from designs")
+label <- paste("alpha_analysis", sep="")
+print(kbl(a_result_df, booktabs = T, escape=T, caption=caption, label=label, 
+          align=c('lcccccccc'), digits=4, format="latex") %>% 
+        kable_styling(latex_options = c("HOLD_position")) )
+
+caption <- paste("Comparison of beta estimtaes from designs")
+label <- paste("beta_analysis", sep="")
+print(kbl(b_result_df, booktabs = T, escape=T, caption=caption, label=label, 
+          align=c('lcccccccc'), digits=4, format="latex") %>% 
+        kable_styling(latex_options = c("HOLD_position")) )
 
 #A little too intense to look at all PPDs for $Y$.
 #for (i in 1:length(experiment_files)){
