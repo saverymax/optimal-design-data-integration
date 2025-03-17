@@ -35,3 +35,5 @@ Finally, this script generates a table comparing the effect of increasing visits
 We have provided a bash script to run all of these in the evaluation directory, ```read_all_results.sh```. Give the full path to the experimental_runs directory provided with this code that contains all the experiments with the .xlsx files, and run the bash script. This will generate all tables and figures.
 
 In the evaluation folder, we also provide the output of each script in .txt files, as presented in the paper. 
+
+### Misspecification analysis

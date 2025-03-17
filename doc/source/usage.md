@@ -100,6 +100,18 @@ Options:
         --aux_cor=AUX_COR
                 Correlation between auxiliary covariates if using 'correlation' bias function.
 ```
+There are three additional options to be used for the misspecification experiments:
+```
+        --misspec_run=MISSPEC_RUN
+                Flag for running misspecification experiments. One of none, oracle, sequential or pa-only
+
+        --misspec=MISSPEC
+                Strength of covariate to be misspecified
+
+        --posterior_file=POSTERIOR_FILE
+                File name of saved NHPP posterior for use with gamma integration
+```
+These will be discussed in a separate section below.
 
 
 ### Running

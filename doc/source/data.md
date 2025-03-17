@@ -196,3 +196,24 @@ Options:
         --data_reps=DATA_REPS
                 Number of dataset reps for criterion estimation
 ```
+### Simulate data for misspecification
+
+The PO data for the misspecification experiments is generated separately from the previous section. To generate this data, you must run ```generate_po_data_misspec.R```, for example 
+```
+Rscript $WORKDIR/generate_po_data_misspec.R --working_dir=. --save_dir="misspec" --exp_name=po_gen_misspec --alpha=-2 --beta=0.5 --gamma=1 --delta=0.25 --epsilon=1.5 --intensity_func="donut" --sd=5 --bias_fun="exponential" --data_reps=96 --gamma_reps=200
+```
+It is the same as above, only now we provide an ```--epsilon``` argument as the known parameter value for the additional covariate in the data generating model of the bias. The number of iterations for the Monte Carlo integration over $\gamma$ is also set by ```--gamma_reps```. These additional options are listed below, but are otherwise the same as in the previous section.
+```
+Options:
+        --epsilon=EPSILON 
+                Slope for covariate inducing misspec
+
+        --gamma_reps=GAMMA_REPS
+                Number of MC iterations for integration over gamma
+
+        --save_dir=SAVE_DIR
+                Name of folder to save data within the data/sim_data directory
+```
+As before, the bash script ```experiment_scripts/generate_po_datasets_misspec.sh``` will run the parameter combinations that we use in the experiments in the paper.
+
+What ```generate_po_data_misspec.R``` does is a little different than in the previous section. Firstly, it generates and saves PO dataset using an additional covariate that will be not be included in the models in the design script. Multiple PO datasets are generated for one fixed set of parameters, each for a different level of exponential decay. This is to test the sensitivity of the design algorithm to misspecification in the working model. The second thing this script does is estimate $\alpha$ from the PO data, to be used for PA dataset generation in the design algorithm. This is done via Monte Carlo integration over $\gamma$, by iteratively drawing from a prior placed on $\gamma$, holding $\gamma$ to this constant value in the NHPP, and averaging multiple NHPP estimates for $\alpha$ when iteratively fixing gamma. This posterior average estimate is saved to a ```.Rds``` file, such as ```pp_posterior_po_gen_ints-donut_peak=5_a=-2_b=0.5_g=1_d=0.25_e=0.1_int``` in the example used above. ```e=0.1``` refers to the amount of exponential decay. ```int``` refers to the use of MC integration. Both ```int``` and ```no_int``` versions will be saved, where ```no_int``` just takes the estimate of $\alpha$ directly from the NHPP even though this estimate is highly correlated with $\gamma$. This posterior file, as well as the PO dataset, will need to be provided to the design script for PA generation. The datasets created and used in the paper are already available in ```data/sim_data/misspec```.
