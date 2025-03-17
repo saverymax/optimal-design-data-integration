@@ -10,14 +10,16 @@ library(readr)
 library(kableExtra)
 
 #working_dir <- "C:\\Users\\msavery\\OneDrive - UGent\\Documents\\ghent_phd_spatial_doe\\code\\optimal_design_site_occ"
-working_dir <- "."
+#working_dir <- "."
+working_dir <- "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration"
 po_path <- file.path(working_dir, "data", "sim_data", "misspec")
-result_path <- "C:\\Users\\msavery\\OneDrive - UGent\\Documents\\ghent_phd_spatial_doe\\data\\globus_hpc_collection\\exp_5_misspec"
+result_path <- "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5"
+#result_path <- "C:\\Users\\msavery\\OneDrive - UGent\\Documents\\ghent_phd_spatial_doe\\data\\globus_hpc_collection\\exp_5_misspec"
+
 source(file.path(working_dir, "experimental_design_functions.R"))
 source(file.path(working_dir, "presence_only_functions.R"))
 stan_models_path <- file.path(working_dir, "stan_models", "stan_site_occupancy_models.R")
 source(stan_models_path)
-knitr::opts_chunk$set(tidy.opts = list(width.cutoff = 60), tidy = TRUE)
 
 # Hardcode all run names, sorry :(
 experiment_files <- c(
@@ -44,7 +46,23 @@ experiment_files <- c(
   "oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.1_sequential_no_int",
   "oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0_oracle",
   "oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0_sequential_int",
-  "oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0_sequential_no_int"
+  "oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0_sequential_no_int",
+  "oe_model-1_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.01_pa-only_int",
+  "oe_model-1_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.01_pa-only_no_int",
+  "oe_model-1_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.05_pa-only_int",
+  "oe_model-1_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.05_pa-only_no_int",
+  "oe_model-1_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.1_pa-only_int",
+  "oe_model-1_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.1_pa-only_no_int",
+  "oe_model-1_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0_pa-only_int",
+  "oe_model-1_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0_pa-only_no_int",
+  "oe_model-1_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.01_pa-only_int",
+  "oe_model-1_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.01_pa-only_no_int",
+  "oe_model-1_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.05_pa-only_int",
+  "oe_model-1_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.05_pa-only_no_int",
+  "oe_model-1_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.1_pa-only_int",
+  "oe_model-1_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.1_pa-only_no_int",
+  "oe_model-1_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0_pa-only_int",
+  "oe_model-1_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0_pa-only_no_int"
 )
 
 k <- 20
@@ -69,10 +87,16 @@ link_func <- "cloglog"
 alpha <- -2
 beta <- 0.5
 
-model_path <- "misspec_fits.stan"
+model_path <- "misspec_fits_with_po.stan"
 model_string <- poisson_process_site_occupancy
 write(model_string, model_path)
+model_so_po <- cmdstan_model(model_path) 
+model_path <- "misspec_fits_no_po.stan"
+model_string <- cloglog_site_occupancy
+write(model_string, model_path)
 model_so <- cmdstan_model(model_path) 
+
+
 
 all_params <- c("alpha", "beta", "gamma", "delta")
 gen_params <- c("occ_gen")
@@ -89,8 +113,8 @@ text_size <- 10
 sampling_surface <- get_sampling_surface_donut(k, deviation)
 sampling_surface <- get_bias_surface_exponential(sampling_surface, centroid)
 
-# TODO: 23-24
-for (e_i in 23:length(experiment_files)){
+# TODO: HMmm, no gamma/delta for no po. Also need to check parsing of params
+for (e_i in 1:length(experiment_files)){
   # Get particular strength 
   print(paste("Current experiment: ", experiment_files[e_i]))
   print(e_i)
@@ -157,21 +181,22 @@ for (e_i in 23:length(experiment_files)){
     for (data_rep in 1:data_reps){
       iter_cnt <- iter_cnt + 1
       selected_counts <- pa_eval_data$Y[data_rep, site_idx]
+      if (
       data_site_occ = list(n_surveys=n_surveys, n_pa_sites=m, n_po_sites=sites, X=covars_sampled_sites$aux_x, Y=selected_counts, PO=po_gen$Y[1, ], X_po=sampling_surface$aux_x, Z_po=sampling_surface$aux_z, model_diag=0)
-      fit_so_1 <- quiet(model_so$sample(data=data_site_occ, seed=13, chains=n_chains, iter_sampling=mcmc_iter, iter_warmup=warmup, refresh=0, show_messages=F)) 
+      fit_so_1 <- quiet(model_so_po$sample(data=data_site_occ, seed=13, chains=n_chains, iter_sampling=mcmc_iter, iter_warmup=warmup, refresh=0, show_messages=F)) 
       fit_draws <- fit_so_1$draws(all_params, format="matrix")
       if (dim(fit_draws)[1]!=n_chains*mcmc_iter){
-        stop(paste("Posterior chains for run", e_i, data_rep, "is of unexpected dimension:", dim(fit_draws), sep=" "))
+        warning(paste("Posterior chains for run", e_i, data_rep, "is of unexpected dimension:", dim(fit_draws), sep=" "))
       }
       chain_matrix <- rbind(chain_matrix, fit_draws)
       gen_occupancy <- fit_so_1$summary(variables="occ_gen")$mean
       stopifnot(length(gen_occupancy)==length(pa_eval_data$Y[data_rep,]))
       v_est <- design_criteria(criteria="brier", sim_occ=gen_occupancy, obs_occ=pa_eval_data$Y[data_rep,])
       v_matrix[e_i, iter_cnt] <- v_est
-      alpha_matrix <- [e_i, iter_cnt] <- fit_so_1$summary(variables="alpha")$mean
-      beta_matrix <- [e_i, iter_cnt] <- fit_so_1$summary(variables="beta")$mean
-      gamma_matrix <- [e_i, iter_cnt] <- fit_so_1$summary(variables="gamma")$mean
-      delta_matrix <- [e_i, iter_cnt] <- fit_so_1$summary(variables="delta")$mean
+      alpha_matrix[e_i, iter_cnt] <- fit_so_1$summary(variables="alpha")$mean
+      beta_matrix[e_i, iter_cnt] <- fit_so_1$summary(variables="beta")$mean
+      gamma_matrix[e_i, iter_cnt] <- fit_so_1$summary(variables="gamma")$mean
+      delta_matrix[e_i, iter_cnt] <- fit_so_1$summary(variables="delta")$mean
       gen_array[e_i, iter_cnt, ] <- gen_occupancy
     }
   }
