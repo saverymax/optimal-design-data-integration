@@ -70,15 +70,15 @@ k <- 20
 sites <- k^2
 m <- 5
 n <- 3
-design_reps <- 2#10
-data_reps <- 2#10
+design_reps <- 10
+data_reps <- 10
 n_surveys <- rep(n, m)
 sigma <- 1
 visits <- 3
 p_0 <- 0.2
 deviation <- 5
-mcmc_iter <- 500
-warmup <- 200
+mcmc_iter <- 2000
+warmup <- 500
 n_chains <- 3
 centroid <- c(10,4)
 centroid_2 <- c(18,18)
@@ -211,6 +211,9 @@ for (e_i in 1:length(experiment_files)){
   }
   fit_matrix[e_i, ] <- colMeans(chain_matrix)
   chain_array[e_i, ,] <- chain_matrix
+  saveRDS(fit_matrix, file=file.path(working_dir, "evaluation", "fit_matrix.Rds"))
+  saveRDS(chain_array, file=file.path(working_dir, "evaluation", "chain_array.Rds"))
+  saveRDS(v_matrix, file=file.path(working_dir, "evaluation", "v_matrix.Rds"))
 }
 
 # Get the average optimality scores
@@ -271,7 +274,7 @@ b_result_df <- as.data.frame(b_result_matrix)
 rownames(result_df) <- names(exp_list)
 rownames(a_result_df) <- names(exp_list)
 rownames(b_result_df) <- names(exp_list)
-col_names <- c("Oracle mean", "Oracle sd", "Sequential int mean", "Sequential int sd", "Sequential no int mean", "Sequential no int sd", "PA-only mean", "PA-only sd")
+col_names <- c("Oracle mean", "Oracle sd", "Sequential int mean", "Sequential int sd", "Sequential no int mean", "Sequential no int sd", "PA-only int mean", "PA-only int sd", "PA-only no int mean", "PA-only no int sd")
 colnames(result_df) <- col_names
 colnames(a_result_df) <- col_names
 colnames(b_result_df) <- col_names
