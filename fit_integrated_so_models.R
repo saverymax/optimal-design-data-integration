@@ -9,12 +9,13 @@ library(stringr)
 library(readr)
 library(kableExtra)
 
-working_dir <- "C:\\Users\\msavery\\OneDrive - UGent\\Documents\\ghent_phd_spatial_doe\\code\\optimal_design_site_occ"
+#working_dir <- "C:\\Users\\msavery\\OneDrive - UGent\\Documents\\ghent_phd_spatial_doe\\code\\optimal_design_site_occ"
+#result_path <- "C:\\Users\\msavery\\OneDrive - UGent\\Documents\\ghent_phd_spatial_doe\\data\\globus_hpc_collection\\exp_5_misspec.1"
 #working_dir <- "."
-#working_dir <- "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration"
+working_dir <- "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration"
+result_path <- "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5"
+
 po_path <- file.path(working_dir, "data", "sim_data", "misspec")
-#result_path <- "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5"
-result_path <- "C:\\Users\\msavery\\OneDrive - UGent\\Documents\\ghent_phd_spatial_doe\\data\\globus_hpc_collection\\exp_5_misspec.1"
 
 source(file.path(working_dir, "experimental_design_functions.R"))
 source(file.path(working_dir, "presence_only_functions.R"))
@@ -76,8 +77,8 @@ sigma <- 1
 visits <- 3
 p_0 <- 0.2
 deviation <- 5
-mcmc_iter <- 300#2000
-warmup <- 100#500
+mcmc_iter <- 500
+warmup <- 200
 n_chains <- 3
 centroid <- c(10,4)
 centroid_2 <- c(18,18)
