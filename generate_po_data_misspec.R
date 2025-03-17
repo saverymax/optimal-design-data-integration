@@ -9,7 +9,7 @@ library(cmdstanr)
 
 parser <- OptionParser()
 parser <- add_option(parser, "--working_dir", type="character", default=".", help="Path to the directory containing script")
-parser <- add_option(parser, "--save_dir", type="character", default=".", help="Name of folder to save data within the data/sim_data directory")
+parser <- add_option(parser, "--save_dir", type="character", default="misspec", help="Name of folder to save data within the data/sim_data directory")
 parser <- add_option(parser, "--exp_name", type="character", default="po_gen_misspec", help="Base name to save data")
 parser <- add_option(parser, "--alpha", type="double", default=-2, help="Intercept for intensity")
 parser <- add_option(parser, "--beta", type="double", default=0.5, help="Slope for intensity")
@@ -22,7 +22,7 @@ parser <- add_option(parser, "--bias_func", type="character", default="exponenti
 parser <- add_option(parser, "--area", type="integer", default=100, help="Area of region D")
 parser <- add_option(parser, "--k", type="integer", default=20, help="Number of sites along one side of grid")
 parser <- add_option(parser, "--data_reps", type="integer", default=4, help="Number of dataset reps for criterion estimation")
-parser <- add_option(parser, "--gamma_reps", type="integer", default=10, help="Number of dataset reps for criterion estimation")
+parser <- add_option(parser, "--gamma_reps", type="integer", default=10, help="Number of MC iterations for integration over gamma.")
 exp_args <- parse_args(parser)
 print(exp_args)
 

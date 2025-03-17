@@ -10,6 +10,6 @@ for d in $delta
 do
 for b in $beta
 do
-Rscript $WORKDIR/generate_po_data_misspec.R --working_dir=$WORKDIR --exp_name=po_gen --alpha=$alpha --beta=$b --gamma=$gamma --delta=$d --epsilon=1.5 --intensity_func="donut" --sd=$deviation --bias_fun="exponential" --data_reps=$data_reps --gamma_reps=200
+Rscript $WORKDIR/generate_po_data_misspec.R --working_dir=$WORKDIR --save_dir="misspec" --exp_name=po_gen --alpha=$alpha --beta=$b --gamma=$gamma --delta=$d --epsilon=1.5 --intensity_func="donut" --sd=$deviation --bias_fun="exponential" --data_reps=$data_reps --gamma_reps=200
 done
 done
