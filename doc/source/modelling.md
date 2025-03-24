@@ -108,7 +108,7 @@ Generally, the Stan command used to fit these during during the exchange algorit
 ```
 fit <- model$sample(data=data_site_occ, seed=13, chains=1, iter_sampling=mcmc_iter, iter_warmup=100, refresh=0, show_messages=F)
 ```
-This can be found in the ```estimate_v_nuthatch``` function in the ```experimental_design_functions.R``` module within the source code. Of course, the variables used to fit this model are in memory during the exchange algorithm. The model is fit R times during the exchange algorithm, and we do not provide instructions here to fit a one-off model. This can be provided upon request.
+This can be found in the ```estimate_v_nuthatch``` function in the ```experimental_design_functions.R``` module within the source code. Of course, the variables used to fit this model are in memory during the exchange algorithm. The model is fit R times during the exchange algorithm.
 
 When running the exchange algorithm these models can be selected using the options 1 (with PO + PA data) and 2 (without PO data, only PA data). For example
 ```

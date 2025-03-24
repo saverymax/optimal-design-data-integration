@@ -26,6 +26,9 @@ This will generate a table and a figure showing the effect of increasing the max
 ```Rscript read_job_output_exp_4.R --base_dir=your/path/to/experimental_runs > exp_4_table.txt```
 This generates a table and figure showing the effect of increasing the number of total sites used in the optimal design.
 
+```Rscript read_job_output_exp_5.R --base_dir=your/path/to/experimental_runs > exp_5_table.txt```
+This generates a table showing the effect of misspecification and integration over gamma on the optimal design results.
+
 ```Rscript read_job_output_application_1.R --base_dir=your/path/to/experimental_runs > application_1_table.txt```
 This generates a table comparing the optimal designs as the amount of PO data used in the site occupancy model is increased.
 
@@ -37,3 +40,4 @@ We have provided a bash script to run all of these in the evaluation directory, 
 In the evaluation folder, we also provide the output of each script in .txt files, as presented in the paper. 
 
 ### Misspecification analysis
+
