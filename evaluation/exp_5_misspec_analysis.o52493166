@@ -1,0 +1,401 @@
+[1] "Current experiment:  oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.01_oracle"
+[1] 1
+[1] "Current experiment:  oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.01_sequential_int"
+[1] 2
+[1] "Current experiment:  oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.01_sequential_no_int"
+[1] 3
+[1] "Current experiment:  oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.05_oracle"
+[1] 4
+[1] "Current experiment:  oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.05_sequential_int"
+[1] 5
+[1] "Current experiment:  oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.05_sequential_no_int"
+[1] 6
+[1] "Current experiment:  oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.1_oracle"
+[1] 7
+[1] "Current experiment:  oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.1_sequential_int"
+[1] 8
+[1] "Current experiment:  oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.1_sequential_no_int"
+[1] 9
+[1] "Current experiment:  oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0_oracle"
+[1] 10
+[1] "Current experiment:  oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0_sequential_int"
+[1] 11
+[1] "Current experiment:  oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0_sequential_no_int"
+[1] 12
+[1] "Current experiment:  oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.01_oracle"
+[1] 13
+[1] "Current experiment:  oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.01_sequential_int"
+[1] 14
+[1] "Current experiment:  oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.01_sequential_no_int"
+[1] 15
+[1] "Current experiment:  oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.05_oracle"
+[1] 16
+[1] "Current experiment:  oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.05_sequential_int"
+[1] 17
+[1] "Current experiment:  oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.05_sequential_no_int"
+[1] 18
+[1] "Current experiment:  oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.1_oracle"
+[1] 19
+[1] "Current experiment:  oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.1_sequential_int"
+[1] 20
+[1] "Current experiment:  oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.1_sequential_no_int"
+[1] 21
+[1] "Current experiment:  oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0_oracle"
+[1] 22
+[1] "Current experiment:  oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0_sequential_int"
+[1] 23
+[1] "Current experiment:  oe_model-3_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0_sequential_no_int"
+[1] 24
+[1] "Current experiment:  oe_model-1_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.01_pa-only_int"
+[1] 25
+[1] "Current experiment:  oe_model-1_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.01_pa-only_no_int"
+[1] 26
+[1] "Current experiment:  oe_model-1_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.05_pa-only_int"
+[1] 27
+[1] "Current experiment:  oe_model-1_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.05_pa-only_no_int"
+[1] 28
+[1] "Current experiment:  oe_model-1_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.1_pa-only_int"
+[1] 29
+[1] "Current experiment:  oe_model-1_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0.1_pa-only_no_int"
+[1] 30
+[1] "Current experiment:  oe_model-1_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0_pa-only_int"
+[1] 31
+[1] "Current experiment:  oe_model-1_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-0.25_p-0.2_misspec-0_pa-only_no_int"
+[1] 32
+[1] "Current experiment:  oe_model-1_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.01_pa-only_int"
+[1] 33
+[1] "Current experiment:  oe_model-1_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.01_pa-only_no_int"
+[1] 34
+[1] "Current experiment:  oe_model-1_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.05_pa-only_int"
+[1] 35
+[1] "Current experiment:  oe_model-1_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.05_pa-only_no_int"
+[1] 36
+[1] "Current experiment:  oe_model-1_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.1_pa-only_int"
+[1] 37
+[1] "Current experiment:  oe_model-1_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0.1_pa-only_no_int"
+[1] 38
+[1] "Current experiment:  oe_model-1_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0_pa-only_int"
+[1] 39
+[1] "Current experiment:  oe_model-1_sites-5_n-3_peak-5_a--2_b-0.5_g-1_d-2_p-0.2_misspec-0_pa-only_no_int"
+[1] 40
+$`b-0.5_d-0.25_misspec-0.01`
+$`b-0.5_d-0.25_misspec-0.01`$oracle
+[1] 0.1243884 0.1152159
+
+$`b-0.5_d-0.25_misspec-0.01`$sequential_int
+[1] 0.1547572 0.1353712
+
+$`b-0.5_d-0.25_misspec-0.01`$sequential_no_int
+[1] 0.1604175 0.1407539
+
+$`b-0.5_d-0.25_misspec-0.01`$`pa-only_int`
+[1] 0.1781721 0.1424777
+
+$`b-0.5_d-0.25_misspec-0.01`$`pa-only_no_int`
+[1] 0.1630467 0.1333982
+
+
+$`b-0.5_d-0.25_misspec-0.05`
+$`b-0.5_d-0.25_misspec-0.05`$oracle
+[1] 0.1271348 0.1344808
+
+$`b-0.5_d-0.25_misspec-0.05`$sequential_int
+[1] 0.1139426 0.1105319
+
+$`b-0.5_d-0.25_misspec-0.05`$sequential_no_int
+[1] 0.1396483 0.1293811
+
+$`b-0.5_d-0.25_misspec-0.05`$`pa-only_int`
+[1] 0.13634782 0.08255717
+
+$`b-0.5_d-0.25_misspec-0.05`$`pa-only_no_int`
+[1] 0.1552562 0.1293456
+
+
+$`b-0.5_d-0.25_misspec-0.1`
+$`b-0.5_d-0.25_misspec-0.1`$oracle
+[1] 0.1227388 0.1173799
+
+$`b-0.5_d-0.25_misspec-0.1`$sequential_int
+[1] 0.1484807 0.1438832
+
+$`b-0.5_d-0.25_misspec-0.1`$sequential_no_int
+[1] 0.1451490 0.1486254
+
+$`b-0.5_d-0.25_misspec-0.1`$`pa-only_int`
+[1] 0.1434130 0.1233989
+
+$`b-0.5_d-0.25_misspec-0.1`$`pa-only_no_int`
+[1] 0.1782448 0.1419755
+
+
+$`b-0.5_d-0.25_misspec-0`
+$`b-0.5_d-0.25_misspec-0`$oracle
+[1] 0.1355783 0.1312486
+
+$`b-0.5_d-0.25_misspec-0`$sequential_int
+[1] 0.1383634 0.1285199
+
+$`b-0.5_d-0.25_misspec-0`$sequential_no_int
+[1] 0.1135977 0.1002308
+
+$`b-0.5_d-0.25_misspec-0`$`pa-only_int`
+[1] 0.1794452 0.1606108
+
+$`b-0.5_d-0.25_misspec-0`$`pa-only_no_int`
+[1] 0.1769450 0.1454061
+
+
+$`b-0.5_d-2_misspec-0.01`
+$`b-0.5_d-2_misspec-0.01`$oracle
+[1] 0.1303318 0.1156024
+
+$`b-0.5_d-2_misspec-0.01`$sequential_int
+[1] 0.1375513 0.1187400
+
+$`b-0.5_d-2_misspec-0.01`$sequential_no_int
+[1] 0.12343563 0.09849303
+
+$`b-0.5_d-2_misspec-0.01`$`pa-only_int`
+[1] 0.1647703 0.1125487
+
+$`b-0.5_d-2_misspec-0.01`$`pa-only_no_int`
+[1] 0.12267066 0.08065226
+
+
+$`b-0.5_d-2_misspec-0.05`
+$`b-0.5_d-2_misspec-0.05`$oracle
+[1] 0.09604062 0.07541173
+
+$`b-0.5_d-2_misspec-0.05`$sequential_int
+[1] 0.1181689 0.1038079
+
+$`b-0.5_d-2_misspec-0.05`$sequential_no_int
+[1] 0.10614000 0.08709866
+
+$`b-0.5_d-2_misspec-0.05`$`pa-only_int`
+[1] 0.1951367 0.1725785
+
+$`b-0.5_d-2_misspec-0.05`$`pa-only_no_int`
+[1] 0.1627491 0.1284591
+
+
+$`b-0.5_d-2_misspec-0.1`
+$`b-0.5_d-2_misspec-0.1`$oracle
+[1] 0.1519506 0.1487126
+
+$`b-0.5_d-2_misspec-0.1`$sequential_int
+[1] 0.1494317 0.1267367
+
+$`b-0.5_d-2_misspec-0.1`$sequential_no_int
+[1] 0.1432154 0.1117102
+
+$`b-0.5_d-2_misspec-0.1`$`pa-only_int`
+[1] 0.1909411 0.1429699
+
+$`b-0.5_d-2_misspec-0.1`$`pa-only_no_int`
+[1] 0.1726209 0.1409275
+
+
+$`b-0.5_d-2_misspec-0`
+$`b-0.5_d-2_misspec-0`$oracle
+[1] 0.1301429 0.1204685
+
+$`b-0.5_d-2_misspec-0`$sequential_int
+[1] 0.1162932 0.1141621
+
+$`b-0.5_d-2_misspec-0`$sequential_no_int
+[1] 0.11974418 0.08959002
+
+$`b-0.5_d-2_misspec-0`$`pa-only_int`
+[1] 0.1519599 0.1003487
+
+$`b-0.5_d-2_misspec-0`$`pa-only_no_int`
+[1] 0.1521121 0.1045448
+
+
+[1] "Long df of all runs"
+                                           exp    v_means       v_sd
+1             b-0.5_d-0.25_misspec-0.01 oracle 0.12438835 0.11521589
+2     b-0.5_d-0.25_misspec-0.01 sequential_int 0.15475718 0.13537116
+3  b-0.5_d-0.25_misspec-0.01 sequential_no_int 0.16041753 0.14075392
+4             b-0.5_d-0.25_misspec-0.05 oracle 0.12713479 0.13448080
+5     b-0.5_d-0.25_misspec-0.05 sequential_int 0.11394259 0.11053188
+6  b-0.5_d-0.25_misspec-0.05 sequential_no_int 0.13964833 0.12938111
+7              b-0.5_d-0.25_misspec-0.1 oracle 0.12273884 0.11737989
+8      b-0.5_d-0.25_misspec-0.1 sequential_int 0.14848070 0.14388324
+9   b-0.5_d-0.25_misspec-0.1 sequential_no_int 0.14514901 0.14862540
+10               b-0.5_d-0.25_misspec-0 oracle 0.13557834 0.13124858
+11       b-0.5_d-0.25_misspec-0 sequential_int 0.13836335 0.12851993
+12    b-0.5_d-0.25_misspec-0 sequential_no_int 0.11359770 0.10023081
+13               b-0.5_d-2_misspec-0.01 oracle 0.13033175 0.11560245
+14       b-0.5_d-2_misspec-0.01 sequential_int 0.13755135 0.11874003
+15    b-0.5_d-2_misspec-0.01 sequential_no_int 0.12343563 0.09849303
+16               b-0.5_d-2_misspec-0.05 oracle 0.09604062 0.07541173
+17       b-0.5_d-2_misspec-0.05 sequential_int 0.11816887 0.10380792
+18    b-0.5_d-2_misspec-0.05 sequential_no_int 0.10614000 0.08709866
+19                b-0.5_d-2_misspec-0.1 oracle 0.15195060 0.14871263
+20        b-0.5_d-2_misspec-0.1 sequential_int 0.14943167 0.12673670
+21     b-0.5_d-2_misspec-0.1 sequential_no_int 0.14321536 0.11171018
+22                  b-0.5_d-2_misspec-0 oracle 0.13014289 0.12046847
+23          b-0.5_d-2_misspec-0 sequential_int 0.11629324 0.11416208
+24       b-0.5_d-2_misspec-0 sequential_no_int 0.11974418 0.08959002
+25       b-0.5_d-0.25_misspec-0.01 pa-only_int 0.17817210 0.14247766
+26    b-0.5_d-0.25_misspec-0.01 pa-only_no_int 0.16304673 0.13339820
+27       b-0.5_d-0.25_misspec-0.05 pa-only_int 0.13634782 0.08255717
+28    b-0.5_d-0.25_misspec-0.05 pa-only_no_int 0.15525620 0.12934555
+29        b-0.5_d-0.25_misspec-0.1 pa-only_int 0.14341301 0.12339890
+30     b-0.5_d-0.25_misspec-0.1 pa-only_no_int 0.17824484 0.14197547
+31          b-0.5_d-0.25_misspec-0 pa-only_int 0.17944518 0.16061078
+32       b-0.5_d-0.25_misspec-0 pa-only_no_int 0.17694500 0.14540613
+33          b-0.5_d-2_misspec-0.01 pa-only_int 0.16477030 0.11254871
+34       b-0.5_d-2_misspec-0.01 pa-only_no_int 0.12267066 0.08065226
+35          b-0.5_d-2_misspec-0.05 pa-only_int 0.19513669 0.17257852
+36       b-0.5_d-2_misspec-0.05 pa-only_no_int 0.16274914 0.12845910
+37           b-0.5_d-2_misspec-0.1 pa-only_int 0.19094107 0.14296987
+38        b-0.5_d-2_misspec-0.1 pa-only_no_int 0.17262090 0.14092748
+39             b-0.5_d-2_misspec-0 pa-only_int 0.15195991 0.10034865
+40          b-0.5_d-2_misspec-0 pa-only_no_int 0.15211208 0.10454478
+[1] "Avg parameter estimates over runs"
+                                           exp     alpha alpha_sd      beta
+1             b-0.5_d-0.25_misspec-0.01 oracle -5.452256 2.935996 0.3704779
+2     b-0.5_d-0.25_misspec-0.01 sequential_int -4.369098 3.795661 0.3696804
+3  b-0.5_d-0.25_misspec-0.01 sequential_no_int -4.442658 3.778288 0.3704604
+4             b-0.5_d-0.25_misspec-0.05 oracle -4.932058 3.143575 0.5019817
+5     b-0.5_d-0.25_misspec-0.05 sequential_int -5.189641 2.825096 0.5026044
+6  b-0.5_d-0.25_misspec-0.05 sequential_no_int -4.578773 3.307365 0.5018875
+7              b-0.5_d-0.25_misspec-0.1 oracle -5.103973 2.787256 0.7164905
+8      b-0.5_d-0.25_misspec-0.1 sequential_int -5.067490 3.177992 0.7133380
+9   b-0.5_d-0.25_misspec-0.1 sequential_no_int -4.452764 3.493858 0.7176278
+10               b-0.5_d-0.25_misspec-0 oracle -5.214996 3.004035 0.5848644
+11       b-0.5_d-0.25_misspec-0 sequential_int -5.127676 3.169971 0.5830569
+12    b-0.5_d-0.25_misspec-0 sequential_no_int -5.296416 2.754558 0.5883240
+13               b-0.5_d-2_misspec-0.01 oracle -5.434110 2.983866 0.5382849
+14       b-0.5_d-2_misspec-0.01 sequential_int -4.872650 3.397378 0.5430289
+15    b-0.5_d-2_misspec-0.01 sequential_no_int -5.392938 2.834018 0.5357986
+16               b-0.5_d-2_misspec-0.05 oracle -5.881621 1.844782 0.6459420
+17       b-0.5_d-2_misspec-0.05 sequential_int -5.016773 3.070361 0.6448464
+18    b-0.5_d-2_misspec-0.05 sequential_no_int -5.258630 2.895769 0.6463924
+19                b-0.5_d-2_misspec-0.1 oracle -5.082610 3.364834 1.0847431
+20        b-0.5_d-2_misspec-0.1 sequential_int -4.971802 3.482137 1.0843270
+21     b-0.5_d-2_misspec-0.1 sequential_no_int -5.020178 3.019543 1.0946085
+22                  b-0.5_d-2_misspec-0 oracle -5.074987 3.182011 1.2844954
+23          b-0.5_d-2_misspec-0 sequential_int -5.617469 3.097134 1.2687909
+24       b-0.5_d-2_misspec-0 sequential_no_int -5.610654 2.540618 1.2993143
+25       b-0.5_d-0.25_misspec-0.01 pa-only_int -5.919189 3.543088 1.7376542
+26    b-0.5_d-0.25_misspec-0.01 pa-only_no_int -5.612345 4.265715 3.2485317
+27       b-0.5_d-0.25_misspec-0.05 pa-only_int -5.670965 3.180375 3.1067585
+28    b-0.5_d-0.25_misspec-0.05 pa-only_no_int -5.648375 4.083111 3.2473814
+29        b-0.5_d-0.25_misspec-0.1 pa-only_int -6.324976 3.007970 1.8129693
+30     b-0.5_d-0.25_misspec-0.1 pa-only_no_int -5.177381 4.447185 3.1867954
+31          b-0.5_d-0.25_misspec-0 pa-only_int -4.831853 4.675258 2.7272927
+32       b-0.5_d-0.25_misspec-0 pa-only_no_int -5.293612 4.241075 3.0463186
+33          b-0.5_d-2_misspec-0.01 pa-only_int -5.218602 4.200293 3.7105683
+34       b-0.5_d-2_misspec-0.01 pa-only_no_int -6.510782 2.827204 2.9536738
+35          b-0.5_d-2_misspec-0.05 pa-only_int -5.218775 4.604634 2.6096662
+36       b-0.5_d-2_misspec-0.05 pa-only_no_int -4.894538 4.162399 3.7015478
+37           b-0.5_d-2_misspec-0.1 pa-only_int -4.614574 4.078606 2.7548501
+38        b-0.5_d-2_misspec-0.1 pa-only_no_int -5.567881 3.776118 2.9167149
+39             b-0.5_d-2_misspec-0 pa-only_int -5.812767 3.487226 3.5410737
+40          b-0.5_d-2_misspec-0 pa-only_no_int -5.243735 3.841549 4.6611511
+       beta_sd
+1  0.008670748
+2  0.011695580
+3  0.013297040
+4  0.015870340
+5  0.012758528
+6  0.022600065
+7  0.011419153
+8  0.015653431
+9  0.015245262
+10 0.017247764
+11 0.014595731
+12 0.020916486
+13 0.011949417
+14 0.029389847
+15 0.022155807
+16 0.019934176
+17 0.047811323
+18 0.043114031
+19 0.082490338
+20 0.082151151
+21 0.074220895
+22 0.094783449
+23 0.088677110
+24 0.064443334
+25 4.257478546
+26 3.674970046
+27 3.383064952
+28 3.275814599
+29 2.960459059
+30 3.620350748
+31 3.843579519
+32 3.687205301
+33 3.577730137
+34 2.877092374
+35 3.996953095
+36 3.549595224
+37 4.806839901
+38 3.419201905
+39 3.518722218
+40 3.244457222
+\begin{table}[H]
+\centering
+\caption{\label{tab:survey_eval}Comparison of models fit to designs}
+\centering
+\begin{tabular}[t]{llccccccccl}
+\toprule
+  & Oracle mean & Oracle sd & Sequential int mean & Sequential int sd & Sequential no int mean & Sequential no int sd & PA-only mean & PA-only sd & NA & NA\\
+\midrule
+b-0.5\_d-0.25\_misspec-0.01 & 0.1244 & 0.1152 & 0.1548 & 0.1354 & 0.1604 & 0.1408 & 0.1782 & 0.1425 & 0.1630 & 0.1334\\
+b-0.5\_d-0.25\_misspec-0.05 & 0.1271 & 0.1345 & 0.1139 & 0.1105 & 0.1396 & 0.1294 & 0.1363 & 0.0826 & 0.1553 & 0.1293\\
+b-0.5\_d-0.25\_misspec-0.1 & 0.1227 & 0.1174 & 0.1485 & 0.1439 & 0.1451 & 0.1486 & 0.1434 & 0.1234 & 0.1782 & 0.1420\\
+b-0.5\_d-0.25\_misspec-0 & 0.1356 & 0.1312 & 0.1384 & 0.1285 & 0.1136 & 0.1002 & 0.1794 & 0.1606 & 0.1769 & 0.1454\\
+b-0.5\_d-2\_misspec-0.01 & 0.1303 & 0.1156 & 0.1376 & 0.1187 & 0.1234 & 0.0985 & 0.1648 & 0.1125 & 0.1227 & 0.0807\\
+\addlinespace
+b-0.5\_d-2\_misspec-0.05 & 0.0960 & 0.0754 & 0.1182 & 0.1038 & 0.1061 & 0.0871 & 0.1951 & 0.1726 & 0.1627 & 0.1285\\
+b-0.5\_d-2\_misspec-0.1 & 0.1520 & 0.1487 & 0.1494 & 0.1267 & 0.1432 & 0.1117 & 0.1909 & 0.1430 & 0.1726 & 0.1409\\
+b-0.5\_d-2\_misspec-0 & 0.1301 & 0.1205 & 0.1163 & 0.1142 & 0.1197 & 0.0896 & 0.1520 & 0.1003 & 0.1521 & 0.1045\\
+\bottomrule
+\end{tabular}
+\end{table}
+\begin{table}[H]
+\centering
+\caption{\label{tab:alpha_analysis}Comparison of alpha estimates from designs}
+\centering
+\begin{tabular}[t]{llccccccccl}
+\toprule
+  & Oracle mean & Oracle sd & Sequential int mean & Sequential int sd & Sequential no int mean & Sequential no int sd & PA-only mean & PA-only sd & NA & NA\\
+\midrule
+b-0.5\_d-0.25\_misspec-0.01 & -5.4523 & 2.9360 & -4.3691 & 3.7957 & -4.4427 & 3.7783 & -5.9192 & 3.5431 & -5.6123 & 4.2657\\
+b-0.5\_d-0.25\_misspec-0.05 & -4.9321 & 3.1436 & -5.1896 & 2.8251 & -4.5788 & 3.3074 & -5.6710 & 3.1804 & -5.6484 & 4.0831\\
+b-0.5\_d-0.25\_misspec-0.1 & -5.1040 & 2.7873 & -5.0675 & 3.1780 & -4.4528 & 3.4939 & -6.3250 & 3.0080 & -5.1774 & 4.4472\\
+b-0.5\_d-0.25\_misspec-0 & -5.2150 & 3.0040 & -5.1277 & 3.1700 & -5.2964 & 2.7546 & -4.8319 & 4.6753 & -5.2936 & 4.2411\\
+b-0.5\_d-2\_misspec-0.01 & -5.4341 & 2.9839 & -4.8727 & 3.3974 & -5.3929 & 2.8340 & -5.2186 & 4.2003 & -6.5108 & 2.8272\\
+\addlinespace
+b-0.5\_d-2\_misspec-0.05 & -5.8816 & 1.8448 & -5.0168 & 3.0704 & -5.2586 & 2.8958 & -5.2188 & 4.6046 & -4.8945 & 4.1624\\
+b-0.5\_d-2\_misspec-0.1 & -5.0826 & 3.3648 & -4.9718 & 3.4821 & -5.0202 & 3.0195 & -4.6146 & 4.0786 & -5.5679 & 3.7761\\
+b-0.5\_d-2\_misspec-0 & -5.0750 & 3.1820 & -5.6175 & 3.0971 & -5.6107 & 2.5406 & -5.8128 & 3.4872 & -5.2437 & 3.8415\\
+\bottomrule
+\end{tabular}
+\end{table}
+\begin{table}[H]
+\centering
+\caption{\label{tab:beta_analysis}Comparison of beta estimtaes from designs}
+\centering
+\begin{tabular}[t]{llccccccccl}
+\toprule
+  & Oracle mean & Oracle sd & Sequential int mean & Sequential int sd & Sequential no int mean & Sequential no int sd & PA-only mean & PA-only sd & NA & NA\\
+\midrule
+b-0.5\_d-0.25\_misspec-0.01 & 0.3705 & 0.0087 & 0.3697 & 0.0117 & 0.3705 & 0.0133 & 1.7377 & 4.2575 & 3.2485 & 3.6750\\
+b-0.5\_d-0.25\_misspec-0.05 & 0.5020 & 0.0159 & 0.5026 & 0.0128 & 0.5019 & 0.0226 & 3.1068 & 3.3831 & 3.2474 & 3.2758\\
+b-0.5\_d-0.25\_misspec-0.1 & 0.7165 & 0.0114 & 0.7133 & 0.0157 & 0.7176 & 0.0152 & 1.8130 & 2.9605 & 3.1868 & 3.6204\\
+b-0.5\_d-0.25\_misspec-0 & 0.5849 & 0.0172 & 0.5831 & 0.0146 & 0.5883 & 0.0209 & 2.7273 & 3.8436 & 3.0463 & 3.6872\\
+b-0.5\_d-2\_misspec-0.01 & 0.5383 & 0.0119 & 0.5430 & 0.0294 & 0.5358 & 0.0222 & 3.7106 & 3.5777 & 2.9537 & 2.8771\\
+\addlinespace
+b-0.5\_d-2\_misspec-0.05 & 0.6459 & 0.0199 & 0.6448 & 0.0478 & 0.6464 & 0.0431 & 2.6097 & 3.9970 & 3.7015 & 3.5496\\
+b-0.5\_d-2\_misspec-0.1 & 1.0847 & 0.0825 & 1.0843 & 0.0822 & 1.0946 & 0.0742 & 2.7549 & 4.8068 & 2.9167 & 3.4192\\
+b-0.5\_d-2\_misspec-0 & 1.2845 & 0.0948 & 1.2688 & 0.0887 & 1.2993 & 0.0644 & 3.5411 & 3.5187 & 4.6612 & 3.2445\\
+\bottomrule
+\end{tabular}
+\end{table}

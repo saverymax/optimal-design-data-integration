@@ -128,24 +128,35 @@ m2_2 <- v_df$`peak-5_b-1_d-2`[11:15]
 m2_3 <- v_df$`peak-5_b-0.5_d-2`[16:20]
 m2_4 <- v_df$`peak-5_b-1_d-2`[16:20]
 
-fig_df <- data.frame(m1_n_2_b05_d2=m1_1, m2_n_2_b05_d2=m2_1, m1_n_2_b1_d2=m1_2, m2_n_2_b1_d2=m2_2, m1_n_5_b05_d2=m1_3, m2_n_5_b05_d2=m2_3, m1_n_5_b1_d2=m1_4, m2_n_5_b1_d2=m2_4)
-print(fig_df)
-fig_df <- pivot_longer(fig_df, cols=1:8, names_to="run", values_to="avg_v")
-fig_df$run <- as.factor(fig_df$run)
-fig_df$x <- rep(c(2,3,4,5,10), each=8)
-print(fig_df)
+fig_df_1 <- data.frame(m1_n_2_b05_d2=m1_1, m2_n_2_b05_d2=m2_1)
+fig_df_2 <- data.frame(m1_n_2_b1_d2=m1_2, m2_n_2_b1_d2=m2_2)
+fig_df_3 <- data.frame(m1_n_5_b05_d2=m1_3, m2_n_5_b05_d2=m2_3)
+fig_df_4 <- data.frame(m1_n_5_b1_d2=m1_4, m2_n_5_b1_d2=m2_4)
+fig_df_1 <- pivot_longer(fig_df_1, cols=1:2, names_to="run", values_to="avg_v")
+fig_df_2 <- pivot_longer(fig_df_2, cols=1:2, names_to="run", values_to="avg_v")
+fig_df_3 <- pivot_longer(fig_df_3, cols=1:2, names_to="run", values_to="avg_v")
+fig_df_4 <- pivot_longer(fig_df_4, cols=1:2, names_to="run", values_to="avg_v")
+fig_df_1$run <- as.factor(fig_df_1$run)
+fig_df_2$run <- as.factor(fig_df_2$run)
+fig_df_3$run <- as.factor(fig_df_3$run)
+fig_df_4$run <- as.factor(fig_df_4$run)
+fig_df_1$x <- rep(c(2,3,4,5,10), each=2)
+fig_df_2$x <- rep(c(2,3,4,5,10), each=2)
+fig_df_3$x <- rep(c(2,3,4,5,10), each=2)
+fig_df_4$x <- rep(c(2,3,4,5,10), each=2)
+print(fig_df_1)
 print("levels")
-print(levels(fig_df$run))
+print(levels(fig_df_1$run))
 #[1] "m1_peak_2_b05_d2" "m1_peak_2_b1_d2"  "m1_peak_5_b05_d2" "m1_peak_5_b1_d2" 
 #[5] "m2_peak_2_b05_d2" "m2_peak_2_b1_d2"  "m2_peak_5_b05_d2" "m2_peak_5_b1_d2" 
-fig_df$x <- rep(c(2,3,4,5,10), each=8)
-fig_df
 
-colors <- c("#1c71e5","#71aef2", "#ff4040","#ffc100", "#31850A", "#97ed6f", "#c356ea", "#ffb0ea")
-model_labels=c("SO, n=2, \u03B2=0.5, \u03B4=2", "SO, n=2, \u03B2=1, \u03B4=2", "SO, n=5, \u03B2=0.5, \u03B4=2", "SO, n=5, \u03B2=1, \u03B4=2", "SO+PO, n=2, \u03B2=0.5, \u03B4=2", "SO+PO, n=2, \u03B2=1, \u03B4=2", "SO+PO, n=5, \u03B2=0.5, \u03B4=2", "SO+PO, n=5, \u03B2=1, \u03B4=2") 
+colors <- c("#1c71e5", "#ff4040")
+#colors <- c("#1c71e5","#71aef2", "#ff4040","#ffc100", "#31850A", "#97ed6f", "#c356ea", "#ffb0ea")
+model_labels <- c("SO",  "SO+PO")
+#model_labels=c("SO, n=2, \u03B2=0.5, \u03B4=2", "SO, n=2, \u03B2=1, \u03B4=2", "SO, n=5, \u03B2=0.5, \u03B4=2", "SO, n=5, \u03B2=1, \u03B4=2", "SO+PO, n=2, \u03B2=0.5, \u03B4=2", "SO+PO, n=2, \u03B2=1, \u03B4=2", "SO+PO, n=5, \u03B2=0.5, \u03B4=2", "SO+PO, n=5, \u03B2=1, \u03B4=2") 
 # Generally will be run from evaluation directory
-fig_name <- file.path(".", "exp_4_comparison_n.png")
-p <- ggplot(data=fig_df, aes(x=x, y=avg_v, colour=run)) +
+fig_name <- file.path(".", "exp_4_comparison_n2_b05_d2.png")
+p <- ggplot(data=fig_df_1, aes(x=x, y=avg_v, colour=run)) +
   geom_line(size=1) +
   geom_vline(xintercept=c(2,3,4,5,10), color = "#949494", size=0.3) + 
   scale_x_continuous(breaks=c(2,3,4,5,10)) +
@@ -154,7 +165,40 @@ p <- ggplot(data=fig_df, aes(x=x, y=avg_v, colour=run)) +
   theme(text=element_text(size=7), axis.title = element_text(size = 7), legend.key.size = unit(0.25, 'cm')) +
   scale_color_discrete(name = "Run", type=colors, labels = model_labels) +
   theme_bw()
-print(p)
 ggsave(fig_name, plot=p, dpi=300, width=10, height=7, units="cm")
 
+fig_name <- file.path(".", "exp_4_comparison_n2_b1_d2.png")
+p <- ggplot(data=fig_df_2, aes(x=x, y=avg_v, colour=run)) +
+  geom_line(size=1) +
+  geom_vline(xintercept=c(2,3,4,5,10), color = "#949494", size=0.3) + 
+  scale_x_continuous(breaks=c(2,3,4,5,10)) +
+  #geom_errorbar(aes(ymin=avg_v-se, ymax=avg_v+se)) +
+  labs(title="", x="Sites", y="U(d)") + 
+  theme(text=element_text(size=7), axis.title = element_text(size = 7), legend.key.size = unit(0.25, 'cm')) +
+  scale_color_discrete(name = "Run", type=colors, labels = model_labels) +
+  theme_bw()
+ggsave(fig_name, plot=p, dpi=300, width=10, height=7, units="cm")
 
+fig_name <- file.path(".", "exp_4_comparison_n5_b05_d2.png")
+p <- ggplot(data=fig_df_3, aes(x=x, y=avg_v, colour=run)) +
+  geom_line(size=1) +
+  geom_vline(xintercept=c(2,3,4,5,10), color = "#949494", size=0.3) + 
+  scale_x_continuous(breaks=c(2,3,4,5,10)) +
+  #geom_errorbar(aes(ymin=avg_v-se, ymax=avg_v+se)) +
+  labs(title="", x="Sites", y="U(d)") + 
+  theme(text=element_text(size=7), axis.title = element_text(size = 7), legend.key.size = unit(0.25, 'cm')) +
+  scale_color_discrete(name = "Run", type=colors, labels = model_labels) +
+  theme_bw()
+ggsave(fig_name, plot=p, dpi=300, width=10, height=7, units="cm")
+
+fig_name <- file.path(".", "exp_4_comparison_n5_b1_d2.png")
+p <- ggplot(data=fig_df_4, aes(x=x, y=avg_v, colour=run)) +
+  geom_line(size=1) +
+  geom_vline(xintercept=c(2,3,4,5,10), color = "#949494", size=0.3) + 
+  scale_x_continuous(breaks=c(2,3,4,5,10)) +
+  #geom_errorbar(aes(ymin=avg_v-se, ymax=avg_v+se)) +
+  labs(title="", x="Sites", y="U(d)") + 
+  theme(text=element_text(size=7), axis.title = element_text(size = 7), legend.key.size = unit(0.25, 'cm')) +
+  scale_color_discrete(name = "Run", type=colors, labels = model_labels) +
+  theme_bw()
+ggsave(fig_name, plot=p, dpi=300, width=10, height=7, units="cm")
