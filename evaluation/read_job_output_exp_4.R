@@ -153,6 +153,11 @@ print(levels(fig_df_1$run))
 colors <- c("#1c71e5", "#ff4040")
 #colors <- c("#1c71e5","#71aef2", "#ff4040","#ffc100", "#31850A", "#97ed6f", "#c356ea", "#ffb0ea")
 model_labels <- c("SO",  "SO+PO")
+title_1 <- "Run: n=2, \u03B2=0.5, \u03B4=2"
+title_2 <- "Run: n=2, \u03B2=1, \u03B4=2"
+title_3 <- "Run: n=5, \u03B2=0.5, \u03B4=2"
+title_4 <- "Run: n=5, \u03B2=1, \u03B4=2"
+
 #model_labels=c("SO, n=2, \u03B2=0.5, \u03B4=2", "SO, n=2, \u03B2=1, \u03B4=2", "SO, n=5, \u03B2=0.5, \u03B4=2", "SO, n=5, \u03B2=1, \u03B4=2", "SO+PO, n=2, \u03B2=0.5, \u03B4=2", "SO+PO, n=2, \u03B2=1, \u03B4=2", "SO+PO, n=5, \u03B2=0.5, \u03B4=2", "SO+PO, n=5, \u03B2=1, \u03B4=2") 
 # Generally will be run from evaluation directory
 fig_name <- file.path(".", "exp_4_comparison_n2_b05_d2.png")
@@ -161,7 +166,7 @@ p <- ggplot(data=fig_df_1, aes(x=x, y=avg_v, colour=run)) +
   geom_vline(xintercept=c(2,3,4,5,10), color = "#949494", size=0.3) + 
   scale_x_continuous(breaks=c(2,3,4,5,10)) +
   #geom_errorbar(aes(ymin=avg_v-se, ymax=avg_v+se)) +
-  labs(title="", x="Sites", y="U(d)") + 
+  labs(title=title_1, x="Sites", y="U(d)") + 
   theme(text=element_text(size=7), axis.title = element_text(size = 7), legend.key.size = unit(0.25, 'cm')) +
   scale_color_discrete(name = "Run", type=colors, labels = model_labels) +
   theme_bw()
@@ -173,7 +178,7 @@ p <- ggplot(data=fig_df_2, aes(x=x, y=avg_v, colour=run)) +
   geom_vline(xintercept=c(2,3,4,5,10), color = "#949494", size=0.3) + 
   scale_x_continuous(breaks=c(2,3,4,5,10)) +
   #geom_errorbar(aes(ymin=avg_v-se, ymax=avg_v+se)) +
-  labs(title="", x="Sites", y="U(d)") + 
+  labs(title=title_2, x="Sites", y="U(d)") + 
   theme(text=element_text(size=7), axis.title = element_text(size = 7), legend.key.size = unit(0.25, 'cm')) +
   scale_color_discrete(name = "Run", type=colors, labels = model_labels) +
   theme_bw()
@@ -185,7 +190,7 @@ p <- ggplot(data=fig_df_3, aes(x=x, y=avg_v, colour=run)) +
   geom_vline(xintercept=c(2,3,4,5,10), color = "#949494", size=0.3) + 
   scale_x_continuous(breaks=c(2,3,4,5,10)) +
   #geom_errorbar(aes(ymin=avg_v-se, ymax=avg_v+se)) +
-  labs(title="", x="Sites", y="U(d)") + 
+  labs(title=title_3, x="Sites", y="U(d)") + 
   theme(text=element_text(size=7), axis.title = element_text(size = 7), legend.key.size = unit(0.25, 'cm')) +
   scale_color_discrete(name = "Run", type=colors, labels = model_labels) +
   theme_bw()
@@ -197,7 +202,7 @@ p <- ggplot(data=fig_df_4, aes(x=x, y=avg_v, colour=run)) +
   geom_vline(xintercept=c(2,3,4,5,10), color = "#949494", size=0.3) + 
   scale_x_continuous(breaks=c(2,3,4,5,10)) +
   #geom_errorbar(aes(ymin=avg_v-se, ymax=avg_v+se)) +
-  labs(title="", x="Sites", y="U(d)") + 
+  labs(title=title_4, x="Sites", y="U(d)") + 
   theme(text=element_text(size=7), axis.title = element_text(size = 7), legend.key.size = unit(0.25, 'cm')) +
   scale_color_discrete(name = "Run", type=colors, labels = model_labels) +
   theme_bw()
