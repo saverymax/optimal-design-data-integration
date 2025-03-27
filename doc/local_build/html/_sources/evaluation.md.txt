@@ -26,6 +26,16 @@ This will generate a table and a figure showing the effect of increasing the max
 ```Rscript read_job_output_exp_4.R --base_dir=your/path/to/experimental_runs > exp_4_table.txt```
 This generates a table and figure showing the effect of increasing the number of total sites used in the optimal design.
 
+```Rscript read_job_output_exp_5.R --base_dir=your/path/to/experimental_runs > exp_5_table.txt```
+This generates a table showing the effect of misspecification and integration over gamma on the optimal design results.
+
+For this experiment, there is another script to perform the follow-up analysis once the designs have been generated. This script will fit SO models
+to the designs, depending on the procedure used to create the designs.
+```
+Rscript fit_integrated_so_models.R --working_dir=. --result_dir==experimental_runs/exp_5
+```
+The script is specifically written for experiment 5 and won't work with other experimental sets. It will output tables summarizing the fits of the SO models to the designs.
+
 ```Rscript read_job_output_application_1.R --base_dir=your/path/to/experimental_runs > application_1_table.txt```
 This generates a table comparing the optimal designs as the amount of PO data used in the site occupancy model is increased.
 
@@ -35,3 +45,4 @@ Finally, this script generates a table comparing the effect of increasing visits
 We have provided a bash script to run all of these in the evaluation directory, ```read_all_results.sh```. Give the full path to the experimental_runs directory provided with this code that contains all the experiments with the .xlsx files, and run the bash script. This will generate all tables and figures.
 
 In the evaluation folder, we also provide the output of each script in .txt files, as presented in the paper. 
+

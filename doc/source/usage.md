@@ -120,17 +120,17 @@ An example command to run an experiment is shown below. ```--v_parallel --cores=
 ```
 Rscript optimal_design_site_occ.R --working_dir=. --save_dir=experimental_runs/test_run --exp_name=design-test-run --data_reps=2 --m=5 --min_visits=1 --max_visits=4 --vary_visits --model_selection=3 --random_starts=1 --exch_iter=2 --mcmc_iter=1000 --use_sim_po --po_data_file=po_gen_peak_ints-donut_peak=2_a=-2_b=0.5_g=1_d=0.25.Rds --intensity_func="donut" --sd=5 --bias_func="exponential" --alpha=-2 --beta=0.5 --gamma=1 --delta=0.25 --p=0.2 --v_parallel --cores=2
 ```
-Setting the initial values for the alpha, beta, gamma, and delta parameters will control the data generation process and specify a higher or lower intensity and bias. However, it is important that the ```--po_data_file``` name matches the parameter values. In the data provided with this code, these datasets have been pre-generated for a wide variety of parameter combinations. These are available in the directory ```data/sim_data```. This data is generated with the generate_po_data.R and generate_po_datasets.sh scripts, which is explained in the [data section](data) of this documentation.
+Setting the initial values for the alpha, beta, gamma, and delta parameters will control the data generation process and specify a higher or lower intensity and bias. However, it is important that the ```--po_data_file``` name matches the parameter values. In the data provided with this code, these datasets have been pre-generated for a wide variety of parameter combinations. These are available in the directory ```data/sim_data```. This data is generated with the generate_po_data.R and generate_po_datasets.sh scripts (or the misspecification versions), which is explained in the [data section](data) of this documentation.
 
 The experimental results will be written to the folder named in the ```save_dir``` argument, ```experimental_runs/test_run``` above. This is created automatically by the script. Saved to this folder will be figures from the exchange (iterations, optimal designs, and convergence) and data generation. An ```.xlsx1``` file will be saved that contains the optimal design indices for each random start, as well as the design scores (the minimized utility), including both the best score and the scores during the course of the optimization. The rest of the output printed during the experiment is written to stdout, which is left to the user to control. Typically these are written to .o and .e files that match the experiment name when running on the HPC cluster.
 
 ### Misspecification runs 
-There are 3 options here: ```oracle```, ```sequential```, and ```pa-only```.
-The runs with or without integration can be controlled just by providing the correct posterior file. Most importantly, make sure the posterior alpha estimate file matches with the generated PO dataset. The PO dataset won't be integration specific, but the posterior will be.
-CHECK THE POSTERIOR AND THE PO MATCH
+There are options to provide to the ```misspec_run``` argument: ```oracle```, ```sequential```, and ```pa-only```.
+The runs with or without integration can be controlled just by providing the correct posterior file. Most importantly, make sure the posterior alpha estimate file matches with the generated PO dataset. The PO dataset won't be integration specific, but the posterior will be. The PO datasets and posteriors used in the paper are available in ```data/sim_data/misspec```. These can be provided to the optimal design script, for example:
 ```
-Rscript optimal_design_site_occ.R --working_dir=. --save_dir=experimental_runs/test_run --exp_name=design-test-run --data_reps=2 --m=5 --min_visits=1 --max_visits=4 --vary_visits --model_selection=3 --random_starts=1 --exch_iter=2 --mcmc_iter=1000 --use_sim_po --po_data_file=po_gen_peak_ints-donut_peak=2_a=-2_b=0.5_g=1_d=0.25.Rds --intensity_func="donut" --sd=5 --bias_func="exponential" --alpha=-2 --beta=0.5 --gamma=1 --delta=0.25 --p=0.2 --v_parallel --cores=2 --misspec_run="pa-only" --misspec=0.01 --posterior_file=pp_posterior_po_gen_ints-donut_peak=5_a=-2_b=0.5_g=1_d=0.25_e=0.01_int.Rds
+Rscript optimal_design_site_occ.R --working_dir=. --save_dir=experimental_runs/test_run --exp_name=design-test-run --data_reps=2 --m=5 --min_visits=1 --max_visits=4 --vary_visits --model_selection=3 --random_starts=1 --exch_iter=2 --mcmc_iter=1000 --use_sim_po --po_data_file=po_gen_peak_ints-donut_peak=2_a=-2_b=0.5_g=1_d=0.25.Rds --intensity_func="donut" --sd=5 --bias_func="exponential" --alpha=-2 --beta=0.5 --gamma=1 --delta=0.25 --p=0.2 --v_parallel --cores=2 --misspec_run="oracle" --misspec=0.01 --posterior_file=pp_posterior_po_gen_ints-donut_peak=5_a=-2_b=0.5_g=1_d=0.25_e=0.01_int.Rds
 ```
+Make sure that the parameters match for the PO data via ```--po_data_file``` and ```---posterior_file```. The epsilon parameter does not effect the PO data file.
 
 
 ## Applied Setting
@@ -213,4 +213,3 @@ Rscript optimal_design_application.R --working_dir=. --save_dir=experimental_run
 The model that uses Presence-only (PO) data is specified as ```--model_selection=1```. To not use PO data (PA only) in the model, specify ```2```.
 
 ```cell_size``` is by default set to 10,000 meters. This refers to the side of one square cell in the discretized region. It is important to specify this correctly for your use case if you use another cell size. 
-

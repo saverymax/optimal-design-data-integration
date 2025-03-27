@@ -98,6 +98,14 @@ A table comparing the total number of visits for each run is also generated.</p>
 This will generate a table and a figure showing the effect of increasing the maximum number of visits to each site.</p>
 <p><code class="docutils literal notranslate"><span class="pre">Rscript</span> <span class="pre">read_job_output_exp_4.R</span> <span class="pre">--base_dir=your/path/to/experimental_runs</span> <span class="pre">&gt;</span> <span class="pre">exp_4_table.txt</span></code>
 This generates a table and figure showing the effect of increasing the number of total sites used in the optimal design.</p>
+<p><code class="docutils literal notranslate"><span class="pre">Rscript</span> <span class="pre">read_job_output_exp_5.R</span> <span class="pre">--base_dir=your/path/to/experimental_runs</span> <span class="pre">&gt;</span> <span class="pre">exp_5_table.txt</span></code>
+This generates a table showing the effect of misspecification and integration over gamma on the optimal design results.</p>
+<p>For this experiment, there is another script to perform the follow-up analysis once the designs have been generated. This script will fit SO models
+to the designs, depending on the procedure used to create the designs.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Rscript</span> <span class="n">fit_integrated_so_models</span><span class="o">.</span><span class="n">R</span> <span class="o">--</span><span class="n">working_dir</span><span class="o">=.</span> <span class="o">--</span><span class="n">result_dir</span><span class="o">==</span><span class="n">experimental_runs</span><span class="o">/</span><span class="n">exp_5</span>
+</pre></div>
+</div>
+<p>The script is specifically written for experiment 5 and won’t work with other experimental sets. It will output tables summarizing the fits of the SO models to the designs.</p>
 <p><code class="docutils literal notranslate"><span class="pre">Rscript</span> <span class="pre">read_job_output_application_1.R</span> <span class="pre">--base_dir=your/path/to/experimental_runs</span> <span class="pre">&gt;</span> <span class="pre">application_1_table.txt</span></code>
 This generates a table comparing the optimal designs as the amount of PO data used in the site occupancy model is increased.</p>
 <p><code class="docutils literal notranslate"><span class="pre">Rscript</span> <span class="pre">read_job_output_application_2.R</span> <span class="pre">--base_dir=your/path/to/experimental_runs</span> <span class="pre">&gt;</span> <span class="pre">application_2_table.txt</span></code>

@@ -80,11 +80,12 @@
   <section id="experiments">
 <h1>Experiments<a class="headerlink" href="#experiments" title="Permalink to this heading"></a></h1>
 <p>This section briefly describes how to run the experiments showed in the paper associated with this work. Each experiment contains runs of the of optimal design algorithm for different parameter settings and experimental options. To run these, it is necessary to have access to an HPC cluster or otherwise large machine, as the optimal design algorithm uses intensive parallel computing and you will need to run this over many different experimental settings. That being said, we have provided the <code class="docutils literal notranslate"><span class="pre">.xlsx</span></code> files containing the results of the experiments presented in the paper, stored in the <code class="docutils literal notranslate"><span class="pre">experimental_runs</span></code> directory. Thus the instructions in this section are not necessary if you are interested in just rerunning the evaluation and recreating the tables and figures shown in the paper. In that case, the <a class="reference internal" href="evaluation.html"><span class="doc std std-doc">evaluation section</span></a> describes the steps to do so.</p>
-<p>Otherwise, navigate to the<code class="docutils literal notranslate"><span class="pre">experiment_scripts</span></code> directory. There are 6 bash scripts to generate the jobs for each experiment. These create <code class="docutils literal notranslate"><span class="pre">.pbs</span></code> files for running on Torque-based scheduler system. If your HPC uses slurm, these will not work, but it is not difficult to modify them. The bash scripts are named</p>
+<p>Otherwise, navigate to the<code class="docutils literal notranslate"><span class="pre">experiment_scripts</span></code> directory. There are 7 bash scripts to generate the jobs for each experiment. These create <code class="docutils literal notranslate"><span class="pre">.pbs</span></code> files for running on Torque-based scheduler system. If your HPC uses slurm, these will not work, but it is not difficult to modify them. The bash scripts are named</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">make_exp_1_param_perm</span><span class="o">.</span><span class="n">sh</span>
 <span class="n">make_exp_2_model_1</span><span class="o">-</span><span class="mf">3.</span><span class="n">sh</span>
 <span class="n">make_exp_3_model_survey_effort</span><span class="o">.</span><span class="n">sh</span>
 <span class="n">make_exp_4_m_increase</span><span class="o">.</span><span class="n">sh</span>
+<span class="n">make_exp_5_misspecification</span><span class="o">.</span><span class="n">sh</span>
 <span class="n">make_application_script_1</span><span class="o">.</span><span class="n">sh</span>
 <span class="n">make_application_script_2</span><span class="o">.</span><span class="n">sh</span>
 </pre></div>
@@ -94,6 +95,7 @@
 <span class="n">run_exp_2</span><span class="o">.</span><span class="n">sh</span>
 <span class="n">run_exp_3</span><span class="o">.</span><span class="n">sh</span>
 <span class="n">run_exp_4</span><span class="o">.</span><span class="n">sh</span>
+<span class="n">run_exp_5</span><span class="o">.</span><span class="n">sh</span>
 <span class="n">run_applied_model_comparison_1</span><span class="o">.</span><span class="n">sh</span>
 <span class="n">run_applied_model_comparison_2</span><span class="o">.</span><span class="n">sh</span>
 </pre></div>
