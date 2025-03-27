@@ -34,7 +34,7 @@ to the designs, depending on the procedure used to create the designs.
 ```
 Rscript fit_integrated_so_models.R --working_dir=. --result_dir==experimental_runs/exp_5
 ```
-The script is specifically written for experiment 5 and won't work with other experimental sets. It will output tables summarizing the fits of the SO models to the designs. Fitting the models to each design permutation over 10 designs and 10 dataset repetitions takes a long time, so using a server to run this is recommended or run it on a subset of the models or over fewer repetitions..
+The script is specifically written for experiment 5 and won't work with other experimental sets. It will output tables summarizing the fits of the SO models to the designs. Fitting the models to each design permutation over 10 designs and 10 dataset repetitions takes a long time, so using a server to run this is recommended, or run it on a subset of the models or over fewer repetitions.
 
 ```Rscript read_job_output_application_1.R --base_dir=your/path/to/experimental_runs > application_1_table.txt```
 This generates a table comparing the optimal designs as the amount of PO data used in the site occupancy model is increased.
