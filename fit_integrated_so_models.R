@@ -8,12 +8,15 @@ library(openxlsx)
 library(stringr)
 library(readr)
 library(kableExtra)
+library(optparse)
 
-#working_dir <- "C:\\Users\\msavery\\OneDrive - UGent\\Documents\\ghent_phd_spatial_doe\\code\\optimal_design_site_occ"
-#result_path <- "C:\\Users\\msavery\\OneDrive - UGent\\Documents\\ghent_phd_spatial_doe\\data\\globus_hpc_collection\\exp_5_misspec.1"
-#working_dir <- "."
-working_dir <- "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration"
-result_path <- "/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5"
+parser <- OptionParser()
+parser <- add_option(parser, "--working_dir", type="character", default=".", help="Path to the directory containing code to source for the main script and associated functions")
+parser <- add_option(parser, "--result_dir", type="character", default="experimental_runs/exp_5", help="Path where optimal design results are stored")
+
+exp_args <- parse_args(parser)
+working_dir <- exp_args$working_dir
+result_path <- exp_args$result_dir
 
 po_path <- file.path(working_dir, "data", "sim_data", "misspec")
 

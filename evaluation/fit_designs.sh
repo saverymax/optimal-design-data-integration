@@ -8,4 +8,4 @@
 
 
 module load CmdStanR
-Rscript /data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/fit_integrated_so_models.R
+Rscript /data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/fit_integrated_so_models.R --working_dir=/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration --result_dir=/data/gent/459/vsc45956/projects/optimal_design_presence_only/optimal-design-data-integration/experimental_runs/exp_5
