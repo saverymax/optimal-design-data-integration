@@ -5,9 +5,7 @@ This describes the data used in both the simulated and applied experiments. The 
 HOWEVER, it is not necessary to follow these steps if you would 
 like to use our pre-processed data set. Within this repository, the data can be found in the ```optimal-design-data-integration/data/ebird/data_pack.RDS``` file. This should be provided to the ```optimal_design_application.R``` script as described in the usage section of this documentation. You can skip to the [usage section](usage) in this case.
 
-We have also provided all data necessary to reconstruct the pre-processed data in the zipped ```raw_data``` folder in the figshare repository <https://doi.org/10.6084/m9.figshare.25450108>. This means that you don't have to follow the data downloading steps and can skip to the [data processing](#processing-data) section below. Upon the public release of this repository, the pre-processed data and code will also be available in a public GitHub repository.
-
-To clarify, the data processing proceeds as: download -> pre-process -> run experiments. We have provided instructions and preliminary files for each step of the process, so the user can choose where to start to replicate the work. Again, to run the experiment code, you can use the data we provide via the file ```optimal-design-data-integation/data/ebird/data_pack.RDS```. Alternatively, the instructions below describe how to download, process, and create this file and data from scratch.  
+We have also provided all data necessary to reconstruct the ```data_pack.RDS``` in the zipped ```raw_data``` folder in the figshare repository <https://doi.org/10.6084/m9.figshare.25450108>. The data processing proceeds as: download -> pre-process -> run experiments. We have provided instructions and preliminary files for each step of the process, so the user can choose where to start to replicate the work. To run the experiment code, you can use the data we provide via the file ```optimal-design-data-integation/data/ebird/data_pack.RDS```. Alternatively, the instructions below describe how to download, process, and create this file and data from scratch.  
 
 ## Additional packages
 
