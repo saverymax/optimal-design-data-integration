@@ -1,0 +1,331 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data &mdash; optimal-design-data-integration 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=f2a433a1"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Usage" href="usage.html" />
+    <link rel="prev" title="Installation" href="installation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            optimal-design-data-integration
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#additional-packages">Additional packages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#map-data">Map data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#land-cover-data">Land cover data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#enhanced-vegetation-index-evi">Enhanced Vegetation Index (EVI)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#elevation">Elevation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ebird">eBird</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#processing-data">Processing data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#simulated-data">Simulated data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#simulate-data-for-misspecification">Simulate data for misspecification</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modelling.html">Modelling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="experiments.html">Experiments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="evaluation.html">Evaluation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">optimal-design-data-integration</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Data</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/data.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="data">
+<h1>Data<a class="headerlink" href="#data" title="Link to this heading"></a></h1>
+<p>This describes the data used in both the simulated and applied experiments. The data for the applied setting is described first. For all data downloaded in these instructions, it will be easiest to place them all in the same directory that you later provide to the script to pre-process the data.</p>
+<p>HOWEVER, it is not necessary to follow these steps if you would
+like to use our pre-processed data set. Within this repository, the data can be found in the <code class="docutils literal notranslate"><span class="pre">optimal-design-data-integration/data/ebird/data_pack.RDS</span></code> file. This should be provided to the <code class="docutils literal notranslate"><span class="pre">optimal_design_application.R</span></code> script as described in the usage section of this documentation. You can skip to the <a class="reference internal" href="usage.html"><span class="doc std std-doc">usage section</span></a> in this case.</p>
+<p>We have also provided all data necessary to reconstruct the <code class="docutils literal notranslate"><span class="pre">data_pack.RDS</span></code> in the zipped <code class="docutils literal notranslate"><span class="pre">raw_data</span></code> folder in the figshare repository <a class="reference external" href="https://doi.org/10.6084/m9.figshare.25450108">https://doi.org/10.6084/m9.figshare.25450108</a>. In this case you may skip to the <a class="reference internal" href="#processing-data"><span class="xref myst">data processing</span></a> section below so that you don’t have to download the data from their respective source sites.</p>
+<p>The data processing proceeds as: download -&gt; pre-process -&gt; run experiments. We have provided instructions and preliminary files for each step of the process, so the user can choose where to start to replicate the work. To run the experiment code, you can use the data we provide via the file <code class="docutils literal notranslate"><span class="pre">optimal-design-data-integation/data/ebird/data_pack.RDS</span></code>. Alternatively, the instructions below describe how to download, process, and create this file and data from scratch.</p>
+<section id="additional-packages">
+<h2>Additional packages<a class="headerlink" href="#additional-packages" title="Link to this heading"></a></h2>
+<p>If you would like to recreate the data used in this work, a few extra packages are required:</p>
+<ul class="simple">
+<li><p>auk</p></li>
+<li><p>exactextracr</p></li>
+<li><p>lubridate</p></li>
+</ul>
+</section>
+<section id="map-data">
+<h2>Map data<a class="headerlink" href="#map-data" title="Link to this heading"></a></h2>
+<p>It will be essential to have a file defining your region of interest before you can proceed with the steps below. We download a .gpkg file from <a class="reference external" href="https://apps.nationalmap.gov/downloader/">https://apps.nationalmap.gov/downloader/</a> for Tennesse in the work here, but you are welcome to define your own region. The code here uses read_sf() from the sf package in R, which is compatible with multiple map file types (.shp, .gpkg). Place this file in a base data directory that you will you use to store all the data for running the design code.</p>
+</section>
+<section id="land-cover-data">
+<h2>Land cover data<a class="headerlink" href="#land-cover-data" title="Link to this heading"></a></h2>
+<p>Land cover data can be acquired from numerous sources. These include products from MODIS, Sentinel-II, Landsat, or Proba-V. In this documentation we
+provide limited instructions for obtaining the Proba-V product from Copernicus.</p>
+<p>To download the PROBA-V satellite data, go to <a class="reference external" href="https://land.copernicus.eu/global/products/lc">https://land.copernicus.eu/global/products/lc</a> and use the world viewer (<a class="reference external" href="https://lcviewer.vito.be/2019">https://lcviewer.vito.be/2019</a>). Select the appropriate section/s
+of the globe for your use-case. In our case, we simply need one section that appropriately covers Tennessee. Information regarding the product itself can be found in the documentation: <a class="reference external" href="https://land.copernicus.eu/global/sites/cgls.vito.be/files/products/CGLOPS1_PUM_LC100m-V3_I3.4.pdf">https://land.copernicus.eu/global/sites/cgls.vito.be/files/products/CGLOPS1_PUM_LC100m-V3_I3.4.pdf</a>. Important for this analysis are the classifications of each landcover type.</p>
+</section>
+<section id="enhanced-vegetation-index-evi">
+<h2>Enhanced Vegetation Index (EVI)<a class="headerlink" href="#enhanced-vegetation-index-evi" title="Link to this heading"></a></h2>
+<p>There are various vegetation products available online. We use the MODIS product from NASA. There are numerous ways to download MODIS data. We follow the steps below:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>1. First save a .shp file of the area you want to do this in R, we can do it in such a way:
+	```
+	library(terra)
+	library(rnaturalearth)
+
+	us_map &lt;- ne_countries(country = &quot;united states of america&quot;, returnclass = &quot;sf&quot;) %&gt;% st_transform(crs=map_proj)
+	us_vect &lt;- vect(us_map)
+	writeVector(us_vect, &quot;us.shp&quot;)
+	```
+
+2. Then, navigate to &lt;https://lpdaac.usgs.gov/products/mcd12q2v061/&gt; and select ACCESS DATA.
+
+3. Select the AppEEARS tool download data button. 
+
+4. At the top of the menu select Extract. This will take you to a form. Drag your .shp (folder)
+	to select the area of interest. Next, select your data and product. For example, in this work we use &quot;Combined MODIS land cover dynamics&quot;. Select all layers.
+
+5. Submit your request and wait for the order to complete.
+</pre></div>
+</div>
+<p>EVI is described here: <a class="reference external" href="https://www.usgs.gov/landsat-missions/landsat-enhanced-vegetation-index">https://www.usgs.gov/landsat-missions/landsat-enhanced-vegetation-index</a>.</p>
+<p>Another option is to use the Copernicus data viewer: See <a class="reference external" href="https://land.copernicus.eu/en/products/vegetation">https://land.copernicus.eu/en/products/vegetation</a> and use the NDVI product. Regardless, once you have downloaded the .tif file, place it within the data directory that you are storing your data related to this project.</p>
+</section>
+<section id="elevation">
+<h2>Elevation<a class="headerlink" href="#elevation" title="Link to this heading"></a></h2>
+<p>In this work we use the AppEARS app to download elevation data for our region of interest, although many sources of elevation data are available at various resolutions. The interface to download the data is available at <a class="reference external" href="https://appeears.earthdatacloud.nasa.gov/task/area">https://appeears.earthdatacloud.nasa.gov/task/area</a>. Here you can provide a polygon, and download the ASTER GDEM elevation product. ASTER GDEM is described here: <a class="reference external" href="https://lpdaac.usgs.gov/products/astgtmv003/">https://lpdaac.usgs.gov/products/astgtmv003/</a>. For users interested in other sources of elevation data, see the FAQ here: <a class="reference external" href="https://www.usgs.gov/faqs/where-can-i-get-global-elevation-data">https://www.usgs.gov/faqs/where-can-i-get-global-elevation-data</a>.</p>
+</section>
+<section id="ebird">
+<h2>eBird<a class="headerlink" href="#ebird" title="Link to this heading"></a></h2>
+<p>The previous data processing steps should be completed before the eBird data is downloaded. In this work we use Brown-headed Nuthatch data within Tennessee.</p>
+<p>The Brown-headed Nuthatch dataset is first downloaded from the eBird site <a class="reference external" href="https://science.ebird.org/en/use-ebird-data/download-ebird-data-products">https://science.ebird.org/en/use-ebird-data/download-ebird-data-products</a>. You must initally ask for access to the eBird data. Once access is granted, when we download the data we filter first by species (brown-headed nuthatch) and year (2019) via the downloader user interface.</p>
+</section>
+<section id="processing-data">
+<h2>Processing data<a class="headerlink" href="#processing-data" title="Link to this heading"></a></h2>
+<p>Once the eBird data is downloaded and the previously mentioned data sources are also downloaded, we can run the script that prepares the data for use within the exchange algorithm. Importantly, in the command shown below, change the <code class="docutils literal notranslate"><span class="pre">--base_data_dir</span></code> to the location where you have saved all your data. <strong>For example</strong>, once you have unzipped the <code class="docutils literal notranslate"><span class="pre">raw_data</span></code> folder in the figshare repository, you will have a directory <code class="docutils literal notranslate"><span class="pre">data</span></code> with a subdirectory <code class="docutils literal notranslate"><span class="pre">data/copernicus_landcover</span></code>, for example. As <code class="docutils literal notranslate"><span class="pre">base_data_dir</span></code>, provide the path to (including) <code class="docutils literal notranslate"><span class="pre">data</span></code> that contains the rest of the subdirectories.</p>
+<p>To run this processing with the data we use in this project, leave the other CLI arguments as they are and give the path to <code class="docutils literal notranslate"><span class="pre">data</span></code> from the unizpped <code class="docutils literal notranslate"><span class="pre">raw_data</span></code> file as the base data directory (for arguments <code class="docutils literal notranslate"><span class="pre">--ebird_data_dir,</span> <span class="pre">--map_file,</span> <span class="pre">--landcover_file,</span> <span class="pre">--modis_file,</span> <span class="pre">--elevation_file</span></code>). Navigate to the <code class="docutils literal notranslate"><span class="pre">optimal-design-data-integration</span></code> source code directory if you have not done so yet. Then run</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Rscript</span> <span class="n">data_utils</span><span class="o">/</span><span class="n">process_ebird</span><span class="o">.</span><span class="n">R</span> <span class="o">--</span><span class="n">working_dir</span><span class="o">=.</span> <span class="o">--</span><span class="n">base_data_dir</span><span class="o">=</span><span class="n">your</span><span class="o">/</span><span class="n">base</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">directory</span> <span class="o">--</span><span class="n">ebird_data_dir</span><span class="o">=</span><span class="s2">&quot;ebd_US_bnhnut_201901_201912_smp_relJul-2023&quot;</span> <span class="o">--</span><span class="n">map_file</span><span class="o">=</span><span class="s2">&quot;us_states/GOVTUNIT_Tennessee_State_GPKG/GOVTUNIT_Tennessee_State_GPKG.gpkg&quot;</span> <span class="o">--</span><span class="n">landcover_file</span><span class="o">=</span><span class="s2">&quot;copernicus_landcover/Discrete-Classification-map_EPSG-4326.tif&quot;</span> <span class="o">--</span><span class="n">modis_file</span><span class="o">=</span><span class="s2">&quot;modis_landcover_dynamics/MCD12Q2.061_EVI_Area_0_doy2019001_aid0001.tif&quot;</span> <span class="o">--</span><span class="n">elevation_file</span><span class="o">=</span><span class="s2">&quot;elevation_aster/ASTGTM_NC.003_ASTER_GDEM_DEM_doy2000061_aid0001.tif&quot;</span> <span class="o">--</span><span class="n">save_dir</span><span class="o">=</span><span class="s2">&quot;data/ebird&quot;</span> <span class="o">--</span><span class="n">data_pack</span> <span class="o">--</span><span class="n">pp_fit</span> <span class="o">--</span><span class="n">pp_diagnostic</span> <span class="o">--</span><span class="n">auk_process</span> <span class="o">--</span><span class="n">gamma_integration</span>
+</pre></div>
+</div>
+<p>The process_ebird.R script performs a number of data processing steps using the R package auk. These steps include verifying the correct time period is filtered, selecting complete checklists (those with all species reported), and only those with stationary and travelling protocols (excluding historical and incidental). For pure PO data modelling we can use the incidental observations as well, but for this occupancy analysis we’ll stick to the 2 protocols.</p>
+<p>Once the auk steps are performed, preliminary files are saved (<code class="docutils literal notranslate"><span class="pre">&quot;nuthatch_filtered_for_occ.csv&quot;</span></code> being the most important one), and it is not necessary to use the <code class="docutils literal notranslate"><span class="pre">auk_process</span></code> option if you run the script again. It does take some time to run this first step though. Once these files are saved, there is a sequence of spatial data processing steps as well, to create the discretized covariates for the site-occupancy model and the non-homogeneous poisson process. After these steps are performed, <code class="docutils literal notranslate"><span class="pre">data_pack.RDS1</span></code> is saved, which contains all data necessary to run the applied experiments without relying on the original data files such as the elevation and EVI tifs. If <code class="docutils literal notranslate"><span class="pre">--pp_fit</span></code> is included, the posterior from the non-homogeneous poisson process (NHPP) is fit and if <code class="docutils literal notranslate"><span class="pre">--gamma_integration</span></code> is included, the posterior of alpha is averaged over gamma to remove the correlation between the two parameters. The NHPP posterior is required in order to have an estimate of the parameters to generate the PA data for the integration for approximation of the expected utility function, so you must include this option the first time you run the script. Gamma integration is optional but recommended as without it the alpha estimate is unreliable and may result in additional noise in the generated PA datasets used in the exchange algorithm.</p>
+<p>Once the <code class="docutils literal notranslate"><span class="pre">process_ebird.R</span></code> script is sucessefully run and the <code class="docutils literal notranslate"><span class="pre">data_pack.RDS</span></code> file generated, you are ready to run the optimal design algorithm applied to the Brown-headed nuthatch example or your own use-case.</p>
+<p>For further reference, the CLI options for the <code class="docutils literal notranslate"><span class="pre">process_ebird.R</span></code> script are listed below:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Options</span><span class="p">:</span>
+        <span class="o">-</span><span class="n">h</span><span class="p">,</span> <span class="o">--</span><span class="n">help</span>
+                <span class="n">Show</span> <span class="n">this</span> <span class="n">help</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">exit</span>
+
+        <span class="o">--</span><span class="n">working_dir</span><span class="o">=</span><span class="n">WORKING_DIR</span>
+                <span class="n">Path</span> <span class="n">to</span> <span class="n">the</span> <span class="n">directory</span> <span class="n">containing</span> <span class="n">code</span> <span class="n">to</span> <span class="n">source</span> <span class="k">for</span> <span class="n">the</span> <span class="n">main</span> <span class="n">script</span>
+
+        <span class="o">--</span><span class="n">base_data_dir</span><span class="o">=</span><span class="n">BASE_DATA_DIR</span>
+                <span class="n">Path</span> <span class="n">to</span> <span class="n">the</span> <span class="n">directory</span> <span class="n">containing</span> <span class="n">covariate</span> <span class="n">data</span>
+
+        <span class="o">--</span><span class="n">ebird_data_dir</span><span class="o">=</span><span class="n">EBIRD_DATA_DIR</span>
+                <span class="n">Name</span> <span class="n">of</span> <span class="n">directory</span> <span class="n">containing</span> <span class="n">processed</span> <span class="n">ebird</span> <span class="n">data</span> <span class="n">csv</span><span class="s1">&#39;s, within basedir</span>
+
+        <span class="o">--</span><span class="n">save_dir</span><span class="o">=</span><span class="n">SAVE_DIR</span>
+                <span class="n">Directory</span> <span class="n">to</span> <span class="n">save</span> <span class="n">data</span> <span class="n">within</span> <span class="n">basedir</span>
+
+        <span class="o">--</span><span class="n">map_file</span><span class="o">=</span><span class="n">MAP_FILE</span>
+                <span class="n">Nmae</span> <span class="n">of</span> <span class="n">file</span> <span class="n">containing</span> <span class="n">processed</span> <span class="n">US</span> <span class="n">geopackage</span> <span class="n">fil</span>
+
+        <span class="o">--</span><span class="n">landcover_file</span><span class="o">=</span><span class="n">LANDCOVER_FILE</span>
+                <span class="n">Name</span> <span class="n">of</span> <span class="n">landcover</span> <span class="n">tif</span>
+
+        <span class="o">--</span><span class="n">modis_file</span><span class="o">=</span><span class="n">MODIS_FILE</span>
+                <span class="n">Name</span> <span class="n">of</span> <span class="n">modis</span> <span class="n">EVI</span> <span class="n">tif</span>
+
+        <span class="o">--</span><span class="n">elevation_file</span><span class="o">=</span><span class="n">ELEVATION_FILE</span>
+                <span class="n">Name</span> <span class="n">of</span> <span class="n">elevation</span> <span class="n">tif</span>
+
+        <span class="o">--</span><span class="n">data_reps</span><span class="o">=</span><span class="n">DATA_REPS</span>
+                <span class="n">Number</span> <span class="n">of</span> <span class="n">dataset</span> <span class="n">reps</span> <span class="k">for</span> <span class="n">criterion</span> <span class="n">estimation</span>
+
+        <span class="o">--</span><span class="n">cell_size</span><span class="o">=</span><span class="n">CELL_SIZE</span>
+                <span class="n">Size</span> <span class="n">of</span> <span class="n">one</span> <span class="n">side</span> <span class="n">of</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">point</span> <span class="n">process</span> <span class="n">grid</span>
+
+        <span class="o">--</span><span class="n">auk_process</span>
+                <span class="n">Boolean</span> <span class="k">for</span> <span class="n">running</span> <span class="n">the</span> <span class="n">initial</span> <span class="n">auk</span> <span class="n">filtering</span> <span class="n">steps</span> <span class="n">to</span> <span class="n">generate</span> <span class="n">smallers</span> <span class="n">csv</span><span class="s1">&#39;s</span>
+
+        <span class="o">--</span><span class="n">data_pack</span>
+                <span class="n">Boolean</span> <span class="k">for</span> <span class="n">generating</span> <span class="n">the</span> <span class="n">data</span> <span class="n">pack</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">already</span> <span class="n">generated</span>
+
+        <span class="o">--</span><span class="n">pp_fit</span>
+                <span class="n">Boolean</span> <span class="n">to</span> <span class="n">fit</span> <span class="n">the</span> <span class="n">Point</span> <span class="n">Process</span> <span class="n">posterior</span> <span class="n">after</span> <span class="n">data</span> <span class="n">saving</span> <span class="n">steps</span>
+
+        <span class="o">--</span><span class="n">pp_diagnostic</span>
+                <span class="n">Boolean</span> <span class="k">for</span> <span class="n">printing</span> <span class="n">diagnostics</span> <span class="k">for</span> <span class="n">point</span> <span class="n">process</span> <span class="n">model</span>
+
+        <span class="o">--</span><span class="n">gamma_integration</span>
+                <span class="n">Boolean</span> <span class="k">for</span> <span class="n">integrating</span> <span class="n">over</span> <span class="n">gamma</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">PP</span>
+</pre></div>
+</div>
+</section>
+<section id="simulated-data">
+<h2>Simulated data<a class="headerlink" href="#simulated-data" title="Link to this heading"></a></h2>
+<p>The above instructions describe how to pre-process the data for the applied case-study. To run the simulated experiments, the data processing is simpler but there are still a few pre-processing steps we need to take. If you would like to skip these steps, we have provided the data you need to get started with the optimal design in <code class="docutils literal notranslate"><span class="pre">data/sim_data</span></code>. See the instructions in the usage section in that case.</p>
+<p>To generate the data for the simulated experiments yourself, you have to first run the script <code class="docutils literal notranslate"><span class="pre">generate_po_data.R</span></code>. The bash script <code class="docutils literal notranslate"><span class="pre">experiment_scripts/generate_po_datasets.sh</span></code> contains the command that generates all PO datasets used in this work. However, the same parameter settings that create the PO data must also be used to create the PA data, so that the two processes match. We pre-generate all PO data for a number of parameter combinations so that any experiment for a particular combination of parameters can just load the correct PO dataset, instead of having to generate a new dataset everytime we call the script. Therefore, to generate one particular PO dataset, we can run</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Rscript</span> <span class="n">generate_po_data</span><span class="o">.</span><span class="n">R</span> <span class="o">--</span><span class="n">working_dir</span><span class="o">=.</span> <span class="o">--</span><span class="n">exp_name</span><span class="o">=</span><span class="n">po_gen</span> <span class="o">--</span><span class="n">alpha</span><span class="o">=-</span><span class="mi">2</span> <span class="o">--</span><span class="n">beta</span><span class="o">=</span><span class="mf">0.5</span> <span class="o">--</span><span class="n">gamma</span><span class="o">=</span><span class="mi">1</span> <span class="o">--</span><span class="n">delta</span><span class="o">=</span><span class="mf">0.25</span> <span class="o">--</span><span class="n">intensity_func</span><span class="o">=</span><span class="s2">&quot;donut&quot;</span> <span class="o">--</span><span class="n">bias_fun</span><span class="o">=</span><span class="s2">&quot;exponential&quot;</span> <span class="o">--</span><span class="n">data_reps</span><span class="o">=</span><span class="mi">96</span>
+</pre></div>
+</div>
+<p>This will simulate PO data for the particular values of the parameters as seen in the command. The bash script <code class="docutils literal notranslate"><span class="pre">experiment_scripts/generate_po_datasets.sh</span></code> will run the R script with all parameter combinations that we use in the experiments in the associated paper.</p>
+<p>Then, once the dataset/s are generated, we can run the optimal design using a particular PO simulated dataset. This is admittedly a bit difficult since we have to specify the same parameter sets that are used to generate the PO data in the design script, where these same parameters (alpha and beta) will be used to generate the PA data. For example given that we have <code class="docutils literal notranslate"><span class="pre">--alpha=-2</span> <span class="pre">--beta=0.5</span> <span class="pre">--gamma=1</span> <span class="pre">--delta=0.25</span></code> above, in the design we need to run the optimal design script with</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Rscript</span> <span class="n">optimal_design_site_occ</span><span class="o">.</span><span class="n">R</span> <span class="o">--</span><span class="n">working_dir</span><span class="o">=.</span> <span class="o">--</span><span class="n">exp_name</span><span class="o">=</span><span class="n">params_a</span><span class="o">--</span><span class="mi">2</span><span class="n">_b</span><span class="o">-</span><span class="mf">0.5</span><span class="n">_g</span><span class="o">-</span><span class="mi">1</span><span class="n">_d</span><span class="o">-</span><span class="mf">0.25</span><span class="n">_p</span><span class="o">-</span><span class="mf">0.2</span> <span class="o">--</span><span class="n">data_reps</span><span class="o">=</span><span class="mi">96</span> <span class="o">--</span><span class="n">m</span><span class="o">=</span><span class="mi">5</span> <span class="o">--</span><span class="n">min_visits</span><span class="o">=</span><span class="mi">1</span> <span class="o">--</span><span class="n">max_visits</span><span class="o">=</span><span class="mi">10</span> <span class="o">--</span><span class="n">vary_visits</span> <span class="o">--</span><span class="n">model_selection</span><span class="o">=</span><span class="mi">2</span> <span class="o">--</span><span class="n">random_starts</span><span class="o">=</span><span class="mi">3</span> <span class="o">--</span><span class="n">exch_iter</span><span class="o">=</span><span class="mi">20</span> <span class="o">--</span><span class="n">mcmc_iter</span><span class="o">=</span><span class="mi">1000</span> <span class="o">--</span><span class="n">use_sim_po</span> <span class="o">--</span><span class="n">po_data_file</span><span class="o">=</span><span class="n">po_gen_ints</span><span class="o">-</span><span class="n">donut_a</span><span class="o">=-</span><span class="mi">2</span><span class="n">_b</span><span class="o">=</span><span class="mf">0.5</span><span class="n">_g</span><span class="o">=</span><span class="mi">1</span><span class="n">_d</span><span class="o">=</span><span class="mf">0.25</span><span class="o">.</span><span class="n">Rds</span> <span class="o">--</span><span class="n">intensity_func</span><span class="o">=</span><span class="s2">&quot;donut&quot;</span> <span class="o">--</span><span class="n">bias_func</span><span class="o">=</span><span class="s2">&quot;exponential&quot;</span> <span class="o">--</span><span class="n">v_parallel</span> <span class="o">--</span><span class="n">cores</span><span class="o">=</span><span class="mi">48</span> <span class="o">--</span><span class="n">alpha</span><span class="o">=-</span><span class="mi">2</span> <span class="o">--</span><span class="n">beta</span><span class="o">=</span><span class="mf">0.5</span> <span class="o">--</span><span class="n">gamma</span><span class="o">=</span><span class="mi">1</span> <span class="o">--</span><span class="n">delta</span><span class="o">=</span><span class="mf">0.25</span> <span class="o">--</span><span class="n">p</span><span class="o">=</span><span class="mf">0.2</span> <span class="o">--</span><span class="n">aux_cor</span><span class="o">=</span><span class="mf">0.8</span>
+</pre></div>
+</div>
+<p>for example. This is explained more in the usage section. We need to make sure we use the –use_sim_po flag and the correct dataset for the specified parameters given to <code class="docutils literal notranslate"><span class="pre">--po_data_file</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">--</span><span class="n">po_data_file</span><span class="o">=</span><span class="n">po_gen_ints</span><span class="o">-</span><span class="n">donut_a</span><span class="o">=-</span><span class="mi">2</span><span class="n">_b</span><span class="o">=</span><span class="mf">0.5</span><span class="n">_g</span><span class="o">=</span><span class="mi">1</span><span class="n">_d</span><span class="o">=</span><span class="mf">0.25</span><span class="o">.</span><span class="n">Rds</span>
+</pre></div>
+</div>
+<p>This is the dataset generated by the call of <code class="docutils literal notranslate"><span class="pre">generate_po_data.R</span></code>. Once you have done this for the parameter values you are interested in, you are ready to run the simulated design experiments (or you can just use the pre-processed data already provided as there are many dataset combinations already there).</p>
+<p>For further reference, the CLI options for the <code class="docutils literal notranslate"><span class="pre">generate_po_data.R</span></code> script are listed below:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Options</span><span class="p">:</span>
+        <span class="o">-</span><span class="n">h</span><span class="p">,</span> <span class="o">--</span><span class="n">help</span>
+                <span class="n">Show</span> <span class="n">this</span> <span class="n">help</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">exit</span>
+
+        <span class="o">--</span><span class="n">working_dir</span><span class="o">=</span><span class="n">WORKING_DIR</span>
+                <span class="n">Path</span> <span class="n">to</span> <span class="n">the</span> <span class="n">directory</span> <span class="n">containing</span> <span class="n">script</span>
+
+        <span class="o">--</span><span class="n">exp_name</span><span class="o">=</span><span class="n">EXP_NAME</span>
+                <span class="n">Base</span> <span class="n">name</span> <span class="n">to</span> <span class="n">save</span> <span class="n">data</span>
+
+        <span class="o">--</span><span class="n">alpha</span><span class="o">=</span><span class="n">ALPHA</span>
+                <span class="n">Intercept</span> <span class="k">for</span> <span class="n">intensity</span>
+
+        <span class="o">--</span><span class="n">beta</span><span class="o">=</span><span class="n">BETA</span>
+                <span class="n">Slope</span> <span class="k">for</span> <span class="n">intensity</span>
+
+        <span class="o">--</span><span class="n">gamma</span><span class="o">=</span><span class="n">GAMMA</span>
+                <span class="n">Intercept</span> <span class="k">for</span> <span class="n">bias</span>
+
+        <span class="o">--</span><span class="n">delta</span><span class="o">=</span><span class="n">DELTA</span>
+                <span class="n">Slope</span> <span class="k">for</span> <span class="n">bias</span>
+
+        <span class="o">--</span><span class="n">intensity_func</span><span class="o">=</span><span class="n">INTENSITY_FUNC</span>
+                <span class="n">Intensity</span> <span class="n">function</span> <span class="k">for</span> <span class="n">sampling</span> <span class="n">surface</span>
+
+        <span class="o">--</span><span class="n">sd</span><span class="o">=</span><span class="n">SD</span>
+                <span class="n">Standard</span> <span class="n">deviation</span> <span class="k">for</span> <span class="n">donut</span> <span class="n">intensity</span> <span class="n">surface</span>
+
+        <span class="o">--</span><span class="n">bias_func</span><span class="o">=</span><span class="n">BIAS_FUNC</span>
+                <span class="n">Bias</span> <span class="n">function</span> <span class="k">for</span> <span class="n">sampling</span> <span class="n">surface</span>
+
+        <span class="o">--</span><span class="n">area</span><span class="o">=</span><span class="n">AREA</span>
+                <span class="n">Area</span> <span class="n">of</span> <span class="n">region</span> <span class="n">D</span>
+
+        <span class="o">--</span><span class="n">k</span><span class="o">=</span><span class="n">K</span>
+                <span class="n">Number</span> <span class="n">of</span> <span class="n">sites</span> <span class="n">along</span> <span class="n">one</span> <span class="n">side</span> <span class="n">of</span> <span class="n">grid</span>
+
+        <span class="o">--</span><span class="n">data_reps</span><span class="o">=</span><span class="n">DATA_REPS</span>
+                <span class="n">Number</span> <span class="n">of</span> <span class="n">dataset</span> <span class="n">reps</span> <span class="k">for</span> <span class="n">criterion</span> <span class="n">estimation</span>
+</pre></div>
+</div>
+<section id="simulate-data-for-misspecification">
+<h3>Simulate data for misspecification<a class="headerlink" href="#simulate-data-for-misspecification" title="Link to this heading"></a></h3>
+<p>The PO data for the misspecification experiments is generated separately from the previous section. To generate this data, you must run <code class="docutils literal notranslate"><span class="pre">generate_po_data_misspec.R</span></code>, for example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Rscript</span> <span class="n">generate_po_data_misspec</span><span class="o">.</span><span class="n">R</span> <span class="o">--</span><span class="n">working_dir</span><span class="o">=.</span> <span class="o">--</span><span class="n">save_dir</span><span class="o">=</span><span class="s2">&quot;misspec&quot;</span> <span class="o">--</span><span class="n">exp_name</span><span class="o">=</span><span class="n">po_gen_misspec</span> <span class="o">--</span><span class="n">alpha</span><span class="o">=-</span><span class="mi">2</span> <span class="o">--</span><span class="n">beta</span><span class="o">=</span><span class="mf">0.5</span> <span class="o">--</span><span class="n">gamma</span><span class="o">=</span><span class="mi">1</span> <span class="o">--</span><span class="n">delta</span><span class="o">=</span><span class="mf">0.25</span> <span class="o">--</span><span class="n">epsilon</span><span class="o">=</span><span class="mf">1.5</span> <span class="o">--</span><span class="n">intensity_func</span><span class="o">=</span><span class="s2">&quot;donut&quot;</span> <span class="o">--</span><span class="n">sd</span><span class="o">=</span><span class="mi">5</span> <span class="o">--</span><span class="n">bias_fun</span><span class="o">=</span><span class="s2">&quot;exponential&quot;</span> <span class="o">--</span><span class="n">data_reps</span><span class="o">=</span><span class="mi">96</span> <span class="o">--</span><span class="n">gamma_reps</span><span class="o">=</span><span class="mi">200</span>
+</pre></div>
+</div>
+<p>It is the same as above, only now we provide an <code class="docutils literal notranslate"><span class="pre">--epsilon</span></code> argument as the known parameter value for the additional covariate in the data generating model of the bias. The number of iterations for the Monte Carlo integration over gamma is also set by <code class="docutils literal notranslate"><span class="pre">--gamma_reps</span></code>. These additional options are listed below, but are otherwise the same as in the previous section.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Options</span><span class="p">:</span>
+        <span class="o">--</span><span class="n">epsilon</span><span class="o">=</span><span class="n">EPSILON</span> 
+                <span class="n">Slope</span> <span class="k">for</span> <span class="n">covariate</span> <span class="n">inducing</span> <span class="n">misspec</span>
+
+        <span class="o">--</span><span class="n">gamma_reps</span><span class="o">=</span><span class="n">GAMMA_REPS</span>
+                <span class="n">Number</span> <span class="n">of</span> <span class="n">MC</span> <span class="n">iterations</span> <span class="k">for</span> <span class="n">integration</span> <span class="n">over</span> <span class="n">gamma</span>
+
+        <span class="o">--</span><span class="n">save_dir</span><span class="o">=</span><span class="n">SAVE_DIR</span>
+                <span class="n">Name</span> <span class="n">of</span> <span class="n">folder</span> <span class="n">to</span> <span class="n">save</span> <span class="n">data</span> <span class="n">within</span> <span class="n">the</span> <span class="n">data</span><span class="o">/</span><span class="n">sim_data</span> <span class="n">directory</span>
+</pre></div>
+</div>
+<p>As before, the bash script <code class="docutils literal notranslate"><span class="pre">experiment_scripts/generate_po_datasets_misspec.sh</span></code> will generate data and NHPP posteriors for the parameter combinations that we use in the experiments in the paper.</p>
+<p>What <code class="docutils literal notranslate"><span class="pre">generate_po_data_misspec.R</span></code> does is a little different than in the previous section. Firstly, it generates and saves PO dataset using an additional covariate that will be not be included in the models in the design script. Multiple PO datasets are generated for one fixed set of parameters, each for a different level of exponential decay (rho in the paper, with <code class="docutils literal notranslate"><span class="pre">--epsilon=1.5</span></code>) hardcoded in the script. This is to test the sensitivity of the design algorithm to misspecification in the working model. The second thing this script does is estimate alpha from the PO data, to be used for PA dataset generation in the design algorithm. This is done via Monte Carlo integration over gamma, by iteratively drawing from a prior placed on gamma, holding gamma to this constant value in the NHPP, and averaging multiple NHPP estimates for alpha when iteratively fixing gamma. This posterior average estimate is saved to a <code class="docutils literal notranslate"><span class="pre">.Rds</span></code> file, such as <code class="docutils literal notranslate"><span class="pre">pp_posterior_po_gen_ints-donut_peak=5_a=-2_b=0.5_g=1_d=0.25_e=0.1_int</span></code> in the example used above. <code class="docutils literal notranslate"><span class="pre">e=0.1</span></code> refers to the amount of exponential decay. <code class="docutils literal notranslate"><span class="pre">int</span></code> refers to the use of MC integration. Both <code class="docutils literal notranslate"><span class="pre">int</span></code> and <code class="docutils literal notranslate"><span class="pre">no_int</span></code> versions will be saved, where <code class="docutils literal notranslate"><span class="pre">no_int</span></code> just takes the estimate of alpha directly from the NHPP even though this estimate is highly correlated with gamma. This posterior file, as well as the PO dataset, will need to be provided to the design script for PA generation. The datasets created and used in the paper are already available in <code class="docutils literal notranslate"><span class="pre">data/sim_data/misspec</span></code>.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="installation.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="usage.html" class="btn btn-neutral float-right" title="Usage" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, anonymous.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

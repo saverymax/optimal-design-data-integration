@@ -1,0 +1,328 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Modelling &mdash; optimal-design-data-integration 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=f2a433a1"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Experiments" href="experiments.html" />
+    <link rel="prev" title="Usage" href="usage.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            optimal-design-data-integration
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data.html">Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Modelling</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#application">Application</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#simulated-setting">Simulated setting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="experiments.html">Experiments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="evaluation.html">Evaluation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">optimal-design-data-integration</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Modelling</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/modelling.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="modelling">
+<h1>Modelling<a class="headerlink" href="#modelling" title="Link to this heading"></a></h1>
+<section id="application">
+<h2>Application<a class="headerlink" href="#application" title="Link to this heading"></a></h2>
+<p>The two supported models in the application module of the code are shown below. They are written in the Bayesian programming language Stan. The models used in this work are site occupancy models with presence-absence (PA) data only and with PA + presence-only (PO) data as a prior on the intensity parameters.</p>
+<p>The first model shown below does not use the PO data. We can see that there is a simple wide normal prior placed on the parameters (alpha and betas). We do not model bias (delta or gamma) here because it is not necessary when we are not using the PO data.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+<span class="n">nuthatch_site_occ_no_po</span> <span class="o">&lt;-</span> <span class="s1">&#39;</span>
+    <span class="n">data</span><span class="p">{</span>
+      <span class="n">real</span><span class="o">&lt;</span><span class="n">lower</span> <span class="o">=</span> <span class="mi">0</span><span class="o">&gt;</span> <span class="n">area_a</span><span class="p">;</span>
+      <span class="nb">int</span><span class="o">&lt;</span><span class="n">lower</span> <span class="o">=</span> <span class="mi">1</span><span class="o">&gt;</span> <span class="n">n_pa_sites</span><span class="p">;</span>
+      <span class="nb">int</span><span class="o">&lt;</span><span class="n">lower</span> <span class="o">=</span> <span class="mi">1</span><span class="o">&gt;</span> <span class="n">n_po_sites</span><span class="p">;</span>
+      <span class="nb">int</span><span class="o">&lt;</span><span class="n">lower</span><span class="o">=</span><span class="mi">0</span><span class="o">&gt;</span> <span class="n">k_i</span><span class="p">;</span>
+      <span class="n">array</span><span class="p">[</span><span class="n">n_pa_sites</span><span class="p">]</span> <span class="nb">int</span> <span class="n">Y</span><span class="p">;</span>
+      <span class="n">array</span><span class="p">[</span><span class="n">n_pa_sites</span><span class="p">]</span> <span class="nb">int</span> <span class="n">n_surveys</span><span class="p">;</span>
+      <span class="n">matrix</span><span class="p">[</span><span class="n">n_pa_sites</span><span class="p">,</span> <span class="n">k_i</span><span class="p">]</span> <span class="n">X</span><span class="p">;</span>
+      <span class="n">matrix</span><span class="p">[</span><span class="n">n_po_sites</span><span class="p">,</span> <span class="n">k_i</span><span class="p">]</span> <span class="n">X_po</span><span class="p">;</span> <span class="o">//</span> <span class="n">predictor</span> <span class="n">matrix</span> <span class="k">for</span> <span class="n">intensity</span>
+    <span class="p">}</span>
+    <span class="n">parameters</span><span class="p">{</span>
+      <span class="n">real</span> <span class="n">alpha</span><span class="p">;</span>           <span class="o">//</span> <span class="n">intercepts</span>
+      <span class="n">vector</span><span class="p">[</span><span class="n">k_i</span><span class="p">]</span> <span class="n">beta</span><span class="p">;</span>       <span class="o">//</span> <span class="n">vector</span> <span class="n">of</span> <span class="n">params</span> <span class="k">for</span> <span class="n">intensity</span>
+      <span class="n">real</span><span class="o">&lt;</span><span class="n">lower</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">upper</span> <span class="o">=</span> <span class="mi">1</span><span class="o">&gt;</span> <span class="n">p</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">model</span><span class="p">{</span>
+      <span class="o">//</span> <span class="n">priors</span>
+      <span class="n">target</span> <span class="o">+=</span> <span class="n">normal_lpdf</span><span class="p">(</span><span class="n">alpha</span> <span class="o">|</span>   <span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">);</span>
+      <span class="n">target</span> <span class="o">+=</span> <span class="n">normal_lpdf</span><span class="p">(</span><span class="n">beta</span> <span class="o">|</span> <span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">);</span>
+      <span class="n">vector</span><span class="p">[</span><span class="n">n_pa_sites</span><span class="p">]</span> <span class="n">g_theta</span><span class="p">;</span>
+      <span class="n">g_theta</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">exp</span><span class="p">(</span><span class="n">alpha</span> <span class="o">+</span> <span class="n">X</span><span class="o">*</span><span class="n">beta</span> <span class="o">+</span> <span class="n">log</span><span class="p">(</span><span class="n">area_a</span><span class="p">)));</span>
+      <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="ow">in</span> <span class="mi">1</span><span class="p">:</span><span class="n">n_pa_sites</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">Y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">){</span>
+          <span class="n">target</span> <span class="o">+=</span> <span class="n">log</span><span class="p">(</span><span class="n">g_theta</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">choose</span><span class="p">(</span><span class="n">n_surveys</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">Y</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">*</span><span class="p">(</span><span class="n">p</span><span class="o">^</span><span class="n">Y</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">p</span><span class="p">)</span><span class="o">^</span><span class="p">(</span><span class="n">n_surveys</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-</span><span class="n">Y</span><span class="p">[</span><span class="n">i</span><span class="p">]));</span>
+        <span class="p">}</span>
+        <span class="k">else</span><span class="p">{</span>
+          <span class="o">//</span> <span class="n">Compute</span> <span class="n">mixture</span> <span class="n">of</span> <span class="n">no</span> <span class="n">detection</span> <span class="ow">and</span> <span class="n">no</span> <span class="n">occupancy</span>
+          <span class="n">target</span> <span class="o">+=</span> <span class="n">log</span><span class="p">(</span><span class="n">g_theta</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">p</span><span class="p">)</span><span class="o">^</span><span class="p">(</span><span class="n">n_surveys</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">g_theta</span><span class="p">[</span><span class="n">i</span><span class="p">]));</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">generated</span> <span class="n">quantities</span><span class="p">{</span>
+      <span class="o">//</span> <span class="n">Required</span> <span class="n">generated</span> <span class="n">quantities</span>
+      <span class="o">//</span> <span class="n">We</span> <span class="n">generate</span> <span class="n">over</span> <span class="nb">all</span> <span class="n">sites</span><span class="p">,</span> <span class="n">instead</span> <span class="n">of</span> <span class="n">just</span> <span class="n">those</span> <span class="n">being</span> <span class="n">used</span> <span class="k">for</span> <span class="n">PA</span>
+      <span class="n">vector</span><span class="p">[</span><span class="n">n_po_sites</span><span class="p">]</span> <span class="n">g_theta_gen</span><span class="p">;</span>
+      <span class="n">array</span><span class="p">[</span><span class="n">n_po_sites</span><span class="p">]</span> <span class="nb">int</span> <span class="n">occ_gen</span><span class="p">;</span> 
+      <span class="n">g_theta_gen</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">exp</span><span class="p">(</span><span class="n">alpha</span> <span class="o">+</span> <span class="n">X_po</span><span class="o">*</span><span class="n">beta</span> <span class="o">+</span> <span class="n">log</span><span class="p">(</span><span class="n">area_a</span><span class="p">)));</span>
+      <span class="n">occ_gen</span> <span class="o">=</span> <span class="n">bernoulli_rng</span><span class="p">(</span><span class="n">g_theta_gen</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="s1">&#39;</span>
+</pre></div>
+</div>
+<p>The mext model uses presence-only data as a prior. This approach uses the Poisson approximation to the non-homogeneous Poisson process (NHPP) – as discussed in the paper – to model the number of PO observations at each site in the region. This Poisson distributed variable is parameterized via the intensity and bias, but the occupancy probability is modelled only as a function of intensity. Wide normal priors are placed on the parameters for the NHPP.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+<span class="n">nuthatch_poisson_process_site_occupancy</span> <span class="o">&lt;-</span> <span class="s1">&#39;</span>
+    <span class="n">data</span><span class="p">{</span>
+      <span class="n">real</span><span class="o">&lt;</span><span class="n">lower</span> <span class="o">=</span> <span class="mi">0</span><span class="o">&gt;</span> <span class="n">area_a</span><span class="p">;</span>
+      <span class="nb">int</span><span class="o">&lt;</span><span class="n">lower</span> <span class="o">=</span> <span class="mi">1</span><span class="o">&gt;</span> <span class="n">n_pa_sites</span><span class="p">;</span>
+      <span class="nb">int</span><span class="o">&lt;</span><span class="n">lower</span> <span class="o">=</span> <span class="mi">1</span><span class="o">&gt;</span> <span class="n">n_po_sites</span><span class="p">;</span>
+      <span class="nb">int</span><span class="o">&lt;</span><span class="n">lower</span><span class="o">=</span><span class="mi">0</span><span class="o">&gt;</span> <span class="n">k_i</span><span class="p">;</span>
+      <span class="nb">int</span><span class="o">&lt;</span><span class="n">lower</span><span class="o">=</span><span class="mi">0</span><span class="o">&gt;</span> <span class="n">k_b</span><span class="p">;</span>
+      <span class="nb">int</span><span class="o">&lt;</span><span class="n">lower</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">upper</span><span class="o">=</span><span class="mi">1</span><span class="o">&gt;</span> <span class="n">model_diag</span><span class="p">;</span>
+      <span class="n">array</span><span class="p">[</span><span class="n">n_pa_sites</span><span class="p">]</span> <span class="nb">int</span> <span class="n">Y</span><span class="p">;</span>
+      <span class="n">array</span><span class="p">[</span><span class="n">n_pa_sites</span><span class="p">]</span> <span class="nb">int</span> <span class="n">n_surveys</span><span class="p">;</span>
+      <span class="n">matrix</span><span class="p">[</span><span class="n">n_pa_sites</span><span class="p">,</span> <span class="n">k_i</span><span class="p">]</span> <span class="n">X</span><span class="p">;</span>
+      <span class="n">array</span><span class="p">[</span><span class="n">n_po_sites</span><span class="p">]</span> <span class="nb">int</span> <span class="n">PO</span><span class="p">;</span>
+      <span class="n">matrix</span><span class="p">[</span><span class="n">n_po_sites</span><span class="p">,</span> <span class="n">k_i</span><span class="p">]</span> <span class="n">X_po</span><span class="p">;</span> <span class="o">//</span> <span class="n">predictor</span> <span class="n">matrix</span> <span class="k">for</span> <span class="n">intensity</span>
+      <span class="n">matrix</span><span class="p">[</span><span class="n">n_po_sites</span><span class="p">,</span> <span class="n">k_b</span><span class="p">]</span> <span class="n">Z_po</span><span class="p">;</span> <span class="o">//</span> <span class="n">predictor</span> <span class="n">matrix</span> <span class="k">for</span> <span class="n">bias</span>
+    <span class="p">}</span>
+    <span class="n">parameters</span><span class="p">{</span>
+      <span class="n">real</span> <span class="n">alpha</span><span class="p">;</span>           <span class="o">//</span> <span class="n">intercepts</span>
+      <span class="n">real</span> <span class="n">gamma</span><span class="p">;</span>
+      <span class="n">vector</span><span class="p">[</span><span class="n">k_i</span><span class="p">]</span> <span class="n">beta</span><span class="p">;</span>       <span class="o">//</span> <span class="n">vector</span> <span class="n">of</span> <span class="n">params</span> <span class="k">for</span> <span class="n">intensity</span>
+      <span class="n">vector</span><span class="p">[</span><span class="n">k_b</span><span class="p">]</span> <span class="n">delta</span><span class="p">;</span>      <span class="o">//</span> <span class="n">vector</span> <span class="n">of</span> <span class="n">params</span> <span class="k">for</span> <span class="n">bias</span>
+      <span class="n">real</span><span class="o">&lt;</span><span class="n">lower</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">upper</span> <span class="o">=</span> <span class="mi">1</span><span class="o">&gt;</span> <span class="n">p</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">model</span><span class="p">{</span>
+      <span class="o">//</span> <span class="n">priors</span>
+      <span class="n">target</span> <span class="o">+=</span> <span class="n">normal_lpdf</span><span class="p">(</span><span class="n">alpha</span> <span class="o">|</span>   <span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">);</span>
+      <span class="n">target</span> <span class="o">+=</span> <span class="n">normal_lpdf</span><span class="p">(</span><span class="n">gamma</span> <span class="o">|</span> <span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">);</span>
+      <span class="n">target</span> <span class="o">+=</span> <span class="n">normal_lpdf</span><span class="p">(</span><span class="n">beta</span> <span class="o">|</span> <span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">);</span>
+      <span class="n">target</span> <span class="o">+=</span> <span class="n">normal_lpdf</span><span class="p">(</span><span class="n">delta</span> <span class="o">|</span> <span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">);</span>
+      <span class="n">vector</span><span class="p">[</span><span class="n">n_pa_sites</span><span class="p">]</span> <span class="n">g_theta</span><span class="p">;</span>
+      <span class="n">target</span> <span class="o">+=</span> <span class="n">poisson_log_lpmf</span><span class="p">(</span><span class="n">PO</span> <span class="o">|</span> <span class="n">log</span><span class="p">(</span><span class="n">area_a</span><span class="p">)</span> <span class="o">+</span> <span class="n">alpha</span> <span class="o">+</span> <span class="n">X_po</span><span class="o">*</span><span class="n">beta</span> <span class="o">+</span> <span class="n">gamma</span> <span class="o">+</span> <span class="n">Z_po</span><span class="o">*</span><span class="n">delta</span><span class="p">);</span>
+      <span class="n">g_theta</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">exp</span><span class="p">(</span><span class="n">alpha</span> <span class="o">+</span> <span class="n">X</span><span class="o">*</span><span class="n">beta</span> <span class="o">+</span> <span class="n">log</span><span class="p">(</span><span class="n">area_a</span><span class="p">)));</span>
+      <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="ow">in</span> <span class="mi">1</span><span class="p">:</span><span class="n">n_pa_sites</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">Y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">){</span>
+          <span class="n">target</span> <span class="o">+=</span> <span class="n">log</span><span class="p">(</span><span class="n">g_theta</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">choose</span><span class="p">(</span><span class="n">n_surveys</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">Y</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">*</span><span class="p">(</span><span class="n">p</span><span class="o">^</span><span class="n">Y</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">p</span><span class="p">)</span><span class="o">^</span><span class="p">(</span><span class="n">n_surveys</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-</span><span class="n">Y</span><span class="p">[</span><span class="n">i</span><span class="p">]));</span>
+        <span class="p">}</span>
+        <span class="k">else</span><span class="p">{</span>
+          <span class="o">//</span> <span class="n">Compute</span> <span class="n">mixture</span> <span class="n">of</span> <span class="n">no</span> <span class="n">detection</span> <span class="ow">and</span> <span class="n">no</span> <span class="n">occupancy</span>
+          <span class="n">target</span> <span class="o">+=</span> <span class="n">log</span><span class="p">(</span><span class="n">g_theta</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">p</span><span class="p">)</span><span class="o">^</span><span class="p">(</span><span class="n">n_surveys</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">g_theta</span><span class="p">[</span><span class="n">i</span><span class="p">]));</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">generated</span> <span class="n">quantities</span><span class="p">{</span>
+      <span class="n">vector</span><span class="p">[</span><span class="n">n_po_sites</span><span class="p">]</span> <span class="n">g_theta_gen</span><span class="p">;</span>
+      <span class="n">array</span><span class="p">[</span><span class="n">n_po_sites</span><span class="p">]</span> <span class="nb">int</span> <span class="n">occ_gen</span><span class="p">;</span> 
+      <span class="n">g_theta_gen</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">exp</span><span class="p">(</span><span class="n">alpha</span> <span class="o">+</span> <span class="n">X_po</span><span class="o">*</span><span class="n">beta</span> <span class="o">+</span> <span class="n">log</span><span class="p">(</span><span class="n">area_a</span><span class="p">)));</span>
+      <span class="n">occ_gen</span> <span class="o">=</span> <span class="n">bernoulli_rng</span><span class="p">(</span><span class="n">g_theta_gen</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="s1">&#39;</span>
+
+</pre></div>
+</div>
+<p>Generally, the Stan command used to fit these during during the exchange algorithm is</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>fit &lt;- model$sample(data=data_site_occ, seed=13, chains=1, iter_sampling=mcmc_iter, iter_warmup=100, refresh=0, show_messages=F)
+</pre></div>
+</div>
+<p>This can be found in the <code class="docutils literal notranslate"><span class="pre">estimate_v_nuthatch</span></code> function in the <code class="docutils literal notranslate"><span class="pre">experimental_design_functions.R</span></code> module within the source code. Of course, the variables used to fit this model are in memory during the exchange algorithm. The model is fit R times during the exchange algorithm.</p>
+<p>When running the exchange algorithm these models can be selected using the options 1 (with PO + PA data) and 2 (without PO data, only PA data). For example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Rscript</span> <span class="n">optimal_design_application</span><span class="o">.</span><span class="n">R</span> <span class="o">--</span><span class="n">working_dir</span><span class="o">=.</span> <span class="o">--</span><span class="n">save_dir</span><span class="o">=</span><span class="n">experimental_runs</span><span class="o">/</span><span class="n">test_application</span> <span class="o">--</span><span class="n">data_save_dir</span><span class="o">=</span><span class="n">data</span><span class="o">/</span><span class="n">ebird</span> <span class="o">--</span><span class="n">exp_name</span><span class="o">=</span><span class="n">test_application</span> <span class="o">--</span><span class="n">data_reps</span><span class="o">=</span><span class="mi">4</span> <span class="o">--</span><span class="n">m</span><span class="o">=</span><span class="mi">10</span> <span class="o">--</span><span class="n">min_visits</span><span class="o">=</span><span class="mi">1</span> <span class="o">--</span><span class="n">max_visits</span><span class="o">=</span><span class="mi">4</span> <span class="o">--</span><span class="n">vary_visits</span> <span class="o">--</span><span class="n">random_starts</span><span class="o">=</span><span class="mi">10</span> <span class="o">--</span><span class="n">model_selection</span><span class="o">=</span><span class="mi">2</span> <span class="o">--</span><span class="n">p</span><span class="o">=</span><span class="mf">0.2</span> <span class="o">--</span><span class="n">po_sample_prop</span><span class="o">=</span><span class="mf">0.05</span> <span class="o">--</span><span class="n">exch_iter</span><span class="o">=</span><span class="mi">40</span> <span class="o">--</span><span class="n">mcmc_iter</span><span class="o">=</span><span class="mi">1000</span> <span class="o">--</span><span class="n">v_parallel</span> <span class="o">--</span><span class="n">cores</span><span class="o">=</span><span class="mi">4</span> <span class="o">--</span><span class="n">run_time</span><span class="o">=</span><span class="mi">2</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">--model_selection=2</span></code> will specify the use of only PA data within the algorithm.</p>
+</section>
+<section id="simulated-setting">
+<h2>Simulated setting<a class="headerlink" href="#simulated-setting" title="Link to this heading"></a></h2>
+<p>The simulated setting uses the same models as in the applied setting. However, there is only one covariate used to model the intensity in the simulated setting, so that the Stan models change slightly. These are shown below.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cloglog_site_occupancy</span> <span class="o">&lt;-</span> <span class="s1">&#39;</span>
+  <span class="n">data</span><span class="p">{</span>
+      <span class="nb">int</span><span class="o">&lt;</span><span class="n">lower</span> <span class="o">=</span> <span class="mi">1</span><span class="o">&gt;</span> <span class="n">n_sites</span><span class="p">;</span>
+      <span class="nb">int</span><span class="o">&lt;</span><span class="n">lower</span> <span class="o">=</span> <span class="mi">1</span><span class="o">&gt;</span> <span class="n">total_sites</span><span class="p">;</span>
+      <span class="o">//</span> <span class="n">Distinction</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">model</span> <span class="k">for</span> <span class="n">total</span> <span class="n">sites</span> <span class="ow">and</span> <span class="n">selected</span> <span class="n">ones</span>
+      <span class="n">vector</span><span class="p">[</span><span class="n">n_sites</span><span class="p">]</span> <span class="n">X</span><span class="p">;</span>
+      <span class="n">vector</span><span class="p">[</span><span class="n">total_sites</span><span class="p">]</span> <span class="n">X_all</span><span class="p">;</span>
+      <span class="n">array</span><span class="p">[</span><span class="n">n_sites</span><span class="p">]</span> <span class="nb">int</span> <span class="n">Y</span><span class="p">;</span>
+      <span class="n">array</span><span class="p">[</span><span class="n">n_sites</span><span class="p">]</span> <span class="nb">int</span> <span class="n">n_surveys</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">parameters</span><span class="p">{</span>
+      <span class="n">real</span> <span class="n">alpha</span><span class="p">;</span>
+      <span class="n">real</span> <span class="n">beta</span><span class="p">;</span>
+      <span class="n">real</span><span class="o">&lt;</span><span class="n">lower</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">upper</span> <span class="o">=</span> <span class="mi">1</span><span class="o">&gt;</span> <span class="n">p</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">model</span><span class="p">{</span>
+      <span class="o">//</span> <span class="n">priors</span>
+      <span class="n">target</span> <span class="o">+=</span> <span class="n">normal_lpdf</span><span class="p">(</span><span class="n">alpha</span> <span class="o">|</span> <span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">);</span>
+      <span class="n">target</span> <span class="o">+=</span> <span class="n">normal_lpdf</span><span class="p">(</span><span class="n">beta</span> <span class="o">|</span> <span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">);</span>
+      <span class="n">vector</span><span class="p">[</span><span class="n">n_sites</span><span class="p">]</span> <span class="n">g_theta</span><span class="p">;</span>
+      <span class="n">g_theta</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">exp</span><span class="p">(</span><span class="n">alpha</span> <span class="o">+</span> <span class="n">beta</span> <span class="o">*</span> <span class="n">X</span><span class="p">));</span>
+      <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="ow">in</span> <span class="mi">1</span><span class="p">:</span><span class="n">n_sites</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">Y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">){</span>
+          <span class="n">target</span> <span class="o">+=</span> <span class="n">log</span><span class="p">(</span><span class="n">g_theta</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">choose</span><span class="p">(</span><span class="n">n_surveys</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">Y</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">*</span><span class="p">(</span><span class="n">p</span><span class="o">^</span><span class="n">Y</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">p</span><span class="p">)</span><span class="o">^</span><span class="p">(</span><span class="n">n_surveys</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-</span><span class="n">Y</span><span class="p">[</span><span class="n">i</span><span class="p">]));</span>
+        <span class="p">}</span>
+        <span class="k">else</span><span class="p">{</span>
+          <span class="o">//</span> <span class="n">Compute</span> <span class="n">mixture</span> <span class="n">of</span> <span class="n">no</span> <span class="n">detection</span> <span class="ow">and</span> <span class="n">no</span> <span class="n">occupancy</span>
+          <span class="n">target</span> <span class="o">+=</span> <span class="n">log</span><span class="p">(</span><span class="n">g_theta</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">p</span><span class="p">)</span><span class="o">^</span><span class="p">(</span><span class="n">n_surveys</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">g_theta</span><span class="p">[</span><span class="n">i</span><span class="p">]));</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">generated</span> <span class="n">quantities</span><span class="p">{</span>
+      <span class="n">vector</span><span class="p">[</span><span class="n">total_sites</span><span class="p">]</span> <span class="n">g_theta_gen</span><span class="p">;</span>
+      <span class="n">array</span><span class="p">[</span><span class="n">total_sites</span><span class="p">]</span> <span class="nb">int</span> <span class="n">occ_gen</span><span class="p">;</span> 
+      <span class="n">g_theta_gen</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">exp</span><span class="p">(</span><span class="n">alpha</span> <span class="o">+</span> <span class="n">beta</span> <span class="o">*</span> <span class="n">X_all</span><span class="p">));</span>
+      <span class="o">//</span> <span class="n">Posterior</span> <span class="n">predictive</span> <span class="n">distribution</span>
+      <span class="n">occ_gen</span> <span class="o">=</span> <span class="n">bernoulli_rng</span><span class="p">(</span><span class="n">g_theta_gen</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="s1">&#39;</span>
+
+<span class="n">poisson_process_site_occupancy</span> <span class="o">&lt;-</span> <span class="s1">&#39;</span>
+  <span class="n">data</span><span class="p">{</span>
+      <span class="nb">int</span><span class="o">&lt;</span><span class="n">lower</span> <span class="o">=</span> <span class="mi">1</span><span class="o">&gt;</span> <span class="n">n_pa_sites</span><span class="p">;</span>
+      <span class="nb">int</span><span class="o">&lt;</span><span class="n">lower</span> <span class="o">=</span> <span class="mi">1</span><span class="o">&gt;</span> <span class="n">n_po_sites</span><span class="p">;</span>
+      <span class="nb">int</span><span class="o">&lt;</span><span class="n">lower</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">upper</span><span class="o">=</span><span class="mi">1</span><span class="o">&gt;</span> <span class="n">model_diag</span><span class="p">;</span>
+      <span class="n">array</span><span class="p">[</span><span class="n">n_pa_sites</span><span class="p">]</span> <span class="nb">int</span> <span class="n">Y</span><span class="p">;</span>
+      <span class="n">array</span><span class="p">[</span><span class="n">n_pa_sites</span><span class="p">]</span> <span class="nb">int</span> <span class="n">n_surveys</span><span class="p">;</span>
+      <span class="n">vector</span><span class="p">[</span><span class="n">n_pa_sites</span><span class="p">]</span> <span class="n">X</span><span class="p">;</span>
+      <span class="n">vector</span><span class="p">[</span><span class="n">n_po_sites</span><span class="p">]</span> <span class="n">X_po</span><span class="p">;</span>
+      <span class="n">vector</span><span class="p">[</span><span class="n">n_po_sites</span><span class="p">]</span> <span class="n">Z_po</span><span class="p">;</span>
+      <span class="n">array</span><span class="p">[</span><span class="n">n_po_sites</span><span class="p">]</span> <span class="nb">int</span> <span class="n">PO</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">parameters</span><span class="p">{</span>
+      <span class="n">real</span> <span class="n">alpha</span><span class="p">;</span>
+      <span class="n">real</span> <span class="n">beta</span><span class="p">;</span>
+      <span class="n">real</span> <span class="n">gamma</span><span class="p">;</span>
+      <span class="n">real</span> <span class="n">delta</span><span class="p">;</span>
+      <span class="n">real</span><span class="o">&lt;</span><span class="n">lower</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">upper</span> <span class="o">=</span> <span class="mi">1</span><span class="o">&gt;</span> <span class="n">p</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">model</span><span class="p">{</span>
+      <span class="o">//</span> <span class="n">priors</span>
+      <span class="n">target</span> <span class="o">+=</span> <span class="n">normal_lpdf</span><span class="p">(</span><span class="n">alpha</span> <span class="o">|</span>   <span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">);</span>
+      <span class="n">target</span> <span class="o">+=</span> <span class="n">normal_lpdf</span><span class="p">(</span><span class="n">beta</span> <span class="o">|</span> <span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">);</span>
+      <span class="n">target</span> <span class="o">+=</span> <span class="n">normal_lpdf</span><span class="p">(</span><span class="n">gamma</span> <span class="o">|</span> <span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">);</span>
+      <span class="n">target</span> <span class="o">+=</span> <span class="n">normal_lpdf</span><span class="p">(</span><span class="n">delta</span> <span class="o">|</span> <span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">);</span>
+      <span class="o">//</span> <span class="n">Call</span> <span class="n">prior</span> <span class="n">function</span> <span class="k">for</span> <span class="n">presence</span><span class="o">-</span><span class="n">only</span> <span class="n">here</span><span class="o">.</span>
+      <span class="n">vector</span><span class="p">[</span><span class="n">n_pa_sites</span><span class="p">]</span> <span class="n">g_theta</span><span class="p">;</span>
+      <span class="n">target</span> <span class="o">+=</span> <span class="n">poisson_log_lpmf</span><span class="p">(</span><span class="n">PO</span> <span class="o">|</span> <span class="n">alpha</span> <span class="o">+</span> <span class="n">beta</span> <span class="o">*</span> <span class="n">X_po</span> <span class="o">+</span> <span class="n">gamma</span> <span class="o">+</span> <span class="n">delta</span> <span class="o">*</span> <span class="n">Z_po</span><span class="p">);</span>
+      <span class="n">g_theta</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">exp</span><span class="p">(</span><span class="n">alpha</span> <span class="o">+</span> <span class="n">beta</span> <span class="o">*</span> <span class="n">X</span><span class="p">));</span>
+      <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="ow">in</span> <span class="mi">1</span><span class="p">:</span><span class="n">n_pa_sites</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">Y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">){</span>
+          <span class="n">target</span> <span class="o">+=</span> <span class="n">log</span><span class="p">(</span><span class="n">g_theta</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">choose</span><span class="p">(</span><span class="n">n_surveys</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">Y</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">*</span><span class="p">(</span><span class="n">p</span><span class="o">^</span><span class="n">Y</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">p</span><span class="p">)</span><span class="o">^</span><span class="p">(</span><span class="n">n_surveys</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-</span><span class="n">Y</span><span class="p">[</span><span class="n">i</span><span class="p">]));</span>
+        <span class="p">}</span>
+        <span class="k">else</span><span class="p">{</span>
+          <span class="o">//</span> <span class="n">Compute</span> <span class="n">mixture</span> <span class="n">of</span> <span class="n">no</span> <span class="n">detection</span> <span class="ow">and</span> <span class="n">no</span> <span class="n">occupancy</span>
+          <span class="n">target</span> <span class="o">+=</span> <span class="n">log</span><span class="p">(</span><span class="n">g_theta</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">p</span><span class="p">)</span><span class="o">^</span><span class="p">(</span><span class="n">n_surveys</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">g_theta</span><span class="p">[</span><span class="n">i</span><span class="p">]));</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">generated</span> <span class="n">quantities</span><span class="p">{</span>
+      <span class="n">vector</span><span class="p">[</span><span class="n">n_po_sites</span><span class="p">]</span> <span class="n">g_theta_gen</span><span class="p">;</span>
+      <span class="n">array</span><span class="p">[</span><span class="n">n_po_sites</span><span class="p">]</span> <span class="nb">int</span> <span class="n">occ_gen</span><span class="p">;</span> 
+      <span class="n">g_theta_gen</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">exp</span><span class="p">(</span><span class="n">alpha</span> <span class="o">+</span> <span class="n">beta</span> <span class="o">*</span> <span class="n">X_po</span><span class="p">));</span>
+      <span class="n">occ_gen</span> <span class="o">=</span> <span class="n">bernoulli_rng</span><span class="p">(</span><span class="n">g_theta_gen</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="s1">&#39;</span>
+</pre></div>
+</div>
+<p>To select these models in the optimal design algorithm use options 1 (no PO data) and 3 (PO data). For example,</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Rscript</span> <span class="n">optimal_design_site_occ</span><span class="o">.</span><span class="n">R</span> <span class="o">--</span><span class="n">working_dir</span><span class="o">=.</span> <span class="o">--</span><span class="n">save_dir</span><span class="o">=</span><span class="n">experimental_runs</span><span class="o">/</span><span class="n">test_run</span> <span class="o">--</span><span class="n">exp_name</span><span class="o">=</span><span class="n">design</span><span class="o">-</span><span class="n">test</span><span class="o">-</span><span class="n">run</span> <span class="o">--</span><span class="n">data_reps</span><span class="o">=</span><span class="mi">4</span> <span class="o">--</span><span class="n">m</span><span class="o">=</span><span class="mi">5</span> <span class="o">--</span><span class="n">min_visits</span><span class="o">=</span><span class="mi">1</span> <span class="o">--</span><span class="n">max_visits</span><span class="o">=</span><span class="mi">4</span> <span class="o">--</span><span class="n">vary_visits</span> <span class="o">--</span><span class="n">model_selection</span><span class="o">=</span><span class="mi">3</span> <span class="o">--</span><span class="n">random_starts</span><span class="o">=</span><span class="mi">3</span> <span class="o">--</span><span class="n">exch_iter</span><span class="o">=</span><span class="mi">10</span> <span class="o">--</span><span class="n">mcmc_iter</span><span class="o">=</span><span class="mi">1000</span> <span class="o">--</span><span class="n">use_sim_po</span> <span class="o">--</span><span class="n">po_data_file</span><span class="o">=</span><span class="n">po_gen_peak_ints</span><span class="o">-</span><span class="n">donut_peak</span><span class="o">=</span><span class="mi">2</span><span class="n">_a</span><span class="o">=-</span><span class="mi">2</span><span class="n">_b</span><span class="o">=</span><span class="mf">0.5</span><span class="n">_g</span><span class="o">=</span><span class="mi">1</span><span class="n">_d</span><span class="o">=</span><span class="mf">0.25</span><span class="o">.</span><span class="n">Rds</span> <span class="o">--</span><span class="n">intensity_func</span><span class="o">=</span><span class="s2">&quot;donut&quot;</span> <span class="o">--</span><span class="n">sd</span><span class="o">=</span><span class="mi">2</span> <span class="o">--</span><span class="n">bias_func</span><span class="o">=</span><span class="s2">&quot;exponential&quot;</span> <span class="o">--</span><span class="n">alpha</span><span class="o">=-</span><span class="mi">2</span> <span class="o">--</span><span class="n">beta</span><span class="o">=</span><span class="mf">0.5</span> <span class="o">--</span><span class="n">gamma</span><span class="o">=</span><span class="mi">1</span> <span class="o">--</span><span class="n">delta</span><span class="o">=</span><span class="mf">0.25</span> <span class="o">--</span><span class="n">p</span><span class="o">=</span><span class="mf">0.2</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">--model_selection=3</span></code> will specify the use of PO data in the site occupancy model used in the exchange algorithm. It is also possible to specify models 2 (constant occupancy probability with no PO data) and 4 (constant occupancy probability with PO data), but these parameterize the intensity and bias with only an intercept and are for debugging purposes only.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="usage.html" class="btn btn-neutral float-left" title="Usage" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="experiments.html" class="btn btn-neutral float-right" title="Experiments" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, anonymous.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
